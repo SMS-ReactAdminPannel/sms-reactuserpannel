@@ -469,56 +469,84 @@ const handleAddToCart = (part: any) => {
 </div>
 
 <div className="max-w-full px-4 md:px-6 lg:px-8">
-  <h1 className="text-2xl font-bold text-[#9b111e] mb-8  md:text-left">BY CATEGORIES</h1>
+  <h1 className="text-2xl font-bold text-[#9b111e] mb-8 text-left">
+    BY CATEGORIES
+  </h1>
 
-  <div className="grid grid-cols-4 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-    
-    
-    {/* Category Card */}
+ <div className="grid grid-cols-4 sm:grid-cols-2 mdplus:grid-cols-2 lg:grid-cols-4 gap-6">
     {[
       {
         title: "Wheels and Tires",
-        image: "https://img.freepik.com/free-vector/realistic-complete-set-car-wheels_1284-29765.jpg?ga=GA1.1.1244886688.1725532511&semt=ais_hybrid&w=740",
-        items: ["Bearings & Hubs", "Chrome Rims", "Hybrid Tyres", "Seasonal Tyres", "Wheel Bolts"]
+        image:
+          "https://img.freepik.com/free-vector/realistic-complete-set-car-wheels_1284-29765.jpg?ga=GA1.1.1244886688.1725532511&semt=ais_hybrid&w=740",
+        items: [
+          "Bearings & Hubs",
+          "Chrome Rims",
+          "Hybrid Tyres",
+          "Seasonal Tyres",
+          "Wheel Bolts",
+        ],
       },
       {
         title: "Body Parts",
-        image: "https://img.freepik.com/premium-photo/two-metal-pistons-white_241146-682.jpg?ga=GA1.1.1244886688.1725532511&semt=ais_hybrid&w=740",
-        items: ["Headlights", "Accelerator", "Bumpers", "Clutch", "Washers"]
+        image:
+          "https://img.freepik.com/premium-photo/two-metal-pistons-white_241146-682.jpg?ga=GA1.1.1244886688.1725532511&semt=ais_hybrid&w=740",
+        items: ["Headlights", "Accelerator", "Bumpers", "Clutch", "Washers"],
       },
       {
         title: "Performance Parts",
-        image: "https://img.freepik.com/free-psd/3d-style-mechanical-item-isolated-transparent-background_191095-13746.jpg?ga=GA1.1.1244886688.1725532511&semt=ais_hybrid&w=740",
-        items: ["Drive Belts", "Engine Gasket", "Fuel Pumps", "Head Bolts", "Piston Rings"]
+        image:
+          "https://img.freepik.com/free-psd/3d-style-mechanical-item-isolated-transparent-background_191095-13746.jpg?ga=GA1.1.1244886688.1725532511&semt=ais_hybrid&w=740",
+        items: [
+          "Drive Belts",
+          "Engine Gasket",
+          "Fuel Pumps",
+          "Head Bolts",
+          "Piston Rings",
+        ],
       },
       {
         title: "Maintenance",
-        image: "https://img.freepik.com/free-vector/engine-pistons-system-composition-with-realistic-image-assembled-metal-engine-elements-isolated_1284-53969.jpg?ga=GA1.1.1244886688.1725532511&semt=ais_hybrid&w=740",
-        items: ["Cleaners", "Antifreeze", "Engine Oil", "Repair Kits", "Bodypaint"]
+        image:
+          "https://img.freepik.com/free-vector/engine-pistons-system-composition-with-realistic-image-assembled-metal-engine-elements-isolated_1284-53969.jpg?ga=GA1.1.1244886688.1725532511&semt=ais_hybrid&w=740",
+        items: [
+          "Cleaners",
+          "Antifreeze",
+          "Engine Oil",
+          "Repair Kits",
+          "Bodypaint",
+        ],
       },
-    ].map(({ title, image, items }) => (
-    <div className="flex flex-col gap-4 p-6 border rounded-xl shadow-md">
-      <div className="flex justify-between items-center w-[250px]">
-        <h2 className="text-md font-bold uppercase text-[#9b111e]">{title}</h2>
-        <img
-      src={image}
-      alt={title}
-      className="w-16 h-16 object-contain"
-    />
-      </div>
-      <ul className="space-y-1 text-sm">
+    ].map(({ title, image, items }, index) => (
+      <div
+        key={index}
+        className="flex flex-col gap-4 p-6 border rounded-xl shadow-md"
+      >
+        <div className="flex justify-between items-center">
+          <h2 className="text-md font-bold uppercase text-[#9b111e]">
+            {title}
+          </h2>
+          <img
+            src={image}
+            alt={title}
+            className="w-16 h-16 object-contain ml-2"
+          />
+        </div>
+        <ul className="space-y-1 text-sm">
           {items.map((item, idx) => (
-            <li key={idx} className="hover:underline cursor-pointer">{item}</li>
+            <li key={idx} className="hover:underline cursor-pointer">
+              {item}
+            </li>
           ))}
         </ul>
-        <span className="text-sm font-semibold text-red-700 cursor-pointer hover:underline mt-1">
+        <span className="text-sm font-semibold text-red-700 cursor-pointer hover:underline mt-2">
           ALL CATEGORIES →
         </span>
-
-  </div>
+      </div>
     ))}
+  </div>
 </div>
-</div>
+
 
 
 
