@@ -1,6 +1,6 @@
 import React from 'react';
 
-import AlternatingProductCardList from '../../components/bookings/BookingCard/BookingCard';
+
 import ScrollableNavbar from '../../components/bookings/BookingScroll/BookingScroll';
 
 const services = [

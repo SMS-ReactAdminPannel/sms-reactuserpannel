@@ -36,7 +36,7 @@ const SparePartCard: React.FC<Props> = ({ part, onDelete }) => {
   const totalPrice = part.price * count;
 
   return (
-    <div className="flex  gap-4 p-2 bg-white shadow-lg rounded-xl overflow-auto  mb-4  -gray-200">
+    <div className="flex  gap-4 p-2 bg-white shadow-md rounded-xl overflow-auto  mb-4  -gray-200 hover:shadow-lg hover:scale-[1.01] md:hover:shadow-lg md:hover:scale-[1.02]">
       <div className="overflow-auto">
         <img
           src={part.imageUrl}
