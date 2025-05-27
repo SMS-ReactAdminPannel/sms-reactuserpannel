@@ -1,9 +1,15 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import FullscreenButton from './FullScreen';
 import { ProfileModal } from './ProfileModal';
 import { useAuth } from '../../pages/auth/AuthContext';
 import { COLORS } from '../../constants/constant';
+import Logo from '../../assets/LOGO.jpg';
+import { FiSearch, FiShoppingCart, FiChevronDown } from 'react-icons/fi';
+import { MdLocationOn } from 'react-icons/md';
+import { IoMenu } from 'react-icons/io5';
+import { Link } from 'react-router-dom';
+import ProfileMenu from '../home/ProfileMenu';
+import FullscreenButton from '../home/FullScreen';
 
 interface User {
 	name: string;
@@ -34,6 +40,7 @@ export const Navbar: React.FC = () => {
 	const navigate = useNavigate();
 	const dropdownRef = useRef<HTMLDivElement | null>(null);
 	const notificationRef = useRef<HTMLDivElement | null>(null);
+	const [search, setSearch] = useState('');
 
 	const [notifications] = useState<Notification[]>([
 		{
@@ -99,6 +106,9 @@ export const Navbar: React.FC = () => {
 		setShowNotifications((prev) => !prev);
 		setTimeout(() => setIsBellActive(false), 150);
 	};
+	const handleSosClick = () => {
+		navigate('/sos');
+	};
 
 	const handleViewAllNotifications = () => {
 		setShowNotifications(false);
@@ -123,57 +133,57 @@ export const Navbar: React.FC = () => {
 		console.log('User logged out');
 	};
 
+	const navData = [
+		{ title: 'Home', link: '/' },
+		{ title: 'Bookings', link: '/bookings' },
+		{ title: 'Booking Cart', link: '/booking-cart' },
+		{ title: 'Services', link: '/services' },
+		{ title: 'Spare Parts', link: '/spare-parts' },
+		{ title: 'Offers', link: '/announcement' },
+	];
+
 	return (
-		<>
-			<nav
-				style={{ backgroundColor: COLORS.primary_01, height: '64px' }}
-				className='flex items-center px-4'
-			>
-				<div className='flex items-center gap-2'>
+		<header className='bg-white text-white w-full'>
+			{/* Top Navbar */}
+			<div className='flex items-center justify-between px-4 py-2 space-x-4'>
+				{/* Logo & Location */}
+				<div className='flex items-center space-x-4'>
+					<Link to='/' className='text-2xl font-bold text-white'>
+						<img src={Logo} alt='yes mechanic logo' className='w-25 h-10' />
+					</Link>
+				</div>
+
+				{/* Search Bar */}
+				<div className='flex flex-1 '>
 					<input
 						type='text'
-						placeholder='Search...'
-						className='bg-white text-black placeholder-gray-500 rounded-full px-4 py-2 w-60 text-sm focus:outline-none focus:ring-2 focus:ring-[#6b1b1b] transition-all'
+						className='px-4 py-2 text-[#9b111e] text-sm border border-[#9b111e] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#9b111e] ml-4 mr-2 w-[500px]'
+						placeholder='Search'
+						value={search}
+						onChange={(e) => setSearch(e.target.value)}
 					/>
-					<button
-						type='submit'
-						className='bg-gradient-to-r from-red-600 to-red-800 rounded-full p-3 hover:scale-105 transition-transform'
-					>
-						<svg
-							className='w-4 h-4 text-white'
-							fill='none'
-							stroke='currentColor'
-							strokeWidth={3}
-							strokeLinecap='round'
-							strokeLinejoin='round'
-							viewBox='0 0 24 24'
-						>
-							<path d='M21 21l-4.35-4.35M11 18a7 7 0 1 1 0-14 7 7 0 0 1 0 14z' />
-						</svg>
+					<button className='bg-gradient-to-r from-red-600 to-red-800 p-3 rounded-full'>
+						<FiSearch
+							className='text-black text-xl'
+							color={COLORS.white}
+							size={18}
+						/>
 					</button>
 				</div>
 
-				{/* Fullscreen */}
-				<div className='relative w-full'>
-					<div className='absolute right-4 top-1/2 -translate-y-1/2 z-20 flex items-center gap-4'>
-						{/* Fullscreen Button */}
-						{/* <FullscreenButton /> */}
-
-						{/* SOS Emergency Icon
-						<div className='relative'>
-							<span className='absolute inline-flex h-8 w-8 rounded-full bg-red-400 opacity-75 animate-ping'></span>
-							<div className='absolute -top-1 -right-1 w-3.5 h-3.5 bg-yellow-500 border-2 border-white rounded-full z-20' />
-							<button
-								onClick={handleSosClick}
-								className='relative z-10 inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-r from-red-600 to-red-800 text-white font-bold text-sm shadow-lg hover:scale-105 transition-transform'
-							>
-								SOS
-							</button>
-						</div> */}
+				{/* Right Side Options */}
+				<div className='flex items-center text-sm gap-3'>
+					{/* SOS Emergency Icon */}
+					<div className='relative'>
+						<span className='absolute inline-flex h-8 w-8 rounded-full bg-red-400 opacity-75 animate-ping'></span>
+						<div className='absolute -top-1 -right-1 w-3.5 h-3.5 bg-yellow-500 border-2 border-white rounded-full z-20' />
+						<button
+							onClick={handleSosClick}
+							className='relative z-10 inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-r from-red-600 to-red-800 text-white font-bold text-sm shadow-lg hover:scale-105 transition-transform'
+						>
+							SOS
+						</button>
 					</div>
-				</div>
-
-				<div className='ml-auto flex items-center space-x-4 pr-4'>
 					<div className='relative' ref={notificationRef}>
 						<button
 							aria-label='Notifications'
@@ -250,185 +260,35 @@ export const Navbar: React.FC = () => {
 							</div>
 						)}
 					</div>
-
-					<div className='relative' ref={dropdownRef}>
-						<div
-							className='flex items-center space-x-3 cursor-pointer max-w-xs'
-							onClick={toggleDropdown}
-						>
-							<div className='w-10 h-10 rounded-full overflow-hidden flex-shrink-0'>
-								<img
-									src={user.avatar}
-									alt='User Avatar'
-									className='w-full h-full object-cover'
-								/>
-							</div>
-							<div className='flex flex-col flex-nowrap overflow-hidden'>
-								<span className='text-[#9b111e] font-medium truncate whitespace-nowrap'>
-									{user.name}
-								</span>
-								<div className='flex items-center text-sm text-[#c13340] whitespace-nowrap'>
-									Admin
-									<svg
-										className='w-4 h-6 ml-1 text-[#c13340]'
-										fill='none'
-										stroke='currentColor'
-										strokeWidth={2}
-										viewBox='0 0 24 24'
-									>
-										<path
-											strokeLinecap='round'
-											strokeLinejoin='round'
-											d='M19 9l-7 7-7-7'
-										/>
-									</svg>
-								</div>
-							</div>
-						</div>
-
-						{isDropdownOpen && (
-							<div className='absolute right-0 mt-2 w-24 rounded-md shadow-lg z-50 bg-gradient-to-br from-yellow-50 to-yellow-100'>
-								<ul className='py-1 text-sm text-[#9b111e]'>
-									<li>
-										<button
-											onClick={() => {
-												setShowProfileDetails(true);
-												setIsDropdownOpen(false);
-											}}
-											className='block w-full text-center px-4 py-1 transition-colors duration-200 hover:text-white hover:bg-[#d14c4c]'
-										>
-											Profile
-										</button>
-									</li>
-									<li>
-										<button
-											onClick={() => {
-												setShowLogoutConfirm(true);
-												setIsDropdownOpen(false);
-											}}
-											className='block w-full text-center px-4 py-1 transition-colors duration-200 hover:text-white hover:bg-[#d14c4c]'
-										>
-											Logout
-										</button>
-									</li>
-								</ul>
-							</div>
-						)}
+					<ProfileMenu />
+					<div className='text-white'>
+						<p className='text-[#9b111e] font-semibold'>Hello, User</p>
+					</div>
+					<div className='relative flex items-center' onClick={() => {}}>
+						<FiShoppingCart
+							className='text-2xl cursor-pointer'
+							color={COLORS.primary}
+						/>
+						<span className='absolute -top-2 left-4 bg-[#9b111e] text-white text-xs rounded-full px-1'>
+							0
+						</span>
+						<span className='ml-1 font-semibold text-[#9b111e]'>Cart</span>
 					</div>
 				</div>
-			</nav>
+			</div>
 
-			{/* Profile Modal Component */}
-			<ProfileModal
-				user={user}
-				isOpen={showProfileDetails}
-				onClose={() => setShowProfileDetails(false)}
-				onUserUpdate={handleUserUpdate}
-			/>
-
-			{/* Logout Confirmation Modal */}
-			{showLogoutConfirm && (
-				<div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]'>
-					<div className='bg-white rounded-xl shadow-lg w-80 p-6 space-y-4 text-center'>
-						<h2 className='text-lg font-semibold text-red-600'>
-							Are you sure you want to logout?
-						</h2>
-						<div className='flex justify-center gap-4 mt-4'>
-							<button
-								onClick={() => setShowLogoutConfirm(false)}
-								className='px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 text-gray-800'
-							>
-								Cancel
-							</button>
-							<button
-								onClick={() => {
-									setShowLogoutConfirm(false);
-									setShowLogoutSuccess(true);
-									setTimeout(() => {
-										setShowLogoutSuccess(false);
-										console.log('Redirect or clear session here');
-										handleLogout();
-									}, 1000);
-								}}
-								className='px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700'
-							>
-								OK
-							</button>
-						</div>
-					</div>
-				</div>
-			)}
-
-			{/* Logout Success Modal */}
-			{showLogoutSuccess && (
-				<div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]'>
-					<div className='bg-white rounded-xl shadow-xl w-80 p-6 flex flex-col items-center space-y-4 text-center animate-fade-in'>
-						{/* Animated Checkmark with Tailwind */}
-						<svg
-							className='w-16 h-16 text-green-600 animate-draw-check'
-							viewBox='0 0 52 52'
-							fill='none'
-							xmlns='http://www.w3.org/2000/svg'
-						>
-							<circle
-								cx='26'
-								cy='26'
-								r='25'
-								stroke='currentColor'
-								strokeWidth='2'
-								className='stroke-current'
-							/>
-							<path
-								d='M14 27L22 35L38 19'
-								stroke='currentColor'
-								strokeWidth='4'
-								strokeLinecap='round'
-								strokeLinejoin='round'
-								className='animate-draw-path'
-							/>
-						</svg>
-						<p className='text-green-700 text-lg font-semibold'>
-							Logout Successfully!
-						</p>
-					</div>
-
-					{/* Tailwind custom animation via <style> tag (works well for small scoped styles) */}
-					<style>
-						{`
-              @keyframes fade-in {
-                from { opacity: 0; transform: scale(0.95); }
-                to { opacity: 1; transform: scale(1); }
-              }
-
-              .animate-fade-in {
-                animation: fade-in 0.3s ease-out forwards;
-              }
-
-              @keyframes draw-path {
-                from { stroke-dasharray: 48; stroke-dashoffset: 48; }
-                to { stroke-dashoffset: 0; }
-              }
-
-              .animate-draw-path {
-                stroke-dasharray: 48;
-                stroke-dashoffset: 48;
-                animation: draw-path 0.5s ease-out forwards;
-              }
-
-              @keyframes draw-check {
-                from { stroke-dasharray: 166; stroke-dashoffset: 166; }
-                to { stroke-dashoffset: 0; }
-              }
-
-              .animate-draw-check circle {
-                stroke-dasharray: 166;
-                stroke-dashoffset: 166;
-                animation: draw-check 0.6s ease-out forwards;
-              }
-            `}
-					</style>
-				</div>
-			)}
-		</>
+			{/* Bottom Navbar - Categories */}
+			<div className='bg-[#232f3e] px-4 py-2 flex items-center space-x-6 text-sm overflow-x-auto scrollbar-hide'>
+				{navData?.map((item, idx) => (
+					<Link
+						key={idx}
+						to={`${item.link}`}
+						className='whitespace-nowrap hover:underline'
+					>
+						{item.title}
+					</Link>
+				))}
+			</div>
+		</header>
 	);
 };
