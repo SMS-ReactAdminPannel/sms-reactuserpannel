@@ -116,11 +116,11 @@ const HelpCenter: React.FC = () => {
 
       <form
         onSubmit={handleSubmit}
-        className="mt-10 w-full max-w-4xl bg-white shadow-md rounded-lg p-6"
+        className="my-5 w-full bg-white shadow-md rounded-lg p-6"
       >
         <h2 className="text-xl font-semibold text-[#9b111e] mb-6">Enquire?</h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1  gap-4">
           <div className="col-span-1 md:col-span-1">
             <label htmlFor="subject" className="block text-gray-700 mb-1">
               Subject
