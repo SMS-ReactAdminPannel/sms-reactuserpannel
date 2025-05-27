@@ -5,24 +5,30 @@ import ProfilePage from '../pages/Profile/ProfilePage';
 import BookingsPage from '../pages/Bookings/BookingsPage';
 import BookingCartPage from '../pages/Booking-Cart/BookingCartPage';
 import LoginPage from '../pages/auth/LoginPage';
-import RegisterPage from '../pages/auth/RegisterPage';
-// import SOSPage from '../pages/SOS/SOSPage';
-import HelpCenterPage from '../pages/HelpCenter/HelpCenter';
-import FaqsPage from '../pages/FAQs/FaqPage';
 import MainLayout from '../layout/MainLayout';
 import AnnouncementPage from '../pages/Announcement/AnnouncementPage';
 import HomePage from '../pages/Home/HomePage';
 import ServicesPage from '../pages/ServicesPage/ServicesPage';
 import SparePartsPage from '../pages/Spare-Parts/SparePartsPage';
+import SOSPage from '../pages/SOS/SOSPage';
+import HelpCenter from '../pages/HelpCenter/HelpCenter';
+import FaqPage from '../pages/FAQs/FaqPage';
+import EnterEmailOrPhone from '../pages/auth/EnterEmailOrPhone';
+import OtpVerificationPage from '../pages/auth/OtpVerificationPage';
+import SignupPage from '../pages/auth/SignupPage';
+import ResetPassword from '../pages/auth/ResetPassword';
 
 const AppRoutes = () => {
 	// const { isAuthenticated } = useAuth();
-	const isAuthenticated = false; // Replace with actual authentication logic
+	const isAuthenticated = true; // Replace with actual authentication logic
 
 	const AuthRoutes = () => (
 		<Routes>
-			<Route path='/login' element={<LoginPage />} />
-			<Route path='/register' element={<RegisterPage />} />
+			<Route path='enter-email-or-phone' element={<EnterEmailOrPhone />} />
+			<Route path='verify-otp' element={<OtpVerificationPage />} />
+			<Route path='login' element={<LoginPage />} />
+			<Route path='signup' element={<SignupPage />} />
+			<Route path='reset-password' element={<ResetPassword />} />
 			<Route path='*' element={<Navigate to='/login' />} />
 		</Routes>
 	);
@@ -39,9 +45,9 @@ const AppRoutes = () => {
 				<Route path='services' element={<ServicesPage />} />
 				<Route path='spare-parts' element={<SparePartsPage />} />
 				<Route path='announcement' element={<AnnouncementPage />} />
-				{/* <Route path='sos' element={<SOSPage />} /> */}
-				<Route path='help-center' element={<HelpCenterPage />} />
-				<Route path='faqs' element={<FaqsPage />} />
+				<Route path='sos' element={<SOSPage />} />
+				<Route path='help-center' element={<HelpCenter />} />
+				<Route path='faqs' element={<FaqPage />} />
 				<Route path='*' element={<Navigate to='/' />} />
 			</Route>
 		</Routes>

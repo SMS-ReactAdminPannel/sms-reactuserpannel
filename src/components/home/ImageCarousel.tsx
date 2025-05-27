@@ -41,13 +41,13 @@ export const ImageCarousel: React.FC<CarouselProps> = ({
 			{/* Prev / Next buttons */}
 			<button
 				onClick={prevSlide}
-				className='absolute top-1/2 left-2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full'
+				className='absolute top-1/2 left-2 transform -translate-y-1/2 bg-red-900 hover:bg-red-700 text-white p-2 rounded-full'
 			>
 				‹
 			</button>
 			<button
 				onClick={nextSlide}
-				className='absolute top-1/2 right-2 transform -translate-y-1/2 bg-black/50 hover:bg-black/70 text-white p-2 rounded-full'
+				className='absolute top-1/2 right-2 transform -translate-y-1/2 bg-red-900 hover:bg-red-700 text-white p-2 rounded-full'
 			>
 				›
 			</button>
