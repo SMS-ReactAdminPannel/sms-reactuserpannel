@@ -1,8 +1,13 @@
-import React from 'react';
+
+// import SettingsPage from '../../components/account-settings/Accountsettings';
 import ProfileComponent from '../../components/profile/page'; // Adjust path as needed
 
-const ProfilePage: React.FC = () => {
-  return <ProfileComponent />;
+
+const ProfilePage = () => {
+	return <div>
+		{/* <SettingsPage /> */}
+    <ProfileComponent />
+	</div>;
 };
 
 export default ProfilePage;
