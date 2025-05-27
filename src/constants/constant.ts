@@ -5,6 +5,8 @@ export const COLORS = {
 	secondary: '#E6A895',
 	hover: '#ffd46b',
 	bgColor: '#FAF3EB',
+	white: '#FFFFFF',
+	black: '#000000',
 };
 
 export const FONTS = {
