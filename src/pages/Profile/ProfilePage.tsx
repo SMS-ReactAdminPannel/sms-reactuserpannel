@@ -1,7 +1,10 @@
-import React from 'react';
+
+import SettingsPage from '../../components/account-settings/Accountsettings';
 
 const ProfilePage = () => {
-	return <div>ProfilePage</div>;
+	return <div>
+		<SettingsPage />
+	</div>;
 };
 
 export default ProfilePage;
