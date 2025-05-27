@@ -27,12 +27,11 @@ const MainLayout = () => {
 						<Outlet />
 					</div>
 				</main>
-				<div>
-					{/* Footer can be added here if needed */}
+				{/* <div>
 					<footer className='fixed bottom-0 w-full bg-gray-100 px-4 py-2 text-sm text-center'>
 						&copy; {date.getFullYear()} yesmechanic. All rights reserved.
 					</footer>
-				</div>
+				</div> */}
 			</div>
 		</div>
 	);

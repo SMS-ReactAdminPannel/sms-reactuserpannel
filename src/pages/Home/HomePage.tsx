@@ -16,14 +16,119 @@ import { TbCertificate } from 'react-icons/tb';
 import { RiCustomerService2Fill } from 'react-icons/ri';
 import MustCare from '../../components/bookings/BookingsPage';
 import { COLORS } from '../../constants/constant';
+import React from 'react';
+import {
+	FaTools,
+	FaSnowflake,
+	FaBatteryThreeQuarters,
+	FaTruckMonster,
+	FaCarAlt,
+	FaSearch,
+	FaLightbulb,
+	FaCarCrash,
+	FaCarSide,
+	FaFileSignature,
+} from 'react-icons/fa';
+import { Link } from 'react-router-dom';
+import GoShineComboCard from '../../components/home/offerCard';
+import PromoCarousel from '../../components/home/offerCard';
+import CustomServicesCarousel from '../../components/home/customServiceCarousel';
 
 const imageUrls = [image1, image2, image3, image4];
+interface ServiceCardProps {
+	id: number;
+	icon: React.ReactNode;
+	title: string;
+	color: string;
+}
 
-const HomePage = () => {
+const HomePage: React.FC = () => {
+	const cardData: ServiceCardProps[] = [
+		{
+			id: 1,
+			icon: <FaTools size={24} />,
+			title: 'Periodic Services',
+			color: 'bg-white border-[#9b111e]',
+		},
+		{
+			id: 2,
+			icon: <FaSnowflake size={24} />,
+			title: 'Ac Services & Repair',
+			color: 'bg-white border-[#9b111e]',
+		},
+		{
+			id: 3,
+			icon: <FaBatteryThreeQuarters size={24} />,
+			title: 'Batteries',
+			color: 'bg-white border-[#9b111e]',
+		},
+		{
+			id: 4,
+			icon: <FaTruckMonster size={24} />,
+			title: 'Tyres and Wheel Care',
+			color: 'bg-white border-[#9b111e]',
+		},
+		{
+			id: 5,
+			icon: <FaCarAlt size={24} />,
+			title: 'Detailing Services',
+			color: 'bg-white border-[#9b111e]',
+		},
+		{
+			id: 6,
+			icon: <FaSearch size={24} />,
+			title: 'Car Inspection',
+			color: 'bg-white border-[#9b111e]',
+		},
+		{
+			id: 7,
+			icon: <FaLightbulb size={24} />,
+			title: 'Windshields & Lights',
+			color: 'bg-white border-[#9b111e]',
+		},
+		{
+			id: 8,
+			icon: <FaCarCrash size={24} />,
+			title: 'Suspension & Fitments',
+			color: 'bg-white border-[#9b111e]',
+		},
+		{
+			id: 9,
+			icon: <FaCarSide size={24} />,
+			title: 'Clutch & Body Parts',
+			color: 'bg-white border-[#9b111e]',
+		},
+		{
+			id: 10,
+			icon: <FaFileSignature size={24} />,
+			title: 'Insurance Claims',
+			color: 'bg-white border-[#9b111e]',
+		},
+	];
 	return (
 		<>
 			<ImageCarousel images={imageUrls} interval={2000} />
-			<div className='mt-4'>
+			<div className='my-3'>
+				<h1 className='font-bold text-3xl mb-10 text-red-900'>
+					Available Services
+				</h1>
+
+				<div className='grid grid-cols-5 grid-rows-2 gap-4 max-w-6xl mx-auto mb-5'>
+					{cardData.map((card) => (
+						<Link
+							to={`/services`}
+							key={card.id}
+							className={`${card.color} border-2 rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer transform hover:scale-105`}
+						>
+							<div className='text-[#9b111e] mb-2 pl-[80px]'>{card.icon} </div>
+							<h3 className='text-center font-medium hover '>{card.title}</h3>
+						</Link>
+					))}
+				</div>
+			</div>
+			<PromoCarousel />
+			<CustomServicesCarousel />
+			<div className='my-4'>
 				<h1 className='font-bold text-3xl mb-10 text-red-900'>
 					Yes Mechanic Care Advantages
 				</h1>
@@ -57,12 +162,12 @@ const HomePage = () => {
 						<p>Of Customer Care Expertise</p>
 					</div>
 				</div>
-				<div>
-					{/* <MustCare /> */}
-				</div>
+				{/* <div><MustCare /></div> */}
 
 				<div>
-					<h1 className='text-3xl font-bold mt-10 text-red-900'>Discover All Services</h1>
+					<h1 className='text-3xl font-bold mt-10 text-red-900'>
+						Discover All Services
+					</h1>
 					<div className='flex mt-10 justify-around gap-10'>
 						<div>
 							<img
@@ -219,8 +324,8 @@ const HomePage = () => {
 				</h1>
 				<div className='flex justify-center gap-10 mt-10 flex-wrap'>
 					<div className='flex flex-col items-center text-center'>
-						<GrWorkshop size={30}  color={COLORS.primary}/>
-						<p className="mt-3">
+						<GrWorkshop size={30} color={COLORS.primary} />
+						<p className='mt-3'>
 							Service Workshop
 							<br />
 							Open All 7 Days
@@ -228,21 +333,21 @@ const HomePage = () => {
 					</div>
 					<div className='flex flex-col items-center text-center'>
 						<LuCarTaxiFront size={30} color={COLORS.primary} />
-						<p className="mt-3">
+						<p className='mt-3'>
 							Service Pick Up
 							<br />& Drop Facility
 						</p>
 					</div>
 					<div className='flex flex-col items-center text-center'>
-						<PiSealCheckBold size={30}  color={COLORS.primary}/>
-						<p className="mt-3">
+						<PiSealCheckBold size={30} color={COLORS.primary} />
+						<p className='mt-3'>
 							Yesmechanic Genuine Parts
 							<br />& Oil
 						</p>
 					</div>
 					<div className='flex flex-col items-center text-center'>
-						<LuHandshake size={30}  color={COLORS.primary}/>
-						<p className="mt-3">
+						<LuHandshake size={30} color={COLORS.primary} />
+						<p className='mt-3'>
 							Annual Maintenance
 							<br />
 							Plan Coverage
@@ -250,15 +355,15 @@ const HomePage = () => {
 					</div>
 					<div className='flex flex-col items-center text-center'>
 						<RiShieldStarFill size={30} color={COLORS.primary} />
-						<p className="mt-3">
+						<p className='mt-3'>
 							5 Years Standard
 							<br />
 							Warranty
 						</p>
 					</div>
 					<div className='flex flex-col items-center text-center'>
-						<MdDateRange size={30}  color={COLORS.primary}/>
-						<p className="mt-3">
+						<MdDateRange size={30} color={COLORS.primary} />
+						<p className='mt-3'>
 							24 x 7 Assistance
 							<br />
 							Through RSA
