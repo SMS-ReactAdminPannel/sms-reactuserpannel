@@ -7,7 +7,7 @@ import BookingCartPage from '../pages/Booking-Cart/BookingCartPage';
 import LoginPage from '../pages/auth/LoginPage';
 import MainLayout from '../layout/MainLayout';
 import AnnouncementPage from '../pages/Announcement/AnnouncementPage';
-import HomePage from '../pages/home/HomePage';
+import HomePage from '../pages/Home/HomePage';
 import ServicesPage from '../pages/ServicesPage/ServicesPage';
 import SparePartsPage from '../pages/Spare-Parts/Spareparts';
 import SOSPage from '../pages/SOS/SOSPage';
