@@ -13,6 +13,7 @@ import MainLayout from '../layout/MainLayout';
 import AnnouncementPage from '../pages/Announcement/AnnouncementPage';
 import HomePage from '../pages/Home/HomePage';
 import ServicesPage from '../pages/ServicesPage/ServicesPage';
+import Spareparts from '../pages/Spare-Parts/Spareparts';
 
 const AppRoutes = () => {
 	// const { isAuthenticated } = useAuth();
@@ -38,6 +39,7 @@ const AppRoutes = () => {
 				<Route path='services' element={<ServicesPage />} />
 				<Route path='announcement' element={<AnnouncementPage />} />
 				{/* <Route path='sos' element={<SOSPage />} /> */}
+				<Route path='spare-parts' element={<Spareparts />} />
 				<Route path='help-center' element={<HelpCenterPage />} />
 				<Route path='faqs' element={<FaqsPage />} />
 				<Route path='*' element={<Navigate to='/' />} />
