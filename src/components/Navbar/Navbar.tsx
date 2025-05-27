@@ -1,15 +1,13 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ProfileModal } from './ProfileModal';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../pages/auth/AuthContext';
-import { COLORS } from '../../constants/constant';
+import { COLORS, FONTS } from '../../constants/constant';
 import Logo from '../../assets/LOGO.jpg';
-import { FiSearch, FiShoppingCart, FiChevronDown } from 'react-icons/fi';
-import { MdLocationOn } from 'react-icons/md';
-import { IoMenu } from 'react-icons/io5';
+import { FiSearch, FiShoppingCart } from 'react-icons/fi';
+import { FaShoppingCart } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import ProfileMenu from '../home/ProfileMenu';
-import FullscreenButton from '../home/FullScreen';
+import dummyImage from '../../assets/navbar/dummyimage.png';
 
 interface User {
 	name: string;
@@ -36,6 +34,7 @@ export const Navbar: React.FC = () => {
 	const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 	const [showLogoutSuccess, setShowLogoutSuccess] = useState(false);
 	const [showNotifications, setShowNotifications] = useState(false);
+	const [isLoggedIn, setIsLoggedIn] = useState(false);
 	const { logout } = useAuth();
 	const navigate = useNavigate();
 	const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -143,7 +142,7 @@ export const Navbar: React.FC = () => {
 	];
 
 	return (
-		<header className='bg-white text-white w-full'>
+		<header className='bg-white text-white w-full fixed top-0 z-50'>
 			{/* Top Navbar */}
 			<div className='flex items-center justify-between px-4 py-2 space-x-4'>
 				{/* Logo & Location */}
@@ -154,15 +153,15 @@ export const Navbar: React.FC = () => {
 				</div>
 
 				{/* Search Bar */}
-				<div className='flex flex-1 '>
+				<div className='flex flex-1'>
 					<input
 						type='text'
-						className='px-4 py-2 text-[#9b111e] text-sm border border-[#9b111e] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#9b111e] ml-4 mr-2 w-[500px]'
+						className='px-4 py-2 text-[#9b111e] text-sm border border-[#9b111e] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#9b111e] ml-4 mr-2 w-[290px]'
 						placeholder='Search'
 						value={search}
 						onChange={(e) => setSearch(e.target.value)}
 					/>
-					<button className='bg-gradient-to-r from-red-600 to-red-800 p-3 rounded-full'>
+					<button className='bg-red-900 p-3 rounded-full'>
 						<FiSearch
 							className='text-black text-xl'
 							color={COLORS.white}
@@ -174,7 +173,7 @@ export const Navbar: React.FC = () => {
 				{/* Right Side Options */}
 				<div className='flex items-center text-sm gap-3'>
 					{/* SOS Emergency Icon */}
-					<div className='relative'>
+					{/* <div className='relative'>
 						<span className='absolute inline-flex h-8 w-8 rounded-full bg-red-400 opacity-75 animate-ping'></span>
 						<div className='absolute -top-1 -right-1 w-3.5 h-3.5 bg-yellow-500 border-2 border-white rounded-full z-20' />
 						<button
@@ -183,12 +182,12 @@ export const Navbar: React.FC = () => {
 						>
 							SOS
 						</button>
-					</div>
+					</div> */}
 					<div className='relative' ref={notificationRef}>
 						<button
 							aria-label='Notifications'
 							onClick={handleBellClick}
-							className={`relative p-2.5 rounded-full bg-gradient-to-r from-red-600 to-red-800 focus:outline-none transform transition-transform duration-200 ease-in-out ${
+							className={`relative p-2.5 rounded-full bg-red-900 focus:outline-none transform transition-transform duration-200 ease-in-out ${
 								isBellActive ? 'scale-90' : 'scale-100'
 							}`}
 						>
@@ -260,33 +259,51 @@ export const Navbar: React.FC = () => {
 							</div>
 						)}
 					</div>
-					<ProfileMenu />
+					{/* Profile Dropdown */}
+					{isLoggedIn ? (
+						<>
+							<ProfileMenu />
+						</>
+					) : (
+						<>
+							<img
+								src={dummyImage}
+								alt='dummy-image'
+								className='w-10 h-10 rounded-full cursor-pointer'
+							/>
+						</>
+					)}
 					<div className='text-white'>
-						<p className='text-[#9b111e] font-semibold'>Hello, User</p>
+						<p className='text-red-900 font-semibold cursor-pointer'>
+							{isLoggedIn ? 'User' : 'Log In'}
+						</p>
 					</div>
 					<div className='relative flex items-center' onClick={() => {}}>
-						<FiShoppingCart
-							className='text-2xl cursor-pointer'
-							color={COLORS.primary}
-						/>
-						<span className='absolute -top-2 left-4 bg-[#9b111e] text-white text-xs rounded-full px-1'>
+						<FaShoppingCart className='text-2xl cursor-pointer text-red-900' />
+						<span className='absolute -top-2 left-4 bg-red-900 text-white text-xs rounded-full px-1'>
 							0
 						</span>
-						<span className='ml-1 font-semibold text-[#9b111e]'>Cart</span>
 					</div>
 				</div>
 			</div>
 
 			{/* Bottom Navbar - Categories */}
-			<div className='bg-[#232f3e] px-4 py-2 flex items-center space-x-6 text-sm overflow-x-auto scrollbar-hide'>
+			<div className='bg-[#fdefe9] px-4 py-6 flex items-center justify-center gap-2 space-x-6 text-sm overflow-x-auto scrollbar-hide'>
 				{navData?.map((item, idx) => (
-					<Link
+					<NavLink
 						key={idx}
-						to={`${item.link}`}
-						className='whitespace-nowrap hover:underline'
+						to={item.link}
+						style={{ fontSize: '18px' }}
+						className={({ isActive }) =>
+							`whitespace-nowrap font-semibold transition-colors duration-200 pb-2 ${
+								isActive
+									? 'text-red-900 border-b-3 border-red-900'
+									: 'text-red-900 hover:border-b-3 border-red-900'
+							}`
+						}
 					>
 						{item.title}
-					</Link>
+					</NavLink>
 				))}
 			</div>
 		</header>

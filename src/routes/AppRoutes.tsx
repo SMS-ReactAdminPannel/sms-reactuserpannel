@@ -13,6 +13,7 @@ import MainLayout from '../layout/MainLayout';
 import AnnouncementPage from '../pages/Announcement/AnnouncementPage';
 import HomePage from '../pages/Home/HomePage';
 import ServicesPage from '../pages/ServicesPage/ServicesPage';
+import SparePartsPage from '../pages/Spare-Parts/SparePartsPage';
 
 const AppRoutes = () => {
 	// const { isAuthenticated } = useAuth();
@@ -36,6 +37,7 @@ const AppRoutes = () => {
 				<Route path='bookings' element={<BookingsPage />} />
 				<Route path='booking-cart' element={<BookingCartPage />} />
 				<Route path='services' element={<ServicesPage />} />
+				<Route path='spare-parts' element={<SparePartsPage />} />
 				<Route path='announcement' element={<AnnouncementPage />} />
 				<Route path='sos' element={<SOSPage />} />
 				<Route path='help-center' element={<HelpCenterPage />} />
