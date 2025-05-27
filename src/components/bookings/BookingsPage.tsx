@@ -110,6 +110,7 @@ const MustCare: React.FC = () => {
               <p className="text-sm">{item.description}</p>
             </div>
           </div>
+          
         ))}
       </div>
 

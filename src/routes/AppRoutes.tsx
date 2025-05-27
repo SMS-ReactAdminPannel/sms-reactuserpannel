@@ -6,7 +6,7 @@ import BookingsPage from '../pages/Bookings/BookingsPage';
 import BookingCartPage from '../pages/Booking-Cart/BookingCartPage';
 import LoginPage from '../pages/auth/LoginPage';
 import RegisterPage from '../pages/auth/RegisterPage';
-import SOSPage from '../pages/SOS/SOSPage';
+// import SOSPage from '../pages/SOS/SOSPage';
 import HelpCenterPage from '../pages/HelpCenter/HelpCenter';
 import FaqsPage from '../pages/FAQs/FaqPage';
 import MainLayout from '../layout/MainLayout';
@@ -37,7 +37,7 @@ const AppRoutes = () => {
 				<Route path='booking-cart' element={<BookingCartPage />} />
 				<Route path='services' element={<ServicesPage />} />
 				<Route path='announcement' element={<AnnouncementPage />} />
-				<Route path='sos' element={<SOSPage />} />
+				{/* <Route path='sos' element={<SOSPage />} /> */}
 				<Route path='help-center' element={<HelpCenterPage />} />
 				<Route path='faqs' element={<FaqsPage />} />
 				<Route path='*' element={<Navigate to='/' />} />
