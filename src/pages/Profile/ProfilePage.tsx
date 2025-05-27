@@ -1,12 +1,10 @@
 
-// import SettingsPage from '../../components/account-settings/Accountsettings';
-import ProfileComponent from '../../components/profile/page'; // Adjust path as needed
+import SettingsPage from '../../components/account-settings/Accountsettings';
 
 
 const ProfilePage = () => {
 	return <div>
-		{/* <SettingsPage /> */}
-    <ProfileComponent />
+		<SettingsPage />
 	</div>;
 };
 
