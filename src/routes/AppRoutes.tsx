@@ -12,6 +12,7 @@ import SOSPage from '../pages/SOS/SOSPage';
 import HelpCenterPage from '../pages/HelpCenter/HelpCenterPage';
 import FaqsPage from '../pages/FAQs/FaqsPage';
 import MainLayout from '../layout/MainLayout';
+import Spareparts from '../pages/Spare-Parts/Spareparts';
 
 const AppRoutes = () => {
 	// const { isAuthenticated } = useAuth();
@@ -34,8 +35,9 @@ const AppRoutes = () => {
 				<Route path='profile' element={<ProfilePage />} />
 				<Route path='bookings' element={<BookingsPage />} />
 				<Route path='booking-cart' element={<BookingCartPage />} />
-				<Route path='service-center' element={<ServiceCentersPage />} />
 				<Route path='sos' element={<SOSPage />} />
+				<Route path='service-center' element={<ServiceCentersPage />} />
+				<Route path='spare-parts' element={<Spareparts />} />
 				<Route path='help-center' element={<HelpCenterPage />} />
 				<Route path='faqs' element={<FaqsPage />} />
 				<Route path='*' element={<Navigate to='/' />} />
