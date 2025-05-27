@@ -10,7 +10,7 @@ import RegisterPage from '../pages/auth/RegisterPage';
 import ServiceCentersPage from '../pages/Service-Centers/ServiceCentersPage';
 import SOSPage from '../pages/SOS/SOSPage';
 import HelpCenterPage from '../pages/HelpCenter/HelpCenterPage';
-import FaqsPage from '../pages/FAQs/FaqsPage';
+import FaqsPage from '../pages/FAQs/FaqPage';
 import MainLayout from '../layout/MainLayout';
 
 const AppRoutes = () => {

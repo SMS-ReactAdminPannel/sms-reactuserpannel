@@ -9,13 +9,13 @@ const MainLayout = () => {
 	return (
 		<div className='flex h-screen bg-gray-100'>
 			{/* Sidebar takes up 1/9 of the width */}
-			<div
+			{/* <div
 				className={`${
 					isSidebarOpen ? 'w-[190px]' : 'w-[68px]'
 				} transition-all duration-300`}
 			>
 				<Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} />
-			</div>
+			</div> */}
 
 			{/* Main content takes up the remaining 8/9 of the width */}
 			<div className='flex-1 flex flex-col overflow-hidden'>
