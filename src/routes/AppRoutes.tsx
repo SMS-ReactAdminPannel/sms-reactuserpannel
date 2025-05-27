@@ -6,23 +6,29 @@ import ProfilePage from '../pages/Profile/ProfilePage';
 import BookingsPage from '../pages/Bookings/BookingsPage';
 import BookingCartPage from '../pages/Booking-Cart/BookingCartPage';
 import LoginPage from '../pages/auth/LoginPage';
-import RegisterPage from '../pages/auth/RegisterPage';
 import ServiceCentersPage from '../pages/Service-Centers/ServiceCentersPage';
 import SOSPage from '../pages/SOS/SOSPage';
 import HelpCenterPage from '../pages/HelpCenter/HelpCenterPage';
 import FaqsPage from '../pages/FAQs/FaqsPage';
 import MainLayout from '../layout/MainLayout';
+import ResetPassword from '../pages/auth/ResetPassword';
+import OtpVerificationPage from '../pages/auth/OtpVerificationPage';
+import EnterEmailOrPhone from '../pages/auth/EnterEmailOrPhone';
+import SignupPage from '../pages/auth/SignupPage';
 
 const AppRoutes = () => {
 	// const { isAuthenticated } = useAuth();
-	const isAuthenticated = true; // Replace with actual authentication logic
+	const isAuthenticated = false; // Replace with actual authentication logic
 
 	const AuthRoutes = () => (
-		<Routes>
-			<Route path='/login' element={<LoginPage />} />
-			<Route path='/register' element={<RegisterPage />} />
-			<Route path='*' element={<Navigate to='/login' />} />
-		</Routes>
+ <Routes>
+      <Route path="enter-email-or-phone" element={<EnterEmailOrPhone />} />
+      <Route path="verify-otp" element={<OtpVerificationPage />} />
+      <Route path='login' element={<LoginPage />} />
+      <Route path='signup' element={<SignupPage />} />
+      <Route path='reset-password' element={<ResetPassword />} />
+      <Route path='*' element={<Navigate to='/login' />} />
+    </Routes>
 	);
 
 	const AdminRoutes = () => (

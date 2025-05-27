@@ -12,12 +12,14 @@
     "tailwind": "tailwindcss -i ./src/styles/input.css -o ./src/styles/output.css --watch"
   },
   "dependencies": {
+    "@heroicons/react": "^2.2.0",
     "@tailwindcss/node": "^4.1.7",
     "@tailwindcss/postcss": "^4.1.7",
     "@tailwindcss/vite": "^4.1.7",
     "lucide-react": "^0.511.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
+    "react-hook-form": "^7.56.4",
     "react-icons": "^5.5.0",
     "react-router-dom": "^7.6.1",
     "react-toastify": "^11.0.5"
