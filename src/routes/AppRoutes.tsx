@@ -17,7 +17,7 @@ import SparePartsPage from '../pages/Spare-Parts/SparePartsPage';
 
 const AppRoutes = () => {
 	// const { isAuthenticated } = useAuth();
-	const isAuthenticated = true; // Replace with actual authentication logic
+	const isAuthenticated = false; // Replace with actual authentication logic
 
 	const AuthRoutes = () => (
 		<Routes>
