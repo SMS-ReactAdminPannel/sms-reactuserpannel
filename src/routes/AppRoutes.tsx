@@ -9,7 +9,7 @@ import LoginPage from '../pages/auth/LoginPage';
 import RegisterPage from '../pages/auth/RegisterPage';
 import ServiceCentersPage from '../pages/Service-Centers/ServiceCentersPage';
 import SOSPage from '../pages/SOS/SOSPage';
-import HelpCenterPage from '../pages/HelpCenter/HelpCenterPage';
+import HelpCenterPage from '../pages/HelpCenter/HelpCenter';
 import FaqsPage from '../pages/FAQs/FaqPage';
 import MainLayout from '../layout/MainLayout';
 
