@@ -85,8 +85,6 @@ const MustCare: React.FC = () => {
 
   return (
     <section className="w-full py-16 px-4 md:px-17 relative overflow-hidden">
-    
-
       <div
         ref={sliderRef}
         className="flex w-full overflow-x-auto space-x-6 px-2 scroll-smooth"
