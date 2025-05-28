@@ -50,6 +50,7 @@ interface SelectedPackageInfo {
 }
 
 
+
 const ServicesPage: React.FC = () => {
 	const [selectedPackage, setSelectedPackage] = useState<SelectedPackageInfo | null>(null);
 	const [selectedPackageId, setSelectedPackageId] = useState<string | null>(null);
@@ -486,8 +487,8 @@ const ServicesPage: React.FC = () => {
 			{/* Vertical Left Sidebar Navigation */}
 			<div className='flex min-h-screen bg-gray-50'>
 				{/* Left Sidebar */}
-				<div className='w-64 h-screen bg-white shadow-lg flex-shrink-0 flex flex-col fixed left-0 top-0 z-10'>
-					<div className='p-4 border-b border-gray-200'>
+				<div className='fixed left-0 top-50 w-64 h-screen bg-white shadow-lg flex flex-col z-10'>
+					<div className='p-4 border-b border-gray-200 flex-shrink-0'>
 						<h2 className='text-lg font-semibold text-gray-800'>
 							Services
 						</h2>
@@ -506,7 +507,7 @@ const ServicesPage: React.FC = () => {
             }`}
           >
             <div className='mr-3 flex-shrink-0'>{item.icon}</div>
-            <span className='text-sm font-medium'>{item.name}</span>
+            <span className='text-sm font-medium whitespace-nowrap'>{item.name}</span>
           </div>
         ))}
       </div>
@@ -515,7 +516,7 @@ const ServicesPage: React.FC = () => {
 				</div>
 
 				{/* Main Content */}
-				<div className='flex-1 ml-64 bg-gray-50 min-h-screen'>
+				<div className=' ml-64 bg-gray-50 min-h-screen'>
   {/* Main Content */}
   <div className='max-w-4xl mx-auto px-6 py-8'>
     <div className='mb-8'>
