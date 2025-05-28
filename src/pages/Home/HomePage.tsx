@@ -464,7 +464,7 @@ const HomePage: React.FC = () => {
 
 
 										<div className="bg-red-900 text-white rounded-full p-3 inline-flex items-center justify-center">
-											<FaCcMastercard className="text-xl" />
+											<FaCcVisa className="text-xl" />
 										</div>
 
 										
