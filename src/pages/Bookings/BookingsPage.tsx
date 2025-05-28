@@ -10,6 +10,7 @@ import { MdHomeFilled } from "react-icons/md";
 import { FaLocationDot } from "react-icons/fa6";
 import { TbCertificate } from "react-icons/tb";
 import { RiCustomerService2Fill } from "react-icons/ri";
+import MustCare from "../../components/bookings/BookingsPage";
 const BookingsPage: React.FC = () => {
   return (
     <div className="bg-white shadow-md p-6">
@@ -45,8 +46,8 @@ const BookingsPage: React.FC = () => {
           <div className="flex mt-10 justify-around gap-10">
             <div>
               <img
-                style={{ width: "500px" }}
-                className="rounded-lg h-72"
+                style={{ width: "300px" }}
+                className="rounded-lg h-64"
                 src={CarImg1}
               />
             </div>
@@ -266,6 +267,7 @@ const BookingsPage: React.FC = () => {
 		<p>Because you deserve only the best, TVS Genuine Parts & True Oil ensure longer product lifespans, perfect compatibility, and higher resistance to wear and tear</p>
 		<button className="bg-gradient-to-r from-red-600 to-red-800 text-white py-2 px-4 rounded">Know More</button>
 	  </div>
+        < MustCare/>
     </div>
   );
 };
