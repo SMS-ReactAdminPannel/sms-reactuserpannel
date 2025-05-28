@@ -11,9 +11,19 @@ import { FaLocationDot } from "react-icons/fa6";
 import { TbCertificate } from "react-icons/tb";
 import { RiCustomerService2Fill } from "react-icons/ri";
 import MustCare from "../../components/bookings/BookingsPage";
+import ScrollableNavbar from "../../components/bookings/BookingScroll/BookingScroll";
+
+const services = [
+  "Oil Change", "Tire Rotation", "Brake Inspection", "Battery Check",
+  "Engine Diagnostics", "AC Service", "Wheel Alignment", "Car Wash",
+  "Headlight Check", "Transmission Flush"
+];
 const BookingsPage: React.FC = () => {
   return (
     <div className="bg-white shadow-md p-6">
+		<div>
+			<ScrollableNavbar items={services} />
+		</div>
     <div>Image</div>
       <div>
         <h1 className="font-bold text-3xl mb-10">
@@ -41,6 +51,10 @@ const BookingsPage: React.FC = () => {
             <p>Of Customer Care Expertise</p>
           </div>
         </div>
+	  <div>
+		<MustCare/>
+	  </div>
+
         <div>
           <h1 className="text-3xl font-bold mt-10">Discover All Services</h1>
           <div className="flex mt-10 justify-around gap-10">

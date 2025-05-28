@@ -67,6 +67,13 @@ export const Sidebar = ({
 						onClick={handleLinkClick}
 					/>
 					<SidebarLink
+						to='/spare-parts'
+						icon={<FiClipboard />}
+						label='Spare-Parts'
+						isOpen={isOpen}
+						onClick={handleLinkClick}
+					/>
+					<SidebarLink
 						to='/booking-cart'
 						icon={<FiMapPin />}
 						label='Booking Cart'
