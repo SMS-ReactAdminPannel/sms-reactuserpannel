@@ -368,7 +368,7 @@ const HomePage: React.FC = () => {
 						</h1>
 						<div className='flex justify-center gap-6 mt-4 flex-wrap'>
 							<div className='flex flex-col items-center text-center bg-[#ffd46b] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
-								<GrWorkshop size={32} color={COLORS.white} />
+								<GrWorkshop size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
 									style={{
@@ -383,7 +383,7 @@ const HomePage: React.FC = () => {
 								</p>
 							</div>
 							<div className='flex flex-col items-center text-center bg-[#ffd46b] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
-								<LuCarTaxiFront size={32} color={COLORS.white} />
+								<LuCarTaxiFront size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
 									style={{
@@ -397,7 +397,7 @@ const HomePage: React.FC = () => {
 								</p>
 							</div>
 							<div className='flex flex-col items-center text-center bg-[#ffd46b] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
-								<GrWorkshop size={32} color={COLORS.white} />
+								<GrWorkshop size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
 									style={{
@@ -412,7 +412,7 @@ const HomePage: React.FC = () => {
 								</p>
 							</div>
 							<div className='flex flex-col items-center text-center bg-[#ffd46b] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
-								<PiSealCheckBold size={32} color={COLORS.white} />
+								<PiSealCheckBold size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
 									style={{
@@ -426,7 +426,7 @@ const HomePage: React.FC = () => {
 								</p>
 							</div>
 							<div className='flex flex-col items-center text-center bg-[#ffd46b] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
-								<LuHandshake size={32} color={COLORS.white} />
+								<LuHandshake size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
 									style={{
@@ -441,7 +441,7 @@ const HomePage: React.FC = () => {
 								</p>
 							</div>
 							<div className='flex flex-col items-center text-center bg-[#ffd46b] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
-								<RiShieldStarFill size={32} color={COLORS.white} />
+								<RiShieldStarFill size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
 									style={{
@@ -456,7 +456,7 @@ const HomePage: React.FC = () => {
 								</p>
 							</div>
 							<div className='flex flex-col items-center text-center bg-[#ffd46b] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
-								<GrWorkshop size={32} color={COLORS.white} />
+								<GrWorkshop size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
 									style={{
@@ -471,7 +471,7 @@ const HomePage: React.FC = () => {
 								</p>
 							</div>
 							<div className='flex flex-col items-center text-center bg-[#ffd46b] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
-								<MdDateRange size={32} color={COLORS.white} />
+								<MdDateRange size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
 									style={{
@@ -674,7 +674,13 @@ const HomePage: React.FC = () => {
 					</div>
 					<div className='py-2'>
 						<div className='h-[1px] bg-red-900 mb-2'></div>
-						<p style={{ ...FONTS.paragraph, textAlign: 'center', color: COLORS.primary}}>
+						<p
+							style={{
+								...FONTS.paragraph,
+								textAlign: 'center',
+								color: COLORS.primary,
+							}}
+						>
 							&copy; 2025 Yes Mechanics. All Rights reserved
 						</p>
 					</div>
