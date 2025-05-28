@@ -42,7 +42,7 @@ const ServiceBookingPage: React.FC<Props> = ({
               {service.name}
             </h2>
             <p className="text-sm text-[#E6A895]  ">
-              {descriptionItems.slice(0, 4).map((item, index, arr) => (
+              {descriptionItems.slice(0, 3).map((item, index, arr) => (
                 <span key={index} className="whitespace-nowrap">
                   {item.trim()}
                   {index !== arr.length - 1 && <span className="mx-1">|</span>}
