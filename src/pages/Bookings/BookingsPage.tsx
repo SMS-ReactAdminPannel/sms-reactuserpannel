@@ -20,6 +20,7 @@ const services = [
 ];
 const BookingsPage: React.FC = () => {
   return (
+    // <div>booking page</div>
     <div className="bg-white shadow-md p-6">
 		<div>
 			<ScrollableNavbar items={services} />

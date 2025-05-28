@@ -30,7 +30,7 @@ import {
 	FaFileSignature,
 } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
-import GoShineComboCard from '../../components/home/offerCard';
+// import GoShineComboCard from '../../components/home/offerCard';
 import PromoCarousel from '../../components/home/offerCard';
 import CustomServicesCarousel from '../../components/home/customServiceCarousel';
 
@@ -162,7 +162,7 @@ const HomePage: React.FC = () => {
 						<p>Of Customer Care Expertise</p>
 					</div>
 				</div>
-				{/* <div><MustCare /></div> */}
+				<div><MustCare /></div>
 
 				<div>
 					<h1 className='text-3xl font-bold mt-10 text-red-900'>
