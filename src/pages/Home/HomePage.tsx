@@ -1,13 +1,9 @@
 import { ImageCarousel } from '../../components/home/ImageCarousel';
-// import image1 from '../../assets/home/360_F_496483060_C9OG1wJpfmjMXcNmUBibmA9wYxxZCxnW.jpg';
-// import image2 from '../../assets/home/360_F_507812981_dGZXqBsqkBpEosDjTlJgmaJAyMFra7sp.jpg';
-// import image3 from '../../assets/home/hand-mechanic-holding-car-service-600nw-2340377479.webp';
-// import image4 from '../../assets/home/istockphoto-1387759698-612x612.jpg';
-import image1 from '../../assets/carimages/pexels-cottonbro-4489749.jpg';
-import image2 from '../../assets/carimages/pexels-artempodrez-8986070.jpg';
-import image3 from '../../assets/carimages/pexels-cottonbro-4489732.jpg';
-import image4 from '../../assets/carimages/pexels-ronaldo-galeano-2428202-4069389.jpg';
-import CarImg1 from '../../assets/CarImg1.jpg';
+import image1 from '../../assets/home/360_F_496483060_C9OG1wJpfmjMXcNmUBibmA9wYxxZCxnW.jpg';
+import image2 from '../../assets/home/360_F_507812981_dGZXqBsqkBpEosDjTlJgmaJAyMFra7sp.jpg';
+import image3 from '../../assets/home/hand-mechanic-holding-car-service-600nw-2340377479.webp';
+import image4 from '../../assets/home/istockphoto-1387759698-612x612.jpg';
+// import CarImg1 from '../../assets/CarImg1.jpg';
 import { GrWorkshop } from 'react-icons/gr';
 import { LuCarTaxiFront } from 'react-icons/lu';
 import { PiSealCheckBold } from 'react-icons/pi';
@@ -37,7 +33,28 @@ import {
 import { Link } from 'react-router-dom';
 import PromoCarousel from '../../components/home/offerCard';
 import CustomServicesCarousel from '../../components/home/customServiceCarousel';
-import { BiTachometer } from 'react-icons/bi';
+
+
+// image
+import Roadsideassistant from '../../assets/CAR ROADSIDE/Roadside assistant.jpg'
+import Prebooking from '../../assets/CAR PREBOOKING/Prebooking.jpg'
+import Annualmaintenance from '../../assets/CAR ANNUAL MAINTENANCE/Annual maintenance.jpg'
+import appimage from '../../assets/LOGO.jpg'
+
+
+
+// icon for footer
+import { FaPhoneFlip } from "react-icons/fa6";// phone
+import { MdEmail } from "react-icons/md";// mail
+import { FaSquareWhatsapp } from "react-icons/fa6";//whatsapp
+import { FaInstagramSquare } from "react-icons/fa";//telegram
+import { FaXTwitter } from "react-icons/fa6";//twitter
+import { FaFacebook } from "react-icons/fa";//facebook
+import { FaYoutube } from "react-icons/fa"//youtube
+import { SiIndeed } from "react-icons/si";//indeed
+import { BiLogoPlayStore } from "react-icons/bi";//play store
+import { FaCcVisa } from "react-icons/fa";//visa card
+import { FaCcMastercard } from "react-icons/fa6";
 
 const imageUrls = [image1, image2, image3, image4];
 interface ServiceCardProps {
@@ -186,26 +203,29 @@ const HomePage: React.FC = () => {
 							<div>
 								<img
 									style={{ width: '500px' }}
-									className='rounded-lg h-72'
-									src={CarImg1}
+									className='rounded-lg h-72 hover:scale-104'
+									src={Roadsideassistant}
 								/>
 							</div>
 							<div className='w-1/2 mt-6'>
-								<h1 className='font-bold text-2xl'>Book a Service</h1>
-								<h2 className='text-lg'>
-									Say goodbye to service booking woes. Enjoy the convenience of
-									booking a service from anywhere through WhatsApp and get live
-									status updates on-the-go.
+								<h1 className='font-bold text-2xl'>Road Side Service</h1>
+								<h2 className='text-base py-2'>
+									Roadside assistance, also known as breakdown coverage, 
+									is a service that assists motorists, motorcyclists, 
+									or bicyclists whose vehicles have suffered a mechanical 
+									failure that either cannot be resolved by the motorist, 
+									or has prevented them from reasonably or effectively 
+									transporting the vehicle to an automobile repair ...
 								</h2>
-								<div className='flex gap-4 '>
+								<div className='flex gap-4 text-sm py-2 '>
 									<p>Service workshop open all 7 days</p>
 									<p>Live status updates of your service</p>
 								</div>
-								<div className='flex gap-4'>
+								<div className='flex gap-9 text-sm '>
 									<p>Service pick up & drop facility</p>
-									<p>Easy booking through WhatsApp</p>
+									<p>Easy booking </p>
 								</div>
-								<button className='bg-gradient-to-r from-red-600 to-red-800 text-white py-2 px-3 mt-5'>
+								<button className='bg-gradient-to-r from-red-600 to-red-800 text-red-900 py-2 px-3 mt-5 hover:underline'>
 									Book Service
 								</button>
 							</div>
@@ -214,89 +234,33 @@ const HomePage: React.FC = () => {
 					<div>
 						<div className='flex mt-10 justify-around gap-10'>
 							<div className='w-1/2 mt-6'>
-								<h1 className='font-bold text-2xl'>Book a Service</h1>
-								<h2 className='text-lg'>
-									Say goodbye to service booking woes. Enjoy the convenience of
-									booking a service from anywhere through WhatsApp and get live
-									status updates on-the-go.
+								<h1 className='font-bold text-2xl'>Prebooking For Maintenance</h1>
+								<h2 className='text-base py-2'>
+									When it comes to visiting a repair shop for vehicle maintenance or repairs, 
+									planning ahead and scheduling an appointment can offer significant advantages 
+									over showing up last minute. While it may be tempting to drop by spontaneously, 
+									the benefits of scheduling appointments beforehand can streamline your experience,
+									 save time, and ensure that you receive the attention your vehicle deserves.
+									  Here are a few facts that make scheduling an appointment a much better and 
+									  safer approach to repair shop procedures:
 								</h2>
-								<div className='flex gap-4 '>
-									<p>Service workshop open all 7 days</p>
-									<p>Live status updates of your service</p>
+								<div className='flex gap-4 text-sm py-2 '>
+									<p>Available all 7 days</p>
+									<p>Status updates of your service will be clear</p>
 								</div>
-								<div className='flex gap-4'>
+								{/* <div className='flex gap-4 text-sm '>
 									<p>Service pick up & drop facility</p>
 									<p>Easy booking through WhatsApp</p>
-								</div>
-								<button className='bg-gradient-to-r from-red-600 to-red-800 text-white py-2 px-3 mt-5'>
+								</div> */}
+								<button className='bg-gradient-to-r from-red-600 to-red-800 text-red-900 py-2 px-3 mt-5 hover:underline'>
 									Book Service
 								</button>
 							</div>
 							<div>
 								<img
 									style={{ width: '500px' }}
-									className='rounded-lg h-72'
-									src={CarImg1}
-								/>
-							</div>
-						</div>
-					</div>
-					<div>
-						<div className='flex mt-10 justify-around gap-10'>
-							<div>
-								<img
-									style={{ width: '500px' }}
-									className='rounded-lg h-72'
-									src={CarImg1}
-								/>
-							</div>
-							<div className='w-1/2 mt-6'>
-								<h1 className='font-bold text-2xl'>Book a Service</h1>
-								<h2 className='text-lg'>
-									Say goodbye to service booking woes. Enjoy the convenience of
-									booking a service from anywhere through WhatsApp and get live
-									status updates on-the-go.
-								</h2>
-								<div className='flex gap-4 '>
-									<p>Service workshop open all 7 days</p>
-									<p>Live status updates of your service</p>
-								</div>
-								<div className='flex gap-4'>
-									<p>Service pick up & drop facility</p>
-									<p>Easy booking through WhatsApp</p>
-								</div>
-								<button className='bg-gradient-to-r from-red-600 to-red-800 text-white py-2 px-3 mt-5'>
-									Book Service
-								</button>
-							</div>
-						</div>
-					</div>
-					<div>
-						<div className='flex mt-10 justify-around gap-10'>
-							<div className='w-1/2 mt-6'>
-								<h1 className='font-bold text-2xl'>Book a Service</h1>
-								<h2 className='text-lg'>
-									Say goodbye to service booking woes. Enjoy the convenience of
-									booking a service from anywhere through WhatsApp and get live
-									status updates on-the-go.
-								</h2>
-								<div className='flex gap-4 '>
-									<p>Service workshop open all 7 days</p>
-									<p>Live status updates of your service</p>
-								</div>
-								<div className='flex gap-4'>
-									<p>Service pick up & drop facility</p>
-									<p>Easy booking through WhatsApp</p>
-								</div>
-								<button className='bg-gradient-to-r from-red-600 to-red-800 text-white py-2 px-3 mt-5'>
-									Book Service
-								</button>
-							</div>
-							<div>
-								<img
-									style={{ width: '500px' }}
-									className='rounded-lg h-72'
-									src={CarImg1}
+									className='rounded-lg h-72 hover:scale-104 '
+									src={Prebooking}
 								/>
 							</div>
 						</div>
@@ -306,31 +270,34 @@ const HomePage: React.FC = () => {
 							<div>
 								<img
 									style={{ width: '500px' }}
-									className='rounded-lg h-72'
-									src={CarImg1}
+									className='rounded-lg h-72 hover:scale-104'
+									src={Annualmaintenance}
 								/>
 							</div>
 							<div className='w-1/2 mt-6'>
-								<h1 className='font-bold text-2xl'>Book a Service</h1>
-								<h2 className='text-lg'>
-									Say goodbye to service booking woes. Enjoy the convenience of
-									booking a service from anywhere through WhatsApp and get live
-									status updates on-the-go.
+								<h1 className='font-bold text-2xl'>Annual Maintenance Scheme</h1>
+								<h2 className='text-base py-2'>
+									Customers also get cost savings by eliminating unexpected
+									 maintenance and repair, and the service provider has a picture 
+									 of what types of jobs they can expect. Create a deeper understanding
+									   of your scheduling and hiring needs.
 								</h2>
-								<div className='flex gap-4 '>
-									<p>Service workshop open all 7 days</p>
-									<p>Live status updates of your service</p>
+								<div className='flex gap-4 text-sm py-2'>
+									<p>Lengthen asset lifespan</p>
+									<p>Lower risk of breakdowns</p>
 								</div>
-								<div className='flex gap-4'>
-									<p>Service pick up & drop facility</p>
-									<p>Easy booking through WhatsApp</p>
+								<div className='flex gap-12 text-sm '>
+									<p>Increase efficiency</p>
+									<p>Save money</p>
 								</div>
-								<button className='bg-gradient-to-r from-red-600 to-red-800 text-white py-2 px-3 mt-5'>
+								<button className='bg-gradient-to-r from-red-600 to-red-800 text-red-900 py-2 px-3 mt-5 hover:underline'>
 									Book Service
 								</button>
 							</div>
 						</div>
 					</div>
+					
+					
 				</div>
 				<div>
 					<h1 className='text-3xl text-center mt-16 font-bold text-red-900'>
@@ -385,37 +352,141 @@ const HomePage: React.FC = () => {
 						</div>
 					</div>
 				</div>
-				<div
-					className='mt-10 p-10 text-white rounded-lg bg-cover bg-center'
-					style={{ backgroundImage: `url(${CarImg1})` }}
-				>
-					<h1 className='font-bold text-3xl border-b-4 border-red-500 inline-block mb-2'>
-						User Manual
-					</h1>
-					<p className='mb-4'>
-						Get your vehicle's service-related information like technical
-						features, warranty information and much more!
-					</p>
-					<button className='bg-gradient-to-r from-red-600 to-red-800 text-white py-2 px-4 rounded'>
-						Know More
-					</button>
-				</div>
-				<div
-					className='mt-10 p-10 text-white rounded-lg bg-cover bg-center'
-					style={{ backgroundImage: `url(${CarImg1})` }}
-				>
-					<h1 className='font-bold text-3xl border-b-4 border-red-500 inline-block mb-2'>
-						Yesmechanic Genuine Parts
-					</h1>
-					<p>
-						Because you deserve only the best, TVS Genuine Parts & True Oil
-						ensure longer product lifespans, perfect compatibility, and higher
-						resistance to wear and tear
-					</p>
-					<button className='bg-gradient-to-r from-red-600 to-red-800 text-white py-2 px-4 rounded'>
-						Know More
-					</button>
-				</div>
+				{/* FOOTER START */}
+				<footer>
+					<div className="grid grid-cols-4 gap-4 p-4 bg-[#fdefe9] border-0 rounded-3xl">
+						{/* Image Card - Full Height (No border) */}
+						<div className="col-span-1 p-4 rounded h-full border-0">
+							<img src={appimage} alt="appimage" className="p-2 h-[200px] w-[400px] object-cover rounded" />
+						</div>
+
+						{/* Remaining Cards - Full Width (No border) */}
+						<div className="col-span-3 grid grid-cols-3 gap-6 p-6 w-full border-0">
+							<div className="p-4 rounded bg-[#fdefe9] w-full h-full border-0">
+								<p className="text-red-900 font-bold text-3xl">About</p>
+								<ol className="py-3 text-red-900 text-xl">
+									<li className="py-3">About Us</li>
+									<li className="py-3">Contact Us</li>
+									<li className="py-3">Location</li>
+								</ol>
+							</div>
+
+							<div className="p-4 rounded bg-[#fdefe9] w-full h-full border-0">
+								<p className="text-red-900 font-bold text-3xl">About</p>
+								<ol className="py-3 text-red-900 text-xl">
+									<li className="py-3">About Us</li>
+									<li className="py-3">Contact Us</li>
+									<li className="py-3">Location</li>
+								</ol>
+							</div>
+
+							<div className="p-4 rounded bg-[#fdefe9] w-full h-full border-0">
+								<p className="text-red-900 font-bold text-3xl">About</p>
+								<ol className="py-3 text-red-900 text-xl">
+									<li className="py-3">About Us</li>
+									<li className="py-3">Contact Us</li>
+									<li className="py-3">Location</li>
+								</ol>
+							</div>
+							<div className='w-[900px]'>
+								<div className="grid grid-cols-1 gap-4 p-4">
+									<div className="">
+										<hr className="w-full border-[2px] border-red-900" />
+
+										{/* Text on left, icons on right */}
+										<div className="flex justify-between items-center text-red-900 text-xl py-2">
+											
+											<p className="font-semibold text-base">Download our App</p>
+
+											<div className="flex items-center gap-4">
+												<div className="bg-red-900 text-white rounded-full p-2">
+													<BiLogoPlayStore />
+												</div>
+												
+											</div>
+										</div>
+									</div>
+
+									<div className="">
+										<hr className="w-full border-[1px] border-red-900" />
+
+										{/* Text on left, icons on right */}
+										<div className="">
+											<hr className="w-full border-[1px] border-red-900" />
+
+											{/* Text on left, icons on right */}
+											<div className="flex justify-between items-center text-red-900 text-xl py-2">
+												<p className="font-semibold text-base">Social Media</p>
+
+												<div className="flex items-center gap-4">
+													<div className="bg-red-900 text-white rounded-full p-2">
+														<FaInstagramSquare />
+													</div>
+													<div className="bg-red-900 text-white rounded-full p-2">
+														<FaXTwitter />
+													</div>
+													<div className="bg-red-900 text-white rounded-full p-2">
+														<FaFacebook />
+													</div>
+													<div className="bg-red-900 text-white rounded-full p-2">
+														<FaYoutube />
+													</div>
+													<div className="bg-red-900 text-white rounded-full p-2">
+														<SiIndeed />
+													</div>
+												</div>
+											</div>
+										</div>
+
+									</div>
+
+									<div className="">
+										<hr className="w-full border-[1px] border-red-900" />
+
+										{/* Text on left, icons on right */}
+										<div className="">
+											<hr className="w-full border-[1px] border-red-900" />
+
+											{/* Text on left, icons on right */}
+											<div className="flex justify-between items-center text-red-900 text-xl py-2">
+												<p className="font-semibold text-base">Contact Us</p>
+
+												<div className="flex items-center gap-4">
+													<div className="bg-red-900 text-white rounded-full p-2">
+														<FaPhoneFlip />
+													</div>
+													<div className="bg-red-900 text-white rounded-full p-2">
+														<MdEmail />
+													</div>
+													<div className="bg-red-900 text-white rounded-full p-2">
+														<FaSquareWhatsapp />
+													</div>
+												</div>
+											</div>
+										</div>
+										<div className="bg-red-900 text-white rounded-full p-3 inline-flex items-center justify-center">
+											<FaCcMastercard className="text-xl" />
+										</div>
+
+
+										<div className="bg-red-900 text-white rounded-full p-3 inline-flex items-center justify-center">
+											<FaCcVisa className="text-xl" />
+										</div>
+
+										
+
+									</div>
+
+								</div>
+
+							</div>
+						</div>
+						
+					</div>
+
+
+				</footer>
+				{/* FOOTER END */}
 			</div>
 		</>
 	);
