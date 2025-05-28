@@ -171,7 +171,12 @@ const SelectCarPage: React.FC<SelectCarPageProps> = ({ onClose }) => {
 	return (
 		<div className='w-[300px] h-[460px] bg-gray-50 ms-[1090px] mt-[140px] rounded-lg overflow-y-auto scrollbar-hide'>
 			<div className=' bg-white shadow-md p-3'>
-				<button onClick={onClose} className='bg-red-900 px-2 text-white relative left-64'>X</button>
+				<button
+					onClick={onClose}
+					className='bg-red-900 px-2 text-white relative left-64'
+				>
+					X
+				</button>
 				<h2 className='text-2xl font-bold text-gray-900 mb-6 text-center'>
 					Select Your Car
 				</h2>

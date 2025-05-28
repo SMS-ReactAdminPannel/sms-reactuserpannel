@@ -9,7 +9,7 @@ import { LuCarTaxiFront } from 'react-icons/lu';
 import { PiSealCheckBold } from 'react-icons/pi';
 import { LuHandshake } from 'react-icons/lu';
 import { RiShieldStarFill } from 'react-icons/ri';
-import { MdDateRange } from 'react-icons/md';
+import { MdDateRange, MdOutlineTireRepair } from 'react-icons/md';
 import { MdHomeFilled } from 'react-icons/md';
 import { FaLocationDot } from 'react-icons/fa6';
 import { TbCertificate } from 'react-icons/tb';
@@ -28,10 +28,12 @@ import {
 	FaCarCrash,
 	FaCarSide,
 	FaFileSignature,
+	FaCircleNotch,
 } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import PromoCarousel from '../../components/home/offerCard';
 import CustomServicesCarousel from '../../components/home/customServiceCarousel';
+import { BiTachometer } from 'react-icons/bi';
 
 const imageUrls = [image1, image2, image3, image4];
 interface ServiceCardProps {
@@ -45,61 +47,61 @@ const HomePage: React.FC = () => {
 	const cardData: ServiceCardProps[] = [
 		{
 			id: 1,
-			icon: <FaTools size={24} />,
+			icon: <FaTools size={42} />,
 			title: 'Periodic Services',
 			color: 'bg-white border-[#9b111e]',
 		},
 		{
 			id: 2,
-			icon: <FaSnowflake size={24} />,
+			icon: <FaSnowflake size={42} />,
 			title: 'Ac Services & Repair',
 			color: 'bg-white border-[#9b111e]',
 		},
 		{
 			id: 3,
-			icon: <FaBatteryThreeQuarters size={24} />,
+			icon: <FaBatteryThreeQuarters size={42} />,
 			title: 'Batteries',
 			color: 'bg-white border-[#9b111e]',
 		},
 		{
 			id: 4,
-			icon: <FaTruckMonster size={24} />,
+			icon: <FaCircleNotch size={42} />,
 			title: 'Tyres and Wheel Care',
 			color: 'bg-white border-[#9b111e]',
 		},
 		{
 			id: 5,
-			icon: <FaCarAlt size={24} />,
+			icon: <FaCarAlt size={42} />,
 			title: 'Detailing Services',
 			color: 'bg-white border-[#9b111e]',
 		},
 		{
 			id: 6,
-			icon: <FaSearch size={24} />,
+			icon: <FaSearch size={42} />,
 			title: 'Car Inspection',
 			color: 'bg-white border-[#9b111e]',
 		},
 		{
 			id: 7,
-			icon: <FaLightbulb size={24} />,
+			icon: <FaLightbulb size={42} />,
 			title: 'Windshields & Lights',
 			color: 'bg-white border-[#9b111e]',
 		},
 		{
 			id: 8,
-			icon: <FaCarCrash size={24} />,
+			icon: <FaCarCrash size={42} />,
 			title: 'Suspension & Fitments',
 			color: 'bg-white border-[#9b111e]',
 		},
 		{
 			id: 9,
-			icon: <FaCarSide size={24} />,
+			icon: <FaCarSide size={42} />,
 			title: 'Clutch & Body Parts',
 			color: 'bg-white border-[#9b111e]',
 		},
 		{
 			id: 10,
-			icon: <FaFileSignature size={24} />,
+			icon: <FaFileSignature size={42} />,
 			title: 'Insurance Claims',
 			color: 'bg-white border-[#9b111e]',
 		},
@@ -117,12 +119,14 @@ const HomePage: React.FC = () => {
 							<Link
 								to={`/services`}
 								key={card.id}
-								className={`${card.color} border-2 rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer transform hover:scale-105`}
+								className={`${card.color} rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow ease-in duration-300 cursor-pointer transform hover:scale-102`}
 							>
-								<div className='text-[#9b111e] mb-2 pl-[80px]'>
-									{card.icon}{' '}
+								<div className='text-[#9b111e] mb-4 flex justify-center'>
+									{card.icon}
 								</div>
-								<h3 className='text-center font-medium hover '>{card.title}</h3>
+								<h3 className='text-center font-semibold text-red-700 opacity-75 text-sm'>
+									{card.title}
+								</h3>
 							</Link>
 						))}
 					</div>
@@ -130,7 +134,7 @@ const HomePage: React.FC = () => {
 				<PromoCarousel />
 				<CustomServicesCarousel />
 				<div className='my-4'>
-					<h1 className='font-bold text-3xl mb-10 text-red-900'>
+					<h1 className='font-bold text-3xl mb-6 text-red-900'>
 						Yes Mechanic Care Advantages
 					</h1>
 					<div className='flex space-x-6 items-center justify-center'>
@@ -163,9 +167,7 @@ const HomePage: React.FC = () => {
 							<p>Of Customer Care Expertise</p>
 						</div>
 					</div>
-					<div>
-						<MustCare />
-					</div>
+					<div><MustCare /></div>
 
 					<div>
 						<h1 className='text-3xl font-bold text-red-900'>

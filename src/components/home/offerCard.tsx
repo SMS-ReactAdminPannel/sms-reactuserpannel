@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import carImage from '../../assets/CarPart2.jfif'
+import React, { useState, useEffect } from 'react';
+import carImage from '../../assets/CarPart2.jfif';
 
 interface PromoCardProps {
 	title: string;
@@ -44,8 +44,17 @@ const PromoCarousel: React.FC = () => {
 		setCurrentIndex((prev) => (prev + 1) % promoCards.length);
 	};
 
+	// Auto-scroll every 3 seconds
+	useEffect(() => {
+		const interval = setInterval(() => {
+			nextCard();
+		}, 3000);
+
+		return () => clearInterval(interval); // Cleanup on unmount
+	}, []);
+
 	return (
-		<div className='w-full max-w-3xl mx-auto relative'>
+		<div className='w-full max-w-5xl mx-auto relative'>
 			{/* Cards */}
 			<div className='overflow-hidden rounded-3xl'>
 				<div

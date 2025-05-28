@@ -31,7 +31,7 @@ const CustomServicesCarousel: React.FC = () => {
 	};
 
 	return (
-		<div className='my-8'>
+		<div className='my-6'>
 			<h2 className='text-3xl font-bold mb-4 text-red-900'>
 				Available Spare Parts
 			</h2>
