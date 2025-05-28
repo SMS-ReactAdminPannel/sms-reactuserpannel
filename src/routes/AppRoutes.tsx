@@ -17,10 +17,11 @@ import EnterEmailOrPhone from '../pages/auth/EnterEmailOrPhone';
 import OtpVerificationPage from '../pages/auth/OtpVerificationPage';
 import SignupPage from '../pages/auth/SignupPage';
 import ResetPassword from '../pages/auth/ResetPassword';
+import {HomePageIntro} from '../pages/HomeIntro/HomePageIntro'
 
 const AppRoutes = () => {
 	// const { isAuthenticated } = useAuth();
-	const isAuthenticated = true; // Replace with actual authentication logic
+	const isAuthenticated = false; // Replace with actual authentication logic
 
 	const AuthRoutes = () => (
 		<Routes>
@@ -29,7 +30,8 @@ const AppRoutes = () => {
 			<Route path='login' element={<LoginPage />} />
 			<Route path='signup' element={<SignupPage />} />
 			<Route path='reset-password' element={<ResetPassword />} />
-			<Route path='*' element={<Navigate to='/login' />} />
+            <Route path="homepageintro" element={<HomePageIntro />} />			
+			{/* <Route path='*' element={<Navigate to='/login' />} /> */}
 		</Routes>
 	);
 
