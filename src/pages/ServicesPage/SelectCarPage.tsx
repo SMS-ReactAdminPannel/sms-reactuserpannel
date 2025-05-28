@@ -175,9 +175,9 @@ const SelectCarPage: React.FC<SelectCarPageProps> = ({ onClose, setSelectedPacka
 	};
 
 	return (
-		<div className='w-[300px] h-[460px] bg-gray-50 ms-[1090px] mt-[140px] rounded-lg overflow-y-auto scrollbar-hide'>
+		<div className='relative bg-white rounded-xl shadow-xl w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto'>
 			<div className=' bg-white shadow-md p-3'>
-				<button onClick={onClose} className='bg-red-900 px-2 text-white relative left-64'>X</button>
+				<button onClick={onClose} className='bg-red-600 px-2 text-white rounded-md  relative left-[380px] hover:bg-red-900'>X</button>
 				<h2 className='text-2xl font-bold text-gray-900 mb-6 text-center'>
 					Select Your Car
 				</h2>
@@ -319,7 +319,7 @@ const SelectCarPage: React.FC<SelectCarPageProps> = ({ onClose, setSelectedPacka
 					{/* Submit Button */}
 					<button
 						onClick={handleSubmit}
-						className='ml-[70px] bg-red-900 text-white py-2 px-8 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200 font-medium'
+						className='ml-[150px] bg-red-600 text-white py-2 px-8 rounded-md hover:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200 font-medium'
 					>
 						Confirm
 					</button>

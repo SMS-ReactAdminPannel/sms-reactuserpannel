@@ -487,7 +487,7 @@ const ServicesPage: React.FC = () => {
 			{/* Vertical Left Sidebar Navigation */}
 			<div className='flex min-h-screen bg-gradient-to-br from-gray-50 to-gray-100'>
   {/* Left Sidebar */}
-  <div className='fixed left-0 top-8 w-72 h-screen bg-white shadow-2xl flex flex-col z-10 border-r border-gray-100'>
+  <div className='fixed left-0 top-8 w-[280px] h-[800px] bg-white shadow-2xl flex flex-col z-10 border-r border-gray-100'>
     {/* Header Section */}
     <div className='p-6 border-b border-gray-100 flex-shrink-0 bg-gradient-to-r from-red-500 to-red-600'>
       <div className='flex items-center space-x-3'>
@@ -663,37 +663,37 @@ const ServicesPage: React.FC = () => {
                   <span className='line-through text-gray-400 mr-2 text-sm'>
                     {pkg.price}
                   </span>
-                  <span className='text-green-600 font-bold text-xl'>
+                  <span className='text-red-600 font-bold text-xl'>
                     {pkg.discountPrice}
                   </span>
                 </div>
-                <button className="px-4 py-2 bg-green-600 text-white rounded-md border-2 border-green-600 hover:bg-green-700 transition-all duration-200">
+                <button className="px-3 py-1 bg-red-600 text-white rounded-md border-2 border-red-600 hover:bg-green-700 transition-all duration-200">
                   ADD TO CART
                 </button>
               </div>
             ) : (
               <button
                 onClick={() => handleSelectCar(pkg.id)}
-                className='px-6 py-3 rounded-lg font-semibold bg-white border-2 border-red-500 text-red-300 hover:bg-red-50 hover:text-red-700 transition-all duration-200 shadow-md hover:shadow-lg'
+                className='px-3 py-1 rounded-lg font-semibold bg-white border-2 border-red-500 text-red-300 hover:bg-red-50 hover:text-red-700 transition-all duration-200 shadow-md hover:shadow-lg'
               >
                 SELECT CAR
               </button>
             )}
           </div>
 			  {showForm && selectedPackageId === pkg.id && (
-            <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-              <SelectCarPage 
-                onClose={() => setShowForm(false)} 
-                setSelectedPackage={(carDetails) => {
-                  setSelectedPackage({
-                    packageId: pkg.id,
-                    carDetails
-                  });
-                  setShowForm(false);
-                }} 
-              />
-            </div>
-          )}
+  <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-end items-center z-50 p-4">
+    <SelectCarPage 
+      onClose={() => setShowForm(false)} 
+      setSelectedPackage={(carDetails) => {
+        setSelectedPackage({
+          packageId: pkg.id,
+          carDetails
+        });
+        setShowForm(false);
+      }} 
+    />
+  </div>
+)}
 
             </div>
           </div>
