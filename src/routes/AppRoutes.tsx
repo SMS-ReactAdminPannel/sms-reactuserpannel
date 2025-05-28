@@ -8,10 +8,12 @@ import BookingCartPage from '../pages/Booking-Cart/BookingCartPage';
 import LoginPage from '../pages/auth/LoginPage';
 import RegisterPage from '../pages/auth/RegisterPage';
 import ServiceCentersPage from '../pages/Service-Centers/ServiceCentersPage';
+import AnnouncementPage from '../pages/Announcement/AnnouncementPage';
 import SOSPage from '../pages/SOS/SOSPage';
 import HelpCenterPage from '../pages/HelpCenter/HelpCenterPage';
 import FaqsPage from '../pages/FAQs/FaqsPage';
 import MainLayout from '../layout/MainLayout';
+
 
 const AppRoutes = () => {
 	// const { isAuthenticated } = useAuth();
@@ -35,6 +37,7 @@ const AppRoutes = () => {
 				<Route path='bookings' element={<BookingsPage />} />
 				<Route path='booking-cart' element={<BookingCartPage />} />
 				<Route path='service-center' element={<ServiceCentersPage />} />
+				<Route path='announcement' element={<AnnouncementPage />} />
 				<Route path='sos' element={<SOSPage />} />
 				<Route path='help-center' element={<HelpCenterPage />} />
 				<Route path='faqs' element={<FaqsPage />} />
