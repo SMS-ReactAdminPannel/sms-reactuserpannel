@@ -194,6 +194,7 @@ const SparePartsList = () => {
   const [activePage, setActivePage] = useState<
     "service" | "ServiceBookingPage"
   >("service");
+  const [show, setShow] = useState(true);
 
   const handleDelete = (id: string) => {
     setParts((prev) => prev.filter((part) => part.id !== id));
@@ -224,9 +225,9 @@ const SparePartsList = () => {
     (acc, { serv, quantity }) => acc + serv.price * quantity,
     0
   );
-
+   
   return (
-    <div className="p-4 scrollbar-hide ">
+    <div className="p-4 ">
       <h1 style={{ ...FONTS.header, color: COLORS.primary }}>My Cart</h1>
 
       {/* Tabs */}
@@ -262,7 +263,7 @@ const SparePartsList = () => {
       {/* Service Page */}
       {activePage === "service" && (parts.length > 0 || confirmedPartOrders.length > 0) &&(
         <>
-          <div className="p-4 bg-white rounded-xl overflow-auto overflow-hidden">
+          <div className="p-4  overflow-auto overflow-hidden ">
             {parts.map((part) => (
               <SparePartCard
                 key={part.id}
@@ -273,15 +274,21 @@ const SparePartsList = () => {
             ))}
           </div>
 
-          {confirmedPartOrders.length > 0 && (
+          {confirmedPartOrders.length > 0 && show && (
             <div className="mt-6 p-4 bg-white rounded-lg shadow ">
-              <div className="mb-4">
-                <h2 className="text-xl font-semibold text-[#9b111e] ">
+              <div className="flex flex-cols justify-between">
+               <div className="mb-4">
+                 <h2 className="text-xl font-semibold text-[#9b111e] ">
                   Summery
                 </h2>
                 <h2 className="text-base font-semibold text-[#9b111e] ">
                   Confirmed Orders
                 </h2>
+               </div>
+               <div className="px-2 py-1 rounded-lg bg-gray-400 h-9 ">
+                <button onClick={() => setShow(false)}>Close</button>
+               </div>
+
               </div>
               {confirmedPartOrders.map(({ part, quantity }) => (
                 <div
@@ -299,11 +306,11 @@ const SparePartsList = () => {
                 <span>₹{totalPartPrice}</span>
               </div>
               <div className="flex justify-center ">
-                <div className="border px-2 py-2 bg-[#9b111e] text-white rounded-xl">
-                  <button onClick={() => toast("Payment Successful 🎉")}>
-                    Process To Place Order
-                  </button>
-                </div>
+                <button
+                  type="submit"
+                  className="flex justify-center gap-2 items-center mx-auto shadow-xl text-lg bg-gray-50 backdrop-blur-md lg:font-semibold isolation-auto border-gray-50 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-[#9b111e] hover:text-gray-50 before:-z-10 before:aspect-square before:hover:scale-150 before:hover:duration-700 relative z-10 px-6 py-2 overflow-hidden border-2 rounded-full group"
+                onClick={() => toast("Payment Successful 🎉")}> Place Order   
+                </button>
               </div>
             </div>
           )}
@@ -313,7 +320,7 @@ const SparePartsList = () => {
       {/* Service Booking Page */}
       {activePage === "ServiceBookingPage" &&  (
         <>
-          <div className="p-4 bg-white rounded-xl overflow-auto overflow-hidden">
+          <div className="p-4  overflow-auto overflow-hidden">
             {servs.map((serv) => (
               <ServiceBookingPage
                 key={serv.id}
@@ -345,14 +352,14 @@ const SparePartsList = () => {
                   <span>₹{serv.price * quantity}</span>
                 </div>
               ))}
-              <div className="mt-2 font-bold text-[#E6A895] border-t border- pt-2 flex justify-between">
+              <div className="mt-2 font-bold text-[#E6A895]  pt-2 flex justify-between">
                 <span>Total</span>
                 <span>₹{totalServicePrice}</span>
               </div>
               <div className="flex justify-center ">
                 {/* <div className="border px-2 py-2 bg-[#9b111e] text-white rounded-xl"> */}
                 {/* <button onClick={() => toast("Payment Successful 🎉")}>Process To Place Order</button> */}
-                
+
                 <button
                   type="submit"
                   className="flex justify-center gap-2 items-center mx-auto shadow-xl text-lg bg-gray-50 backdrop-blur-md lg:font-semibold isolation-auto border-gray-50 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-[#9b111e] hover:text-gray-50 before:-z-10 before:aspect-square before:hover:scale-150 before:hover:duration-700 relative z-10 px-6 py-2 overflow-hidden border-2 rounded-full group"
