@@ -1,4 +1,4 @@
-import  { useState } from "react";
+import { useState } from "react";
 import SparePartCard from "../../components/booking-cart/SparePartBooking";
 import { COLORS, FONTS } from "../../constants/constant";
 
@@ -7,7 +7,7 @@ import { GiMechanicGarage } from "react-icons/gi";
 import { FaWrench } from "react-icons/fa";
 
 //component
-import SwipeToPay from "../../components/booking-cart/Swipetopay";
+// import SwipeToPay from "../../components/booking-cart/Swipetopay";
 import ServiceBookingPage from "../../components/booking-cart/Servingbookingcart";
 import { toast } from "react-toastify";
 
@@ -25,7 +25,7 @@ interface SparePart {
 interface Service {
   id: string;
   name: string;
-  description: string [];
+  description: string[];
   imageUrl: string;
   price: number;
   originalPrice: number;
@@ -39,38 +39,81 @@ const initialService: Service[] = [
     id: "Basic",
     name: "Basic Service ",
     hour: "4 Hrs Taken",
-    description: ["Wiper Fluid Replacement",'Car Wash','Interior Vacuuming (Carpet & Seats)', 'Engine Oil Replacement',],
+    description: [
+      "Wiper Fluid Replacement",
+      "Car Wash",
+      "Interior Vacuuming (Carpet & Seats)",
+      "Engine Oil Replacement",
+    ],
     imageUrl:
       "https://boodmo.com/media/cache/catalog_part/images/parts/3fe3e3713e19d66a47bae04233a97cf4.webp",
-    price: 1899,
-    originalPrice: 2399,
-    
+    price: 2999,
+    originalPrice: 3399,
   },
-   {
+  {
     id: "Stander",
     name: "Standard Service",
     hour: "6 Hrs Taken",
-    description: ['Car Scanning','Wiper Fluid Replacement','Battery Water Top up','Car Wash','Interior Vacuuming (Carpet & Seats)'],
+    description: [
+      "Car Scanning",
+      "Wiper Fluid Replacement",
+      "Battery Water Top up",
+      "Car Wash",
+      "Interior Vacuuming (Carpet & Seats)",
+    ],
     imageUrl:
       "https://boodmo.com/media/cache/catalog_part/images/parts/3fe3e3713e19d66a47bae04233a97cf4.webp",
-    price: 1899,
-    originalPrice: 2399,
-    
+    price: 4899,
+    originalPrice: 5599,
   },
   {
     id: "ac-basic",
     name: "AC Gas Refill",
-     hour: "2 Hrs Taken",
-    description: ['Car Scanning','Wiper Fluid Replacement','Battery Water Top up','Car Wash','Interior Vacuuming (Carpet & Seats)'],
+    hour: "2 Hrs Taken",
+    description: [
+      "Car Scanning",
+      "Wiper Fluid Replacement",
+      "Battery Water Top up",
+      "Car Wash",
+      "Interior Vacuuming (Carpet & Seats)",
+    ],
     imageUrl:
       "https://boodmo.com/media/cache/catalog_part/images/parts/3fe3e3713e19d66a47bae04233a97cf4.webp",
-    price: 1899,
-    originalPrice: 2399,
-   
+    price: 3899,
+    originalPrice: 5999,
+  },
+  {
+    id: "ac-complete",
+    name: "Complete AC Service",
+    hour: "4 Hrs Taken",
+    description: [
+      "AC Deep Cleaning",
+      "Filter Replacement",
+      "Condenser Cleaning",
+      "AC Gas Refill",
+      "Compressor Check",
+    ],
+    imageUrl:
+      "https://boodmo.com/media/cache/catalog_part/images/parts/3fe3e3713e19d66a47bae04233a97cf4.webp",
+    price: 3899,
+    originalPrice: 5999,
+  },
+  {
+    id: "battery-check",
+    name: "Battery Health Check",
+    hour: "1 Hr Taken",
+    description: [
+      "Battery Voltage Test",
+      "Terminal Cleaning",
+      "Load Test",
+      "Water Level Check",
+    ],
+    imageUrl:
+      "https://boodmo.com/media/cache/catalog_part/images/parts/3fe3e3713e19d66a47bae04233a97cf4.webp",
+    price: 3899,
+    originalPrice: 5999,
   },
 ];
-
-
 
 //for Spare Part
 const initialParts: SparePart[] = [
@@ -141,10 +184,17 @@ const SparePartsList = () => {
   const [parts, setParts] = useState<SparePart[]>(initialParts);
   const [servs, setServs] = useState<Service[]>(initialService);
 
-  const [confirmedPartOrders, setConfirmedPartOrders] = useState<{ part: SparePart; quantity: number }[]>([]);
-  const [confirmedServiceOrders, setConfirmedServiceOrders] = useState<{ serv: Service; quantity: number }[]>([]);
+  const [confirmedPartOrders, setConfirmedPartOrders] = useState<
+    { part: SparePart; quantity: number }[]
+  >([]);
+  const [confirmedServiceOrders, setConfirmedServiceOrders] = useState<
+    { serv: Service; quantity: number }[]
+  >([]);
 
-  const [activePage, setActivePage] = useState<"service" | "ServiceBookingPage">("service");
+  const [activePage, setActivePage] = useState<
+    "service" | "ServiceBookingPage"
+  >("service");
+  const [show, setShow] = useState(true);
 
   const handleDelete = (id: string) => {
     setParts((prev) => prev.filter((part) => part.id !== id));
@@ -167,18 +217,24 @@ const SparePartsList = () => {
     }
   };
 
-  const totalPartPrice = confirmedPartOrders.reduce((acc, { part, quantity }) => acc + part.price * quantity, 0);
-  const totalServicePrice = confirmedServiceOrders.reduce((acc, { serv, quantity }) => acc + serv.price * quantity, 0);
-
+  const totalPartPrice = confirmedPartOrders.reduce(
+    (acc, { part, quantity }) => acc + part.price * quantity,
+    0
+  );
+  const totalServicePrice = confirmedServiceOrders.reduce(
+    (acc, { serv, quantity }) => acc + serv.price * quantity,
+    0
+  );
+   
   return (
-    <div className="p-4 scrollbar-hide">
+    <div className="p-4 ">
       <h1 style={{ ...FONTS.header, color: COLORS.primary }}>My Cart</h1>
 
       {/* Tabs */}
       <div className="flex gap-4 mt-4 mb-4 ">
         <div className=" ">
           <button
-            className={`px-4 py-2 rounded-full  flex flex-cols  ${
+            className={`px-4 py-2 rounded-full  flex flex-cols hover:bg-[#ab2431] hover:shadow-xl hover:scale-[1.02]  ${
               activePage === "service"
                 ? "bg-[#9b111e] text-white"
                 : "bg-gray-200  text-black"
@@ -191,7 +247,7 @@ const SparePartsList = () => {
         </div>
         <div>
           <button
-            className={`px-4 py-2 rounded-full flex flex-cols   ${
+            className={`px-4 py-2 rounded-full flex flex-cols hover:bg-[#ab2431] over:shadow-xl hover:scale-[1.02]  ${
               activePage === "ServiceBookingPage"
                 ? "bg-[#9b111e] text-white"
                 : "bg-gray-200 text-black"
@@ -205,28 +261,34 @@ const SparePartsList = () => {
       </div>
 
       {/* Service Page */}
-      {activePage === "service" && (
+      {activePage === "service" && (parts.length > 0 || confirmedPartOrders.length > 0) &&(
         <>
-          <div className="p-4 bg-white rounded-xl">
+          <div className="p-4  overflow-auto overflow-hidden ">
             {parts.map((part) => (
               <SparePartCard
                 key={part.id}
                 parts={part}
-                onDelete={handleDelete} 
+                onDelete={handleDelete}
                 onConfirm={handleConfirmPart}
               />
             ))}
           </div>
 
-          {confirmedPartOrders.length > 0 && (
+          {confirmedPartOrders.length > 0 && show && (
             <div className="mt-6 p-4 bg-white rounded-lg shadow ">
-              <div className="mb-4">
-                <h2 className="text-xl font-semibold text-[#9b111e] ">
+              <div className="flex flex-cols justify-between">
+               <div className="mb-4">
+                 <h2 className="text-xl font-semibold text-[#9b111e] ">
                   Summery
                 </h2>
                 <h2 className="text-base font-semibold text-[#9b111e] ">
                   Confirmed Orders
                 </h2>
+               </div>
+               <div className="px-2 py-1 rounded-lg bg-gray-400 h-9 ">
+                <button onClick={() => setShow(false)}>Close</button>
+               </div>
+
               </div>
               {confirmedPartOrders.map(({ part, quantity }) => (
                 <div
@@ -239,18 +301,16 @@ const SparePartsList = () => {
                   <span>₹{part.price * quantity}</span>
                 </div>
               ))}
-              <div className="mt-2 font-bold text-[#E6A895] border-t border-green-300 pt-2 flex justify-between">
+              <div className="mt-2 font-bold text-[#E6A895] border-t border-[#E6A895] pt-2 flex justify-between">
                 <span>Total</span>
                 <span>₹{totalPartPrice}</span>
               </div>
               <div className="flex justify-center ">
-                <div className="p-2 w-1/3 ">
-                  <div className="">
-                    <SwipeToPay
-                      onSwipeComplete={() => alert("Payment Successful 🎉")}
-                    />
-                  </div>
-                </div>
+                <button
+                  type="submit"
+                  className="flex justify-center gap-2 items-center mx-auto shadow-xl text-lg bg-gray-50 backdrop-blur-md lg:font-semibold isolation-auto border-gray-50 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-[#9b111e] hover:text-gray-50 before:-z-10 before:aspect-square before:hover:scale-150 before:hover:duration-700 relative z-10 px-6 py-2 overflow-hidden border-2 rounded-full group"
+                onClick={() => toast("Payment Successful 🎉")}> Place Order   
+                </button>
               </div>
             </div>
           )}
@@ -258,9 +318,9 @@ const SparePartsList = () => {
       )}
 
       {/* Service Booking Page */}
-      {activePage === "ServiceBookingPage" && (
+      {activePage === "ServiceBookingPage" &&  (
         <>
-          <div className="p-4 bg-white rounded-xl ">
+          <div className="p-4  overflow-auto overflow-hidden">
             {servs.map((serv) => (
               <ServiceBookingPage
                 key={serv.id}
@@ -272,7 +332,7 @@ const SparePartsList = () => {
           </div>
 
           {confirmedServiceOrders.length > 0 && (
-            <div className="mt-6 p-4 bg-white rounded-lg shadow ">
+            <div className="mt-6 p-4 bg-white rounded-lg shadow  ">
               <div className="mb-4">
                 <h2 className="text-xl font-semibold text-[#9b111e] ">
                   Summery
@@ -292,18 +352,21 @@ const SparePartsList = () => {
                   <span>₹{serv.price * quantity}</span>
                 </div>
               ))}
-              <div className="mt-2 font-bold text-[#E6A895] border-t border-green-300 pt-2 flex justify-between">
+              <div className="mt-2 font-bold text-[#E6A895]  pt-2 flex justify-between">
                 <span>Total</span>
                 <span>₹{totalServicePrice}</span>
               </div>
               <div className="flex justify-center ">
-                <div className="p-2 w-1/3 ">
-                  <div className="">
-                    <SwipeToPay
-                      onSwipeComplete={() => toast.success("Payment Successful 🎉")}
-                    />
-                  </div>
-                </div>
+                {/* <div className="border px-2 py-2 bg-[#9b111e] text-white rounded-xl"> */}
+                {/* <button onClick={() => toast("Payment Successful 🎉")}>Process To Place Order</button> */}
+
+                <button
+                  type="submit"
+                  className="flex justify-center gap-2 items-center mx-auto shadow-xl text-lg bg-gray-50 backdrop-blur-md lg:font-semibold isolation-auto border-gray-50 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-[#9b111e] hover:text-gray-50 before:-z-10 before:aspect-square before:hover:scale-150 before:hover:duration-700 relative z-10 px-6 py-2 overflow-hidden border-2 rounded-full group"
+                onClick={() => toast("Payment Successful 🎉")}> Place Order   
+                </button>
+
+                {/* </div> */}
               </div>
             </div>
           )}
