@@ -487,7 +487,7 @@ const ServicesPage: React.FC = () => {
 			{/* Vertical Left Sidebar Navigation */}
 			<div className='flex min-h-screen bg-gradient-to-br from-gray-50 to-gray-100'>
   {/* Left Sidebar */}
-  <div className='fixed left-0 top-10 w-72 h-screen bg-white shadow-2xl flex flex-col z-10 border-r border-gray-100'>
+  <div className='fixed left-0 top-8 w-72 h-screen bg-white shadow-2xl flex flex-col z-10 border-r border-gray-100'>
     {/* Header Section */}
     <div className='p-6 border-b border-gray-100 flex-shrink-0 bg-gradient-to-r from-red-500 to-red-600'>
       <div className='flex items-center space-x-3'>
