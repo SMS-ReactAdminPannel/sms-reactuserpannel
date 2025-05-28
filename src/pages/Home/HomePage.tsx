@@ -1,8 +1,12 @@
 import { ImageCarousel } from '../../components/home/ImageCarousel';
-import image1 from '../../assets/home/360_F_496483060_C9OG1wJpfmjMXcNmUBibmA9wYxxZCxnW.jpg';
-import image2 from '../../assets/home/360_F_507812981_dGZXqBsqkBpEosDjTlJgmaJAyMFra7sp.jpg';
-import image3 from '../../assets/home/hand-mechanic-holding-car-service-600nw-2340377479.webp';
-import image4 from '../../assets/home/istockphoto-1387759698-612x612.jpg';
+// import image1 from '../../assets/home/360_F_496483060_C9OG1wJpfmjMXcNmUBibmA9wYxxZCxnW.jpg';
+// import image2 from '../../assets/home/360_F_507812981_dGZXqBsqkBpEosDjTlJgmaJAyMFra7sp.jpg';
+// import image3 from '../../assets/home/hand-mechanic-holding-car-service-600nw-2340377479.webp';
+// import image4 from '../../assets/home/istockphoto-1387759698-612x612.jpg';
+import image1 from '../../assets/carimages/pexels-cottonbro-4489749.jpg'
+import image2 from '../../assets/carimages/pexels-artempodrez-8986070.jpg'
+import image3 from '../../assets/carimages/pexels-cottonbro-4489732.jpg'
+import image4 from '../../assets/carimages/pexels-ronaldo-galeano-2428202-4069389.jpg'
 import CarImg1 from '../../assets/CarImg1.jpg';
 import { GrWorkshop } from 'react-icons/gr';
 import { LuCarTaxiFront } from 'react-icons/lu';
