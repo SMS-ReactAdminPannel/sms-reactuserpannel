@@ -45,7 +45,7 @@ const PromoCarousel: React.FC = () => {
 	};
 
 	return (
-		<div className='w-full max-w-4xl mx-auto relative'>
+		<div className='w-full max-w-3xl mx-auto relative'>
 			{/* Cards */}
 			<div className='overflow-hidden rounded-3xl'>
 				<div
@@ -64,7 +64,7 @@ const PromoCarousel: React.FC = () => {
 									className='w-full h-auto object-contain'
 								/>
 							</div>
-							<div className='w-1/2 px-4 ml-4'>
+							<div className='w-1/2 px-4'>
 								<h2 className='text-white text-3xl font-bold leading-tight mb-2'>
 									{card.title} <span className='inline-block'>✨</span>
 									<br />
