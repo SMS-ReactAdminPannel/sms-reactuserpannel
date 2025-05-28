@@ -273,7 +273,7 @@ const handleAddToCart = (part: any) => {
       Welcome to Auto Spare Hub
     </h2>
     <p className="text-gray-700 mb-3 text-sm md:text-base">
-      Discover top-quality auto spare parts. We offer genuine and aftermarket
+      Discover top-quality auto spare parts. We offer genuine and after market
       components with fast delivery and customer satisfaction guaranteed.
     </p>
   </div>
