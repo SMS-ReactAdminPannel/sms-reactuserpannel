@@ -41,7 +41,7 @@ const Dashboard: React.FC = () => {
       <div className="grid grid-cols-5 grid-rows-2 gap-4 max-w-6xl mx-auto">
         {cardData.map((card) => (
           <Link
-            to={`/service-center`}
+            to={`/service-center/{card.id}`}
             key={card.id}
             className={`${card.color} border-2 rounded-lg p-4 shadow-md hover:shadow-lg transition-shadow duration-300 cursor-pointer transform hover:scale-105`}
           >

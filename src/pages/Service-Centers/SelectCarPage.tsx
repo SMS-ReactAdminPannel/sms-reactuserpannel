@@ -1,6 +1,5 @@
-
 import React, { useState } from 'react';
-import { ChevronDown } from 'lucide-react';
+import { ChevronDown, X } from 'lucide-react';
 
 interface CarSelect {
     brand: string;
@@ -10,10 +9,10 @@ interface CarSelect {
 }
 
 interface SelectCarPageProps {
-    onClose?: ()=> void; 
+    onClose?: () => void; 
 }
 
-const SelectCarPage: React.FC<SelectCarPageProps> = ({onClose}) => {
+const SelectCarPage: React.FC<SelectCarPageProps> = ({ onClose }) => {
     const [selectedCar, setSelectedCar] = useState<CarSelect>({
         brand: '',
         model: '',
@@ -93,9 +92,7 @@ const SelectCarPage: React.FC<SelectCarPageProps> = ({onClose}) => {
     const handleSubmit = () => {
         if (selectedCar.brand && selectedCar.model && selectedCar.year && selectedCar.fuel) {
             console.log('Selected Car:', selectedCar);
-            if (onClose) {
-         onClose();
-          }
+            if (onClose) onClose();
         } else {
             alert('Please fill in all fields');
         }
@@ -106,21 +103,31 @@ const SelectCarPage: React.FC<SelectCarPageProps> = ({onClose}) => {
     };
 
     const getAvailableYears = () => {
-        return selectedCar.brand ? carData[selectedCar.brand as keyof typeof carData]?.years || [] : [];
+        return selectedCar.brand && selectedCar.model ? carData[selectedCar.brand as keyof typeof carData]?.years || [] : [];
     };
 
     const getAvailableFuels = () => {
-        return selectedCar.brand ? carData[selectedCar.brand as keyof typeof carData]?.fuels || [] : [];
+        return selectedCar.brand && selectedCar.model && selectedCar.year ? carData[selectedCar.brand as keyof typeof carData]?.fuels || [] : [];
     };
 
+    const isFormComplete = selectedCar.brand && selectedCar.model && selectedCar.year && selectedCar.fuel;
+
     return (
-        <div className="w-[300px] h-[400px] bg-gray-50 ms-[1200px] mt-[90px] rounded-lg ">
-           
-            <div className=" bg-white  shadow-md p-6">
-                 <button onClick={onClose}>X</button>
-                <h2 className="text-2xl font-bold text-gray-900 mb-6 text-center">Select Your Car</h2>
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden">
+                {/* Header */}
+                <div className="border-b border-gray-200 p-4 flex justify-between items-center">
+                    <h2 className="text-xl font-bold text-gray-900">Select Your Car</h2>
+                    <button 
+                        onClick={onClose}
+                        className="text-gray-500 hover:text-gray-700 transition-colors"
+                    >
+                        <X size={24} />
+                    </button>
+                </div>
                 
-                <div className="space-y-6">
+                {/* Form Content */}
+                <div className="p-6 space-y-6">
                     {/* Brand Selection */}
                     <div>
                         <label htmlFor="brand" className="block text-sm font-medium text-gray-700 mb-2">
@@ -131,7 +138,7 @@ const SelectCarPage: React.FC<SelectCarPageProps> = ({onClose}) => {
                                 id="brand"
                                 value={selectedCar.brand}
                                 onChange={(e) => handleBrandChange(e.target.value)}
-                                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 appearance-none bg-white"
+                                className="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 appearance-none bg-white"
                             >
                                 <option value="">Select Brand</option>
                                 {brands.map((brand) => (
@@ -140,7 +147,7 @@ const SelectCarPage: React.FC<SelectCarPageProps> = ({onClose}) => {
                                     </option>
                                 ))}
                             </select>
-                            <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                            <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
                         </div>
                     </div>
 
@@ -155,7 +162,7 @@ const SelectCarPage: React.FC<SelectCarPageProps> = ({onClose}) => {
                                 value={selectedCar.model}
                                 onChange={(e) => handleModelChange(e.target.value)}
                                 disabled={!selectedCar.brand}
-                                className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 appearance-none ${
+                                className={`w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 appearance-none ${
                                     !selectedCar.brand ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
                                 }`}
                             >
@@ -166,7 +173,7 @@ const SelectCarPage: React.FC<SelectCarPageProps> = ({onClose}) => {
                                     </option>
                                 ))}
                             </select>
-                            <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                            <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
                         </div>
                     </div>
 
@@ -181,7 +188,7 @@ const SelectCarPage: React.FC<SelectCarPageProps> = ({onClose}) => {
                                 value={selectedCar.year}
                                 onChange={(e) => handleYearChange(Number(e.target.value))}
                                 disabled={!selectedCar.model}
-                                className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 appearance-none ${
+                                className={`w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 appearance-none ${
                                     !selectedCar.model ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
                                 }`}
                             >
@@ -192,7 +199,7 @@ const SelectCarPage: React.FC<SelectCarPageProps> = ({onClose}) => {
                                     </option>
                                 ))}
                             </select>
-                            <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                            <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
                         </div>
                     </div>
 
@@ -207,7 +214,7 @@ const SelectCarPage: React.FC<SelectCarPageProps> = ({onClose}) => {
                                 value={selectedCar.fuel}
                                 onChange={(e) => handleFuelChange(e.target.value)}
                                 disabled={!selectedCar.year}
-                                className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 appearance-none ${
+                                className={`w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 appearance-none ${
                                     !selectedCar.year ? 'bg-gray-100 cursor-not-allowed' : 'bg-white'
                                 }`}
                             >
@@ -218,27 +225,34 @@ const SelectCarPage: React.FC<SelectCarPageProps> = ({onClose}) => {
                                     </option>
                                 ))}
                             </select>
-                            <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" />
+                            <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-400 pointer-events-none" />
                         </div>
                     </div>
 
                     {/* Selected Car Preview */}
                     {selectedCar.brand && (
-                        <div className="bg-gray-50 p-4 rounded-md">
-                            <h3 className="text-sm font-medium text-gray-700 mb-2">Selected Car:</h3>
+                        <div className="bg-gray-50 p-4 rounded-lg border border-gray-200">
+                            <h3 className="text-sm font-medium text-gray-700 mb-1">Selected Vehicle:</h3>
                             <p className="text-lg font-semibold text-gray-900">
                                 {selectedCar.year > 0 ? selectedCar.year : '----'} {selectedCar.brand} {selectedCar.model || '----'}
-                                {selectedCar.fuel && ` (${selectedCar.fuel})`}
+                                {selectedCar.fuel && ` • ${selectedCar.fuel}`}
                             </p>
                         </div>
                     )}
+                </div>
 
-                    {/* Submit Button */}
+                {/* Footer with Submit Button */}
+                <div className="border-t border-gray-200 p-4 bg-gray-50">
                     <button
                         onClick={handleSubmit}
-                        className="ml-[70px] bg-red-600 text-white py-2 px-8 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200 font-medium"
+                        disabled={!isFormComplete}
+                        className={`w-full py-3 px-4 rounded-lg font-medium text-white transition-colors ${
+                            isFormComplete 
+                                ? 'bg-red-600 hover:bg-red-700 focus:ring-2 focus:ring-red-500 focus:ring-offset-2'
+                                : 'bg-gray-400 cursor-not-allowed'
+                        }`}
                     >
-                        Confirm
+                        Confirm Selection
                     </button>
                 </div>
             </div>
