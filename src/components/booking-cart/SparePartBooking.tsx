@@ -37,7 +37,7 @@ const SparePartCard: React.FC<Props> = ({ parts, onDelete, onConfirm }) => {
   };
 
   return (
-    <div className="flex  gap-4 p-2  shadow-md rounded-xl overflow-auto  mb-4  hover:shadow-lg hover:scale-[1.001] md:hover:shadow-lg md:hover:scale-[1.002] scrollbar-hide bg-gradient-to-r from-[#fbe9d7,]  to-[#f6d5f7] ">
+    <div className="flex  gap-4 p-2  shadow-md rounded-xl overflow-auto  mb-4  hover:shadow-lg hover:scale-[1.001] md:hover:shadow-lg md:hover:scale-[1.002] scrollbar-hide bg-gradient-to-r from-[#f6d5f7]  to-[#fbe9d7] ">
       <div className="overflow-auto">
         <img
           src={parts.imageUrl}

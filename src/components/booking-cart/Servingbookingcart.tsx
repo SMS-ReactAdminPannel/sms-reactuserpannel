@@ -26,7 +26,7 @@ const ServiceBookingPage: React.FC<Props> = ({
   const descriptionItems = service.description;
 
   return (
-    <div className="flex gap-4 p-2 rounded-xl overflow-auto  mb-4  bg-white hover:shadow-lg hover: md:hover:shadow-lg  scrollbar-hide hover:border-red hover:border-xl bg-gradient-to-r from-[#fbe9d7,]  to-[#f6d5f7]" >
+    <div className="flex gap-4 p-2 rounded-xl overflow-auto  mb-4   hover:shadow-lg hover: md:hover:shadow-lg  scrollbar-hide hover:border-red hover:border-xl bg-gradient-to-r from-[#f6d5f7]  to-[#fbe9d7]" >
       <div className="overflow-auto  " >
         <img
           src={service.imageUrl}
