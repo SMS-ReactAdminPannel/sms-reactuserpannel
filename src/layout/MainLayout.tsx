@@ -19,9 +19,9 @@ const MainLayout = () => {
 			<div className=''>
 				<Navbar />
 				{/* <Sidebar isOpen={isSidebarOpen} setIsOpen={setIsSidebarOpen} /> */}
-				<main className='flex-1 overflow-auto scrollbar-hide pt-[125px]'>
+				<main className='flex-1 overflow-auto scrollbar-hide pt-[133px]'>
 					<div
-						className='p-2 rounded shadow'
+						className=''
 						style={{ backgroundColor: COLORS.bgColor }}
 					>
 						<Outlet />

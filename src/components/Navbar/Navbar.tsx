@@ -9,8 +9,8 @@ import { Link } from 'react-router-dom';
 import ProfileMenu from '../home/ProfileMenu';
 import dummyImage from '../../assets/navbar/dummyimage.png';
 import CustomDropdown from './Customdropdown';
-import TruckIcon from '../../assets/carimages/delivery-truck.png'
-import LocationIcon from '../../assets/carimages/location.png'
+import TruckIcon from '../../assets/carimages/delivery-truck.png';
+import LocationIcon from '../../assets/carimages/location.png';
 
 interface User {
 	name: string;
@@ -37,7 +37,7 @@ export const Navbar: React.FC = () => {
 	const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 	const [showLogoutSuccess, setShowLogoutSuccess] = useState(false);
 	const [showNotifications, setShowNotifications] = useState(false);
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [isLoggedIn, setIsLoggedIn] = useState(true);
 	const { logout } = useAuth();
 	const navigate = useNavigate();
 	const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -137,51 +137,48 @@ export const Navbar: React.FC = () => {
 
 	const navData = [
 		{ title: 'Home', link: '/' },
-		{ title: 'Bookings', link: '/bookings' },
-		{ title: 'Booking Cart', link: '/booking-cart' },
 		{ title: 'Services', link: '/services' },
 		{ title: 'Spare Parts', link: '/spare-parts' },
+		{ title: 'Booking Cart', link: '/booking-cart' },
+		{ title: 'Bookings', link: '/bookings' },
 		{ title: 'Offers', link: '/announcement' },
 	];
 
 	return (
 		<header className='bg-white text-white w-full fixed top-0 z-50'>
 			{/* Top Navbar */}
-			<div className='flex items-center justify-between px-4 py-2 space-x-4'>
+			<div className='bg-red-900 h-[5px]'></div>
+			<div className='flex items-center justify-between px-24 py-2 space-x-4'>
 				{/* Logo & Location */}
 				<div className='flex items-center space-x-4'>
 					<Link to='/' className='text-2xl font-bold text-white'>
-						<img src={Logo} alt='yes mechanic logo' className='w-25 h-10' />
+						<img src={Logo} alt='yes mechanic logo' className='w-32 h-16' />
 					</Link>
 				</div>
 
-                				
-                 <div className='text-white flex items-center gap-1'>			
-							<img src={TruckIcon} style={{width:'30px'}}/>
-						<label className='text-red-900 font-semibold cursor-pointer'>
-							QUICK DELIVERY
-						</label>
-					</div>
+				<div className='text-white flex items-center gap-1'>
+					<img src={TruckIcon} style={{ width: '30px' }} />
+					<label className='text-red-900 font-semibold cursor-pointer text-sm'>
+						QUICK DELIVERY
+					</label>
+				</div>
 
-                     
-                     
-                     <div className='text-white flex items-center '>
-                     <img src={LocationIcon} style={{width:'20px'}}/>
-                     <CustomDropdown />
-                       </div>
-{/* 
+				<div className='text-white flex items-center '>
+					<CustomDropdown />
+				</div>
+				{/* 
 
 				{/* Search Bar */}
 				<div className='flex flex-1 justify-end'>
-					
-                 <input type='text'
-                 className='px-4 py-2 text-[#9b111e] text-sm border border-[#9b111e] rounded-md focus:outline-none focus:ring-1 focus:ring-[#9b111e] ml-4 mr-2 w-[290px]'
-                   placeholder='Search'
-                   value={search}
-                   onChange={(e) => setSearch(e.target.value)}
-/>
+					<input
+						type='text'
+						className='px-4 py-2 text-[#9b111e] placeholder-red-700 text-sm border border-[#9b111e] rounded-l-md focus:outline-none focus:ring-[#9b111e] ml-4 w-[290px]'
+						placeholder='Search'
+						value={search}
+						onChange={(e) => setSearch(e.target.value)}
+					/>
 
-					<button className='bg-red-900  px-4 py-2 ml-2 rounded-md'>
+					<button className='bg-red-900  px-4 py-2 rounded-r-md'>
 						<FiSearch
 							className='text-black text-xl'
 							color={COLORS.white}
@@ -234,7 +231,7 @@ export const Navbar: React.FC = () => {
 
 						{showNotifications && (
 							<div className='absolute right-0 mt-2 w-80 rounded-lg shadow-xl bg-white z-50 overflow-hidden'>
-								<div className='bg-gradient-to-r from-red-600 to-red-800 p-3'>
+								<div className='bg-red-900 p-3'>
 									<h3 className='text-white font-bold'>Notifications</h3>
 								</div>
 								<div className='max-h-80 overflow-y-auto'>
@@ -287,7 +284,7 @@ export const Navbar: React.FC = () => {
 					) : (
 						<>
 							<img
-								src="/images/images.jpeg"
+								src='/images/images.jpeg'
 								alt='dummy-image'
 								className='w-10 h-10 rounded-full cursor-pointer'
 							/>
@@ -295,7 +292,7 @@ export const Navbar: React.FC = () => {
 					)}
 					<div className='text-white'>
 						<p className='text-red-900 font-semibold cursor-pointer'>
-							{isLoggedIn ? 'User' : 'Log In'}
+							{isLoggedIn ? 'YM User' : 'Log In'}
 						</p>
 					</div>
 					<div className='relative flex items-center' onClick={() => {}}>
@@ -308,33 +305,32 @@ export const Navbar: React.FC = () => {
 			</div>
 
 			{/* Bottom Navbar - Categories */}
-		
- <div className="bg-[#fdefe9] px-4 py-6 flex items-center justify-center gap-10 overflow-x-auto scrollbar-hide">
-  {navData?.map((item, idx) => (
-    <NavLink
-      key={idx}
-      to={item.link}
-      style={{ fontSize: '20px' }}
-	className={({ isActive }) =>
-  `relative pb-2 text-lg font-semibold transition-all duration-300 ease-in-out whitespace-nowrap
-  ${
-    isActive
-      ? 'text-red-900 -translate-y-1 after:content-[""] after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-full after:bg-red-900 after:transition-all after:duration-300'
-      : 'text-red-800 after:content-[""] after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-0 after:bg-red-900 after:transition-all after:duration-300 hover:after:w-full'
-  }`
-}
->
-      {item.title}
-    </NavLink>
-  ))}
 
- <div className='flex justify-end ml-20'>
-	<button className="bg-red-800 hover:bg-red-900 text-white font-semibold py-2 px-4 rounded-full ">
-  Enquiry
-</button>
-</div>
-</div> 
+			<div className='bg-[#fdefe9] px-24 py-1 flex items-center justify-between overflow-x-auto scrollbar-hide'>
+				{navData?.map((item, idx) => (
+					<NavLink
+						key={idx}
+						to={item.link}
+						style={{ fontSize: '16px' }}
+						className={({ isActive }) =>
+							`relative pb-2 text-md font-semibold transition-all duration-300 ease-in-out whitespace-nowrap
+	${
+		isActive
+			? 'text-red-900 -translate-y-1 after:content-[""] after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-full after:bg-red-900 after:transition-all after:duration-300'
+			: 'text-red-800 after:content-[""] after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-0 after:bg-red-900 after:transition-all after:duration-300 hover:after:w-full'
+	}`
+						}
+					>
+						{item.title}
+					</NavLink>
+				))}
 
+				<div className='flex justify-end'>
+					<button className='bg-red-900 hover:bg-red-800 text-white font-semibold py-2 px-4 rounded-full '>
+						Enquiry
+					</button>
+				</div>
+			</div>
 		</header>
 	);
 };

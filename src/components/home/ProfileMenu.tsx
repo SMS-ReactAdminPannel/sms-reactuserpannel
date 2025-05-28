@@ -35,23 +35,23 @@ const ProfileMenu = () => {
 				<img
 					src={profileImage}
 					alt='Profile'
-					className='w-10	 h-10 rounded-full border-2 border-gray-300 hover:border-primary'
+					className='w-12	h-12 rounded-full'
 				/>
 			</button>
 
 			{/* Dropdown */}
 			{isOpen && (
 				<div className='origin-top-right absolute mt-2 w-36 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50 bg-[#faf3eb]'>
-					<div className='py-1'>
+					<div className=''>
 						<Link
 							to='/profile'
-							className='flex items-center px-4 py-2 text-lg font-semibold text-[#9b111e] hover:bg-[#ffd46b]'
+							className='flex items-center px-4 py-2 text-sm font-semibold text-[#9b111e] hover:bg-red-900 hover:text-white'
 						>
 							<FiUser className='mr-2' /> Profile
 						</Link>
 						<button
 							onClick={handleLogout}
-							className='flex items-center w-full px-4 py-2 text-lg font-semibold text-[#9b111e] hover:bg-[#ffd46b]'
+							className='flex items-center w-full px-4 py-2 text-sm font-semibold text-[#9b111e] hover:bg-red-900 hover:text-white'
 						>
 							<FiLogOut className='mr-2' /> Logout
 						</button>

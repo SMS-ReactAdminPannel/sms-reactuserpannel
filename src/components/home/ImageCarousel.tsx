@@ -28,9 +28,9 @@ export const ImageCarousel: React.FC<CarouselProps> = ({
 	};
 
 	return (
-		<div className='relative w-full mx-auto overflow-hidden rounded-lg shadow-lg'>
+		<div className='relative w-full mx-auto overflow-hidden shadow-lg'>
 			{/* Image container */}
-			<div className='w-full h-64 md:h-96'>
+			<div className='w-full h-70 md:h-96'>
 				<img
 					src={images[current]}
 					alt={`Slide ${current}`}
@@ -41,13 +41,13 @@ export const ImageCarousel: React.FC<CarouselProps> = ({
 			{/* Prev / Next buttons */}
 			<button
 				onClick={prevSlide}
-				className='absolute top-1/2 left-2 transform -translate-y-1/2 bg-red-900 hover:bg-red-700 text-white p-2 rounded-full'
+				className='absolute top-1/2 left-2 transform -translate-y-1/2 bg-red-900 hover:bg-red-700 text-white p-2 rounded-full opacity-75'
 			>
 				‹
 			</button>
 			<button
 				onClick={nextSlide}
-				className='absolute top-1/2 right-2 transform -translate-y-1/2 bg-red-900 hover:bg-red-700 text-white p-2 rounded-full'
+				className='absolute top-1/2 right-2 transform -translate-y-1/2 bg-red-900 hover:bg-red-700 text-white p-2 rounded-full opacity-75'
 			>
 				›
 			</button>
@@ -58,7 +58,7 @@ export const ImageCarousel: React.FC<CarouselProps> = ({
 					<button
 						key={index}
 						onClick={() => setCurrent(index)}
-						className={`w-3 h-3 rounded-full ${
+						className={`w-1.5 h-1.5 rounded-full ${
 							current === index ? 'bg-red-800' : 'bg-red-50'
 						}`}
 					/>

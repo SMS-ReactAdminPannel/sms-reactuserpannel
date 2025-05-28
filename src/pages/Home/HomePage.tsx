@@ -3,10 +3,10 @@ import { ImageCarousel } from '../../components/home/ImageCarousel';
 // import image2 from '../../assets/home/360_F_507812981_dGZXqBsqkBpEosDjTlJgmaJAyMFra7sp.jpg';
 // import image3 from '../../assets/home/hand-mechanic-holding-car-service-600nw-2340377479.webp';
 // import image4 from '../../assets/home/istockphoto-1387759698-612x612.jpg';
-import image1 from '../../assets/carimages/pexels-cottonbro-4489749.jpg'
-import image2 from '../../assets/carimages/pexels-artempodrez-8986070.jpg'
-import image3 from '../../assets/carimages/pexels-cottonbro-4489732.jpg'
-import image4 from '../../assets/carimages/pexels-ronaldo-galeano-2428202-4069389.jpg'
+import image1 from '../../assets/carimages/pexels-cottonbro-4489749.jpg';
+import image2 from '../../assets/carimages/pexels-artempodrez-8986070.jpg';
+import image3 from '../../assets/carimages/pexels-cottonbro-4489732.jpg';
+import image4 from '../../assets/carimages/pexels-ronaldo-galeano-2428202-4069389.jpg';
 import CarImg1 from '../../assets/CarImg1.jpg';
 import { GrWorkshop } from 'react-icons/gr';
 import { LuCarTaxiFront } from 'react-icons/lu';
@@ -112,7 +112,10 @@ const HomePage: React.FC = () => {
 	];
 	return (
 		<>
-			<ImageCarousel images={imageUrls} interval={2000} />
+			<div className='h-[80vh]'>
+				<div className='bg-red-900 h-[55px]'></div>
+				<ImageCarousel images={imageUrls} interval={2000} />
+			</div>
 			<div className='px-6'>
 				<div className='my-3'>
 					<h1 className='font-bold text-3xl mb-10 text-red-900'>
@@ -171,7 +174,9 @@ const HomePage: React.FC = () => {
 							<p>Of Customer Care Expertise</p>
 						</div>
 					</div>
-					<div><MustCare /></div>
+					<div>
+						<MustCare />
+					</div>
 
 					<div>
 						<h1 className='text-3xl font-bold text-red-900'>
