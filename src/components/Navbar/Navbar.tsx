@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 import ProfileMenu from '../home/ProfileMenu';
 import dummyImage from '../../assets/navbar/dummyimage.png';
 import CustomDropdown from './Customdropdown';
-import Icon from '../../assets/carimages/delivery-truck.png'
+import TruckIcon from '../../assets/carimages/delivery-truck.png'
 import LocationIcon from '../../assets/carimages/location.png'
 
 interface User {
@@ -156,36 +156,32 @@ export const Navbar: React.FC = () => {
 				</div>
 
                 				
-                 <div className='text-white flex items-center gap-1'>
-
-					
-							<img src={Icon} style={{width:'30px'}}/>
+                 <div className='text-white flex items-center gap-1'>			
+							<img src={TruckIcon} style={{width:'30px'}}/>
 						<label className='text-red-900 font-semibold cursor-pointer'>
 							QUICK DELIVERY
 						</label>
 					</div>
 
-
-
-<div className='text-white flex items-center '>
-<img src={LocationIcon} style={{width:'20px'}}/>
-<CustomDropdown />
-	
-</div>
+                     
+                     
+                     <div className='text-white flex items-center '>
+                     <img src={LocationIcon} style={{width:'20px'}}/>
+                     <CustomDropdown />
+                       </div>
 {/* 
 
 				{/* Search Bar */}
 				<div className='flex flex-1 justify-end'>
 					
-					<input
-type='text'
-className='px-4 py-2 text-[#9b111e] text-sm border border-[#9b111e] rounded-full focus:outline-none focus:ring-1 focus:ring-[#9b111e] ml-4 mr-2 w-[290px]'
-  placeholder='Search'
-  value={search}
-  onChange={(e) => setSearch(e.target.value)}
+                 <input type='text'
+                 className='px-4 py-2 text-[#9b111e] text-sm border border-[#9b111e] rounded-md focus:outline-none focus:ring-1 focus:ring-[#9b111e] ml-4 mr-2 w-[290px]'
+                   placeholder='Search'
+                   value={search}
+                   onChange={(e) => setSearch(e.target.value)}
 />
 
-					<button className='bg-red-900 p-3 rounded-full'>
+					<button className='bg-red-900  px-4 py-2 ml-2 rounded-md'>
 						<FiSearch
 							className='text-black text-xl'
 							color={COLORS.white}
@@ -331,7 +327,14 @@ className='px-4 py-2 text-[#9b111e] text-sm border border-[#9b111e] rounded-full
       {item.title}
     </NavLink>
   ))}
+
+ <div className='flex justify-end ml-20'>
+	<button className="bg-red-800 hover:bg-red-900 text-white font-semibold py-2 px-4 rounded-full ">
+  Enquiry
+</button>
 </div>
+</div> 
+
 		</header>
 	);
 };

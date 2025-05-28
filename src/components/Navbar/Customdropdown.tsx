@@ -46,7 +46,7 @@ const CustomDropdown: React.FC = () => {
       </button>
 
       {isOpen && (
-        <div className="absolute z-10 mt-1 w-full bg-white border border-red-300 rounded shadow-lg">
+        <div className="absolute z-10 mt-1 w-full bg-white border rounded shadow-lg">
           {cities.map((city) => (
             <div
               key={city}
