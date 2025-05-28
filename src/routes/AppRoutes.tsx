@@ -15,10 +15,11 @@ import ResetPassword from '../pages/auth/ResetPassword';
 import OtpVerificationPage from '../pages/auth/OtpVerificationPage';
 import EnterEmailOrPhone from '../pages/auth/EnterEmailOrPhone';
 import SignupPage from '../pages/auth/SignupPage';
+	
 
 const AppRoutes = () => {
 	// const { isAuthenticated } = useAuth();
-	const isAuthenticated = false; // Replace with actual authentication logic
+	const isAuthenticated = true; // Replace with actual authentication logic
 
 	const AuthRoutes = () => (
  <Routes>
