@@ -30,40 +30,18 @@ export const Sidebar = ({
 	// const uselocation = useLocation();
 
 	const handleLinkClick = () => {
-		setIsOpen(false);
+		// setIsOpen(false);
 	};
 
 	return (
-		<div className='flex h-screen'>
-			<div className='bg-white border-r shadow-md p-2 transition-all duration-300 fixed top-0 left-0 h-screen z-40 flex flex-col items-center'>
-				<div className='flex justify-center items-center h-20'>
-					<img
-						src={Logo}
-						alt='YES Mechanic Logo'
-						className={`object-contain transition-all duration-300 ${
-							isOpen ? 'w-20 h-20' : 'w-10 h-10'
-						}`}
-					/>
-				</div>
-				<div className='w-full flex justify-end px-2 mt-2'>
-					<button
-						onClick={() => setIsOpen(!isOpen)}
-						className='text-gray-600 hover:text-black p-2 rounded-md transition duration-200 hover:bg-gray-100'
-						title='Toggle Sidebar'
-					>
-						{isOpen ? (
-							<RiMenu3Line size={20} style={{ color: COLOR.primary }} />
-						) : (
-							<RiMenu2Line size={20} style={{ color: COLOR.primary }} />
-						)}
-					</button>
-				</div>
+		<div className='w-full h-full flex flex-col'>
+			<div className='items-center justify-between bg-white shadow-md h-full transition-all duration-300'>
 
-				<nav className='flex flex-col gap-4 mt-4 w-full items-center'>
+				<nav className='flex flex-row'>
 					<SidebarLink
 						to='/'
 						icon={<FiHome />}
-						label='Dashboard'
+						label='Home'
 						isOpen={isOpen}
 						onClick={handleLinkClick}
 					/>
@@ -157,9 +135,7 @@ export const Sidebar = ({
 
 const SidebarLink = ({
 	to,
-	icon,
 	label,
-	isOpen,
 	onClick,
 }: {
 	to: string;
@@ -187,19 +163,9 @@ const SidebarLink = ({
 			onMouseEnter={() => setIsHovered(true)}
 			onMouseLeave={() => setIsHovered(false)}
 			style={{ backgroundColor }}
-			className={`flex items-center transition-all px-2 py-1 
-        ${
-					isOpen
-						? 'w-full justify-start gap-5 pl-5 pr-1'
-						: 'justify-center w-10 h-8'
-				} 
-        rounded-full
-      `}
+			className={`rounded-sm px-7 py-3 w-1/4`}
 		>
-			<div className='text-xl' style={{ color: textColor }}>
-				{icon}
-			</div>
-			{isOpen && <span style={{ color: textColor }}>{label}</span>}
+			<span style={{ color: textColor }}>{label}</span>
 		</Link>
 	);
 };
