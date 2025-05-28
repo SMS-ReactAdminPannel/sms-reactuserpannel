@@ -27,7 +27,16 @@ const ServiceBookingPage: React.FC<Props> = ({
   const descriptionItems = service.description;
 
   return (
-    <div className="flex  gap-4 p-2 bg-white shadow-md rounded-xl overflow-auto  mb-4  -gray-200 hover:shadow-lg hover:scale-[1.001] md:hover:shadow-lg md:hover:scale-[1.002] scrollbar-hide">
+    // this design
+     <div className="relative bg-[rgba(105,13,197,0.103)] rounded-xl m-10 flex flex-col overflow-hidden group  hover:shadow-lg hover:scale-[1.001] md:hover:shadow-lg md:hover:scale-[1.002] ">
+      {/* Hover effect circle */}
+      <div className="absolute w-[200px] h-[200px] -top-[40%] -left-[20%] rounded-full border-[35px] border-red/10 blur-sm transition-all duration-700 ease-in-out group-hover:w-[280px] group-hover:h-[280px] group-hover:top-[-40%] group-hover:left-3/4 group-hover:blur-0" />
+      <div className="absolute w-[100px] h-[100px] -top-[40%] -left-[10%] rounded-full border-[35px] border-red/10 blur-sm transition-all duration-700 ease-in-out group-hover:w-[180px] group-hover:h-[180px] group-hover:top-[-20%] group-hover:left-2/4 group-hover:blur-0" />
+      <div className="absolute w-[100px] h-[100px] -top-[40%] -left-[20%] rounded-full border-[35px] border-red/10 blur-sm transition-all duration-700 ease-in-out group-hover:w-[140px] group-hover:h-[140px] group-hover:top-[-10%] group-hover:left-1/4 group-hover:blur-0" />
+
+      {/* Text content */}
+      <div className="flex-grow p-4 flex flex-col text-[aliceblue] font-bold text-lg">
+        <div className="flex  gap-4 p-2  overflow-auto  mb-4  -gray-200 scrollbar-hide">
       <div className="overflow-auto">
         <img
           src={service.imageUrl}
@@ -88,6 +97,10 @@ const ServiceBookingPage: React.FC<Props> = ({
           </div>
         </div>
       </div>
+    </div>
+      </div>
+
+      
     </div>
   );
 };
