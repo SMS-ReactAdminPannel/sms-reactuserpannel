@@ -158,7 +158,10 @@ export const Navbar: React.FC = () => {
 
 				<div className='text-white flex items-center gap-1'>
 					<img src={TruckIcon} style={{ width: '30px' }} />
-					<label className='text-red-900 font-semibold cursor-pointer text-sm'>
+					<label
+						className='text-red-900 cursor-pointer'
+						style={{ ...FONTS.paragraph, fontWeight: 600 }}
+					>
 						QUICK DELIVERY
 					</label>
 				</div>
@@ -311,7 +314,7 @@ export const Navbar: React.FC = () => {
 					<NavLink
 						key={idx}
 						to={item.link}
-						style={{ fontSize: '16px' }}
+						style={{ ...FONTS.paragraph, fontWeight: 600, fontSize: '16px' }}
 						className={({ isActive }) =>
 							`relative pb-2 text-md font-semibold transition-all duration-300 ease-in-out whitespace-nowrap
 	${
@@ -326,7 +329,10 @@ export const Navbar: React.FC = () => {
 				))}
 
 				<div className='flex justify-end'>
-					<button className='bg-red-900 hover:bg-red-800 text-white font-semibold py-2 px-4 rounded-full '>
+					<button
+						className='bg-red-900 hover:bg-red-800 text-white py-2 px-4 rounded-full'
+						style={{ ...FONTS.paragraph, fontWeight: 600 }}
+					>
 						Enquiry
 					</button>
 				</div>
