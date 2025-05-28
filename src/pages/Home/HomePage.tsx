@@ -38,6 +38,22 @@ import CustomServicesCarousel from '../../components/home/customServiceCarousel'
 import Roadsideassistant from '../../assets/CAR ROADSIDE/Roadside assistant.jpg'
 import Prebooking from '../../assets/CAR PREBOOKING/Prebooking.jpg'
 import Annualmaintenance from '../../assets/CAR ANNUAL MAINTENANCE/Annual maintenance.jpg'
+import appimage from '../../assets/LOGO.jpg'
+
+
+
+// icon for footer
+import { FaPhoneFlip } from "react-icons/fa6";// phone
+import { MdEmail } from "react-icons/md";// mail
+import { FaSquareWhatsapp } from "react-icons/fa6";//whatsapp
+import { FaInstagramSquare } from "react-icons/fa";//telegram
+import { FaXTwitter } from "react-icons/fa6";//twitter
+import { FaFacebook } from "react-icons/fa";//facebook
+import { FaYoutube } from "react-icons/fa"//youtube
+import { SiIndeed } from "react-icons/si";//indeed
+import { BiLogoPlayStore } from "react-icons/bi";//play store
+import { FaCcVisa } from "react-icons/fa";//visa card
+import { FaCcMastercard } from "react-icons/fa6";
 
 const imageUrls = [image1, image2, image3, image4];
 interface ServiceCardProps {
@@ -330,7 +346,141 @@ const HomePage: React.FC = () => {
 						</div>
 					</div>
 				</div>
-				
+				{/* FOOTER START */}
+				<footer>
+					<div className="grid grid-cols-4 gap-4 p-4 bg-[#fdefe9] border-0 rounded-3xl">
+						{/* Image Card - Full Height (No border) */}
+						<div className="col-span-1 p-4 rounded h-full border-0">
+							<img src={appimage} alt="appimage" className="p-2 h-[200px] w-[400px] object-cover rounded" />
+						</div>
+
+						{/* Remaining Cards - Full Width (No border) */}
+						<div className="col-span-3 grid grid-cols-3 gap-6 p-6 w-full border-0">
+							<div className="p-4 rounded bg-[#fdefe9] w-full h-full border-0">
+								<p className="text-red-900 font-bold text-3xl">About</p>
+								<ol className="py-3 text-red-900 text-xl">
+									<li className="py-3">About Us</li>
+									<li className="py-3">Contact Us</li>
+									<li className="py-3">Location</li>
+								</ol>
+							</div>
+
+							<div className="p-4 rounded bg-[#fdefe9] w-full h-full border-0">
+								<p className="text-red-900 font-bold text-3xl">About</p>
+								<ol className="py-3 text-red-900 text-xl">
+									<li className="py-3">About Us</li>
+									<li className="py-3">Contact Us</li>
+									<li className="py-3">Location</li>
+								</ol>
+							</div>
+
+							<div className="p-4 rounded bg-[#fdefe9] w-full h-full border-0">
+								<p className="text-red-900 font-bold text-3xl">About</p>
+								<ol className="py-3 text-red-900 text-xl">
+									<li className="py-3">About Us</li>
+									<li className="py-3">Contact Us</li>
+									<li className="py-3">Location</li>
+								</ol>
+							</div>
+							<div className='w-[900px]'>
+								<div className="grid grid-cols-1 gap-4 p-4">
+									<div className="">
+										<hr className="w-full border-[2px] border-red-900" />
+
+										{/* Text on left, icons on right */}
+										<div className="flex justify-between items-center text-red-900 text-xl py-2">
+											
+											<p className="font-semibold text-base">Download our App</p>
+
+											<div className="flex items-center gap-4">
+												<div className="bg-red-900 text-white rounded-full p-2">
+													<BiLogoPlayStore />
+												</div>
+												
+											</div>
+										</div>
+									</div>
+
+									<div className="">
+										<hr className="w-full border-[1px] border-red-900" />
+
+										{/* Text on left, icons on right */}
+										<div className="">
+											<hr className="w-full border-[1px] border-red-900" />
+
+											{/* Text on left, icons on right */}
+											<div className="flex justify-between items-center text-red-900 text-xl py-2">
+												<p className="font-semibold text-base">Social Media</p>
+
+												<div className="flex items-center gap-4">
+													<div className="bg-red-900 text-white rounded-full p-2">
+														<FaInstagramSquare />
+													</div>
+													<div className="bg-red-900 text-white rounded-full p-2">
+														<FaXTwitter />
+													</div>
+													<div className="bg-red-900 text-white rounded-full p-2">
+														<FaFacebook />
+													</div>
+													<div className="bg-red-900 text-white rounded-full p-2">
+														<FaYoutube />
+													</div>
+													<div className="bg-red-900 text-white rounded-full p-2">
+														<SiIndeed />
+													</div>
+												</div>
+											</div>
+										</div>
+
+									</div>
+
+									<div className="">
+										<hr className="w-full border-[1px] border-red-900" />
+
+										{/* Text on left, icons on right */}
+										<div className="">
+											<hr className="w-full border-[1px] border-red-900" />
+
+											{/* Text on left, icons on right */}
+											<div className="flex justify-between items-center text-red-900 text-xl py-2">
+												<p className="font-semibold text-base">Contact Us</p>
+
+												<div className="flex items-center gap-4">
+													<div className="bg-red-900 text-white rounded-full p-2">
+														<FaPhoneFlip />
+													</div>
+													<div className="bg-red-900 text-white rounded-full p-2">
+														<MdEmail />
+													</div>
+													<div className="bg-red-900 text-white rounded-full p-2">
+														<FaSquareWhatsapp />
+													</div>
+												</div>
+											</div>
+										</div>
+										<div className="bg-red-900 text-white rounded-full p-3 inline-flex items-center justify-center">
+											<FaCcMastercard className="text-xl" />
+										</div>
+
+
+										<div className="bg-red-900 text-white rounded-full p-3 inline-flex items-center justify-center">
+											<FaCcMastercard className="text-xl" />
+										</div>
+
+										
+
+									</div>
+
+								</div>
+
+							</div>
+						</div>
+						
+					</div>
+
+
+				</footer>
+				{/* FOOTER END */}
 			</div>
 		</>
 	);
