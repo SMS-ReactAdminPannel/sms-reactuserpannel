@@ -10,6 +10,7 @@ import {
   Clock,
   MapPin,
 } from "lucide-react";
+import bgImage from "../../assets/checkout-bg_1_.png"
 
 // OrderDetails Interface
 interface OrderDetails {
@@ -159,10 +160,13 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
   const isCompleted = orderDate && orderDate < new Date();
   const isOld =
     orderDate && orderDate < new Date(Date.now() - 365 * 24 * 60 * 60 * 1000); // Older than 1 year
+ 
 
+    //this is card inside
   return (
-    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
-      <div className="flex flex-col md:flex-row">
+    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 " >
+      <div className="flex flex-col">
+        <div className="flex flex-row ">
         {/* Image Section */}
 
         <div className="md:w-48 h-48 md:h-auto relative bg-gradient-to-br from-gray-50 to-gray-100">
@@ -192,7 +196,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
               )}
             </span>
           </div>
-          <div className="absolute top-3 right-3">
+          <div className="absolute top-3 right-3 ">
             <span
               className={`px-2 py-1 text-xs font-medium rounded-full ${
                 isCompleted
@@ -209,58 +213,56 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
         <div className="flex-1 p-6">
           <div className="flex flex-col h-full">
             {/* Header */}
+            <div className="  flex justify-center items-center">
+              {/* name nd des */}
+              <div>
+                <div className="">
+                  <h3 className="text-xl font-bold text-gray-900 mb-1">
+                    {order.name}
+                  </h3>
+                  <p className="text-gray-600 text-sm leading-relaxed">
+                    {order.description}
+                  </p>
+                </div>
                 <div>
-                  {/* name nd des */}
-                  <div>
-                    <h3 className="text-xl font-bold text-gray-900 mb-1">
-                      {order.name}
-                    </h3>
-                    <p className="text-gray-600 text-sm leading-relaxed">
-                      {order.description}
-                    </p>
+                  <div className="flex items-center text-sm">
+                    <MapPin className="w-4 h-4 text-gray-400 mr-2" />
+                    <span className="text-gray-700 font-medium">
+                      {order.compatibility}
+                    </span>
                   </div>
-                  <div>
-                    <div className="flex items-center text-sm">
-                      <MapPin className="w-4 h-4 text-gray-400 mr-2" />
-                      <span className="text-gray-700 font-medium">
-                        {order.compatibility}
+                  {/* Date Section */}
+                  {order.date && (
+                    <div className="flex items-center text-sm text-gray-600">
+                      <Calendar className="w-4 h-4 text-gray-400 mr-2" />
+                      <span>
+                        {new Date(order.date).toLocaleDateString("en-US", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}
                       </span>
                     </div>
-                    {/* Date Section */}
-                    {order.date && (
-                      <div className="flex items-center text-sm text-gray-600">
-                        <Calendar className="w-4 h-4 text-gray-400 mr-2" />
-                        <span>
-                          {new Date(order.date).toLocaleDateString("en-US", {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          })}
-                        </span>
-                      </div>
-                    )}
+                  )}
+                </div>
+                <div className="">
+                  <div className="text-2xl font-bold text-gray-900">
+                    ₹{order.price.toLocaleString()}
                   </div>
+
+                  {isOld && (
+                    <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full mt-1 inline-block">
+                      Old Order
+                    </span>
+                  )}
+                </div>
               </div>
-          </div>
-        </div>
-        {/* Details */}
-        <div className="space-y-2 mb-4">
-          {/* Price Section */}
-          <div className="text-right">
-            <div className="text-2xl font-bold text-gray-900">
-              ₹{order.price.toLocaleString()}
             </div>
-
-            {isOld && (
-              <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full mt-1 inline-block">
-                Old Order
-              </span>
-            )}
           </div>
         </div>
-
-        {/* Actions */}
-        <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+      </div>
+            {/* Actions */}
+        <div className="flex items-center justify-between pt-4 ">
           <div className="flex items-center space-x-4">
             {isCompleted ? (
               <div className="flex items-center text-green-600 text-sm font-medium">
@@ -288,6 +290,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
           </div>
         </div>
       </div>
+      
     </div>
   );
 };
@@ -339,8 +342,8 @@ const OrdersPage: React.FC = () => {
   }).length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100"style={{backgroundImage:`url("${bgImage}")`}}>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" >
         {/* Header */}
         <div className="mb-8">
           <h1 className="text-4xl font-bold text-gray-900 mb-2">My Orders</h1>
@@ -402,7 +405,7 @@ const OrdersPage: React.FC = () => {
                 </button>
                 <button
                   onClick={() => setFilterType("spare")}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${
+                  className={`px-4 py-2 rounded-lg  text-sm font-medium transition-all flex items-center ${
                     filterType === "spare"
                       ? "bg-white text-gray-900 shadow-sm"
                       : "text-gray-600 hover:text-gray-900"
@@ -427,7 +430,7 @@ const OrdersPage: React.FC = () => {
               {/* Old Orders Toggle */}
               <button
                 onClick={() => setShowOldOrders(!showOldOrders)}
-                className={`px-4 py-2 rounded-xl text-sm font-medium transition-all flex items-center ${
+                className={`px-4 py-2 rounded-xl hover:shadow-xl text-sm font-medium transition-all flex items-center ${
                   showOldOrders
                     ? "bg-purple-600 text-white shadow-sm"
                     : "bg-gray-100 text-gray-600 hover:bg-gray-200"
@@ -443,7 +446,7 @@ const OrdersPage: React.FC = () => {
                 onChange={(e) =>
                   setSortBy(e.target.value as "date" | "price" | "name")
                 }
-                className="px-4 py-2 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-sm"
+                className="px-4 py-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-smpx-6 py-2 bg-gradient-to-r from-red-600 to-red-700 text-gray-600 rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-200 shadow-sm hover:shadow-md font-medium text-sm"
               >
                 <option value="date">Sort by Date</option>
                 <option value="price">Sort by Price</option>
