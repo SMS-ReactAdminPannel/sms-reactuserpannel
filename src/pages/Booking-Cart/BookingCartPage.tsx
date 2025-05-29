@@ -1,7 +1,10 @@
-"use client"
 
 import { useState, useMemo } from "react"
-import { Search, Filter, X, Plus, Minus, Wrench, Car } from "lucide-react"
+import {  X, Plus, Minus, Wrench, Car } from "lucide-react"
+//Search, Filter,
+import serviceImg from '../../assets/serviceimages/generalservice.png';
+import bgImage from "../../assets/checkout-bg_1_.png";
+import { toast } from "react-toastify";
 
 interface SparePart {
   id: string
@@ -32,7 +35,7 @@ const initialParts: SparePart[] = [
     id: "1",
     name: "Brake Pad Set",
     description: "High-quality ceramic brake pads for safe and smooth braking.",
-    imageUrl: "/placeholder.svg?height=200&width=200",
+    imageUrl:"https://boodmo.com/media/cache/catalog_part/images/parts/3fe3e3713e19d66a47bae04233a97cf4.webp",
     inStock: true,
     price: 1899,
     discount: 20,
@@ -44,7 +47,7 @@ const initialParts: SparePart[] = [
     id: "2",
     name: "Air Filter Element",
     description: "Durable air filter ensuring clean air intake and better mileage.",
-    imageUrl: "/placeholder.svg?height=200&width=200",
+    imageUrl: "https://boodmo.com/media/cache/catalog_part/images/parts/3fe3e3713e19d66a47bae04233a97cf4.webp",
     inStock: true,
     price: 499,
     discount: 10,
@@ -56,7 +59,7 @@ const initialParts: SparePart[] = [
     id: "3",
     name: "Engine Oil 5W-30 (3L)",
     description: "Premium synthetic oil for high-performance engines.",
-    imageUrl: "/placeholder.svg?height=200&width=200",
+    imageUrl: "https://boodmo.com/media/cache/catalog_part/images/parts/9fd50e122693b3b0e4ae4ee3724ca1b2.webp",
     inStock: false,
     price: 1299,
     discount: 15,
@@ -68,7 +71,7 @@ const initialParts: SparePart[] = [
     id: "4",
     name: "Headlight Assembly",
     description: "Complete headlamp assembly with long-lasting brightness.",
-    imageUrl: "/placeholder.svg?height=200&width=200",
+    imageUrl:"https://boodmo.com/media/cache/catalog_part/images/parts/a808aff9788f47721e361dbf0d10bba8.webp",
     inStock: true,
     price: 3499,
     discount: 25,
@@ -80,7 +83,7 @@ const initialParts: SparePart[] = [
     id: "5",
     name: "Wiper Blade Set",
     description: "All-weather wiper blades with streak-free performance.",
-    imageUrl: "/placeholder.svg?height=200&width=200",
+    imageUrl: "https://boodmo.com/media/cache/catalog_part/images/parts/7371bac93f3021909d987178c1b3ffdc.webp",
     inStock: true,
     price: 799,
     discount: 12,
@@ -101,7 +104,7 @@ const initialServices: Service[] = [
       "Interior Vacuuming (Carpet & Seats)",
       "Engine Oil Replacement",
     ],
-    imageUrl: "/placeholder.svg?height=200&width=200",
+    imageUrl: serviceImg,
     price: 2999,
     originalPrice: 3399,
     category: "Basic",
@@ -117,7 +120,7 @@ const initialServices: Service[] = [
       "Car Wash",
       "Interior Vacuuming (Carpet & Seats)",
     ],
-    imageUrl: "/placeholder.svg?height=200&width=200",
+    imageUrl: serviceImg,
     price: 4899,
     originalPrice: 5599,
     category: "Standard",
@@ -133,7 +136,7 @@ const initialServices: Service[] = [
       "Car Wash",
       "Interior Vacuuming (Carpet & Seats)",
     ],
-    imageUrl: "/placeholder.svg?height=200&width=200",
+    imageUrl: serviceImg,
     price: 3899,
     originalPrice: 5999,
     category: "AC Service",
@@ -143,7 +146,7 @@ const initialServices: Service[] = [
     name: "Complete AC Service",
     hour: "4 Hrs Taken",
     description: ["AC Deep Cleaning", "Filter Replacement", "Condenser Cleaning", "AC Gas Refill", "Compressor Check"],
-    imageUrl: "/placeholder.svg?height=200&width=200",
+    imageUrl: serviceImg,
     price: 3899,
     originalPrice: 5999,
     category: "AC Service",
@@ -153,7 +156,7 @@ const initialServices: Service[] = [
     name: "Battery Health Check",
     hour: "1 Hr Taken",
     description: ["Battery Voltage Test", "Terminal Cleaning", "Load Test", "Water Level Check"],
-    imageUrl: "/placeholder.svg?height=200&width=200",
+    imageUrl: serviceImg,
     price: 3899,
     originalPrice: 5999,
     category: "Battery",
@@ -167,6 +170,7 @@ export default function SparePartsCart() {
   const [confirmedServiceOrders, setConfirmedServiceOrders] = useState<{ serv: Service; quantity: number }[]>([])
   const [activeTab, setActiveTab] = useState<"service" | "ServiceBookingPage">("service")
   const [showSummary, setShowSummary] = useState(true)
+  const [showsSummary, setShowsSummary] = useState(true)
 
   // Filter states
   const [searchQuery, setSearchQuery] = useState("")
@@ -174,11 +178,11 @@ export default function SparePartsCart() {
   const [selectedCategories, setSelectedCategories] = useState<string[]>([])
   const [sortBy, setSortBy] = useState("name")
   const [showInStockOnly, setShowInStockOnly] = useState(false)
-  const [showFilters, setShowFilters] = useState(false)
+  // const [showFilters, setShowFilters] = useState(false)
 
   // Get unique categories
-  const partCategories = [...new Set(parts.map((part) => part.category))]
-  const serviceCategories = [...new Set(services.map((service) => service.category))]
+  // const partCategories = [...new Set(parts.map((part) => part.category))]
+  // const serviceCategories = [...new Set(services.map((service) => service.category))]
 
   // Filter and sort parts
   const filteredParts = useMemo(() => {
@@ -261,22 +265,22 @@ export default function SparePartsCart() {
     setShowInStockOnly(false)
   }
 
-  const handleCategoryChange = (category: string, checked: boolean) => {
-    if (checked) {
-      setSelectedCategories((prev) => [...prev, category])
-    } else {
-      setSelectedCategories((prev) => prev.filter((c) => c !== category))
-    }
-  }
+  // const handleCategoryChange = (category: string, checked: boolean) => {
+  //   if (checked) {
+  //     setSelectedCategories((prev) => [...prev, category])
+  //   } else {
+  //     setSelectedCategories((prev) => prev.filter((c) => c !== category))
+  //   }
+  // }
 
   const SparePartCard = ({ part }: { part: SparePart }) => {
     const [quantity, setQuantity] = useState(1)
 
     return (
-      <div className="bg-white rounded-lg shadow-md p-4 mb-4 border border-gray-200 hover:shadow-lg transition-shadow duration-300">
+      <div className=" rounded-lg shadow-md p-4 mb-4  border border-gray-200 hover:shadow-lg transition-shadow duration-300  bg-white" >
         <div className="flex gap-4">
-          <div className="relative w-20 h-20 flex-shrink-0">
-            {/* <Image src={part.imageUrl || "/placeholder.svg"} alt={part.name} fill className="object-cover rounded-lg" /> */}
+          <div className="relative w-36  flex-shrink-0">
+            <img src={part.imageUrl || "/placeholder.svg"} alt={part.name} className="object-cover rounded-lg h-full" />
             {part.discount > 0 && (
               <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-semibold">
                 {part.discount}% OFF
@@ -345,15 +349,15 @@ export default function SparePartsCart() {
     const [quantity, setQuantity] = useState(1)
 
     return (
-      <div className="bg-white rounded-lg shadow-md p-4 mb-4 border border-gray-200 hover:shadow-lg transition-shadow duration-300">
+      <div className="bg-white rounded-lg shadow-md p-4 mb-4 border border-gray-200 hover:shadow-lg transition-shadow duration-300" >
         <div className="flex gap-4">
-          <div className="relative w-20 h-20 flex-shrink-0">
-            {/* <Image
+          <div className="relative w-48  flex-shrink-0">
+            <img
               src={service.imageUrl || "/placeholder.svg"}
               alt={service.name}
-              fill
-              className="object-cover rounded-lg"
-            /> */}
+
+              className="object-cover rounded-lg h-full "
+            />
           </div>
           <div className="flex-1">
             <div className="flex justify-between items-start mb-2">
@@ -362,11 +366,11 @@ export default function SparePartsCart() {
                 {service.hour}
               </span>
             </div>
-            <div className="mb-3">
-              <ul className="text-sm text-gray-600 space-y-1">
+            <div className="mb-3 ">
+              <ul className="text-sm text-gray-600 w-96 grid grid-cols-2 gap-x-3 gap-y-1">
                 {service.description.map((desc, index) => (
-                  <li key={index} className="flex items-start gap-2">
-                    <div className="w-1 h-1 bg-red-600 rounded-full mt-2 flex-shrink-0" />
+                  <li key={index} className="flex gap-1 item-start">
+                    <div className="w-1 h-1 bg-red-600 rounded-full mt-1.5   flex-shrink-0" />
                     {desc}
                   </li>
                 ))}
@@ -413,124 +417,20 @@ export default function SparePartsCart() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
+    <div className="min-h-screen bg-gray-50 p-4 " style={{ backgroundImage: `url("${bgImage}")` }}>
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <h1 className="text-3xl font-bold text-red-600 mb-6">My Cart</h1>
-
-        {/* Search and Filters */}
-        <div className="bg-white rounded-lg shadow-md p-4 mb-6">
-          <div className="flex flex-col lg:flex-row gap-4 mb-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <input
-                  type="text"
-                  placeholder="Search parts and services..."
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none"
-                />
-              </div>
-            </div>
-            <div className="flex gap-2">
-              <select
-                value={sortBy}
-                onChange={(e) => setSortBy(e.target.value)}
-                className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none"
-              >
-                <option value="name">Sort by Name</option>
-                <option value="price-low">Price: Low to High</option>
-                <option value="price-high">Price: High to Low</option>
-                <option value="discount">Highest Discount</option>
-              </select>
-              <button
-                onClick={() => setShowFilters(!showFilters)}
-                className="flex items-center gap-2 px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-              >
-                <Filter className="h-4 w-4" />
-                Filters
-              </button>
-            </div>
-          </div>
-
-          {/* Filters Panel */}
-          {showFilters && (
-            <div className="border-t pt-4">
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div>
-                  <label className="block text-sm font-medium mb-2">Price Range</label>
-                  <div className="space-y-2">
-                    <input
-                      type="range"
-                      min="0"
-                      max="10000"
-                      step="100"
-                      value={priceRange[0]}
-                      onChange={(e) => setPriceRange([Number(e.target.value), priceRange[1]])}
-                      className="w-full"
-                    />
-                    <input
-                      type="range"
-                      min="0"
-                      max="10000"
-                      step="100"
-                      value={priceRange[1]}
-                      onChange={(e) => setPriceRange([priceRange[0], Number(e.target.value)])}
-                      className="w-full"
-                    />
-                    <div className="flex justify-between text-sm text-gray-500">
-                      <span>₹{priceRange[0]}</span>
-                      <span>₹{priceRange[1]}</span>
-                    </div>
-                  </div>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium mb-2">Categories</label>
-                  <div className="space-y-2 max-h-32 overflow-y-auto">
-                    {(activeTab === "service" ? partCategories : serviceCategories).map((category) => (
-                      <label key={category} className="flex items-center space-x-2">
-                        <input
-                          type="checkbox"
-                          checked={selectedCategories.includes(category)}
-                          onChange={(e) => handleCategoryChange(category, e.target.checked)}
-                          className="rounded border-gray-300 text-red-600 focus:ring-red-500"
-                        />
-                        <span className="text-sm">{category}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-                <div className="flex flex-col gap-2">
-                  {activeTab === "service" && (
-                    <label className="flex items-center space-x-2">
-                      <input
-                        type="checkbox"
-                        checked={showInStockOnly}
-                        onChange={(e) => setShowInStockOnly(e.target.checked)}
-                        className="rounded border-gray-300 text-red-600 focus:ring-red-500"
-                      />
-                      <span className="text-sm">In Stock Only</span>
-                    </label>
-                  )}
-                  <button
-                    onClick={clearFilters}
-                    className="px-3 py-1 text-sm border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
-                  >
-                    Clear Filters
-                  </button>
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
+        <h1 className="text-3xl font-bold text-[#9b111e] mb-6">My Cart</h1>
+        
 
         {/* Tabs */}
         <div className="flex gap-4 mb-6">
           <button
             onClick={() => setActiveTab("service")}
             className={`px-6 py-3 rounded-full flex items-center gap-2 transition-all hover:scale-105 ${
-              activeTab === "service" ? "bg-red-600 text-white shadow-lg" : "bg-gray-200 text-black hover:bg-red-100"
+              activeTab === "service" 
+              ? "bg-[#9b111e] text-white shadow-lg"
+                : "bg-gray-200 text-black hover:bg-red-400"
             }`}
           >
             <Wrench className="text-lg" />
@@ -540,8 +440,8 @@ export default function SparePartsCart() {
             onClick={() => setActiveTab("ServiceBookingPage")}
             className={`px-6 py-3 rounded-full flex items-center gap-2 transition-all hover:scale-105 ${
               activeTab === "ServiceBookingPage"
-                ? "bg-red-600 text-white shadow-lg"
-                : "bg-gray-200 text-black hover:bg-red-100"
+                ? "bg-[#9b111e] text-white shadow-lg"
+                : "bg-gray-200 text-black hover:bg-red-400"
             }`}
           >
             <Car className="text-xl" />
@@ -549,9 +449,9 @@ export default function SparePartsCart() {
           </button>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1  gap-6">
           {/* Main Content */}
-          <div className="lg:col-span-2">
+          <div className="">
             {/* Service Page */}
             {activeTab === "service" && (
               <div>
@@ -588,7 +488,7 @@ export default function SparePartsCart() {
           </div>
 
           {/* Summary Sidebar */}
-          <div className="lg:col-span-1">
+          <div className="">
             {/* Parts Summary */}
             {confirmedPartOrders.length > 0 && showSummary && (
               <div className="bg-white rounded-lg shadow-md p-4 mb-6">
@@ -622,22 +522,30 @@ export default function SparePartsCart() {
                 </div>
                 <div className="flex justify-center">
                   <button
-                    onClick={() => alert("Payment Successful 🎉")}
-                    className="relative overflow-hidden bg-gray-50 text-lg font-semibold border-2 border-gray-50 px-6 py-2 rounded-full transition-all duration-700 hover:text-gray-50 hover:bg-red-600 hover:border-red-600 hover:scale-105 hover:shadow-xl"
-                  >
-                    Place Order
-                  </button>
+                  type="submit"
+                  className="flex justify-center gap-2 items-center mx-auto shadow-xl text-lg bg-gray-50 backdrop-blur-md lg:font-semibold isolation-auto border-gray-50 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-[#9b111e] hover:text-gray-50 before:-z-10 before:aspect-square before:hover:scale-150 before:hover:duration-700 relative z-10 px-6 py-2 overflow-hidden border-2 rounded-full group"
+                onClick={() => toast("Order Confirmed 🎉",{autoClose:1000})}> Place Order   
+                </button>
                 </div>
               </div>
             )}
 
             {/* Services Summary */}
-            {confirmedServiceOrders.length > 0 && (
-              <div className="bg-white rounded-lg shadow-md p-4">
-                <div className="mb-4">
-                  <h2 className="text-xl font-semibold text-red-600">Summary</h2>
-                  <h3 className="text-base font-semibold text-red-600">Confirmed Service Orders</h3>
+            {confirmedServiceOrders.length > 0 &&showsSummary&& (
+              <div className="bg-white rounded-lg shadow-md p-4 ">
+                <div className="flex justify-between items-center mb-4">
+                  <div>
+                    <h2 className="text-xl font-semibold text-red-600">Summary</h2>
+                    <h3 className="text-base font-semibold text-red-600">Confirmed Part Orders</h3>
+                  </div>
+                  <button
+                    onClick={() => setShowsSummary(false)}
+                    className="px-3 py-1 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition-colors"
+                  >
+                    Close
+                  </button>
                 </div>
+                
                 <div className="space-y-2 mb-4">
                   {confirmedServiceOrders.map(({ serv, quantity }) => (
                     <div key={serv.id} className="flex justify-between text-sm">
@@ -656,17 +564,16 @@ export default function SparePartsCart() {
                 </div>
                 <div className="flex justify-center">
                   <button
-                    onClick={() => alert("Payment Successful 🎉")}
-                    className="relative overflow-hidden bg-gray-50 text-lg font-semibold border-2 border-gray-50 px-6 py-2 rounded-full transition-all duration-700 hover:text-gray-50 hover:bg-red-600 hover:border-red-600 hover:scale-105 hover:shadow-xl"
-                  >
-                    Place Order
-                  </button>
+                  type="submit"
+                  className="flex justify-center gap-2 items-center mx-auto shadow-xl text-lg bg-gray-50 backdrop-blur-md lg:font-semibold isolation-auto border-gray-50 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-[#9b111e] hover:text-gray-50 before:-z-10 before:aspect-square before:hover:scale-150 before:hover:duration-700 relative z-10 px-6 py-2 overflow-hidden border-2 rounded-full group"
+                onClick={() => toast("Order Confirmed 🎉",{autoClose:1000})}> Place Order   
+                </button>
                 </div>
               </div>
             )}
           </div>
         </div>
       </div>
-    </div>
-  )
+    </div>
+  )
 }
