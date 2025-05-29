@@ -8,14 +8,28 @@ const slides = [slide1, slide2, slide3];
 
 export const HomePageIntro = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState(true);
 
-  //Auto-slide every 6 seconds
+  // Auto-slide every 6 seconds
   useEffect(() => {
     const interval = setInterval(() => {
-      setCurrentSlide((prev) => (prev + 1) % slides.length);
+      if (isAutoPlaying) {
+        setCurrentSlide((prev) => (prev + 1) % slides.length);
+      }
     }, 6000);
     return () => clearInterval(interval);
-  }, []);
+  }, [isAutoPlaying]);
+
+  // Navigation that doesn't stop auto-play
+  const goToNextSlide = () => setCurrentSlide((prev) => (prev + 1) % slides.length);
+  const goToPrevSlide = () => setCurrentSlide((prev) => (prev - 1 + slides.length) % slides.length);
+  const goToSlide = (index) => setCurrentSlide(index);
+
+  // Function to handle content clicks (stops auto-play)
+  const handleInteractiveClick = () => {
+    setIsAutoPlaying(false);
+  };
+
 
   const renderSlideContent = () => {
     switch (currentSlide) {
@@ -80,7 +94,7 @@ export const HomePageIntro = () => {
       whileTap={{ scale: 0.98 }}
       aria-label="Buy now"
     >
-      BUY NOW
+      Book NOW
     </motion.button>
   </motion.div>
 </motion.div>
@@ -257,7 +271,7 @@ export const HomePageIntro = () => {
     }
   };
 
-  return (
+ return (
     <div className="relative min-h-screen flex items-center justify-center px-8 py-12 overflow-hidden">
       {/* Background Image + Overlay */}
       <div className="absolute inset-0 z-0 transition-opacity duration-700 ease-in-out">
@@ -269,23 +283,27 @@ export const HomePageIntro = () => {
         <div className="absolute inset-0 bg-black/50" />
       </div>
 
+      {/* Navigation Arrows (don't stop auto-play) */}
+      <button 
+        onClick={goToPrevSlide}
+        className="absolute left-8 z-10 p-2 text-white hover:bg-white/20 rounded-full transition-all"
+      >
+        <span className="text-4xl font-bold">&lt;</span>
+      </button>
+      
+      <button 
+        onClick={goToNextSlide}
+        className="absolute right-8 z-10 p-2 text-white hover:bg-white/20 rounded-full transition-all"
+      >
+        <span className="text-4xl font-bold">&gt;</span>
+      </button>
+
       {/* Slide Content */}
       <div className="flex items-center w-full">
         {renderSlideContent()}
       </div>
 
-      {/* Carousel Dots */}
-      <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-10 flex space-x-3">
-        {slides.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentSlide(index)}
-            className={`w-3 h-3 rounded-full transition-all duration-300 ${
-              index === currentSlide ? "bg-white scale-125" : "bg-gray-400"
-            }`}
-          />
-        ))}
-      </div>
+   
     </div>
   );
 };
