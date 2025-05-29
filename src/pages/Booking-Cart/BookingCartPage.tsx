@@ -275,7 +275,7 @@ const SparePartsList = () => {
           </div>
 
           {confirmedPartOrders.length > 0 && show && (
-            <div className="mt-6 p-4 bg-white rounded-lg shadow ">
+            <div className="mt-3 p-5 m-4 bg-[#FAF3EB] rounded-lg shadow ">
               <div className="flex flex-cols justify-between">
                <div className="mb-4">
                  <h2 className="text-xl font-semibold text-[#9b111e] ">
@@ -332,7 +332,7 @@ const SparePartsList = () => {
           </div>
 
           {confirmedServiceOrders.length > 0 && (
-            <div className="mt-6 p-4 bg-white rounded-lg shadow  ">
+            <div className="mt-3 p-4 m-4 bg-[#FAF3EB] rounded-lg shadow  ">
               <div className="mb-4">
                 <h2 className="text-xl font-semibold text-[#9b111e] ">
                   Summery
