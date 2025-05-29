@@ -44,20 +44,20 @@ const services: ServiceItem[] = [
 
 const CustomServicesGrid: React.FC = () => {
 	return (
-		<div className='pt-4'>
+		<div className='py-10'>
 			<h2
-				className='text-3xl font-bold text-red-900 text-center pb-6'
+				className='text-3xl font-bold text-red-900 text-center pb-12 underline'
 				style={{ ...FONTS.header, fontWeight: 600 }}
 			>
 				Available Spare Parts
 			</h2>
-			<div className='grid grid-cols-5 gap-4'>
+			<div className='grid grid-cols-5 gap-10'>
 				{services.map((item, idx) => (
 					<div
 						key={idx}
 						className='bg-[#E5D0AC] rounded-lg p-2 shadow-3xl hover:shadow-4xl hover:scale-102 transition-transform duration-300 text-center text-red-900 relative '
 					>
-						<div className='w-full h-[150px]  bg-white flex items-center justify-center overflow-hidden rounded'>
+						<div className='w-full h-[125px] bg-white flex items-center justify-center overflow-hidden rounded'>
 							<img
 								src={item.image}
 								alt={item.title}

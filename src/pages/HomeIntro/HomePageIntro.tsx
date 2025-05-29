@@ -6,19 +6,35 @@ import slide3 from '../../../src/assets/HomeIntro/slider(3).jpg';
 import { Link } from 'react-router-dom';
 import { FONTS } from '../../constants/constant';
 import Logo from '../../assets/LOGO.jpg';
+import { toast } from 'react-toastify';
 
 const slides = [slide1, slide2, slide3];
 
 export const HomePageIntro = () => {
 	const [currentSlide, setCurrentSlide] = useState(0);
+	const [isInteracting, setIsInteracting] = useState(false);
 
-	//Auto-slide every 6 seconds
+	const showLoginToast = () => {
+		toast.error('Please login to view this content', {
+			position: 'top-right',
+			autoClose: 3000,
+			hideProgressBar: false,
+			closeOnClick: true,
+			pauseOnHover: true,
+			draggable: true,
+			progress: undefined,
+			theme: 'colored',
+		});
+	};
+
 	useEffect(() => {
-		const interval = setInterval(() => {
-			setCurrentSlide((prev) => (prev + 1) % slides.length);
-		}, 6000);
-		return () => clearInterval(interval);
-	}, []);
+		if (!isInteracting) {
+			const interval = setInterval(() => {
+				setCurrentSlide((prev) => (prev + 1) % slides.length);
+			}, 6000);
+			return () => clearInterval(interval);
+		}
+	}, [isInteracting]);
 
 	const renderSlideContent = () => {
 		switch (currentSlide) {
@@ -78,6 +94,7 @@ export const HomePageIntro = () => {
 								whileHover={{
 									scale: 1.03,
 								}}
+								onClick={showLoginToast}
 								whileTap={{ scale: 0.98 }}
 								aria-label='Buy now'
 							>
@@ -126,6 +143,7 @@ export const HomePageIntro = () => {
 									whileHover={{ scale: 1.05 }}
 									whileTap={{ scale: 0.95 }}
 									aria-label='View our prices'
+									onClick={showLoginToast}
 								>
 									Our prices
 								</motion.button>
@@ -177,6 +195,8 @@ export const HomePageIntro = () => {
 										hidden: { opacity: 0, y: 10 },
 										visible: { opacity: 1, y: 0 },
 									}}
+									onFocus={() => setIsInteracting(true)}
+									onBlur={() => setIsInteracting(false)}
 								>
 									<option className='text-gray-500'>Select District</option>
 									<option className='text-black'>Chennai</option>
@@ -195,6 +215,8 @@ export const HomePageIntro = () => {
 										hidden: { opacity: 0, y: 10 },
 										visible: { opacity: 1, y: 0 },
 									}}
+									onFocus={() => setIsInteracting(true)}
+									onBlur={() => setIsInteracting(false)}
 								>
 									<option className='text-gray-500'>Select Car Model</option>
 									<option className='text-black'>Maruti Swift</option>
@@ -208,9 +230,11 @@ export const HomePageIntro = () => {
 								</motion.select>
 
 								<motion.input
-									type='text'
+									type='number'
 									placeholder='Mobile Number'
 									className='w-full px-4 py-3 bg-white/80 text-red-600 border border-red-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500 transition duration-300'
+									onFocus={() => setIsInteracting(true)}
+									onBlur={() => setIsInteracting(false)}
 									variants={{
 										hidden: { opacity: 0, y: 10 },
 										visible: { opacity: 1, y: 0 },
@@ -286,7 +310,7 @@ export const HomePageIntro = () => {
 					<button
 						key={index}
 						onClick={() => setCurrentSlide(index)}
-						className={`w-1 h-1 rounded-full transition-all duration-300 ${
+						className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
 							index === currentSlide ? 'bg-[#9b111e] scale-125' : 'bg-gray-400'
 						}`}
 					/>
