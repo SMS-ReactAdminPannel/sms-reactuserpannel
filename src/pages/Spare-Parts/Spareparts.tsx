@@ -241,7 +241,7 @@ const handleAddToCart = (part: any) => {
 
 
   return (
-    <div className="p-6">
+    <div className="p-12">
   <div className="flex items-center justify-between flex-wrap gap-4 mb-6">
     <h1 className="text-4xl font-bold text-[#9b111e] text-left">
       Spare Parts
@@ -354,7 +354,7 @@ const handleAddToCart = (part: any) => {
   ))}
 </div>
 
-<div className="bg-gray-100 p-8">
+<div className="bg-gray-100 transition-shadow p-8">
       <div>
         <h2 className="text-2xl ml-6 font-bold text-[#9b111e] text-left mb-8">
           OUR BUNDLES
@@ -473,12 +473,12 @@ const handleAddToCart = (part: any) => {
   </div>
 </div>
 
-<div className="max-w-full px-4 md:px-6 lg:px-8">
+<div className="max-w-full px-4 md:px-6 lg:px-8 bg-[#fae9eb] py-6">
   <h1 className="text-2xl font-bold text-[#9b111e] mb-8 text-left">
     BY CATEGORIES
   </h1>
 
- <div className="grid grid-cols-4 sm:grid-cols-2 mdplus:grid-cols-2 lg:grid-cols-4 gap-6">
+ <div className="grid  grid-cols-4 sm:grid-cols-2 mdplus:grid-cols-2 lg:grid-cols-4 gap-6">
     {[
       {
         title: "Wheels and Tires",
