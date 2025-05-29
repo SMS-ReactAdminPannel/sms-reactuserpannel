@@ -1,15 +1,6 @@
 import React, { useState } from "react";
-import {
-  Search,
-  Filter,
-  Package,
-  Wrench,
-  CheckCircle,
-} from "lucide-react";
-import { motion } from "framer-motion";
-import bgImage from "../../assets/checkout-bg_1_.png";
-
-
+import { Search, Filter, Package, Wrench, CheckCircle } from "lucide-react";
+import bgImage from '../../assets/checkout-bg_1_.png'
 
 // OrderDetails Component
 interface OrderDetails {
@@ -32,14 +23,8 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ part }) => {
   const isCompleted = orderDate && orderDate < new Date();
 
   return (
-    <motion.div
-      layout
-      whileHover={{ scale: 1.02 }}
-      transition={{ type: "spring", stiffness: 300 }}
-      className="group relative"
-    >
-      <div className="bg-white rounded-2xl shadow-md border border-gray-100 hover:shadow-xl transition-all duration-300 overflow-hidden">
-        {/* Status Badge */}
+    <div className="group relative h-full">
+      <div className="bg-white rounded-2xl shadow-sm border border-gray-100 bg-gradient-to-br from-fuchsia-500 to-indigo-900 text-center transition-all duration-200 ease-[cubic-bezier(0,0,0,1)] hover:shadow-[0_0_30px_1px_rgba(102,0,25,0.3)] h-full flex flex-col ">
         <div className="absolute top-3 right-3 z-10">
           <span
             className={`px-2 py-1 text-xs font-medium rounded-full ${
@@ -52,7 +37,6 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ part }) => {
           </span>
         </div>
 
-        {/* Image Section */}
         <div className="relative h-48 bg-gradient-to-br from-gray-50 to-gray-100 overflow-hidden">
           <img
             src={part.imageUrl || "/placeholder.svg"}
@@ -61,8 +45,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ part }) => {
           />
         </div>
 
-        {/* Content */}
-        <div className="p-5">
+        <div className="p-5 flex-1 flex flex-col justify-between">
           <div className="mb-3">
             <h3 className="font-semibold text-lg text-gray-900 mb-1 line-clamp-1">
               {part.name}
@@ -92,7 +75,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ part }) => {
             )}
           </div>
 
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mt-auto">
             <div className="text-2xl font-bold text-gray-900">
               ₹{part.price.toLocaleString()}
             </div>
@@ -105,7 +88,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ part }) => {
           </div>
         </div>
       </div>
-    </motion.div>
+    </div>
   );
 };
 
@@ -192,7 +175,6 @@ const initialServiceOrders: OrderDetails[] = [
 const BookingsPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeTab, setActiveTab] = useState<"spare" | "service">("spare");
-  const [showCompletedOnly, setShowCompletedOnly] = useState(false);
   const [showFilters, setShowFilters] = useState(false);
   const [filterValue, setFilterValue] = useState("");
 
@@ -202,12 +184,7 @@ const BookingsPage: React.FC = () => {
   const handleTabClick = (tab: "spare" | "service") => {
     setActiveTab(tab);
     setSearchTerm("");
-    setShowCompletedOnly(false);
     setFilterValue("");
-  };
-
-  const toggleShowCompleted = () => {
-    setShowCompletedOnly((prev) => !prev);
   };
 
   const toggleFilters = () => {
@@ -219,39 +196,29 @@ const BookingsPage: React.FC = () => {
       .toLowerCase()
       .includes(searchTerm.toLowerCase());
 
-    if (!showCompletedOnly) return matchesSearch;
-    if (!part.date) return false;
-
-    const orderDate = new Date(part.date);
-    const today = new Date();
-    return matchesSearch && orderDate < today;
+    return matchesSearch;
   });
-
-  // const completedCount = currentList.filter((part) => {
-  //   if (!part.date) return false;
-  //   return new Date(part.date) < new Date();
-  // }).length;
 
   return (
     <div className="min-h-screen bg-cover bg-center bg-no-repeat bg-fixed" style={{ backgroundImage: `url(${bgImage})` }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">My Orders</h1>
+          <h1 className="text-3xl font-bold text-red-700 mb-2">My Orders</h1>
           <p className="text-gray-600">
             Track and manage your spare parts and service orders
           </p>
         </div>
 
-        {/* Navigation Tabs */}
-        <div className="bg-white rounded-xl shadow-sm border border-gray-100 mb-8 ">
-          <div className="flex hover:shadow-[0_0_20px_#f87171] hover:border hover:border-red-300">
+        {/* Tabs */}
+        <div className="bg-white rounded-xl shadow-sm  mb-8 ">
+          <div className="flex bg-gradient-to-br from-fuchsia-500 to-indigo-900 rounded-[20px] text-center">
             <button
               onClick={() => handleTabClick("spare")}
-              className={`flex-1 flex items-center justify-center px-6 py-4 text-sm font-medium rounded-l-xl transition-colors ${
+              className={`flex-1 flex items-center justify-center px-6 py-4 text-sm font-medium rounded-l-xl  bg-gradient-to-br from-fuchsia-500 to-indigo-900 rounded-[20px] text-center transition-all duration-200 ease-[cubic-bezier(0,0,0,1)] hover:shadow-[0_0_30px_1px_rgba(204,0,255,0.3)] ${
                 activeTab === "spare"
-                  ? "bg-red-600 text-white"
-                  : "text-gray-700 hover:text-red-600 hover:bg-gray-50"
+                  ? "bg-red-700 text-white"
+                  : "text-gray-700 hover:text-red-700 hover:bg-gray-50"
               }`}
             >
               <Package className="h-5 w-5 mr-2" />
@@ -259,90 +226,58 @@ const BookingsPage: React.FC = () => {
             </button>
             <button
               onClick={() => handleTabClick("service")}
-              className={`flex-1 flex items-center justify-center px-6 py-4 text-sm font-medium rounded-r-xl transition-colors ${
+              className={`flex-1 flex items-center justify-center px-6 py-4 text-sm font-medium rounded-r-xl transition-colorsbg-gradient-to-br from-fuchsia-500 to-indigo-900 rounded-[20px] text-center transition-all duration-200 ease-[cubic-bezier(0,0,0,1)] hover:shadow-[0_0_30px_1px_rgba(204,0,255,0.3)] ${
                 activeTab === "service"
-                  ? "bg-red-600 text-white"
-                  : "text-gray-700 hover:text-red-600 hover:bg-gray-50"
+                  ? "bg-red-700 text-white"
+                  : "text-gray-700 hover:text-red-700 hover:bg-gray-50"
               }`}
             >
               <Wrench className="h-5 w-5 mr-2" />
-              Service Orders
+              Service Bookings
             </button>
           </div>
         </div>
 
-        {/* Search and Filters */}
-        <div className=" rounded-xl  mb-8">
+        {/* Search  */}
+        <div className="rounded-xl mb-8">
           <div className="flex flex-col-4 lg:flex-row gap-4 items-start lg:items-center justify-between">
             <div className="flex flex-col sm:flex-row gap-4 flex-1">
               <div className="flex flex-1 gap-4">
                 {/* Search */}
-                <div className="relative ">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5 " />
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
                   <input
                     type="text"
                     value={searchTerm}
                     placeholder="Search orders..."
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10 pr-4 py-3  border border-gray-200 rounded-lg focus:ring-2 hover:shadow-[0_0_20px_#f87171] hover:border hover:border-red-300 focus:ring-red-500 focus:border-transparent outline-none transition-all"
+                    className="w-96 pl-10 pr-4 py-3 rounded-[20px] border boder-gray focus:outline-none focus:ring-0 bg-gradient-to-br from-fuchsia-500 to-indigo-900 text-white placeholder-gray text-sm transition-all duration-200 ease-[cubic-bezier(0,0,0,1)] hover:shadow-[0_0_30px_1px_rgba(204,0,255,0.3)]"
                   />
-                </div>
-
-                {/* Filter Button */}
-                <div className="relative hover:shadow-[0_0_20px_#f87171] hover:border hover:border-red-300">
-                  <button
-                    onClick={toggleFilters}
-                    className={`flex items-center h-full px-4 py-3 border rounded-lg font-medium transition-colors ${
-                      showFilters
-                        ? "bg-red-600 text-white border-red-600"
-                        : "border-gray-200 text-gray-700 hover:bg-gray-50"
-                    }`}
-                  >
-                    <Filter className="h-5 w-5 mr-2" />
-                    Filters
-                  </button>
-
-                  {showFilters && (
-                    <div className="absolute top-full left-0 mt-2 w-64 bg-white shadow-lg rounded-lg border border-gray-200 p-4 z-10">
-                      <label className="block text-sm font-medium text-gray-700 mb-2">
-                        Filter by Status
-                      </label>
-                      <select
-                        value={filterValue}
-                        onChange={(e) => setFilterValue(e.target.value)}
-                        className="block w-full border border-gray-200 rounded-lg px-3 py-2 focus:ring-2 focus:ring-red-500 focus:border-transparent outline-none"
-                      >
-                        <option value="">All Orders</option>
-                        <option value="delivered">Delivered</option>
-                        <option value="pending">Pending</option>
-                        <option value="last30">Last 30 Days</option>
-                      </select>
-                    </div>
-                  )}
                 </div>
               </div>
             </div>
 
-            {/* Completed Orders Toggle */}
+            {/* Optional Reset Filters Button */}
             <button
-              onClick={toggleShowCompleted}
-              className={`flex items-center px-6 py-3 rounded-lg font-medium transition-colors whitespace-nowrap hover:shadow-[0_0_20px_#f87171] hover:border hover:border-red-300 ${
-                showCompletedOnly
-                  ? "bg-green-600 text-white"
-                  : "bg-gray-100 text-gray-700 hover:bg-gray-200"
-              }`}
+              onClick={() => {
+                setSearchTerm("");
+                setFilterValue("");
+              }}
+              className="flex items-center px-6 py-3 rounded-lg font-medium whitespace-nowrap bg-gradient-to-br from-fuchsia-500 to-indigo-900 bg-red-700 text-white hover:shadow-[0_0_30px_1px_rgba(204,0,255,0.3)]"
             >
               <CheckCircle className="h-5 w-5 mr-2" />
-              {showCompletedOnly ? "Show All" : "Completed Only"}
+              Show All Orders
             </button>
           </div>
         </div>
 
         {/* Orders Grid */}
-        <div className="grid grid-cols-4 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4  gap-6">
+        <div className="grid grid-cols-4 md:grid-cols-4 lg:grid-cols-3 xl:grid-cols-4 gap-6 ">
           {filteredParts.length > 0 ? (
             filteredParts.map((part) => (
-              <OrderDetails key={part.id} part={part} />
+              <div key={part.id} className="h-full">
+                <OrderDetails part={part} />
+              </div>
             ))
           ) : (
             <div className="col-span-full">
