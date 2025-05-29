@@ -195,6 +195,8 @@ const SparePartsList = () => {
     "service" | "ServiceBookingPage"
   >("service");
   const [show, setShow] = useState(true);
+  const [shows, setShows] = useState(true);
+
 
   const handleDelete = (id: string) => {
     setParts((prev) => prev.filter((part) => part.id !== id));
@@ -215,6 +217,7 @@ const SparePartsList = () => {
     if (serv) {
       setConfirmedServiceOrders((prev) => [...prev, { serv, quantity }]);
       setServs((prev) => prev.filter((s) => s.id !== id));
+      setShows(true);
     }
   };
 
@@ -235,7 +238,7 @@ const SparePartsList = () => {
       <div className="flex gap-4 mt-4 mb-4 ">
         <div className=" ">
           <button
-            className={`px-4 py-2 rounded-full  flex flex-cols hover:bg-[#ab2431] hover:shadow-xl hover:scale-[1.02]  ${
+            className={`px-4 py-2 rounded-full  flex flex-cols hover:bg-[#ab2431] hover:shadow-xl hover:scale-[1.02] hover:text-white   ${
               activePage === "service"
                 ? "bg-[#9b111e] text-white"
                 : "bg-gray-200  text-black"
@@ -248,9 +251,9 @@ const SparePartsList = () => {
         </div>
         <div>
           <button
-            className={`px-4 py-2 rounded-full flex flex-cols hover:bg-[#ab2431] over:shadow-xl hover:scale-[1.02]  ${
+            className={`px-4 py-2 rounded-full flex flex-cols hover:bg-[#ab2431] over:shadow-xl hover:scale-[1.02] hover:text-white ${
               activePage === "ServiceBookingPage"
-                ? "bg-[#9b111e] text-white"
+                ? "bg-[#9b111e] text-white "
                 : "bg-gray-200 text-black"
             }`}
             onClick={() => setActivePage("ServiceBookingPage")}
@@ -332,15 +335,20 @@ const SparePartsList = () => {
             ))}
           </div>
 
-          {confirmedServiceOrders.length > 0 && (
-            <div className="mt-3 p-4 m-4 bg-[#FAF3EB] rounded-lg shadow  ">
-              <div className="mb-4">
-                <h2 className="text-xl font-semibold text-[#9b111e] ">
+          {confirmedServiceOrders.length > 0 && show&&(
+            <div className="mt-3 p-5 m-4 bg-[#FAF3EB] rounded-lg shadow ">
+              <div className="flex flex-cols justify-between">
+               <div className="mb-4">
+                 <h2 className="text-xl font-semibold text-[#9b111e] ">
                   Summery
                 </h2>
                 <h2 className="text-base font-semibold text-[#9b111e] ">
                   Confirmed Orders
                 </h2>
+               </div>
+               <div className="px-2 py-1 rounded-lg bg-gray-400 h-9 ">
+                <button onClick={() => setShows(false)}>Close</button>
+               </div>
               </div>
               {confirmedServiceOrders.map(({ serv, quantity }) => (
                 <div
