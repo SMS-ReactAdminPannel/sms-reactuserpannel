@@ -42,7 +42,7 @@ import Annualmaintenance from '../../assets/CAR ANNUAL MAINTENANCE/Annual mainte
 import appimage from '../../assets/LOGO.jpg';
 import bgImg from '../../assets/home/aesthetic-background-with-patterned-glass-texture.jpg';
 import bgImg2 from '../../assets/home/studio-background-concept-abstract-empty-light-gradient-purple-studio-room-background-product.jpg';
-import bgImg3 from '../../assets/home/yakin 41.jpg';
+import bgImg3 from '../../assets/checkout-bg_1_.png';
 
 // icon for footer
 import { FaPhoneFlip } from 'react-icons/fa6'; // phone
@@ -366,36 +366,7 @@ const HomePage: React.FC = () => {
 							Customised Care For All Your Needs
 						</h1>
 						<div className='flex justify-center gap-6 mt-4 mb-10 flex-wrap'>
-							<div className='flex flex-col items-center text-center bg-[#FFDCDC] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
-								<GrWorkshop size={32} color={COLORS.primary} />
-								<p
-									className='mt-3'
-									style={{
-										...FONTS.paragraph,
-										fontSize: '16px',
-										color: COLORS.primary,
-									}}
-								>
-									Service Workshop
-									<br />
-									Open All 7 Days
-								</p>
-							</div>
-							<div className='flex flex-col items-center text-center bg-[#FFDCDC] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
-								<LuCarTaxiFront size={32} color={COLORS.primary} />
-								<p
-									className='mt-3'
-									style={{
-										...FONTS.paragraph,
-										fontSize: '16px',
-										color: COLORS.primary,
-									}}
-								>
-									Service Pick Up
-									<br />& Drop Facility
-								</p>
-							</div>
-							<div className='flex flex-col items-center text-center bg-[#FFDCDC] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
+							<div className='flex flex-col items-center text-center bg-[#fdefe9] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
 								<GrWorkshop size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
@@ -410,57 +381,27 @@ const HomePage: React.FC = () => {
 									Open All 7 Days
 								</p>
 							</div>
-							<div className='flex flex-col items-center text-center bg-[#FFDCDC] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
-								<PiSealCheckBold size={32} color={COLORS.primary} />
+							<div className='flex flex-col items-center text-center bg-[#fdefe9] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
+								<LuCarTaxiFront size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
 									style={{
 										...FONTS.paragraph,
-										fontSize: '16px',
+										fontSize: '14px',
 										color: COLORS.primary,
 									}}
 								>
-									YM Genuine Parts
-									<br />& Oil
+									Service Pick Up
+									<br />& Drop Facility
 								</p>
 							</div>
-							<div className='flex flex-col items-center text-center bg-[#FFDCDC] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
-								<LuHandshake size={32} color={COLORS.primary} />
-								<p
-									className='mt-3'
-									style={{
-										...FONTS.paragraph,
-										fontSize: '16px',
-										color: COLORS.primary,
-									}}
-								>
-									Annual Maintenance
-									<br />
-									Plan Coverage
-								</p>
-							</div>
-							<div className='flex flex-col items-center text-center bg-[#FFDCDC] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
-								<RiShieldStarFill size={32} color={COLORS.primary} />
-								<p
-									className='mt-3'
-									style={{
-										...FONTS.paragraph,
-										fontSize: '16px',
-										color: COLORS.primary,
-									}}
-								>
-									5 Years Standard
-									<br />
-									Warranty
-								</p>
-							</div>
-							<div className='flex flex-col items-center text-center bg-[#FFDCDC] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
+							<div className='flex flex-col items-center text-center bg-[#fdefe9] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
 								<GrWorkshop size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
 									style={{
 										...FONTS.paragraph,
-										fontSize: '16px',
+										fontSize: '14px',
 										color: COLORS.primary,
 									}}
 								>
@@ -469,13 +410,72 @@ const HomePage: React.FC = () => {
 									Open All 7 Days
 								</p>
 							</div>
-							<div className='flex flex-col items-center text-center bg-[#FFDCDC] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
+							<div className='flex flex-col items-center text-center bg-[#fdefe9] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
+								<PiSealCheckBold size={32} color={COLORS.primary} />
+								<p
+									className='mt-3'
+									style={{
+										...FONTS.paragraph,
+										fontSize: '14px',
+										color: COLORS.primary,
+									}}
+								>
+									YM Genuine Parts
+									<br />& Oil
+								</p>
+							</div>
+							<div className='flex flex-col items-center text-center bg-[#fdefe9] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
+								<LuHandshake size={32} color={COLORS.primary} />
+								<p
+									className='mt-3'
+									style={{
+										...FONTS.paragraph,
+										fontSize: '14px',
+										color: COLORS.primary,
+									}}
+								>
+									Annual Maintenance
+									<br />
+									Plan Coverage
+								</p>
+							</div>
+							<div className='flex flex-col items-center text-center bg-[#fdefe9] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
+								<RiShieldStarFill size={32} color={COLORS.primary} />
+								<p
+									className='mt-3'
+									style={{
+										...FONTS.paragraph,
+										fontSize: '14px',
+										color: COLORS.primary,
+									}}
+								>
+									5 Years Standard
+									<br />
+									Warranty
+								</p>
+							</div>
+							<div className='flex flex-col items-center text-center bg-[#fdefe9] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
+								<GrWorkshop size={32} color={COLORS.primary} />
+								<p
+									className='mt-3'
+									style={{
+										...FONTS.paragraph,
+										fontSize: '14px',
+										color: COLORS.primary,
+									}}
+								>
+									Service Workshop
+									<br />
+									Open All 7 Days
+								</p>
+							</div>
+							<div className='flex flex-col items-center text-center bg-[#fdefe9] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
 								<MdDateRange size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
 									style={{
 										...FONTS.paragraph,
-										fontSize: '16px',
+										fontSize: '14px',
 										color: COLORS.primary,
 									}}
 								>

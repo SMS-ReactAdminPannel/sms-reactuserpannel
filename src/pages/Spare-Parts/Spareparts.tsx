@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ShoppingCart } from 'lucide-react'
+import { Search, X } from 'lucide-react';
 
 
 interface SparePart {
@@ -240,27 +241,31 @@ const handleAddToCart = (part: any) => {
 
 
   return (
-    <div className="p-6">
+    <div className="p-12">
   <div className="flex items-center justify-between flex-wrap gap-4 mb-6">
     <h1 className="text-4xl font-bold text-[#9b111e] text-left">
       Spare Parts
     </h1>
     {/* Search Bar */}
     <div className="relative w-full max-w-md">
-      <input
-        type="text"
-        placeholder="Search by product name..."
-        className="border border-gray-300 rounded-full px-5 py-2 pr-10 w-full focus:outline-none focus:ring-2 focus:ring-[#9b111e]"
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
-      />
-      <button
-        className="absolute right-3 top-[85%] -translate-y-1/2 text-3xl text-[#9b111e] hover:text-red-600 transition-transform hover:scale-125"
-        onClick={() => setSearchTerm('')}
-        aria-label="Clear search"
-      >
-        &times;
-      </button>
+  <input
+    type="text"
+    placeholder="Search by product name..."
+    className="border border-gray-300 rounded-full px-5 py-2 pr-10 w-full focus:outline-none focus:ring-2 focus:ring-[#9b111e]"
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+  />
+  <button
+    className="absolute right-3 top-[85%] -translate-y-1/2 text-xl text-[#de687a] hover:text-red-600 transition-all duration-200 hover:scale-105 hover:bg-[#f1a2a9] p-1 rounded-full"
+    onClick={() => {
+      if (searchTerm !== '') {
+        setSearchTerm('');
+      }
+    }}
+    aria-label={searchTerm ? "Clear search" : "Search"}
+  >
+    {searchTerm ? <X size={20} /> : <Search size={16} />}
+  </button>
     </div>
   </div>
 
@@ -273,7 +278,7 @@ const handleAddToCart = (part: any) => {
       Welcome to Auto Spare Hub
     </h2>
     <p className="text-gray-700 mb-3 text-sm md:text-base">
-      Discover top-quality auto spare parts. We offer genuine and aftermarket
+      Discover top-quality auto spare parts. We offer genuine and after market
       components with fast delivery and customer satisfaction guaranteed.
     </p>
   </div>
@@ -287,17 +292,18 @@ const handleAddToCart = (part: any) => {
     />
   </div>
 </div>
- <div className="flex  justify-between mb-6">
-  <h2 className="text-3xl ml-6 font-bold text-[#9b111e] text-left">
+ <div className="relative flex items-center justify-between mt-16 mb-10">
+  <h2 className="absolute left-1/2 transform -translate-x-1/2 text-3xl font-bold text-[#9b111e] border-b-4 border-[#9b111e] pb-1">
     Products
   </h2>
   <button
-    className="bg-[#9b111e] text-white px-5 py-2 rounded-full text-sm hover:bg-red-700 transition"
+    className="bg-[#9b111e] text-white px-5 py-2 rounded-full text-sm hover:bg-red-700 transition ml-auto"
     onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
   >
     View All Products
   </button>
 </div>
+
 
 
       
@@ -349,14 +355,15 @@ const handleAddToCart = (part: any) => {
   ))}
 </div>
 
-<div className="bg-gray-100 p-8">
-      <div>
-        <h2 className="text-2xl ml-6 font-bold text-[#9b111e] text-left mb-8">
-          OUR BUNDLES
-        </h2>
-      </div>
+<div className="bg-gray-100 mt-16  transition-shadow p-8">
+     <div className="mb-8 text-center">
+  <h2 className="inline-block text-2xl font-bold text-[#9b111e] border-b-4 border-[#9b111e] pb-1">
+    OUR BUNDLES
+  </h2>
+</div>
 
-      <div className="overflow-hidden relative">
+
+      <div className="overflow-hidden mt-10 relative">
         <div
           className="flex transition-transform duration-500 ease-in-out"
           style={{
@@ -468,12 +475,16 @@ const handleAddToCart = (part: any) => {
   </div>
 </div>
 
-<div className="max-w-full px-4 md:px-6 lg:px-8">
-  <h1 className="text-2xl font-bold text-[#9b111e] mb-8 text-left">
+<div className="max-w-full px-4 md:px-6 lg:px-8 bg-[#fae9eb] py-6">
+ <div className="text-center mt-10 mb-12">
+  <h1 className="inline-block text-2xl font-bold text-[#9b111e] border-b-4 border-[#9b111e] pb-1">
     BY CATEGORIES
   </h1>
+</div>
 
- <div className="grid grid-cols-4 sm:grid-cols-2 mdplus:grid-cols-2 lg:grid-cols-4 gap-6">
+  
+
+ <div className="grid  grid-cols-4 sm:grid-cols-2 mdplus:grid-cols-2 lg:grid-cols-4 gap-6">
     {[
       {
         title: "Wheels and Tires",
