@@ -1,6 +1,5 @@
 import { useState, useMemo } from "react";
 import { X, Plus, Minus, Wrench, Car } from "lucide-react";
-//Search, Filter,
 import serviceImg from "../../assets/serviceimages/generalservice.png";
 import bgImage from "../../assets/checkout-bg_1_.png";
 import { toast } from "react-toastify";
@@ -322,7 +321,7 @@ export default function SparePartsCart() {
     const [quantity, setQuantity] = useState(1);
 
     return (
-      <div className=" rounded-lg shadow-md p-4 mb-4  border border-gray-200 hover:shadow-lg transition-shadow duration-300  bg-[#FDFAF6]">
+      <div className=" rounded-lg shadow-md p-4 mb-4  border border-gray-200 hover:shadow-lg transition-shadow duration-300  bg-white">
         <div className="flex gap-4">
           <div className="relative w-36  flex-shrink-0">
             <img
@@ -411,7 +410,7 @@ export default function SparePartsCart() {
     const [quantity, setQuantity] = useState(1);
 
     return (
-      <div className="bg-[#FFFDF6] rounded-lg shadow-md p-4 mb-4 border border-gray-200 hover:shadow-lg transition-shadow duration-300">
+      <div className="bg-white rounded-lg shadow-md p-4 mb-4 border border-gray-200 hover:shadow-lg transition-shadow duration-300">
         <div className="flex gap-4">
           <div className="relative w-48  flex-shrink-0">
             <img
@@ -493,33 +492,43 @@ export default function SparePartsCart() {
     >
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <h1 className="text-4xl font-semibold text-[#9b111e] mb-6">My Cart</h1>
+        <h1 className="text-3xl font-bold text-[#9b111e] mb-6">My Cart</h1>
 
         {/* Tabs */}
-        <div className="">
-          <div className="flex gap-4 mb-6">
+        <div className="mb-6">
+          <div className="relative inline-flex p-1 bg-[#FAF3EB] rounded-full border border-gray-300">
             <button
               onClick={() => setActiveTab("service")}
-              className={`px-6 py-3 rounded-full flex items-center gap-2 transition-all hover:scale-105 ${
+              className={`px-6 py-3 rounded-full flex items-center gap-2 z-10 transition-colors duration-300 ${
                 activeTab === "service"
-                  ? "bg-[#9b111e] text-white shadow-lg"
-                  : "bg-[#f9dacd] text-black hover:bg-[#fdefe9]"
+                  ? "text-white"
+                  : "text-black "
               }`}
             >
               <Wrench className="text-lg" />
               SparePart Orders
             </button>
+
             <button
               onClick={() => setActiveTab("ServiceBookingPage")}
-              className={`px-6 py-3 rounded-full flex items-center gap-2 transition-all hover:scale-105 ${
+              className={`px-6 py-3 rounded-full flex items-center gap-2 z-10 transition-colors duration-300 ${
                 activeTab === "ServiceBookingPage"
-                  ? "bg-[#9b111e] text-white shadow-lg"
-                  : "bg-[#f9dacd] text-black hover:bg-[#fdefe9]"
+                  ? "text-white"
+                  : "text-black "
               }`}
             >
               <Car className="text-xl" />
               Service Order
             </button>
+
+            {/* Animated indicator with smooth sliding */}
+            <div
+              className={`absolute inset-y-1 h-[calc(100%-0.5rem)] bg-[#9b111e] rounded-full shadow-md transition-all duration-300 ease-in-out ${
+                activeTab === "service"
+                  ? "left-1 w-[calc(50%-0.25rem)]"
+                  : "left-[calc(50%+0.25rem)] w-[calc(50%-0.25rem)]"
+              }`}
+            />
           </div>
         </div>
 
@@ -572,13 +581,10 @@ export default function SparePartsCart() {
               <div className="bg-white rounded-lg shadow-md p-4 mb-6">
                 <div className="flex justify-between items-center mb-4">
                   <div>
-                    <h2
-                      className="text-xl font-semibold  "
-                      style={{ color: COLORS.primary }}
-                    >
+                    <h2 className="text-xl font-semibold text-red-600">
                       Summary
                     </h2>
-                    <h3 className="text-base font-semibold text-[#9b111e]">
+                    <h3 className="text-base font-semibold text-red-600">
                       Confirmed Part Orders
                     </h3>
                   </div>
@@ -625,10 +631,10 @@ export default function SparePartsCart() {
               <div className="bg-white rounded-lg shadow-md p-4 ">
                 <div className="flex justify-between items-center mb-4">
                   <div>
-                    <h2 className="text-xl font-semibold text-[#9b111e]">
+                    <h2 className="text-xl font-semibold text-red-600">
                       Summary
                     </h2>
-                    <h3 className="text-base font-semibold text-[#9b111e]">
+                    <h3 className="text-base font-semibold text-red-600">
                       Confirmed Part Orders
                     </h3>
                   </div>
