@@ -11,12 +11,12 @@ export const COLORS = {
 
 export const FONTS = {
 	header: {
-		fontFamily: 'Poppins',
+		fontFamily: "Open Sans",
 		fontWeight: 400,
 		fontSize: '32px',
 	},
 	paragraph: {
-		fontFamily: 'Poppins',
+		fontFamily: "Open Sans", 
 		fontWeight: 400,
 		fontSize: '14px',
 	},

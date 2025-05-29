@@ -1,4 +1,3 @@
-
 // //DYNAMIC IMAGE CARD PLACED BELOW AVAILABLE SERVICE
 
 // import React, { useEffect, useState } from 'react';
@@ -55,7 +54,7 @@
 // 		}, 3000);
 
 // 		return () => clearInterval(interval);
-// 	}, []); 
+// 	}, []);
 
 // 	return (
 // 		<div className="w-full max-w-6xl mx-auto relative">
@@ -130,11 +129,6 @@
 // };
 
 // export default PromoCarousel;
-
-
-
-
-
 
 import React, { useEffect, useState } from 'react';
 import carImage from '../../assets/CarPart2.jfif';
@@ -211,40 +205,42 @@ const PromoCarousel: React.FC = () => {
 	}, [currentIndex]);
 
 	return (
-		<div className="w-full max-w-6xl mx-auto relative overflow-hidden rounded-3xl">
+		<div className='w-full max-w-6xl mx-auto relative overflow-hidden rounded-3xl'>
 			<div
-				className={`flex ${!isResetting ? 'transition-transform duration-500 ease-in-out' : ''}`}
+				className={`flex ${
+					!isResetting ? 'transition-transform duration-500 ease-in-out' : ''
+				}`}
 				style={{ transform: `translateX(-${currentIndex * 100}%)` }}
 			>
 				{loopCards.map((card, idx) => (
 					<div
 						key={idx}
-						className="min-w-full p-6 bg-red-900 flex items-center justify-between"
+						className='min-w-full p-6 bg-red-900 flex items-center justify-between'
 					>
 						{/* Image Section */}
-						<div className="w-full flex justify-center items-center">
-							<div className="w-[670px] h-[300px] p-6 rounded overflow-hidden flex justify-center items-center">
-							 									<img
-																	src={card.image}
-																	alt={card.title}
-																	className="w-full h-full object-cover"
-																/>
-															</div>
+						<div className='w-full flex justify-center items-center'>
+							<div className='w-[670px] h-[300px] p-6 rounded overflow-hidden flex justify-center items-center'>
+								<img
+									src={card.image}
+									alt={card.title}
+									className='w-full h-full object-cover'
+								/>
+							</div>
 						</div>
 
 						{/* Text Section */}
-						<div className="w-1/2 px-4">
-							<h2 className="text-white text-3xl font-bold leading-tight mb-2">
-								{card.title} <span className="inline-block">✨</span>
+						<div className='w-1/2 px-4'>
+							<h2 className='text-white text-3xl font-bold leading-tight mb-2'>
+								{card.title} <span className='inline-block'>✨</span>
 								<br />
-								<span className="text-2xl">{card.subtitle}</span>
+								<span className='text-2xl'>{card.subtitle}</span>
 							</h2>
-							<ul className="text-white text-lg mb-4 space-y-1 list-disc list-inside">
+							<ul className='text-white text-lg mb-4 space-y-1 list-disc list-inside'>
 								{card.points.map((point, i) => (
 									<li key={i}>{point}</li>
 								))}
 							</ul>
-							<button className="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition-all">
+							<button className='bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition-all'>
 								{card.cta}
 							</button>
 						</div>

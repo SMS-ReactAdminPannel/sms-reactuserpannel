@@ -10,9 +10,10 @@ interface CarSelect {
 
 interface SelectCarPageProps {
 	onClose?: () => void;
+	setSelectedPackage?: (packageDetails: CarSelect) => void;
 }
 
-const SelectCarPage: React.FC<SelectCarPageProps> = ({ onClose }) => {
+const SelectCarPage: React.FC<SelectCarPageProps> = ({ onClose, setSelectedPackage }) => {
 	const [selectedCar, setSelectedCar] = useState<CarSelect>({
 		brand: '',
 		model: '',
@@ -22,6 +23,7 @@ const SelectCarPage: React.FC<SelectCarPageProps> = ({ onClose }) => {
 
 	// Car data structure
 	const carData = {
+
 		Honda: {
 			models: [
 				'Civic',
@@ -135,20 +137,24 @@ const SelectCarPage: React.FC<SelectCarPageProps> = ({ onClose }) => {
 	};
 
 	const handleSubmit = () => {
-		if (
-			selectedCar.brand &&
-			selectedCar.model &&
-			selectedCar.year &&
-			selectedCar.fuel
-		) {
-			console.log('Selected Car:', selectedCar);
-			if (onClose) {
-				onClose();
-			}
-		} else {
-			alert('Please fill in all fields');
-		}
-	};
+    if (
+      selectedCar.brand &&
+      selectedCar.model &&
+      selectedCar.year &&
+      selectedCar.fuel
+    ) {
+      console.log('Selected Car:', selectedCar);
+      if (setSelectedPackage) {
+        setSelectedPackage(selectedCar);
+      }
+      if (onClose) {
+        onClose();
+      }
+    } else {
+      alert('Please fill in all fields');
+    }
+  };
+
 
 	const getAvailableModels = () => {
 		return selectedCar.brand
@@ -169,9 +175,9 @@ const SelectCarPage: React.FC<SelectCarPageProps> = ({ onClose }) => {
 	};
 
 	return (
-		<div className='w-[300px] h-[460px] bg-gray-50 ms-[1090px] mt-[140px] rounded-lg overflow-y-auto scrollbar-hide'>
+		<div className='relative bg-white rounded-xl shadow-xl w-full max-w-md mx-4 max-h-[90vh] overflow-y-auto'>
 			<div className=' bg-white shadow-md p-3'>
-				<button onClick={onClose} className='bg-red-900 px-2 text-white relative left-64'>X</button>
+				<button onClick={onClose} className='bg-red-600 px-2 text-white rounded-md  relative left-[380px] hover:bg-red-900'>X</button>
 				<h2 className='text-2xl font-bold text-gray-900 mb-6 text-center'>
 					Select Your Car
 				</h2>
@@ -313,7 +319,7 @@ const SelectCarPage: React.FC<SelectCarPageProps> = ({ onClose }) => {
 					{/* Submit Button */}
 					<button
 						onClick={handleSubmit}
-						className='ml-[70px] bg-red-900 text-white py-2 px-8 rounded-md hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200 font-medium'
+						className='ml-[150px] bg-red-600 text-white py-2 px-8 rounded-md hover:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200 font-medium'
 					>
 						Confirm
 					</button>
