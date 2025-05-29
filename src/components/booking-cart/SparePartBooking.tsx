@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { FaMinus } from "react-icons/fa6";
 import { FaPlus } from "react-icons/fa";
+import bgImage from "../../assets/checkout-bg_1_.png";
+
 
 interface SparePart {
   id: string;
@@ -37,7 +39,8 @@ const SparePartCard: React.FC<Props> = ({ parts, onDelete, onConfirm }) => {
   };
 
   return (
-    <div className="flex  gap-4 p-2  shadow-md rounded-xl overflow-auto  mb-4  hover:shadow-lg hover:scale-[1.001] md:hover:shadow-lg md:hover:scale-[1.002] scrollbar-hide bg-gradient-to-r from-[#fbe9d7,]  to-[#f6d5f7] ">
+    <div className="flex  gap-4 p-2  shadow-md rounded-xl overflow-auto  mb-4  hover:shadow-lg hover:scale-[1.001] md:hover:shadow-lg md:hover:scale-[1.002] scrollbar-hide  bg-cover bg-center bg-no-repeat hover:border-1 hover:border-red-200"
+    style={{ backgroundImage: `url("${bgImage}")` }}>
       <div className="overflow-auto">
         <img
           src={parts.imageUrl}
