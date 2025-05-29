@@ -86,7 +86,7 @@ const ProfilePage: React.FC = () => {
             <div className="w-1/2 flex flex-col items-center justify-center p-8 bg-gray-50 relative">
               <h2 className="text-3xl font-bold text-gray-800 mb-6">Car Details</h2>
 
-              <div className="w-full max-w-sm space-y-4 max-h-80 overflow-y-auto">
+              <div className="w-full max-w-sm space-y-4">
                 {cars.map((car, index) => (
                   <div
                     key={index}
