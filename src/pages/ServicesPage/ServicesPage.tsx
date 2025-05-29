@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 	import {
 		Clock,
 		Wrench,
@@ -19,6 +19,7 @@ import React, { useState } from 'react';
 	import SelectCarPage from './SelectCarPage';
 	import { useNavigate, useParams } from 'react-router-dom';
 	import serviceImg from '../../assets/serviceimages/generalservice.png'
+	import AutoPopup from './RightSidePopup';
 
 	interface ServiceItem {
 		name: string;
@@ -63,7 +64,9 @@ import React, { useState } from 'react';
 		const [showCartNotification, setShowCartNotification] = useState(false);
 		// handle left and right on navbar
 		const { id } = useParams<{ id: string }>();
-		// Define content for each navigation section
+		
+		// Auto popup message
+		const [showWelcomePopup, setShowWelcomePopup] = useState(true);
 
 		// navigate to cart
 		const navigate = useNavigate();
@@ -478,6 +481,20 @@ import React, { useState } from 'react';
 			console.log(`Navigated to: ${navItem}`);
 		};
 
+		// Auto popup message
+		useEffect(() => {
+		  // Check if user has previously dismissed the popup
+		  const hasDismissed = localStorage.getItem('dismissedWelcomePopup');
+		  if (!hasDismissed) {
+		    setShowWelcomePopup(true);
+		  }
+		}, []);
+
+			const handleCloseWelcome = () => {
+				  setShowWelcomePopup(false);
+				  localStorage.setItem('dismissedWelcomePopup', 'true');
+			};
+
 		const toggleExpandServices = (packageId: string) => {
 			setExpandedServices((prev) => ({
 				...prev,
@@ -764,7 +781,13 @@ import React, { useState } from 'react';
 </div>
 	</div>
 	</div>
-
+	{showWelcomePopup && (
+  <AutoPopup 
+    onClose={handleCloseWelcome}
+    title="Welcome to Car Services"
+    message="Explore our comprehensive service packages. Select what your vehicle needs and book an appointment with ease."
+  />
+)}
 	</div>
 		);
 	};
