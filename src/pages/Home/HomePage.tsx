@@ -38,7 +38,7 @@ import CustomServicesCarousel from '../../components/home/customServiceCarousel'
 import Roadsideassistant from '../../assets/CAR ROADSIDE/Roadside assistant.jpg';
 import Prebooking from '../../assets/CAR PREBOOKING/Prebooking.jpg';
 import Annualmaintenance from '../../assets/CAR ANNUAL MAINTENANCE/Annual maintenance.jpg';
-import appimage from '../../assets/LOGO.jpg';
+import appimage from '../../assets/yes_mechanic_transparent_cropped.png';
 import bgImg from '../../assets/home/aesthetic-background-with-patterned-glass-texture.jpg';
 import bgImg2 from '../../assets/home/studio-background-concept-abstract-empty-light-gradient-purple-studio-room-background-product.jpg';
 import bgImg3 from '../../assets/home/yakin 41.jpg';
@@ -53,8 +53,12 @@ import { FaFacebook } from 'react-icons/fa'; //facebook
 import { FaYoutube } from 'react-icons/fa'; //youtube
 import { SiIndeed } from 'react-icons/si'; //indeed
 import { BiLogoPlayStore } from 'react-icons/bi'; //play store
-import { FaCcVisa } from 'react-icons/fa'; //visa card
-import { FaCcMastercard } from 'react-icons/fa6';
+// import { FaCcVisa } from 'react-icons/fa'; //visa card
+// import { FaCcMastercard } from 'react-icons/fa6';
+
+
+//import RotatingCar from '../../components/RotatingCar'
+
 
 const imageUrls = [image1, image2, image3, image4];
 interface ServiceCardProps {
@@ -693,9 +697,7 @@ const HomePage: React.FC = () => {
 				</footer>
 				{/* FOOTER END */}
 
-				{/* <div>
-					<App/>
-				</div> */}
+				
 				
 			</div>
 		</>
