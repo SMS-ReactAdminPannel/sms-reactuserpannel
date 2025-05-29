@@ -28,13 +28,6 @@ const SettingsPage: React.FC = () => {
     <div className="p-6">
       <div className="flex flex-wrap align-center justify-center gap-4 mb-6">
         <button
-          onClick={() => handleRenderComponent('Account Settings')}
-          className={getButtonClassName('Account Settings')}
-        >
-          Account Settings
-        </button>
-
-        <button
           onClick={() => handleRenderComponent('About us')}
           className={getButtonClassName('About us')}
         >
