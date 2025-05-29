@@ -33,10 +33,10 @@ const LoginPage = () => {
 
   return (
     <AuthLayout title="User Login">
-      <form onSubmit={handleSubmit(onSubmit)} className='space-y-6'>
+      <form onSubmit={handleSubmit(onSubmit)} className='space-y-6 '>
         {/* Email Field */}
         <div className='flex flex-col space-y-2'>
-          <label className='text-sm font-semibold text-gray-800'>Email Address</label>
+          <label className='text-sm font-bold text-white '>Email Address</label>
           <input
             type='email'
             placeholder='Enter your email address'
@@ -60,7 +60,7 @@ const LoginPage = () => {
        
         {/* Password Field */}
         <div className='flex flex-col space-y-2'>
-          <label className='text-sm font-semibold text-gray-800'>Password</label>
+          <label className='text-sm font-bold text-white'>Password</label>
           <div className='relative'>
             <input
               type={showPassword ? 'text' : 'password'}
@@ -109,12 +109,12 @@ const LoginPage = () => {
         {/* Links */}
         <div className='mt-2 text-sm w-full'>
           <div className='text-right'>
-            <Link to='/reset-password' className='text-gray-800 hover:underline hover:text-[#d23c3c]'>
+            <Link to='/reset-password' className='text-white hover:underline hover:text-[#d23c3c]'>
               Forgot Password?
             </Link>
           </div>
           <div className='text-center mt-1'>
-            <p className='text-gray-800'>
+            <p className='text-white '>
               Don't have an account?{' '}
               <Link to='/enter-email-or-phone' className='text-[#d23c3c] font-semibold hover:underline'>
                 Sign up
