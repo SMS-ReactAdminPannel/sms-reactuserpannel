@@ -241,7 +241,7 @@ const handleAddToCart = (part: any) => {
 
 
   return (
-    <div className="p-12">
+    <div>
   <div className="flex items-center justify-between flex-wrap gap-4 mb-6">
     <h1 className="text-4xl font-bold text-[#9b111e] text-left">
       Spare Parts
@@ -271,7 +271,7 @@ const handleAddToCart = (part: any) => {
 
 
      {/* Hero Card */}
-<div className="mb-8 w-full bg-gray-100 rounded-xl shadow p-4 md:p-6 flex flex-row lg:flex-row items-center gap-6 hover:shadow-lg transition-shadow duration-300 h-[280px]">
+<div className="mb-8 w-full bg-gray-100  shadow p-4 md:p-6 flex flex-row lg:flex-row items-center  hover:shadow-lg transition-shadow duration-300 h-[300px]">
   {/* Content - Left Side */}
   <div className="flex-1 order-none lg:order-none">
     <h2 className="text-2xl md:text-3xl font-bold text-[#9b111e] mb-3 md:mb-4">
@@ -356,7 +356,7 @@ const handleAddToCart = (part: any) => {
 </div>
 
 <div className="bg-gray-100 mt-16  transition-shadow p-8">
-     <div className="mb-8 text-center">
+     <div className="mb-12 text-center">
   <h2 className="inline-block text-2xl font-bold text-[#9b111e] border-b-4 border-[#9b111e] pb-1">
     OUR BUNDLES
   </h2>
