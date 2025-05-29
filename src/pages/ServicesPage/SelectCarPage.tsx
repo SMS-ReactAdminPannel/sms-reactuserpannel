@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { ChevronDown } from 'lucide-react';
 
@@ -10,7 +11,8 @@ interface CarSelect {
 
 interface SelectCarPageProps {
 	onClose?: () => void;
-	setSelectedPackage?: (packageDetails: CarSelect) => void;
+  setSelectedPackage?: (packageDetails: CarSelect) => void;
+  packageId?: string;
 }
 
 const SelectCarPage: React.FC<SelectCarPageProps> = ({ onClose, setSelectedPackage }) => {
@@ -143,17 +145,14 @@ const SelectCarPage: React.FC<SelectCarPageProps> = ({ onClose, setSelectedPacka
       selectedCar.year &&
       selectedCar.fuel
     ) {
-      console.log('Selected Car:', selectedCar);
-      if (setSelectedPackage) {
-        setSelectedPackage(selectedCar);
-      }
-      if (onClose) {
-        onClose();
-      }
-    } else {
-      alert('Please fill in all fields');
-    }
-  };
+	  if (setSelectedPackage) {
+		setSelectedPackage(selectedCar);
+	  }
+    if (onClose) onClose();
+  } else {
+    alert('Please fill in all fields');
+  }
+};
 
 
 	const getAvailableModels = () => {
