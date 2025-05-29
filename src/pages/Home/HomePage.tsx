@@ -38,7 +38,12 @@ import CustomServicesCarousel from '../../components/home/customServiceCarousel'
 import Roadsideassistant from '../../assets/CAR ROADSIDE/Roadside assistant.jpg'
 import Prebooking from '../../assets/CAR PREBOOKING/Prebooking.jpg'
 import Annualmaintenance from '../../assets/CAR ANNUAL MAINTENANCE/Annual maintenance.jpg'
-import appimage from '../../assets/LOGO.jpg'
+// import appimage from '../../assets/LOGO.jpg'
+import logo4k from '../../assets/yes_mechanic_4k_tick_colored.png'
+
+//dummy page
+// import App from'../../components/'
+
 
 
 
@@ -348,15 +353,15 @@ const HomePage: React.FC = () => {
 				</div>
 				{/* FOOTER START */}
 				<footer>
-					<div className="grid grid-cols-4 gap-4 p-4 bg-[#fdefe9] border-0 rounded-3xl">
+					<div className="grid grid-cols-4 gap-4 p-4 bg-[#D0B8A8] border-0 rounded-3xl">
 						{/* Image Card - Full Height (No border) */}
 						<div className="col-span-1 p-4 rounded h-full border-0">
-							<img src={appimage} alt="appimage" className="p-2 h-[200px] w-[400px] object-cover rounded" />
+							<img src={logo4k} alt="appimage" className="p-2 h-[170px] w-[300px] object-fill rounded" />
 						</div>
 
 						{/* Remaining Cards - Full Width (No border) */}
 						<div className="col-span-3 grid grid-cols-3 gap-6 p-6 w-full border-0">
-							<div className="p-4 rounded bg-[#fdefe9] w-full h-full border-0">
+							<div className="p-4 rounded bg-[#D0B8A8] w-full h-full border-0">
 								<p className="text-red-900 font-bold text-3xl">About</p>
 								<ol className="py-3 text-red-900 text-xl">
 									<li className="py-3">About Us</li>
@@ -365,7 +370,7 @@ const HomePage: React.FC = () => {
 								</ol>
 							</div>
 
-							<div className="p-4 rounded bg-[#fdefe9] w-full h-full border-0">
+							<div className="p-4 rounded bg-[#D0B8A8] w-full h-full border-0">
 								<p className="text-red-900 font-bold text-3xl">About</p>
 								<ol className="py-3 text-red-900 text-xl">
 									<li className="py-3">About Us</li>
@@ -374,7 +379,7 @@ const HomePage: React.FC = () => {
 								</ol>
 							</div>
 
-							<div className="p-4 rounded bg-[#fdefe9] w-full h-full border-0">
+							<div className="p-4 rounded bg-[#D0B8A8] w-full h-full border-0">
 								<p className="text-red-900 font-bold text-3xl">About</p>
 								<ol className="py-3 text-red-900 text-xl">
 									<li className="py-3">About Us</li>
@@ -481,6 +486,11 @@ const HomePage: React.FC = () => {
 
 				</footer>
 				{/* FOOTER END */}
+
+				{/* <div>
+					<App/>
+				</div> */}
+				
 			</div>
 		</>
 	);

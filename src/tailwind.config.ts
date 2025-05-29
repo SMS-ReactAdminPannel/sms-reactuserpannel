@@ -4,7 +4,9 @@ export default {
     "./index.html",
     "./src/**/*.{js,ts,jsx,tsx}",
     "./node_modules/preline/**/*.js",
-    "./node_modules/flowbite/**/*.js"
+    "./node_modules/flowbite/**/*.js",
+    "./App.{js,jsx,ts,tsx}",
+    "./components/**/*.{js,jsx,ts,tsx}",
   ],
   theme: {
     extend: {
@@ -12,6 +14,7 @@ export default {
         custom900: "900px", // 👈 This must exist
       },
     },
+    
   },
   plugins: [
     require('tailwind-scrollbar-hide')
