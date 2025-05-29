@@ -39,7 +39,7 @@ const SparePartCard: React.FC<Props> = ({ parts, onDelete, onConfirm }) => {
   };
 
   return (
-    <div className="flex  gap-4 p-2  shadow-md rounded-xl overflow-auto  mb-4  hover:shadow-lg hover:scale-[1.001] md:hover:shadow-lg md:hover:scale-[1.002] scrollbar-hide  bg-cover bg-center bg-no-repeat hover:border-1 hover:border-red-200"
+    <div className="flex  gap-4 p-2  shadow-md rounded-xl overflow-auto  mb-4  hover:shadow-lg hover:scale-[1.001] md:hover:shadow-lg md:hover:scale-[1.002] scrollbar-hide  bg-cover bg-center bg-no-repeat hover:border-1 hover:border-red-500"
     style={{ backgroundImage: `url("${bgImage}")` }}>
       <div className="overflow-auto">
         <img
@@ -103,7 +103,7 @@ const SparePartCard: React.FC<Props> = ({ parts, onDelete, onConfirm }) => {
             </div>
             <div className="item-center flex justify-center  ">
               <button
-                className="text-sm px-2 py-2 rounded-full bg-red-500 text-white relative overflow-hidden group z-10 hover:text-white duration-1000"
+                className="text-sm px-2 py-2 rounded-xl bg-red-500 text-white relative overflow-hidden group z-10 hover:text-black duration-1000"
                 onClick={() => onConfirm(parts.id, count)}
               >
                 <span className="absolute bg-red-600 w-36 h-36 rounded-full group-hover:scale-100 scale-0 -z-10 -left-2 -top-10 group-hover:duration-500 duration-700 origin-center transform transition-all"></span>
@@ -113,7 +113,7 @@ const SparePartCard: React.FC<Props> = ({ parts, onDelete, onConfirm }) => {
             </div>
             <div className=" item-center flex justify-center ">
               <button
-                className="text-sm px-2 py-2 rounded-full bg-emerald-500 text-white relative overflow-hidden group z-10 hover:text-white duration-1000"
+                className="text-sm px-2 py-2 rounded-xl bg-emerald-500 text-white relative overflow-hidden group z-10 hover:text-black duration-1000"
                 onClick={() => onConfirm(parts.id, count)}
               >
                 <span className="absolute bg-emerald-600 w-36 h-36 rounded-full group-hover:scale-100 scale-0 -z-10 -left-2 -top-10 group-hover:duration-500 duration-700 origin-center transform transition-all"></span>

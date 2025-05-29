@@ -26,7 +26,8 @@ const ServiceBookingPage: React.FC<Props> = ({
   const descriptionItems = service.description;
 
   return (
-    <div className="flex gap-4 p-2 rounded-xl overflow-auto  mb-4  bg-white hover:shadow-lg hover: md:hover:shadow-lg  scrollbar-hide hover:border-red hover:border-xl bg-gradient-to-r from-[#fbe9d7,]  to-[#f6d5f7]" >
+    // via-[#536976] for 3rd gradient add this b/w from and to
+    <div className="flex gap-4 p-2 rounded-xl overflow-auto   mb-4 scrollbar-hide border-2  hover:border-red-500 hover:border-xl bg-gradient-to-r from-[#DE6262]  to-[#FFB88C]" >
       <div className="overflow-auto  " >
         <img
           src={service.imageUrl}
@@ -65,17 +66,17 @@ const ServiceBookingPage: React.FC<Props> = ({
 
           <div className=" mr-3  text-center justify-center items-center flex flex-col-1 gap-4 ">
             <div className="item-center flex justify-center  ">
-              <button className="text-sm px-2 py-2 rounded-full bg-red-500 text-white relative overflow-hidden group z-10 hover:text-white duration-1000" onClick={() => onConfirm(service.id, count)}
+              <button className="text-sm px-2 py-2 rounded-xl bg-red-500 text-white relative overflow-hidden group z-10 hover:text-black duration-1000 " onClick={() => onConfirm(service.id, count)}
                 >
                   <span className="absolute bg-red-600 w-36 h-36 rounded-full group-hover:scale-100 scale-0 -z-10 -left-2 -top-10 group-hover:duration-500 duration-700 origin-center transform transition-all"></span>
-                  <span className="absolute bg-red-800 w-36 h-36 -left-2 -top-10 rounded-full group-hover:scale-100 scale-0 -z-10 group-hover:duration-700 duration-500 origin-center transform transition-all"></span>
+                  <span className="absolute bg-red-800 w-36 h-36 -left-2 -top-10 rounded-full group-hover:scale-100 scale-0 -z-5 group-hover:duration-700 duration-500 origin-center transform transition-all"></span>
                    Delete
                 </button>
               
             </div>
             <div className=" item-center flex justify-center ">
               
-                <button className="text-sm px-2 py-2 rounded-full bg-emerald-500 text-white relative overflow-hidden group z-10 hover:text-white duration-1000" onClick={() => onConfirm(service.id, count)}
+                <button className="text-sm px-2 py-2 rounded-xl bg-emerald-500 text-white relative overflow-hidden group z-10 hover:text-black duration-1000 " onClick={() => onConfirm(service.id, count)}
                 >
                   <span className="absolute bg-emerald-600 w-36 h-36 rounded-full group-hover:scale-100 scale-0 -z-10 -left-2 -top-10 group-hover:duration-500 duration-700 origin-center transform transition-all"></span>
                   <span className="absolute bg-emerald-800 w-36 h-36 -left-2 -top-10 rounded-full group-hover:scale-100 scale-0 -z-10 group-hover:duration-700 duration-500 origin-center transform transition-all"></span>
