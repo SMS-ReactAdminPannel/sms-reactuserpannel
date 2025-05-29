@@ -393,7 +393,7 @@ const OrdersPage: React.FC = () => {
                   setSortBy("date")
                   setShowOldOrders(false)
                 }}
-                className="px-6 py-2 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-200 shadow-sm hover:shadow-md font-medium text-sm"
+                 className="px-6 py-2 bg-gradient-to-r from-red-600 to-red-700 text-white rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-200 shadow-sm hover:shadow-md font-medium text-sm"
               >
                 Reset Filters
               </button>
