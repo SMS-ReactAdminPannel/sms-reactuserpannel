@@ -20,7 +20,7 @@ const allOrders: OrderDetails[] = [
     id: "1",
     name: "Brake Pad Set",
     price: 1800,
-    imageUrl: "/placeholder.svg?height=200&width=200",
+    imageUrl: "https://www.godigit.com/content/dam/godigit/directportal/en/contenthm/what-are-brake-pads.jpg",
     description: "High-quality ceramic brake pads for safe and smooth braking.",
     date: "2025-01-15", // Future date - In Progress
     compatibility: "Honda City",
