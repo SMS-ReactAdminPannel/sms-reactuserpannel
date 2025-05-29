@@ -8,6 +8,9 @@ import { FaShoppingCart } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import ProfileMenu from '../home/ProfileMenu';
 import dummyImage from '../../assets/navbar/dummyimage.png';
+import CustomDropdown from './Customdropdown';
+import TruckIcon from '../../assets/carimages/delivery-truck.png';
+import LocationIcon from '../../assets/carimages/location.png';
 
 interface User {
 	name: string;
@@ -34,7 +37,7 @@ export const Navbar: React.FC = () => {
 	const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 	const [showLogoutSuccess, setShowLogoutSuccess] = useState(false);
 	const [showNotifications, setShowNotifications] = useState(false);
-	const [isLoggedIn, setIsLoggedIn] = useState(false);
+	const [isLoggedIn, setIsLoggedIn] = useState(true);
 	const { logout } = useAuth();
 	const navigate = useNavigate();
 	const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -127,41 +130,60 @@ export const Navbar: React.FC = () => {
 	const unreadCount = notifications.filter((n) => !n.isRead).length;
 
 	const handleLogout = () => {
-		logout();
-		navigate('/');
-		console.log('User logged out');
+		setShowLogoutConfirm(true);
+		setIsDropdownOpen(false);
+		// logout();
+		// navigate('/');
+		// console.log('User logged out');
 	};
 
 	const navData = [
 		{ title: 'Home', link: '/' },
-		{ title: 'Bookings', link: '/bookings' },
-		{ title: 'Booking Cart', link: '/booking-cart' },
 		{ title: 'Services', link: '/services' },
 		{ title: 'Spare Parts', link: '/spare-parts' },
+		{ title: 'Booking Cart', link: '/booking-cart' },
+		{ title: 'Bookings', link: '/bookings' },
 		{ title: 'Offers', link: '/announcement' },
 	];
 
 	return (
 		<header className='bg-white text-white w-full fixed top-0 z-50'>
 			{/* Top Navbar */}
-			<div className='flex items-center justify-between px-4 py-2 space-x-4'>
+			<div className='bg-red-900 h-[5px]'></div>
+			<div className='flex items-center justify-between px-24 py-2 space-x-4'>
 				{/* Logo & Location */}
 				<div className='flex items-center space-x-4'>
 					<Link to='/' className='text-2xl font-bold text-white'>
-						<img src={Logo} alt='yes mechanic logo' className='w-25 h-10' />
+						<img src={Logo} alt='yes mechanic logo' className='w-32 h-16' />
 					</Link>
 				</div>
 
+				<div className='text-white flex items-center gap-1'>
+					<img src={TruckIcon} style={{ width: '30px' }} />
+					<label
+						className='text-red-900 cursor-pointer'
+						style={{ ...FONTS.paragraph, fontWeight: 600 }}
+					>
+						QUICK DELIVERY
+					</label>
+				</div>
+
+				<div className='text-white flex items-center '>
+					<CustomDropdown />
+				</div>
+				{/* 
+
 				{/* Search Bar */}
-				<div className='flex flex-1'>
+				<div className='flex flex-1 justify-end'>
 					<input
 						type='text'
-						className='px-4 py-2 text-[#9b111e] text-sm border border-[#9b111e] rounded-lg focus:outline-none focus:ring-1 focus:ring-[#9b111e] ml-4 mr-2 w-[290px]'
+						className='px-4 py-2 text-[#9b111e] placeholder-gray-600 text-sm bg-red-50 rounded-l-md focus:outline-none focus:ring-[#9b111e] ml-4 w-[290px]'
 						placeholder='Search'
 						value={search}
 						onChange={(e) => setSearch(e.target.value)}
 					/>
-					<button className='bg-red-900 p-3 rounded-full'>
+
+					<button className='bg-red-900  px-4 py-2 rounded-r-md'>
 						<FiSearch
 							className='text-black text-xl'
 							color={COLORS.white}
@@ -214,7 +236,7 @@ export const Navbar: React.FC = () => {
 
 						{showNotifications && (
 							<div className='absolute right-0 mt-2 w-80 rounded-lg shadow-xl bg-white z-50 overflow-hidden'>
-								<div className='bg-gradient-to-r from-red-600 to-red-800 p-3'>
+								<div className='bg-red-900 p-3'>
 									<h3 className='text-white font-bold'>Notifications</h3>
 								</div>
 								<div className='max-h-80 overflow-y-auto'>
@@ -262,23 +284,125 @@ export const Navbar: React.FC = () => {
 					{/* Profile Dropdown */}
 					{isLoggedIn ? (
 						<>
-							<ProfileMenu />
+							<ProfileMenu handleLogout={handleLogout} />
 						</>
 					) : (
 						<>
 							<img
-								src={dummyImage}
+								src='/images/images.jpeg'
 								alt='dummy-image'
 								className='w-10 h-10 rounded-full cursor-pointer'
 							/>
 						</>
 					)}
-					<div className='text-white'>
-						<p className='text-red-900 font-semibold cursor-pointer'>
-							{isLoggedIn ? 'User' : 'Log In'}
-						</p>
-					</div>
-					<div className='relative flex items-center' onClick={() => {}}>
+					{/* Logout Confirmation Modal */}
+					{showLogoutConfirm && (
+						<div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]'>
+							<div className='bg-white rounded-xl shadow-lg w-80 p-6 space-y-4 text-center'>
+								<h2 className='text-lg font-semibold text-red-600'>
+									Are you sure you want to logout?
+								</h2>
+								<div className='flex justify-center gap-4 mt-4'>
+									<button
+										onClick={() => setShowLogoutConfirm(false)}
+										className='px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 text-gray-800'
+									>
+										Cancel
+									</button>
+									<button
+										onClick={() => {
+											setShowLogoutConfirm(false);
+											setShowLogoutSuccess(true);
+											setTimeout(() => {
+												setShowLogoutSuccess(false);
+												logout();
+												navigate('/');
+											}, 1000);
+										}}
+										className='px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700'
+									>
+										OK
+									</button>
+								</div>
+							</div>
+						</div>
+					)}
+					{/* Logout Success Modal */}
+					{showLogoutSuccess && (
+						<div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]'>
+							<div className='bg-white rounded-xl shadow-xl w-80 p-6 flex flex-col items-center space-y-4 text-center animate-fade-in'>
+								{/* Animated Checkmark with Tailwind */}
+								<svg
+									className='w-16 h-16 text-green-600 animate-draw-check'
+									viewBox='0 0 52 52'
+									fill='none'
+									xmlns='http://www.w3.org/2000/svg'
+								>
+									<circle
+										cx='26'
+										cy='26'
+										r='25'
+										stroke='currentColor'
+										strokeWidth='2'
+										className='stroke-current'
+									/>
+									<path
+										d='M14 27L22 35L38 19'
+										stroke='currentColor'
+										strokeWidth='4'
+										strokeLinecap='round'
+										strokeLinejoin='round'
+										className='animate-draw-path'
+									/>
+								</svg>
+								<p className='text-green-700 text-lg font-semibold'>
+									Logout Successfully!
+								</p>
+							</div>
+
+							{/* Tailwind custom animation via <style> tag (works well for small scoped styles) */}
+							<style>
+								{`
+              @keyframes fade-in {
+                from { opacity: 0; transform: scale(0.95); }
+                to { opacity: 1; transform: scale(1); }
+              }
+
+              .animate-fade-in {
+                animation: fade-in 0.3s ease-out forwards;
+              }
+
+              @keyframes draw-path {
+                from { stroke-dasharray: 48; stroke-dashoffset: 48; }
+                to { stroke-dashoffset: 0; }
+              }
+
+              .animate-draw-path {
+                stroke-dasharray: 48;
+                stroke-dashoffset: 48;
+                animation: draw-path 0.5s ease-out forwards;
+              }
+
+              @keyframes draw-check {
+                from { stroke-dasharray: 166; stroke-dashoffset: 166; }
+                to { stroke-dashoffset: 0; }
+              }
+
+              .animate-draw-check circle {
+                stroke-dasharray: 166;
+                stroke-dashoffset: 166;
+                animation: draw-check 0.6s ease-out forwards;
+              }
+            `}
+							</style>
+						</div>
+					)}
+					<div
+						className='relative flex items-center'
+						onClick={() => {
+							navigate('/booking-cart');
+						}}
+					>
 						<FaShoppingCart className='text-2xl cursor-pointer text-red-900' />
 						<span className='absolute -top-2 left-4 bg-red-900 text-white text-xs rounded-full px-1'>
 							0
@@ -288,23 +412,34 @@ export const Navbar: React.FC = () => {
 			</div>
 
 			{/* Bottom Navbar - Categories */}
-			<div className='bg-[#fdefe9] px-4 py-6 flex items-center justify-center gap-2 space-x-6 text-sm overflow-x-auto scrollbar-hide'>
+
+			<div className='bg-[#fdefe9] px-24 py-1 flex items-center justify-between overflow-x-auto scrollbar-hide'>
 				{navData?.map((item, idx) => (
 					<NavLink
 						key={idx}
 						to={item.link}
-						style={{ fontSize: '18px' }}
+						style={{ ...FONTS.paragraph, fontWeight: 600, fontSize: '16px' }}
 						className={({ isActive }) =>
-							`whitespace-nowrap font-semibold transition-colors duration-200 pb-2 ${
-								isActive
-									? 'text-red-900 border-b-3 border-red-900'
-									: 'text-red-900 hover:border-b-3 border-red-900'
-							}`
+							`relative pb-2 text-md font-semibold transition-all duration-300 ease-in-out whitespace-nowrap
+	${
+		isActive
+			? 'text-red-900 -translate-y-1 after:content-[""] after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-full after:bg-red-900 after:transition-all after:duration-300'
+			: 'text-red-800 after:content-[""] after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-0 after:bg-red-900 after:transition-all after:duration-300 hover:after:w-full'
+	}`
 						}
 					>
 						{item.title}
 					</NavLink>
 				))}
+
+				<div className='flex justify-end'>
+					<button
+						className='bg-red-900 hover:bg-red-800 text-white py-2 px-4 rounded-full'
+						style={{ ...FONTS.paragraph, fontWeight: 600 }}
+					>
+						Enquiry
+					</button>
+				</div>
 			</div>
 		</header>
 	);
