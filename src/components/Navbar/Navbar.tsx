@@ -130,9 +130,11 @@ export const Navbar: React.FC = () => {
 	const unreadCount = notifications.filter((n) => !n.isRead).length;
 
 	const handleLogout = () => {
-		logout();
-		navigate('/');
-		console.log('User logged out');
+		setShowLogoutConfirm(true);
+		setIsDropdownOpen(false);
+		// logout();
+		// navigate('/');
+		// console.log('User logged out');
 	};
 
 	const navData = [
@@ -175,7 +177,7 @@ export const Navbar: React.FC = () => {
 				<div className='flex flex-1 justify-end'>
 					<input
 						type='text'
-						className='px-4 py-2 text-[#9b111e] placeholder-red-700 text-sm border border-[#9b111e] rounded-l-md focus:outline-none focus:ring-[#9b111e] ml-4 w-[290px]'
+						className='px-4 py-2 text-[#9b111e] placeholder-gray-600 text-sm bg-red-50 rounded-l-md focus:outline-none focus:ring-[#9b111e] ml-4 w-[290px]'
 						placeholder='Search'
 						value={search}
 						onChange={(e) => setSearch(e.target.value)}
@@ -282,7 +284,7 @@ export const Navbar: React.FC = () => {
 					{/* Profile Dropdown */}
 					{isLoggedIn ? (
 						<>
-							<ProfileMenu />
+							<ProfileMenu handleLogout={handleLogout} />
 						</>
 					) : (
 						<>
@@ -293,12 +295,114 @@ export const Navbar: React.FC = () => {
 							/>
 						</>
 					)}
-					<div className='text-white'>
-						<p className='text-red-900 font-semibold cursor-pointer'>
-							{isLoggedIn ? 'YM User' : 'Log In'}
-						</p>
-					</div>
-					<div className='relative flex items-center' onClick={() => {}}>
+					{/* Logout Confirmation Modal */}
+					{showLogoutConfirm && (
+						<div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]'>
+							<div className='bg-white rounded-xl shadow-lg w-80 p-6 space-y-4 text-center'>
+								<h2 className='text-lg font-semibold text-red-600'>
+									Are you sure you want to logout?
+								</h2>
+								<div className='flex justify-center gap-4 mt-4'>
+									<button
+										onClick={() => setShowLogoutConfirm(false)}
+										className='px-4 py-2 rounded bg-gray-200 hover:bg-gray-300 text-gray-800'
+									>
+										Cancel
+									</button>
+									<button
+										onClick={() => {
+											setShowLogoutConfirm(false);
+											setShowLogoutSuccess(true);
+											setTimeout(() => {
+												setShowLogoutSuccess(false);
+												logout();
+												navigate('/');
+											}, 1000);
+										}}
+										className='px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700'
+									>
+										OK
+									</button>
+								</div>
+							</div>
+						</div>
+					)}
+					{/* Logout Success Modal */}
+					{showLogoutSuccess && (
+						<div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]'>
+							<div className='bg-white rounded-xl shadow-xl w-80 p-6 flex flex-col items-center space-y-4 text-center animate-fade-in'>
+								{/* Animated Checkmark with Tailwind */}
+								<svg
+									className='w-16 h-16 text-green-600 animate-draw-check'
+									viewBox='0 0 52 52'
+									fill='none'
+									xmlns='http://www.w3.org/2000/svg'
+								>
+									<circle
+										cx='26'
+										cy='26'
+										r='25'
+										stroke='currentColor'
+										strokeWidth='2'
+										className='stroke-current'
+									/>
+									<path
+										d='M14 27L22 35L38 19'
+										stroke='currentColor'
+										strokeWidth='4'
+										strokeLinecap='round'
+										strokeLinejoin='round'
+										className='animate-draw-path'
+									/>
+								</svg>
+								<p className='text-green-700 text-lg font-semibold'>
+									Logout Successfully!
+								</p>
+							</div>
+
+							{/* Tailwind custom animation via <style> tag (works well for small scoped styles) */}
+							<style>
+								{`
+              @keyframes fade-in {
+                from { opacity: 0; transform: scale(0.95); }
+                to { opacity: 1; transform: scale(1); }
+              }
+
+              .animate-fade-in {
+                animation: fade-in 0.3s ease-out forwards;
+              }
+
+              @keyframes draw-path {
+                from { stroke-dasharray: 48; stroke-dashoffset: 48; }
+                to { stroke-dashoffset: 0; }
+              }
+
+              .animate-draw-path {
+                stroke-dasharray: 48;
+                stroke-dashoffset: 48;
+                animation: draw-path 0.5s ease-out forwards;
+              }
+
+              @keyframes draw-check {
+                from { stroke-dasharray: 166; stroke-dashoffset: 166; }
+                to { stroke-dashoffset: 0; }
+              }
+
+              .animate-draw-check circle {
+                stroke-dasharray: 166;
+                stroke-dashoffset: 166;
+                animation: draw-check 0.6s ease-out forwards;
+              }
+            `}
+							</style>
+						</div>
+					)}
+					<div
+						className='relative flex items-center'
+						onClick={() => {
+							navigate('/booking-cart');
+						}}
+					>
 						<FaShoppingCart className='text-2xl cursor-pointer text-red-900' />
 						<span className='absolute -top-2 left-4 bg-red-900 text-white text-xs rounded-full px-1'>
 							0

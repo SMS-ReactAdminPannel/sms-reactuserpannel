@@ -367,14 +367,14 @@ const HomePage: React.FC = () => {
 							Customised Care For All Your Needs
 						</h1>
 						<div className='flex justify-center gap-6 mt-4 flex-wrap'>
-							<div className='flex flex-col items-center text-center bg-[#ffd46b] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
+							<div className='flex flex-col items-center text-center bg-[#FFDCDC] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
 								<GrWorkshop size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
 									style={{
 										...FONTS.paragraph,
 										fontSize: '16px',
-										color: COLORS.white,
+										color: COLORS.primary,
 									}}
 								>
 									Service Workshop
@@ -382,28 +382,28 @@ const HomePage: React.FC = () => {
 									Open All 7 Days
 								</p>
 							</div>
-							<div className='flex flex-col items-center text-center bg-[#ffd46b] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
+							<div className='flex flex-col items-center text-center bg-[#FFDCDC] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
 								<LuCarTaxiFront size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
 									style={{
 										...FONTS.paragraph,
 										fontSize: '16px',
-										color: COLORS.white,
+										color: COLORS.primary,
 									}}
 								>
 									Service Pick Up
 									<br />& Drop Facility
 								</p>
 							</div>
-							<div className='flex flex-col items-center text-center bg-[#ffd46b] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
+							<div className='flex flex-col items-center text-center bg-[#FFDCDC] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
 								<GrWorkshop size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
 									style={{
 										...FONTS.paragraph,
-										fontSize: '16px',
-										color: COLORS.white,
+										fontSize: '14px',
+										color: COLORS.primary,
 									}}
 								>
 									Service Workshop
@@ -411,28 +411,28 @@ const HomePage: React.FC = () => {
 									Open All 7 Days
 								</p>
 							</div>
-							<div className='flex flex-col items-center text-center bg-[#ffd46b] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
+							<div className='flex flex-col items-center text-center bg-[#FFDCDC] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
 								<PiSealCheckBold size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
 									style={{
 										...FONTS.paragraph,
 										fontSize: '16px',
-										color: COLORS.white,
+										color: COLORS.primary,
 									}}
 								>
 									YM Genuine Parts
 									<br />& Oil
 								</p>
 							</div>
-							<div className='flex flex-col items-center text-center bg-[#ffd46b] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
+							<div className='flex flex-col items-center text-center bg-[#FFDCDC] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
 								<LuHandshake size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
 									style={{
 										...FONTS.paragraph,
 										fontSize: '16px',
-										color: COLORS.white,
+										color: COLORS.primary,
 									}}
 								>
 									Annual Maintenance
@@ -440,14 +440,14 @@ const HomePage: React.FC = () => {
 									Plan Coverage
 								</p>
 							</div>
-							<div className='flex flex-col items-center text-center bg-[#ffd46b] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
+							<div className='flex flex-col items-center text-center bg-[#FFDCDC] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
 								<RiShieldStarFill size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
 									style={{
 										...FONTS.paragraph,
 										fontSize: '16px',
-										color: COLORS.white,
+										color: COLORS.primary,
 									}}
 								>
 									5 Years Standard
@@ -455,14 +455,14 @@ const HomePage: React.FC = () => {
 									Warranty
 								</p>
 							</div>
-							<div className='flex flex-col items-center text-center bg-[#ffd46b] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
+							<div className='flex flex-col items-center text-center bg-[#FFDCDC] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
 								<GrWorkshop size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
 									style={{
 										...FONTS.paragraph,
 										fontSize: '16px',
-										color: COLORS.white,
+										color: COLORS.primary,
 									}}
 								>
 									Service Workshop
@@ -470,14 +470,14 @@ const HomePage: React.FC = () => {
 									Open All 7 Days
 								</p>
 							</div>
-							<div className='flex flex-col items-center text-center bg-[#ffd46b] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
+							<div className='flex flex-col items-center text-center bg-[#FFDCDC] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
 								<MdDateRange size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
 									style={{
 										...FONTS.paragraph,
 										fontSize: '16px',
-										color: COLORS.white,
+										color: COLORS.primary,
 									}}
 								>
 									24 x 7 Assistance
@@ -533,31 +533,34 @@ const HomePage: React.FC = () => {
 								>
 									About YM
 								</p>
-								<ol className='pt-1 text-red-900 text-xl'>
+								<ol className='pt-1 text-red-900 text-xl flex flex-col'>
 									<li
-										className='py-1 text-red-900'
+										className='py-1 text-red-900 hover:underline cursor-pointer'
 										style={{ ...FONTS.paragraph }}
 									>
 										About Us
 									</li>
-									<li
-										className='py-1 text-red-900'
+									<Link
+										to='/contact'
+										className='py-1 text-red-900 hover:underline cursor-pointer'
 										style={{ ...FONTS.paragraph }}
 									>
 										Contact Us
-									</li>
-									<li
-										className='py-1 text-red-900'
+									</Link>
+									<Link
+										to='/settings'
+										className='py-1 text-red-900 hover:underline cursor-pointer'
 										style={{ ...FONTS.paragraph }}
 									>
 										Settings
-									</li>
-									<li
-										className='py-1 text-red-900'
+									</Link>
+									<Link
+										to='/services'
+										className='py-1 text-red-900 hover:underline cursor-pointer'
 										style={{ ...FONTS.paragraph }}
 									>
 										Services
-									</li>
+									</Link>
 								</ol>
 							</div>
 
@@ -572,25 +575,28 @@ const HomePage: React.FC = () => {
 								>
 									Support
 								</p>
-								<ol className='pt-3 text-red-900 text-xl'>
-									<li
-										className='py-1 text-red-900'
+								<ol className='pt-3 text-red-900 text-xl flex flex-col'>
+									<Link
+										to='/enquiry'
+										className='py-1 text-red-900 hover:underline'
 										style={{ ...FONTS.paragraph }}
 									>
 										Enquiry Form
-									</li>
-									<li
-										className='py-1 text-red-900'
+									</Link>
+									<Link
+										to='/help-center'
+										className='py-1 text-red-900 hover:underline'
 										style={{ ...FONTS.paragraph }}
 									>
 										Help Center
-									</li>
-									<li
-										className='py-1 text-red-900'
+									</Link>
+									<Link
+										to='/faqs'
+										className='py-1 text-red-900 hover:underline'
 										style={{ ...FONTS.paragraph }}
 									>
 										FAQs
-									</li>
+									</Link>
 								</ol>
 							</div>
 							<div className='w-[900px]'>
@@ -672,8 +678,8 @@ const HomePage: React.FC = () => {
 							</div>
 						</div>
 					</div>
-					<div className='py-2'>
-						<div className='h-[1px] bg-red-900 mb-2'></div>
+					<div className='py-2 mt-8'>
+						<div className='h-[1px] bg-red-900 mb-4'></div>
 						<p
 							style={{
 								...FONTS.paragraph,

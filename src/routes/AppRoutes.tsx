@@ -31,7 +31,7 @@ const AppRoutes = () => {
 			<Route path='signup' element={<SignupPage />} />
 			<Route path='reset-password' element={<ResetPassword />} />
 			<Route path='homepageintro' element={<HomePageIntro />} />
-			<Route path='*' element={<Navigate to='/login' />} />
+			<Route path='*' element={<Navigate to='/homepageintro' />} />
 		</Routes>
 	);
 

@@ -1,11 +1,16 @@
-import { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
-import { FiLogOut, FiUser } from 'react-icons/fi';
+import React, { useEffect, useRef, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { FiLogOut, FiSettings, FiUser } from 'react-icons/fi';
 import profileImage from '../../assets/navbar/profileimage.jpg';
 
-const ProfileMenu = () => {
+type ProfileMenuProps = {
+	handleLogout: () => void;
+};
+
+const ProfileMenu: React.FC<ProfileMenuProps> = ({ handleLogout }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const menuRef = useRef<HTMLDivElement>(null);
+	const navigate = useNavigate();
 
 	// Close dropdown when clicking outside
 	useEffect(() => {
@@ -18,13 +23,13 @@ const ProfileMenu = () => {
 		document.addEventListener('mousedown', handleClickOutside);
 		return () => {
 			document.removeEventListener('mousedown', handleClickOutside);
+			setIsOpen(false);
 		};
 	}, []);
 
-	const handleLogout = () => {
-		// implement logout logic
-		console.log('Logging out...');
-	};
+	useEffect(() => {
+		setIsOpen(false);
+	}, [navigate]);
 
 	return (
 		<div className='relative inline-block text-left' ref={menuRef}>
@@ -48,6 +53,12 @@ const ProfileMenu = () => {
 							className='flex items-center px-4 py-2 text-sm font-semibold text-[#9b111e] hover:bg-red-900 hover:text-white'
 						>
 							<FiUser className='mr-2' /> Profile
+						</Link>
+						<Link
+							to='/settings'
+							className='flex items-center px-4 py-2 text-sm font-semibold text-[#9b111e] hover:bg-red-900 hover:text-white'
+						>
+							<FiSettings className='mr-2' /> Settings
 						</Link>
 						<button
 							onClick={handleLogout}
