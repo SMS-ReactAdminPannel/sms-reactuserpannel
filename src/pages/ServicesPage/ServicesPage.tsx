@@ -667,75 +667,70 @@ import React, { useState } from 'react';
 				)}
 
 				<div className='flex justify-between items-center mt-6'>
-  {/* Price display - always shown */}
-  
+				  {/* Conditional buttons */}
+				 {selectedPackage.some(p => p.packageId === pkg.id) ? (
+				  <>
+				    {/* Price and Discount */}
+				    <div className='text-right mb-2'>
+				      <span className='line-through text-gray-400 mr-2 text-sm'>
+				        {pkg.price}
+				      </span>
+				      <span className='text-red-600 font-bold text-xl'>
+				        {pkg.discountPrice}
+				      </span>
+				    </div>
+				
+				    {/* Check if it's in the cart */}
+				    {cart.some(item => item.packageId === pkg.id) ? (
+				      <button
+				        onClick={() => {
+						  navigate("/booking-cart")
+				        }}
+				        className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
+				      >
+				        Go to Cart
+				      </button>
+				    ) : (
+				      <button
+				        onClick={() => {
+				          const packageToAdd = selectedPackage.find(p => p.packageId === pkg.id);
+				          if (packageToAdd) {
+				            setCart([...cart, packageToAdd]);
+				            setShowCartNotification(true);
+				            setTimeout(() => setShowCartNotification(false), 3000);
+				          }
+				        }}
+				        className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-900 transition-colors"
+				      >
+				        Add to Cart
+				      </button>
+				    )}
+				  </>
+				) : (
+				  <button
+				    onClick={() => handleSelectCar(pkg.id)}
+				    className='px-4 py-2 rounded-lg font-semibold bg-white border-2 border-red-500 text-red-500 hover:bg-red-50 hover:text-red-700 transition-all duration-200 shadow-md hover:shadow-lg'
+				  >
+				    SELECT CAR
+				  </button>
+				)}
 
-  {/* Conditional buttons */}
- {selectedPackage.some(p => p.packageId === pkg.id) ? (
-  <>
-    {/* Price and Discount */}
-    <div className='text-right mb-2'>
-      <span className='line-through text-gray-400 mr-2 text-sm'>
-        {pkg.price}
-      </span>
-      <span className='text-red-600 font-bold text-xl'>
-        {pkg.discountPrice}
-      </span>
-    </div>
-
-    {/* Check if it's in the cart */}
-    {cart.some(item => item.packageId === pkg.id) ? (
-      <button
-        onClick={() => {
-          setShowCartNotification(true);
-          setTimeout(() => setShowCartNotification(false), 3000);
-		  navigate("/booking-cart")
-        }}
-        className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors"
-      >
-        Go to Cart
-      </button>
-    ) : (
-      <button
-        onClick={() => {
-          const packageToAdd = selectedPackage.find(p => p.packageId === pkg.id);
-          if (packageToAdd) {
-            setCart([...cart, packageToAdd]);
-            setShowCartNotification(true);
-            setTimeout(() => setShowCartNotification(false), 3000);
-          }
-        }}
-        className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 transition-colors"
-      >
-        Add to Cart
-      </button>
-    )}
-  </>
-) : (
-  <button
-    onClick={() => handleSelectCar(pkg.id)}
-    className='px-4 py-2 rounded-lg font-semibold bg-white border-2 border-red-500 text-red-500 hover:bg-red-50 hover:text-red-700 transition-all duration-200 shadow-md hover:shadow-lg'
-  >
-    SELECT CAR
-  </button>
-)}
-
-</div>
-				{showForm && selectedPackageId && (
-	<div className="fixed inset-0 bg-black bg-opacity-50 flex justify-end items-center z-50 p-4">
-		<SelectCarPage 
-		onClose={() => setShowForm(false)} 
-		setSelectedPackage={(carDetails) => {
-			setSelectedPackage(prev => [...prev, {
-			packageId: selectedPackageId,
-			carDetails
-			}]);
-			setShowForm(false);
-		}} 
-		packageId={selectedPackageId}
-		/>
-	</div>
-	)}
+				</div>
+								{showForm && selectedPackageId && (
+					<div className="fixed inset-0 bg-black bg-opacity-50 flex justify-end items-center z-50 p-4">
+						<SelectCarPage 
+						onClose={() => setShowForm(false)} 
+						setSelectedPackage={(carDetails) => {
+							setSelectedPackage(prev => [...prev, {
+							packageId: selectedPackageId,
+							carDetails
+							}]);
+							setShowForm(false);
+						}} 
+						packageId={selectedPackageId}
+						/>
+					</div>
+					)}
 
 				</div>
 			</div>
