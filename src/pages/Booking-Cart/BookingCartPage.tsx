@@ -206,6 +206,7 @@ const SparePartsList = () => {
     if (part) {
       setConfirmedPartOrders((prev) => [...prev, { part, quantity }]);
       setParts((prev) => prev.filter((p) => p.id !== id));
+      setShow(true);
     }
   };
 
