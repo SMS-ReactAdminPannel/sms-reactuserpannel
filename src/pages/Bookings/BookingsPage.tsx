@@ -7,6 +7,8 @@ import {
   CheckCircle,
 } from "lucide-react";
 import { motion } from "framer-motion";
+import bgImage from "../../assets/checkout-bg_1_.png";
+
 
 
 // OrderDetails Component
@@ -231,7 +233,7 @@ const BookingsPage: React.FC = () => {
   // }).length;
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-cover bg-center bg-no-repeat bg-fixed" style={{ backgroundImage: `url(${bgImage})` }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
