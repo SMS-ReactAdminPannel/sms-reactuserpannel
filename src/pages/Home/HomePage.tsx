@@ -16,6 +16,7 @@ import { TbCertificate } from 'react-icons/tb';
 import { RiCustomerService2Fill } from 'react-icons/ri';
 import MustCare from '../../components/bookings/BookingsPage';
 import { COLORS, FONTS } from '../../constants/constant';
+import { TfiLayoutLineSolid } from 'react-icons/tfi';
 import React from 'react';
 import {
 	FaTools,
@@ -41,7 +42,7 @@ import Annualmaintenance from '../../assets/CAR ANNUAL MAINTENANCE/Annual mainte
 import appimage from '../../assets/LOGO.jpg';
 import bgImg from '../../assets/home/aesthetic-background-with-patterned-glass-texture.jpg';
 import bgImg2 from '../../assets/home/studio-background-concept-abstract-empty-light-gradient-purple-studio-room-background-product.jpg';
-import bgImg3 from '../../assets/home/yakin 41.jpg';
+import bgImg3 from '../../assets/checkout-bg_1_.png';
 
 // icon for footer
 import { FaPhoneFlip } from 'react-icons/fa6'; // phone
@@ -53,8 +54,6 @@ import { FaFacebook } from 'react-icons/fa'; //facebook
 import { FaYoutube } from 'react-icons/fa'; //youtube
 import { SiIndeed } from 'react-icons/si'; //indeed
 import { BiLogoPlayStore } from 'react-icons/bi'; //play store
-import { FaCcVisa } from 'react-icons/fa'; //visa card
-import { FaCcMastercard } from 'react-icons/fa6';
 
 const imageUrls = [image1, image2, image3, image4];
 interface ServiceCardProps {
@@ -134,9 +133,9 @@ const HomePage: React.FC = () => {
 				<ImageCarousel images={imageUrls} interval={2500} />
 			</div>
 			<div className=''>
-				<div className='px-24 my-3 h-[75vh]'>
+				<div className='px-24 my-8 h-[75vh]'>
 					<h1
-						className='text-2xl mb-10 text-red-900 text-center'
+						className='text-2xl mb-10 text-red-900 text-center underline'
 						style={{ ...FONTS.header, fontWeight: 600 }}
 					>
 						Available Services
@@ -162,7 +161,7 @@ const HomePage: React.FC = () => {
 					</div>
 				</div>
 				<div
-					className={`h-[78vh] bg-[url(${bgImg})] flex justify-center items-center`}
+					className={`h-[90vh] bg-[url(${bgImg})] flex justify-center items-center`}
 				>
 					<div className='mx-24'>
 						<PromoCarousel />
@@ -171,11 +170,11 @@ const HomePage: React.FC = () => {
 				<div className='mx-24'>
 					<CustomServicesCarousel />
 				</div>
-				<div className='mt-3'>
-					<div className={`bg-[url(${bgImg2})] h-[80vh]`}>
-						<div className='px-24 pt-3'>
+				<div className='mt-4'>
+					<div className={`bg-[url(${bgImg2})] h-[95vh]`}>
+						<div className='px-24 py-10'>
 							<h1
-								className='text-3xl text-red-900 text-center pb-6'
+								className='text-3xl text-red-900 text-center pb-10 underline'
 								style={{ ...FONTS.header, fontWeight: 600 }}
 							>
 								Care Advantages
@@ -210,16 +209,16 @@ const HomePage: React.FC = () => {
 									<p>Of Customer Care Expertise</p>
 								</div>
 							</div>
-							<div className='py-4'>
+							<div className='py-8'>
 								<MustCare />
 							</div>
 						</div>
 					</div>
 
-					<div className='px-24'>
-						<div className='pt-3'>
+					<div className='px-24 pb-8'>
+						<div className='py-12'>
 							<h1
-								className='text-3xl text-red-900 text-center pb-4'
+								className='text-3xl text-red-900 text-center pb-8 underline'
 								style={{ ...FONTS.header, fontWeight: 600 }}
 							>
 								Discover Our Services
@@ -358,23 +357,23 @@ const HomePage: React.FC = () => {
 						</div>
 					</div>
 				</div>
-				<div className={`bg-[url(${bgImg3})] h-[78vh] mt-5`}>
-					<div className='px-24 pt-5'>
+				<div className={`bg-[url(${bgImg3})] h-[85vh] mt-5`}>
+					<div className='px-24 pt-2'>
 						<h1
-							className='text-3xl text-center text-red-900 pb-4'
+							className='text-3xl text-center text-red-900 py-10 underline'
 							style={{ ...FONTS.header, fontWeight: 600 }}
 						>
 							Customised Care For All Your Needs
 						</h1>
-						<div className='flex justify-center gap-6 mt-4 flex-wrap'>
-							<div className='flex flex-col items-center text-center bg-[#ffd46b] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
+						<div className='flex justify-center gap-6 mt-4 mb-10 flex-wrap'>
+							<div className='flex flex-col items-center text-center bg-[#fdefe9] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
 								<GrWorkshop size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
 									style={{
 										...FONTS.paragraph,
-										fontSize: '16px',
-										color: COLORS.white,
+										fontSize: '14px',
+										color: COLORS.primary,
 									}}
 								>
 									Service Workshop
@@ -382,28 +381,28 @@ const HomePage: React.FC = () => {
 									Open All 7 Days
 								</p>
 							</div>
-							<div className='flex flex-col items-center text-center bg-[#ffd46b] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
+							<div className='flex flex-col items-center text-center bg-[#fdefe9] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
 								<LuCarTaxiFront size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
 									style={{
 										...FONTS.paragraph,
-										fontSize: '16px',
-										color: COLORS.white,
+										fontSize: '14px',
+										color: COLORS.primary,
 									}}
 								>
 									Service Pick Up
 									<br />& Drop Facility
 								</p>
 							</div>
-							<div className='flex flex-col items-center text-center bg-[#ffd46b] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
+							<div className='flex flex-col items-center text-center bg-[#fdefe9] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
 								<GrWorkshop size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
 									style={{
 										...FONTS.paragraph,
-										fontSize: '16px',
-										color: COLORS.white,
+										fontSize: '14px',
+										color: COLORS.primary,
 									}}
 								>
 									Service Workshop
@@ -411,28 +410,28 @@ const HomePage: React.FC = () => {
 									Open All 7 Days
 								</p>
 							</div>
-							<div className='flex flex-col items-center text-center bg-[#ffd46b] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
+							<div className='flex flex-col items-center text-center bg-[#fdefe9] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
 								<PiSealCheckBold size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
 									style={{
 										...FONTS.paragraph,
-										fontSize: '16px',
-										color: COLORS.white,
+										fontSize: '14px',
+										color: COLORS.primary,
 									}}
 								>
 									YM Genuine Parts
 									<br />& Oil
 								</p>
 							</div>
-							<div className='flex flex-col items-center text-center bg-[#ffd46b] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
+							<div className='flex flex-col items-center text-center bg-[#fdefe9] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
 								<LuHandshake size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
 									style={{
 										...FONTS.paragraph,
-										fontSize: '16px',
-										color: COLORS.white,
+										fontSize: '14px',
+										color: COLORS.primary,
 									}}
 								>
 									Annual Maintenance
@@ -440,14 +439,14 @@ const HomePage: React.FC = () => {
 									Plan Coverage
 								</p>
 							</div>
-							<div className='flex flex-col items-center text-center bg-[#ffd46b] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
+							<div className='flex flex-col items-center text-center bg-[#fdefe9] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
 								<RiShieldStarFill size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
 									style={{
 										...FONTS.paragraph,
-										fontSize: '16px',
-										color: COLORS.white,
+										fontSize: '14px',
+										color: COLORS.primary,
 									}}
 								>
 									5 Years Standard
@@ -455,14 +454,14 @@ const HomePage: React.FC = () => {
 									Warranty
 								</p>
 							</div>
-							<div className='flex flex-col items-center text-center bg-[#ffd46b] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
+							<div className='flex flex-col items-center text-center bg-[#fdefe9] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
 								<GrWorkshop size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
 									style={{
 										...FONTS.paragraph,
-										fontSize: '16px',
-										color: COLORS.white,
+										fontSize: '14px',
+										color: COLORS.primary,
 									}}
 								>
 									Service Workshop
@@ -470,14 +469,14 @@ const HomePage: React.FC = () => {
 									Open All 7 Days
 								</p>
 							</div>
-							<div className='flex flex-col items-center text-center bg-[#ffd46b] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
+							<div className='flex flex-col items-center text-center bg-[#fdefe9] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
 								<MdDateRange size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
 									style={{
 										...FONTS.paragraph,
-										fontSize: '16px',
-										color: COLORS.white,
+										fontSize: '14px',
+										color: COLORS.primary,
 									}}
 								>
 									24 x 7 Assistance
@@ -489,7 +488,7 @@ const HomePage: React.FC = () => {
 					</div>
 				</div>
 				{/* FOOTER START */}
-				<footer className={`h-[90vh] bg-[url(${bgImg2})]`}>
+				<footer className={`h-[100vh] bg-[url(${bgImg2})] pt-3`}>
 					<div className='grid grid-cols-4 gap-4 px-24'>
 						{/* Image Card - Full Height (No border) */}
 						<div className='col-span-1 p-4 rounded h-full border-0'>
@@ -533,31 +532,34 @@ const HomePage: React.FC = () => {
 								>
 									About YM
 								</p>
-								<ol className='pt-1 text-red-900 text-xl'>
+								<ol className='pt-1 text-red-900 text-xl flex flex-col'>
 									<li
-										className='py-1 text-red-900'
+										className='py-1 text-red-900 hover:underline cursor-pointer'
 										style={{ ...FONTS.paragraph }}
 									>
 										About Us
 									</li>
-									<li
-										className='py-1 text-red-900'
+									<Link
+										to='/contact'
+										className='py-1 text-red-900 hover:underline cursor-pointer'
 										style={{ ...FONTS.paragraph }}
 									>
 										Contact Us
-									</li>
-									<li
-										className='py-1 text-red-900'
+									</Link>
+									<Link
+										to='/settings'
+										className='py-1 text-red-900 hover:underline cursor-pointer'
 										style={{ ...FONTS.paragraph }}
 									>
 										Settings
-									</li>
-									<li
-										className='py-1 text-red-900'
+									</Link>
+									<Link
+										to='/services'
+										className='py-1 text-red-900 hover:underline cursor-pointer'
 										style={{ ...FONTS.paragraph }}
 									>
 										Services
-									</li>
+									</Link>
 								</ol>
 							</div>
 
@@ -572,25 +574,28 @@ const HomePage: React.FC = () => {
 								>
 									Support
 								</p>
-								<ol className='pt-3 text-red-900 text-xl'>
-									<li
-										className='py-1 text-red-900'
+								<ol className='pt-3 text-red-900 text-xl flex flex-col'>
+									<Link
+										to='/enquiry'
+										className='py-1 text-red-900 hover:underline'
 										style={{ ...FONTS.paragraph }}
 									>
 										Enquiry Form
-									</li>
-									<li
-										className='py-1 text-red-900'
+									</Link>
+									<Link
+										to='/help-center'
+										className='py-1 text-red-900 hover:underline'
 										style={{ ...FONTS.paragraph }}
 									>
 										Help Center
-									</li>
-									<li
-										className='py-1 text-red-900'
+									</Link>
+									<Link
+										to='/faqs'
+										className='py-1 text-red-900 hover:underline'
 										style={{ ...FONTS.paragraph }}
 									>
 										FAQs
-									</li>
+									</Link>
 								</ol>
 							</div>
 							<div className='w-[900px]'>
@@ -672,8 +677,8 @@ const HomePage: React.FC = () => {
 							</div>
 						</div>
 					</div>
-					<div className='py-2'>
-						<div className='h-[1px] bg-red-900 mb-2'></div>
+					<div className='py-2 mt-6'>
+						<div className='h-[1px] bg-red-900 mb-4'></div>
 						<p
 							style={{
 								...FONTS.paragraph,
