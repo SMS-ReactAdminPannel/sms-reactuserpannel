@@ -10,7 +10,7 @@ import {
   Clock,
   MapPin,
 } from "lucide-react";
-import bgImage from "../../assets/checkout-bg_1_.png"
+import bgImage from "../../assets/checkout-bg_1_.png";
 
 // OrderDetails Interface
 interface OrderDetails {
@@ -160,90 +160,102 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
   const isCompleted = orderDate && orderDate < new Date();
   const isOld =
     orderDate && orderDate < new Date(Date.now() - 365 * 24 * 60 * 60 * 1000); // Older than 1 year
- 
 
-    //this is card inside
+  //this is card inside
   return (
-    <div className="bg-white rounded-2xl shadow-lg border border-gray-100 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 " >
+    <div className=" opacity-90 rounded-2xl shadow-lg-red-300 border border-red-200 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:border-red-300 ">
       <div className="flex flex-col">
         <div className="flex flex-row ">
-        {/* Image Section */}
+          {/* Image Section */}
 
-        <div className="md:w-48 h-48 md:h-auto relative bg-gradient-to-br from-gray-50 to-gray-100">
-          <img
-            src={order.imageUrl || "/placeholder.svg"}
-            alt={order.name}
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute top-3 left-3">
-            <span
-              className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                order.type === "spare"
-                  ? "bg-blue-100 text-blue-800"
-                  : "bg-purple-100 text-purple-800"
-              }`}
-            >
-              {order.type === "spare" ? (
-                <>
-                  <Package className="w-3 h-3 mr-1" />
-                  Spare Part
-                </>
-              ) : (
-                <>
-                  <Wrench className="w-3 h-3 mr-1" />
-                  Service
-                </>
-              )}
-            </span>
-          </div>
-          <div className="absolute top-3 right-3 ">
-            <span
-              className={`px-2 py-1 text-xs font-medium rounded-full ${
-                isCompleted
-                  ? "bg-green-100 text-green-700"
-                  : "bg-orange-100 text-orange-700"
-              }`}
-            >
-              {isCompleted ? "Delivered" : "In Progress"}
-            </span>
-          </div>
-        </div>
+          <div className="md:w-48 h-48 md:h-auto relative overflow-hidden rounded-lg shadow-md">
+            {/* Image fills the entire container */}
+            <img
+              src={order.imageUrl || "/placeholder.svg"}
+              alt={order.name}
+              className="w-full h-full object-cover"
+            />
 
-        {/* Content Section */}
-        <div className="flex-1 p-6">
-          <div className="flex flex-col h-full">
-            {/* Header */}
-            <div className="  flex justify-center items-center">
-              {/* name nd des */}
-              <div>
+            {/* Type badge (top-left) */}
+            <div className="absolute top-3 left-3 z-10">
+              <span
+                className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+                  order.type === "spare"
+                    ? "bg-blue-100 text-blue-800"
+                    : "bg-purple-100 text-purple-800"
+                }`}
+              >
+                {order.type === "spare" ? (
+                  <>
+                    <Package className="w-3 h-3 mr-1" />
+                    Spare Part
+                  </>
+                ) : (
+                  <>
+                    <Wrench className="w-3 h-3 mr-1" />
+                    Service
+                  </>
+                )}
+              </span>
+            </div>
+
+            {/* Status badge (top-right) */}
+            <div className="absolute top-3 right-3 z-10">
+              <span
+                className={`px-2 py-1 text-xs font-medium rounded-full ${
+                  isCompleted
+                    ? "bg-green-100 text-green-700"
+                    : "bg-orange-100 text-orange-700"
+                }`}
+              >
+                {isCompleted ? "Delivered" : "In Progress"}
+              </span>
+            </div>
+
+            {/* Completed overlay ribbon (center or bottom) */}
+            {/* {isCompleted && (
+              <div className="absolute bottom-0 left-0 w-full bg-green-600 bg-opacity-75 text-white text-xs font-semibold text-center py-1">
+                ✅ Completed
+              </div>
+            )} */}
+          </div>
+
+          {/* Content Section */}
+          <div className="flex-1 p-6">
+            <div className="flex flex-col h-full">
+              {/* Header */}
+              <div className="  flex  justify-between">
+                {/* name nd des */}
                 <div className="">
-                  <h3 className="text-xl font-bold text-gray-900 mb-1">
-                    {order.name}
-                  </h3>
-                  <p className="text-gray-600 text-sm leading-relaxed">
-                    {order.description}
-                  </p>
-                </div>
-                <div>
-                  <div className="flex items-center text-sm">
-                    <MapPin className="w-4 h-4 text-gray-400 mr-2" />
-                    <span className="text-gray-700 font-medium">
-                      {order.compatibility}
-                    </span>
+                  <div className="">
+                    <h3 className="text-xl font-bold text-red-900 mb-1">
+                      {order.name}
+                    </h3>
+                    <p className="text-red-700 text-sm leading-relaxed">
+                      {order.description}
+                    </p>
                   </div>
-                  {/* Date Section */}
-                  {order.date && (
-                    <div className="flex items-center text-sm text-gray-600">
-                      <Calendar className="w-4 h-4 text-gray-400 mr-2" />
-                      <span>
-                        {new Date(order.date).toLocaleDateString("en-US", {
-                          year: "numeric",
-                          month: "long",
-                          day: "numeric",
-                        })}
+                  <div>
+                    <div className="flex items-center text-sm">
+                      <MapPin className="w-4 h-4 text-red-800 mr-2" />
+                      <span className="text-red-700 font-medium">
+                        {order.compatibility}
                       </span>
                     </div>
-                  )}
+                    {/* Date Section */}
+                    {order.date && (
+                      <div className="flex items-center text-sm text-red-700">
+                        <Calendar className="w-4 h-4 text-red-800 mr-2" />
+                        <span>
+                          {new Date(order.date).toLocaleDateString("en-US", {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          })}
+                        </span>
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div className="">
                   <div className="text-2xl font-bold text-gray-900">
@@ -260,9 +272,8 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
             </div>
           </div>
         </div>
-      </div>
-            {/* Actions */}
-        <div className="flex items-center justify-between pt-4 ">
+        {/* Actions */}
+        <div className="flex items-center justify-between p-2 ">
           <div className="flex items-center space-x-4">
             {isCompleted ? (
               <div className="flex items-center text-green-600 text-sm font-medium">
@@ -275,14 +286,15 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
                 In Progress
               </div>
             )}
-          </div>
-
-          <div className="flex space-x-2">
+           </div>
+ 
+           <div className="flex space-x-2">
             <button className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
               View Details
             </button>
-            {!isCompleted && (
-              <button className="px-4 py-2 text-sm font-medium text-white bg-gradient-to-r from-red-600 to-red-700 rounded-lg hover:from-red-700 hover:to-red-800 transition-all duration-200 shadow-sm hover:shadow-md">
+
+            {order.type === "service" && (
+              <button className="px-4 py-2 text-sm font-medium text-white bg-[#9b111e] rounded-lg hover:from-red-200 hover:to-red-100 transition-all duration-200 shadow-sm hover:shadow-md">
                 <Truck className="w-4 h-4 mr-1 inline" />
                 Track Order
               </button>
@@ -290,7 +302,6 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
           </div>
         </div>
       </div>
-      
     </div>
   );
 };
@@ -342,40 +353,43 @@ const OrdersPage: React.FC = () => {
   }).length;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100"style={{backgroundImage:`url("${bgImage}")`}}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8" >
+    <div
+      className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100"
+      style={{ backgroundImage: `url("${bgImage}")` }}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-gray-900 mb-2">My Orders</h1>
-          <p className="text-gray-600 text-lg">
+          <h1 className="text-4xl font-bold text-red-900 mb-2">My Orders</h1>
+          <p className="text-red-600 text-lg">
             Track and manage all your orders in one place
           </p>
 
           {/* Stats */}
-          <div className="flex space-x-6 mt-4">
+          <div className="flex space-x-6 mt-4 text-[#9b111e]">
             <div className="bg-white rounded-lg px-4 py-2 shadow-sm border">
               <span className="text-2xl font-bold text-gray-900">
                 {totalOrders}
               </span>
-              <span className="text-gray-600 ml-2">Total Orders</span>
+              <span className=" ml-2">Total Orders</span>
             </div>
             <div className="bg-white rounded-lg px-4 py-2 shadow-sm border">
               <span className="text-2xl font-bold text-green-600">
                 {completedOrders}
               </span>
-              <span className="text-gray-600 ml-2">Completed</span>
+              <span className=" ml-2">Completed</span>
             </div>
             <div className="bg-white rounded-lg px-4 py-2 shadow-sm border">
               <span className="text-2xl font-bold text-orange-600">
                 {totalOrders - completedOrders}
               </span>
-              <span className="text-gray-600 ml-2">In Progress</span>
+              <span className=" ml-2">In Progress</span>
             </div>
           </div>
         </div>
 
         {/* Filters and Search */}
-        <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 mb-8">
+        <div className="bg-[#FAF3EB] rounded-2xl shadow-sm border border-gray-100 p-6 mb-8">
           <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
             {/* Search */}
             <div className="relative flex-1 max-w-md">
@@ -432,7 +446,7 @@ const OrdersPage: React.FC = () => {
                 onClick={() => setShowOldOrders(!showOldOrders)}
                 className={`px-4 py-2 rounded-xl hover:shadow-xl text-sm font-medium transition-all flex items-center ${
                   showOldOrders
-                    ? "bg-purple-600 text-white shadow-sm"
+                    ? "bg-red-700 text-white shadow-sm"
                     : "bg-gray-100 text-gray-600 hover:bg-gray-200"
                 }`}
               >
