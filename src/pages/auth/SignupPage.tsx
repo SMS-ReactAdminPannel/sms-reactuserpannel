@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate ,Link} from 'react-router-dom';
 import AuthLayout from './AuthLayout';
 
 type SignupFormData = {
@@ -35,7 +35,7 @@ const SignupPage = () => {
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         {/* Full Name */}
         <div className="flex flex-col space-y-2">
-          <label className="text-sm font-semibold text-gray-800">Full Name</label>
+          <label className="text-sm font-semibold text-white">Full Name</label>
           <input
             type="text"
             placeholder="Enter your full name"
@@ -57,7 +57,7 @@ const SignupPage = () => {
 
         {/* Email */}
         <div className="flex flex-col space-y-2">
-          <label className="text-sm font-semibold text-gray-800">Email Address</label>
+          <label className="text-sm font-semibold text-white">Email Address</label>
           <input
             type="email"
             placeholder="Enter your email"
@@ -79,7 +79,7 @@ const SignupPage = () => {
 
         {/* Password */}
         <div className="flex flex-col space-y-2">
-          <label className="text-sm font-semibold text-gray-800">Password</label>
+          <label className="text-sm font-semibold text-white">Password</label>
           <div className="relative">
             <input
               type={showPassword ? 'text' : 'password'}
@@ -117,7 +117,7 @@ const SignupPage = () => {
 
         {/* Confirm Password */}
         <div className="flex flex-col space-y-2">
-          <label className="text-sm font-semibold text-gray-800">Confirm Password</label>
+          <label className="text-sm font-semibold text-white">Confirm Password</label>
           <div className="relative">
             <input
               type={showConfirmPassword ? 'text' : 'password'}
@@ -156,6 +156,14 @@ const SignupPage = () => {
         >
           Sign Up
         </button>
+         <div className="text-center pt-1">
+          <Link
+            to="/login"
+            className="text-white hover:underline text-lg text-[#d23c3c] font-bold"
+          >
+            Back to Login
+          </Link>
+        </div>
       </form>
     </AuthLayout>
   );
