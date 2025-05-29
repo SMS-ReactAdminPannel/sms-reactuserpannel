@@ -263,7 +263,7 @@ const SparePartsList = () => {
       {/* Service Page */}
       {activePage === "service" && (parts.length > 0 || confirmedPartOrders.length > 0) &&(
         <>
-          <div className="p-4  overflow-auto overflow-hidden ">
+          <div className="p-4  overflow-auto  ">
             {parts.map((part) => (
               <SparePartCard
                 key={part.id}
@@ -320,7 +320,7 @@ const SparePartsList = () => {
       {/* Service Booking Page */}
       {activePage === "ServiceBookingPage" &&  (
         <>
-          <div className="p-4  overflow-auto overflow-hidden">
+          <div className="p-4  overflow-auto ">
             {servs.map((serv) => (
               <ServiceBookingPage
                 key={serv.id}
