@@ -1,4 +1,5 @@
 import Client  from "../../../api";
+import  ServiceCategory  from '../../../api/index';
 
 // export const getservicesoveralldata = async ( data : any ) => {
 //     try {
@@ -10,14 +11,31 @@ import Client  from "../../../api";
 //     }
 // } 
 
+// export const getservicesoveralldata = async (): Promise<ServiceCategory[]> => {
+//     try {
+//         const client = new Client();
+//         const response = await client.user.services.service_category.getALL();
+//         return response.data.data; // assuming this is where actual list is
+//     } catch (error) {
+//         console.error("Error fetching services:", error);
+//         return [];
+//     }
+// };
+  
+
 export const getservicesoveralldata = async (): Promise<ServiceCategory[]> => {
     try {
         const client = new Client();
-        const response = await client.user.services.service_category.getALL();
-        return response.data.data; // assuming this is where actual list is
+        const response = await client.user.services.service_category.getAll();
+
+        if (response?.data?.data && Array.isArray(response.data.data)) {
+            return response.data.data as ServiceCategory[];
+        } else {
+            console.warn("Unexpected response format:", response);
+            return [];
+        }
     } catch (error) {
-        console.error("Error fetching services:", error);
+        console.error("Error fetching services:", (error as Error).message || error);
         return [];
     }
 };
-  
