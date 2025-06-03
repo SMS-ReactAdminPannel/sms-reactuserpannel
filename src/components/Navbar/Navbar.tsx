@@ -175,13 +175,13 @@ export const Navbar: React.FC = () => {
 				<div className='flex flex-1 justify-end'>
 					
                  <input type='text'
-                 className='px-4 py-2 text-[#9b111e] text-sm border border-[#9b111e] rounded-md focus:outline-none focus:ring-1 focus:ring-[#9b111e] ml-4 mr-2 w-[290px]'
+                 className='px-2 py-1 text-[#9b111e] text-sm   focus:outline-none focus:ring-1   w-[290px]'
                    placeholder='Search'
                    value={search}
                    onChange={(e) => setSearch(e.target.value)}
 />
 
-					<button className='bg-red-900  px-4 py-2 ml-2 rounded-md'>
+					<button className='bg-red-900  px-4 py-2'>
 						<FiSearch
 							className='text-black text-xl'
 							color={COLORS.white}
@@ -209,8 +209,8 @@ export const Navbar: React.FC = () => {
 							onClick={handleBellClick}
 							className={`relative p-2.5 rounded-full bg-red-900 focus:outline-none transform transition-transform duration-200 ease-in-out ${
 								isBellActive ? 'scale-90' : 'scale-100'
-							}`}
-						>
+							}`}>
+								
 							<svg
 								xmlns='http://www.w3.org/2000/svg'
 								fill='none'
@@ -309,7 +309,7 @@ export const Navbar: React.FC = () => {
 
 			{/* Bottom Navbar - Categories */}
 		
- <div className="bg-[#fdefe9] px-4 py-6 flex items-center justify-center gap-10 overflow-x-auto scrollbar-hide">
+ <div className="bg-[#fdefe9] px-4 py-6 flex items-center justify-center gap-20 overflow-x-auto scrollbar-hide">
   {navData?.map((item, idx) => (
     <NavLink
       key={idx}
@@ -325,11 +325,13 @@ export const Navbar: React.FC = () => {
 }
 >
       {item.title}
+	  
     </NavLink>
+	
   ))}
 
  <div className='flex justify-end ml-20'>
-	<button className="bg-red-800 hover:bg-red-900 text-white font-semibold py-2 px-4 rounded-full ">
+	<button className=" bg-red-800 hover:bg-red-900 text-white font-semibold py-2 px-4 rounded-full ">
   Enquiry
 </button>
 </div>
