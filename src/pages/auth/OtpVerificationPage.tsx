@@ -1,22 +1,18 @@
-
 import { useNavigate, Link } from 'react-router-dom';
 import AuthLayout from './AuthLayout';
 import { useState, useRef } from 'react'; 
 import { useForm } from 'react-hook-form'; 
-
+import { verifyotp } from '../../features/auth';
 
 type OtpFormData = {
   otp: string;
 };
 
 const OtpVerificationPage = () => {
-  const [storedOtp, setStoredOtp] = useState('123456'); // Simulate stored OTP
   const [otpDigits, setOtpDigits] = useState<string[]>(Array(6).fill(''));
   const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
 
   const {
-    register,
-    handleSubmit,
     setError,
     clearErrors,
     formState: { errors },
@@ -48,24 +44,32 @@ const OtpVerificationPage = () => {
     }
   };
 
-  const handleOtpVerify = () => {
+  const handleOtpVerify = async () => {
     const enteredOtp = otpDigits.join('');
-    if (enteredOtp) {
-      clearErrors('otp');
-      navigate('/signup');
-    } else {
-      setError('otp', { message: 'Invalid OTP' });
+    if (enteredOtp.length !== 6) {
+      setError('otp', { message: 'Please enter a valid 6-digit OTP' });
+      return;
     }
-  };
 
-  const onSubmit = (data: OtpFormData) => {
-    // fallback handler - not used since button is of type 'button'
-    console.log('OTP submitted:', data.otp);
+    try {
+      clearErrors('otp');
+      const response = await verifyotp({ otp: enteredOtp });
+
+      if (response?.success) {
+        console.log('OTP verified successfully');
+        navigate('/signup'); // Proceed to signup
+      } else {
+        setError('otp', { message: response?.message || 'OTP verification failed. Please try again.' });
+      }
+    } catch (error: any) {
+      console.error('Error verifying OTP:', error);
+      setError('otp', { message: error?.response?.data?.message || 'An error occurred during verification.' });
+    }
   };
 
   return (
     <AuthLayout title="Verify OTP">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form className="space-y-6">
         <div className="flex flex-col space-y-3">
           <label className="text-sm font-semibold text-white">Enter the 6-digit OTP</label>
           <div className="flex justify-between space-x-2">

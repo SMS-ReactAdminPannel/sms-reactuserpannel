@@ -3,6 +3,7 @@ import { useForm } from 'react-hook-form';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { useNavigate ,Link} from 'react-router-dom';
 import AuthLayout from './AuthLayout';
+import { signUp } from '../../features/auth';
 
 type SignupFormData = {
   fullName: string;
@@ -23,9 +24,16 @@ const SignupPage = () => {
     formState: { errors },
   } = useForm<SignupFormData>();
 
-  const onSubmit = (data: SignupFormData) => {
+  const onSubmit =async (data: SignupFormData) => {
     console.log('Signup data:', data);
-    navigate('/login');
+    try {
+      const response = await signUp(data);
+      if (response) {
+        navigate('/verify-otp');
+      }
+    } catch (error) {
+      console.error('Signup error:', error);
+    }
   };
 
   const password = watch('password');
@@ -39,7 +47,7 @@ const SignupPage = () => {
           <input
             type="text"
             placeholder="Enter your full name"
-            {...register('fullName', {
+            {...register('fulName', {
               required: 'Full name is required',
               minLength: {
                 value: 3,
