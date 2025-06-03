@@ -27,7 +27,7 @@ const AutoPopup: React.FC<AutoPopupProps> = ({
   };
 
   return (
-    <><div className="fixed top-20 right-6 z-50 pointer-events-auto">
+    <><div className="fixed top-30 right-6 z-50 pointer-events-auto">
           {/* Popup Container */}
           <div
               className={`w-96 h-[500px] transition-all duration-500 ease-out transform ${isVisible && !isClosing
@@ -61,6 +61,7 @@ const AutoPopup: React.FC<AutoPopupProps> = ({
                               <div className="animate-spin" style={{ animationDuration: '3s' }}>
                                   <Sparkles className="w-6 h-6 text-yellow-500" />
                               </div>
+
                               <h3 className="font-bold text-xl text-gray-800 bg-gradient-to-r from-red-600 to-red-800 bg-clip-text text-transparent">
                                   {title}
                               </h3>
