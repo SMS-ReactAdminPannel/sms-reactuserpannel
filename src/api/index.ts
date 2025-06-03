@@ -100,6 +100,10 @@ class Client {
 			updateUserProfile: (params: string, data: string) =>
 				httpClient.update(API_END_POINTS.auth.put, data, params),
 		},
+		notification: {
+			getAll: (params: string) =>
+				httpClient.get(API_END_POINTS.notification.getAll, params),
+		},
 	};
 }
 

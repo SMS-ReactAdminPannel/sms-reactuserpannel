@@ -54,4 +54,8 @@ export const API_END_POINTS = {
 		post_resend_otp: '/api/customer/auth/resend-otp',
 		post_reset_password: '/api/customer/auth/reset-pass',
 	},
+
+	notification: {
+		getAll: '/api/notifications/',
+	},
 };
