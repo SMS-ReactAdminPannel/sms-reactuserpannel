@@ -459,7 +459,7 @@ const handleAddToCart = (part: any) => {
       </div>
       <div className="bg-white px-4 py-2 rounded-full text-sm border shadow-sm">
         ✓ Quality Guarantee
-      </div>
+      </div>   
       <div className="bg-white px-4 py-2 rounded-full text-sm border shadow-sm">
         ✓ 24/7 Support
       </div>
