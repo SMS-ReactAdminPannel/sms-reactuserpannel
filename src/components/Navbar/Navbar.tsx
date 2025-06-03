@@ -33,7 +33,6 @@ interface Notification {
 export const Navbar: React.FC = () => {
 	const [isBellActive, setIsBellActive] = useState(false);
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-	const [showProfileDetails, setShowProfileDetails] = useState(false);
 	const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
 	const [showLogoutSuccess, setShowLogoutSuccess] = useState(false);
 	const [showNotifications, setShowNotifications] = useState(false);
@@ -149,7 +148,7 @@ export const Navbar: React.FC = () => {
 	return (
 		<header className='bg-white text-white w-full fixed top-0 z-50'>
 			{/* Top Navbar */}
-			<div className='bg-red-900 h-[5px]'></div>
+			<div className='bg-red-900 h-[2px]'></div>
 			<div className='flex items-center justify-between px-24 py-2 space-x-4'>
 				{/* Logo & Location */}
 				<div className='flex items-center space-x-4'>
@@ -177,13 +176,13 @@ export const Navbar: React.FC = () => {
 				<div className='flex flex-1 justify-end'>
 					<input
 						type='text'
-						className='px-4 py-2 text-[#9b111e] placeholder-gray-600 text-sm bg-red-50 rounded-l-md focus:outline-none focus:ring-[#9b111e] ml-4 w-[290px]'
+						className='px-4 py-2 text-[#9b111e] placeholder-gray-600 text-sm bg-[#fdefe9] rounded-l-md focus:outline-none focus:ring-[#9b111e] w-[290px] shadow-md'
 						placeholder='Search'
 						value={search}
 						onChange={(e) => setSearch(e.target.value)}
 					/>
 
-					<button className='bg-red-900  px-4 py-2 rounded-r-md'>
+					<button className='bg-red-900 px-3 py-2 rounded-r-md'>
 						<FiSearch
 							className='text-black text-xl'
 							color={COLORS.white}
@@ -363,36 +362,36 @@ export const Navbar: React.FC = () => {
 							{/* Tailwind custom animation via <style> tag (works well for small scoped styles) */}
 							<style>
 								{`
-              @keyframes fade-in {
+            @keyframes fade-in {
                 from { opacity: 0; transform: scale(0.95); }
                 to { opacity: 1; transform: scale(1); }
-              }
+            }
 
-              .animate-fade-in {
+            .animate-fade-in {
                 animation: fade-in 0.3s ease-out forwards;
-              }
+            }
 
-              @keyframes draw-path {
+            @keyframes draw-path {
                 from { stroke-dasharray: 48; stroke-dashoffset: 48; }
                 to { stroke-dashoffset: 0; }
-              }
+            }
 
-              .animate-draw-path {
+            .animate-draw-path {
                 stroke-dasharray: 48;
                 stroke-dashoffset: 48;
                 animation: draw-path 0.5s ease-out forwards;
-              }
+            }
 
-              @keyframes draw-check {
+            @keyframes draw-check {
                 from { stroke-dasharray: 166; stroke-dashoffset: 166; }
                 to { stroke-dashoffset: 0; }
-              }
+            }
 
-              .animate-draw-check circle {
+            .animate-draw-check circle {
                 stroke-dasharray: 166;
                 stroke-dashoffset: 166;
                 animation: draw-check 0.6s ease-out forwards;
-              }
+            }
             `}
 							</style>
 						</div>
@@ -413,17 +412,17 @@ export const Navbar: React.FC = () => {
 
 			{/* Bottom Navbar - Categories */}
 
-			<div className='bg-[#fdefe9] px-24 py-1 flex items-center justify-between overflow-x-auto scrollbar-hide'>
+			<div className='bg-[#fdefe9] px-24 py-1.5 flex items-center justify-center gap-10 shadow-lg'>
 				{navData?.map((item, idx) => (
 					<NavLink
 						key={idx}
 						to={item.link}
 						style={{ ...FONTS.paragraph, fontWeight: 600, fontSize: '16px' }}
 						className={({ isActive }) =>
-							`relative pb-2 text-md font-semibold transition-all duration-300 ease-in-out whitespace-nowrap
+							`relative pb-1 text-md font-semibold transition-all duration-300 ease-in-out whitespace-nowrap
 	${
 		isActive
-			? 'text-red-900 -translate-y-1 after:content-[""] after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-full after:bg-red-900 after:transition-all after:duration-300'
+			? 'text-red-900 after:content-[""] after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-full after:bg-red-900 after:transition-all after:duration-300'
 			: 'text-red-800 after:content-[""] after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-0 after:bg-red-900 after:transition-all after:duration-300 hover:after:w-full'
 	}`
 						}
@@ -441,6 +440,7 @@ export const Navbar: React.FC = () => {
 					</button>
 				</div>
 			</div>
+			<div className=' shadow-lg'></div>
 		</header>
 	);
 };

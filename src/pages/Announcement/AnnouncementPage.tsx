@@ -1,7 +1,12 @@
-import React from 'react';
 
-const AnnouncementPage = () => {
-	return <div>AnnouncementPage</div>;
+import Offer from '../../components/Announcement/Offer';
+
+const Announcement = () => {
+  return (
+    <div style={{ textAlign: 'center', padding: '30px' }}>
+        <Offer />
+    </div>
+  );
 };
 
-export default AnnouncementPage;
+export default Announcement;
