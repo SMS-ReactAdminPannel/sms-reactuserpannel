@@ -75,10 +75,10 @@ const MustCare: React.FC = () => {
 	const extendedItems = [...careItems, ...careItems];
 
 	return (
-		<section className='w-full py-16 px-4 md:px-16 relative overflow-hidden'>
+		<section className='w-full my-3 relative overflow-hidden'>
 			<div
 				ref={sliderRef}
-				className='flex w-full overflow-x-auto space-x-6 px-2 scroll-smooth no-scrollbar'
+				className='flex w-full overflow-x-auto space-x-6 px-2 scroll-smooth scrollbar-hide'
 			>
 				{extendedItems.map((item, index) => (
 					<div

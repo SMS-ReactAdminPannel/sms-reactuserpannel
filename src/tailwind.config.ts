@@ -14,7 +14,31 @@ export default {
     },
   },
   plugins: [
-    require('tailwind-scrollbar-hide')
+    require('tailwind-scrollbar-hide'),
+    require('tailwind-scrollbar')
   ],
+
+ module.exports = {
+  theme: {
+    extend: {
+      animation: {
+        slideInRight: 'slideInRight 0.5s ease-out forwards',
+      },
+      keyframes: {
+        slideInRight: {
+          'from': { 
+            transform: 'translateX(100%)',
+            opacity: '0',
+          },
+          'to': { 
+            transform: 'translateX(0)',
+            opacity: '1',
+          },
+        },
+      },
+    },
+  },
+}
+  
 };
 // tailwind.config.js
