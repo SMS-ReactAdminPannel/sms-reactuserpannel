@@ -57,7 +57,7 @@ import { BiLogoPlayStore } from 'react-icons/bi'; //play store
 // import { FaCcMastercard } from 'react-icons/fa6';
 
 
-//import RotatingCar from '../../components/RotatingCar'
+import RotatingCar from '../../components/RotatingCar'
 
 
 const imageUrls = [image1, image2, image3, image4];
@@ -164,6 +164,9 @@ const HomePage: React.FC = () => {
 							</Link>
 						))}
 					</div>
+				</div>
+				<div>
+					<RotatingCar />
 				</div>
 				<div
 					className={`h-[78vh] bg-[url(${bgImg})] flex justify-center items-center`}
@@ -696,7 +699,7 @@ const HomePage: React.FC = () => {
 					</div>
 				</footer>
 				{/* FOOTER END */}
-
+				
 				
 				
 			</div>
