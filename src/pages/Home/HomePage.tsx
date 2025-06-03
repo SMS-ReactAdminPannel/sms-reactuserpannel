@@ -160,9 +160,6 @@ const HomePage: React.FC = () => {
 						))}
 					</div>
 				</div>
-				<div>
-					<RotatingCar />
-				</div>
 				<div
 					className={`h-[90vh] bg-[url(${bgImg})] flex justify-center items-center`}
 				>
