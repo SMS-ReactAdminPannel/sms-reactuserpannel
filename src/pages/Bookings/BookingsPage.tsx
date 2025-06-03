@@ -76,7 +76,7 @@ const allOrders: OrderDetails[] = [
     name: "Wiper Blade Set",
     price: 1000,
     imageUrl:
-      "https://cdn11.bigcommerce.com/s-fqaftp/images/stencil/1280x1280/products/17091/39298/D3WIPEBOSCHA1__94725.1620205879.jpg?c=2?imbypass=on",
+      "https://cdn11.bigcommerce.com/s-fqaftp/images/stencil/1280x1280/ products/17091/39298/D3WIPEBOSCHA1__94725.1620205879.jpg?c=2?imbypass=on",
     description: "All-weather wiper blades with streak-free performance.",
     date: "2024-05-20",
     compatibility: "Toyota Corolla",
