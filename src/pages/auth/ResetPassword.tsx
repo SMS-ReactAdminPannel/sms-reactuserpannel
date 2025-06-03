@@ -106,7 +106,7 @@ const ResetPassword = () => {
 				{/* Email Step */}
 				{step === 'email' && (
 					<div className='flex flex-col space-y-2'>
-						<label className='text-sm font-semibold text-black'>
+						<label className='text-sm font-semibold text-white'>
 							Email Address
 						</label>
 						<input
@@ -135,7 +135,7 @@ const ResetPassword = () => {
 				{/* OTP Step */}
 				{step === 'otp' && (
 					<div className='flex flex-col space-y-3'>
-						<label className='text-sm font-semibold text-black'>
+						<label className='text-sm font-semibold text-white'>
 							Enter the 6-digit OTP
 						</label>
 						<div className='flex justify-between space-x-2'>
@@ -172,7 +172,7 @@ const ResetPassword = () => {
 					<>
 						{/* New Password */}
 						<div className='flex flex-col space-y-2'>
-							<label className='text-sm font-semibold text-black'>
+							<label className='text-sm font-semibold text-white'>
 								New Password
 							</label>
 							<div className='relative'>
@@ -212,7 +212,7 @@ const ResetPassword = () => {
 
 						{/* Confirm Password */}
 						<div className='flex flex-col space-y-2'>
-							<label className='text-sm font-semibold text-black'>
+							<label className='text-sm font-semibold text-white'>
 								Confirm New Password
 							</label>
 							<div className='relative'>
@@ -259,7 +259,7 @@ const ResetPassword = () => {
 				<div className='text-center pt-1'>
 					<Link
 						to='/login'
-						className='text-white hover:underline text-sm text-[#d23c3c] '
+						className='text-white hover:underline text-md text-[#d23c3c] font-bold'
 					>
 						Back to Login
 					</Link>

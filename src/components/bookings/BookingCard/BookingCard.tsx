@@ -35,7 +35,7 @@ const bookings: Booking[] = [
 const AlternatingCardList: React.FC = () => {
   return (
     <div className="space-y-6">
-      {bookings.map((booking, index) => (
+      {bookings.map((booking) => (
         <div
           key={booking.id}
           className={`flex items-center gap-4 bg-white rounded-lg shadow-md overflow-hidden p-4 `}

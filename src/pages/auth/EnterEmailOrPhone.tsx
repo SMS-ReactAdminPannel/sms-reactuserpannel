@@ -2,30 +2,58 @@ import { useForm } from 'react-hook-form';
 import { useNavigate, Link } from 'react-router-dom';
 import AuthLayout from './AuthLayout';
 import { FONTS } from '../../constants/constant';
+import { useState } from 'react';
 
 type FormData = {
   emailOrPhone: string;
 };
 
+// Dummy OTP generator (replace with real logic if needed)
+const generateOtp = () => Math.floor(100000 + Math.random() * 900000).toString();
+
 const EnterEmailOrPhone = () => {
   const navigate = useNavigate();
+  const [storedOtp, setStoredOtp] = useState<string | null>(null);
 
   const {
     register,
     handleSubmit,
+    getValues,
+    setError,
+    clearErrors,
     formState: { errors },
   } = useForm<FormData>();
 
-  const onSubmit = (data: FormData) => {
-    console.log('Submitted:', data);
+  const handleEmailSubmit = () => {
+    const emailOrPhone = getValues('emailOrPhone');
+    if (!emailOrPhone) {
+      setError('emailOrPhone', { message: 'Please enter your email or phone' });
+      return;
+    }
+
+    clearErrors('emailOrPhone');
+
+    const otp = generateOtp();
+    setStoredOtp(otp);
+
+    console.log('Generated OTP:', otp);
+
+    // Optional: store OTP or email/phone in session/local storage or global state
+    // sessionStorage.setItem('otp', otp);
+    // sessionStorage.setItem('emailOrPhone', emailOrPhone);
+
     navigate('/verify-otp');
+  };
+
+  const onSubmit = () => {
+    handleEmailSubmit();
   };
 
   return (
     <AuthLayout title="Enter Email or Phone">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
         <div className="flex flex-col space-y-2">
-          <label className="text-sm font-semibold text-gray-800">Email or Phone</label>
+          <label className="text-sm font-semibold text-white">Email or Phone</label>
           <input
             type="text"
             placeholder="Enter email or phone number"
@@ -53,6 +81,12 @@ const EnterEmailOrPhone = () => {
         >
           Set OTP
         </button>
+
+        <div className="text-center pt-1">
+          <Link to="/login" className="text-white hover:underline text-lg text-[#d23c3c] font-bold">
+            Back to Login
+          </Link>
+        </div>
       </form>
     </AuthLayout>
   );

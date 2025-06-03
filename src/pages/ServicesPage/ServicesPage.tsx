@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
 	Clock,
 	Wrench,
@@ -17,9 +17,9 @@ import {
 	ChevronDown,
 } from 'lucide-react';
 import SelectCarPage from './SelectCarPage';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import serviceImg from '../../assets/serviceimages/generalservice.png';
-import { FONTS } from '../../constants/constant';
+import AutoPopup from './RightSidePopup';
 
 interface ServiceItem {
 	name: string;
@@ -51,8 +51,9 @@ interface SelectedPackageInfo {
 }
 
 const ServicesPage: React.FC = () => {
-	const [selectedPackage, setSelectedPackage] =
-		useState<SelectedPackageInfo | null>(null);
+	const [selectedPackage, setSelectedPackage] = useState<SelectedPackageInfo[]>(
+		[]
+	);
 	const [selectedPackageId, setSelectedPackageId] = useState<string | null>(
 		null
 	);
@@ -61,9 +62,17 @@ const ServicesPage: React.FC = () => {
 	const [expandedServices, setExpandedServices] = useState<{
 		[key: string]: boolean;
 	}>({});
+	const [cart, setCart] = useState<SelectedPackageInfo[]>([]);
+	const [showCartNotification, setShowCartNotification] = useState(false);
 	// handle left and right on navbar
 	const { id } = useParams<{ id: string }>();
-	// Define content for each navigation section
+
+	// Auto popup message
+	const [showWelcomePopup, setShowWelcomePopup] = useState(true);
+
+	// navigate to cart
+	const navigate = useNavigate();
+
 	const contentSections: { [key: string]: ContentSection } = {
 		'Periodic Services': {
 			title: 'Scheduled Packages',
@@ -350,7 +359,12 @@ const ServicesPage: React.FC = () => {
 							icon: <Lightbulb className='w-4 h-4' />,
 						},
 						{ name: 'Quality Check', icon: <Search className='w-4 h-4' /> },
+						{
+							name: 'Resin Application',
+							icon: <Droplets className='w-4 h-4' />,
+						},
 					],
+					additionalCount: 1,
 					price: '₹1,500',
 					discountPrice: '₹1,200',
 				},
@@ -420,7 +434,7 @@ const ServicesPage: React.FC = () => {
 					title: 'Complete Claim Assistance',
 					warranty: 'Full Documentation Support',
 					frequency: 'As Required',
-					duration: '5 Days Processing',
+					duration: '9 Hrs Taken',
 					image: serviceImg,
 					services: [
 						{ name: 'Damage Assessment', icon: <Eye className='w-4 h-4' /> },
@@ -466,8 +480,22 @@ const ServicesPage: React.FC = () => {
 
 	const handleNavClick = (navItem: string) => {
 		setActiveNavItem(navItem);
-		setSelectedPackage(null); // Reset selected package when switching sections
+		setSelectedPackage([]); // Reset selected package when switching sections
 		console.log(`Navigated to: ${navItem}`);
+	};
+
+	// Auto popup message
+	useEffect(() => {
+		// Check if user has previously dismissed the popup
+		const hasDismissed = localStorage.getItem('dismissedWelcomePopup');
+		if (!hasDismissed) {
+			setShowWelcomePopup(true);
+		}
+	}, []);
+
+	const handleCloseWelcome = () => {
+		setShowWelcomePopup(false);
+		localStorage.setItem('dismissedWelcomePopup', 'true');
 	};
 
 	const toggleExpandServices = (packageId: string) => {
@@ -580,17 +608,14 @@ const ServicesPage: React.FC = () => {
 				</div>
 			</div>
 			{/* Main Content */}
-			<div className='ml-72 bg-gray-50 min-h-screen'>
+			<div className=' ml-72 bg-gray-50 min-h-screen'>
 				{/* Main Content */}
-				<div className='max-w-4xl mx-auto px-6 py-4'>
+				<div className='max-w-4xl mx-auto px-6 py-8'>
 					<div className='mb-8'>
-						<h1
-							className='text-3xl font-bold text-[#9b111e] mb-2'
-							style={{ ...FONTS.header, fontWeight: 600 }}
-						>
+						<h1 className='text-3xl font-bold text-[#9b111e] mb-2'>
 							{currentContent.title}
 						</h1>
-						<p className='text-gray-500' style={{ ...FONTS.paragraph }}>
+						<p className='text-gray-500'>
 							Choose the perfect package for your vehicle
 						</p>
 					</div>
@@ -599,9 +624,9 @@ const ServicesPage: React.FC = () => {
 						{currentContent.packages.map((pkg) => (
 							<div
 								key={pkg.id}
-								className={`bg-[#FAF3EB] rounded-xl shadow-lg overflow-hidden relative transition-all duration-300 hover:shadow-xl ${
-									selectedPackage?.packageId === pkg.id
-										? 'ring-1 ring-red-500'
+								className={`bg-[#FAF3EB] rounded-xl w-[600px] shadow-lg relative transition-all duration-300 hover:shadow-xl ${
+									selectedPackage.some((p) => p.packageId === pkg.id)
+										? 'ring-2 ring-red-500'
 										: ''
 								}`}
 							>
@@ -615,7 +640,7 @@ const ServicesPage: React.FC = () => {
 
 								<div className='flex flex-col md:flex-row'>
 									{/* Service Image */}
-									<div className='ml-8 mt-4 md:w-[525px] h-[250px] md:h-auto bg-gradient-to-br from-gray-100 to-gray-200 flex-shrink-0 relative'>
+									<div className='ml-12 mt-4 md:w-[500px] h-[250px] md:h-auto bg-gradient-to-br from-gray-100 to-gray-200 flex-shrink-0 relative'>
 										<img
 											src={pkg.image}
 											alt={pkg.title}
@@ -630,21 +655,14 @@ const ServicesPage: React.FC = () => {
 									{/* Service Details */}
 									<div className='flex-1 p-6'>
 										<div className='flex justify-between items-start mb-4'>
-											<div>
-												<h2
-													className='text-2xl font-bold text-[#9b111e] mb-2'
-													style={{
-														...FONTS.paragraph,
-														fontSize: '24px',
-														fontWeight: 600,
-													}}
-												>
+											<div className='relative'>
+												<h2 className='text-2xl font-bold text-[#9b111e] mb-2'>
 													{pkg.title}
-													<div className='ml-[100px] inline-flex w-[125px] items-center px-3 py-1 rounded-full bg-red-600 text-white text-sm'>
-														<Clock className='w-4 h-4 mr-1' />
-														{pkg.duration}
-													</div>
 												</h2>
+												<div className='absolute font-bold flex flex-row items-center w-[122px] bottom-[40px] left-[430px] px-3 py-1 rounded-full bg-red-600 text-white text-sm'>
+													<Clock className='w-4 h-4 mr-1' />
+													{pkg.duration}
+												</div>
 												<div className='flex space-x-4 text-sm'>
 													<span className='inline-flex items-center px-3 py-1 rounded-full opacity-70 text-red-600 '>
 														{pkg.warranty}
@@ -701,9 +719,11 @@ const ServicesPage: React.FC = () => {
 										)}
 
 										<div className='flex justify-between items-center mt-6'>
-											{selectedPackage?.packageId === pkg.id ? (
-												<div className='flex items-center space-x-4'>
-													<div className='text-right'>
+											{/* Conditional buttons */}
+											{selectedPackage.some((p) => p.packageId === pkg.id) ? (
+												<>
+													{/* Price and Discount */}
+													<div className='text-right mb-2'>
 														<span className='line-through text-gray-400 mr-2 text-sm'>
 															{pkg.price}
 														</span>
@@ -711,30 +731,62 @@ const ServicesPage: React.FC = () => {
 															{pkg.discountPrice}
 														</span>
 													</div>
-													<button className='px-3 py-1 text-sm font-semibold bg-red-900 text-white rounded-md hover:bg-red-800 transition-all duration-200'>
-														ADD TO CART
-													</button>
-												</div>
+
+													{/* Check if it's in the cart */}
+													{cart.some((item) => item.packageId === pkg.id) ? (
+														<button
+															onClick={() => {
+																navigate('/booking-cart');
+															}}
+															className='px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors'
+														>
+															Go to Cart
+														</button>
+													) : (
+														<button
+															onClick={() => {
+																const packageToAdd = selectedPackage.find(
+																	(p) => p.packageId === pkg.id
+																);
+																if (packageToAdd) {
+																	setCart([...cart, packageToAdd]);
+																	setShowCartNotification(true);
+																	setTimeout(
+																		() => setShowCartNotification(false),
+																		3000
+																	);
+																}
+															}}
+															className='px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-900 transition-colors'
+														>
+															Add to Cart
+														</button>
+													)}
+												</>
 											) : (
 												<button
 													onClick={() => handleSelectCar(pkg.id)}
-													className='px-3 py-1 rounded-lg font-semibold bg-red-900 text-white text-sm hover:bg-red-800 transition-all duration-200 shadow-md hover:shadow-lg'
+													className='px-4 py-2 rounded-lg font-semibold bg-white border-2 border-red-500 text-red-500 hover:bg-red-50 hover:text-red-700 transition-all duration-200 shadow-md hover:shadow-lg'
 												>
 													SELECT CAR
 												</button>
 											)}
 										</div>
-										{showForm && selectedPackageId === pkg.id && (
+										{showForm && selectedPackageId && (
 											<div className='fixed inset-0 bg-black bg-opacity-50 flex justify-end items-center z-50 p-4'>
 												<SelectCarPage
 													onClose={() => setShowForm(false)}
 													setSelectedPackage={(carDetails) => {
-														setSelectedPackage({
-															packageId: pkg.id,
-															carDetails,
-														});
+														setSelectedPackage((prev) => [
+															...prev,
+															{
+																packageId: selectedPackageId,
+																carDetails,
+															},
+														]);
 														setShowForm(false);
 													}}
+													packageId={selectedPackageId}
 												/>
 											</div>
 										)}
@@ -743,8 +795,21 @@ const ServicesPage: React.FC = () => {
 							</div>
 						))}
 					</div>
+					{/* Cart Notification */}
+					{showCartNotification && (
+						<div className='fixed top-[70px] right-[10px] transform -translate-x-1/2 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg z-50'>
+							Item added to cart successfully!
+						</div>
+					)}
 				</div>
 			</div>
+			{showWelcomePopup && (
+				<AutoPopup
+					onClose={handleCloseWelcome}
+					title='Welcome to Car Services'
+					message='Explore our comprehensive service packages. Select what your vehicle needs and book an appointment with ease.'
+				/>
+			)}
 		</div>
 	);
 };
