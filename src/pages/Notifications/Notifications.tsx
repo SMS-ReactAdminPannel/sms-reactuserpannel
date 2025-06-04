@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
+
 
 type MailItem = {
   id: number;
@@ -52,6 +53,7 @@ export default function GmailStyleInbox() {
   const filteredMails = mails.filter((m) =>
     filter === "all" ? true : filter === "unread" ? m.unread : !m.unread
   );
+
 
   return (
     <div className="min-h-screen bg-[#FAF3EB] p-2 font-[Poppins]">
