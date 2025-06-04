@@ -5,12 +5,12 @@ import { useNavigate ,Link} from 'react-router-dom';
 import AuthLayout from './AuthLayout';
 import { signUp } from '../../features/auth';
 
-type SignupFormData = {
-  fullName: string;
+type SignupFormData = { 
   email: string;
+  phoneNumber: string;
   password: string;
   confirmPassword: string;
-};
+};;
 
 const SignupPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -24,44 +24,64 @@ const SignupPage = () => {
     formState: { errors },
   } = useForm<SignupFormData>();
 
-  const onSubmit =async (data: SignupFormData) => {
-    console.log('Signup data:', data);
-    try {
-      const response = await signUp(data);
-      if (response) {
-        navigate('/verify-otp');
-      }
-    } catch (error) {
-      console.error('Signup error:', error);
+  // const onSubmit =async (data: SignupFormData) => {
+  //   console.log('Signup data:', data);
+  //   const {email, phone , password} =data
+  //   try {
+  //     const response = await signUp({ email, phoneNumber: phone, password });
+  //     console.log('Signup response:', response);
+  //     if (response?.success) {
+      
+  //       navigate('/verify-otp',{data : response.data});
+  //     }
+  //   } catch (error) {
+  //     console.error('Signup error:', error);
+  //   }
+  // };
+
+  const onSubmit = async (data: SignupFormData) => {
+  const { email, phoneNumber, password } = data;
+
+  try {
+    const response = await signUp({ email, phone:phoneNumber, password });
+    console.log('Signup response:', response);
+
+    if (response?.success) {
+      // Navigate to OTP page and pass response data to it
+      navigate('/verify-otp', { state: { data: response.data } });
     }
-  };
+  } catch (error) {
+    console.error('Signup error:', error);
+  }
+};
 
   const password = watch('password');
 
   return (
     <AuthLayout title="Sign Up">
       <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-        {/* Full Name */}
-        <div className="flex flex-col space-y-2">
-          <label className="text-sm font-semibold text-white">Full Name</label>
-          <input
-            type="text"
-            placeholder="Enter your full name"
-            {...register('fulName', {
-              required: 'Full name is required',
-              minLength: {
-                value: 3,
-                message: 'Name must be at least 3 characters',
-              },
-            })}
-            className={`w-full px-4 py-3 border text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9b111e] bg-white text-sm ${
-              errors.fullName ? 'border-red-500' : 'border-[#d77c7c]'
-            }`}
-          />
-          {errors.fullName && (
-            <span className="text-xs text-red-600">{errors.fullName.message}</span>
-          )}
-        </div>
+{/* Phone Number */}
+<div className="flex flex-col space-y-2">
+  <label className="text-sm font-semibold text-white">Phone Number</label>
+  <input
+    type="tel"
+    placeholder="Enter your phone number"
+    {...register('phoneNumber', {
+      required: 'Phone number is required',
+      pattern: {
+        value: /^[6-9]\d{9}$/,
+        message: 'Enter a valid 10-digit Indian phone number',
+      },
+    })}
+    className={`w-full px-4 py-3 border text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9b111e] bg-white text-sm ${
+      errors.phoneNumber ? 'border-red-500' : 'border-[#d77c7c]'
+    }`}
+  />
+  {errors.phoneNumber && (
+    <span className="text-xs text-red-600">{errors.phoneNumber.message}</span>
+  )}
+</div>
+
 
         {/* Email */}
         <div className="flex flex-col space-y-2">

@@ -24,10 +24,31 @@ export const signUp =async (data : any) =>{
       const response =await new Client().user.auth.verify_otp(data)
       return response;
     }catch(error){
+       console.error("Error verifying OTP:", error);
       throw error;
-      console.error("Error verifying OTP:", error);
     }
   }
 
+   export const forgotPassword =async (data:any) =>{
+    try{
+      const response =await new Client().user.auth.forgotPassword(data)
+      return response;
+    }catch(error){
+      console.error("Error in forgot password:", error);
+      throw error;
+     
+    }
+  }
+
+export const  resetPassword =async (data:any) =>{
+    try{
+      const response =await new Client().user.auth.forgotPassword(data)
+      return response;
+    }catch(error){
+      console.error("Error in forgot password:", error);
+      throw error;
+     
+    }
+  }
   
 
