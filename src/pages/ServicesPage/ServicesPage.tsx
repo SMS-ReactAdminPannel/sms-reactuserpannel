@@ -40,37 +40,37 @@ import serviceImg from '../../assets/serviceimages/generalservice.png';
 import AutoPopup from './RightSidePopup';
 import CLIENT from '../../api/index'
 import Client from '../../api/index';
-import { getservicesoveralldata } from '../../features/services/services';
+import { getservicebyid, getservicesoveralldata } from '../../features/services/services';
 
 
-interface ServiceItem {
-	name: string;
-	icon: React.ReactNode;
-}
+// interface ServiceItem {
+// 	name: string;
+// 	icon: React.ReactNode;
+// }
 
-interface ServicePackage {
-	id: string;
-	title: string;
-	warranty: string;
-	frequency: string;
-	isRecommended?: boolean;
-	duration: string;
-	services: ServiceItem[];
-	additionalCount?: number;
-	image: string;
-	price: string;
-	discountPrice: string;
-}
+// interface ServicePackage {
+// 	id: string;
+// 	title: string;
+// 	warranty: string;
+// 	frequency: string;
+// 	isRecommended?: boolean;
+// 	duration: string;
+// 	services: ServiceItem[];
+// 	additionalCount?: number;
+// 	image: string;
+// 	price: string;
+// 	discountPrice: string;
+// }
 
-interface ContentSection {
-	title: string;
-	packages: ServicePackage[];
-}
+// interface ContentSection {
+// 	title: string;
+// 	packages: ServicePackage[];
+// }
 
-interface SelectedPackageInfo {
-	packageId: string;
-	carDetails: CarSelect;
-}
+// interface SelectedPackageInfo {
+// 	packageId: string;
+// 	carDetails: CarSelect;
+// }
 
 const ServicesPage: React.FC = () => {
 	const [selectedPackage, setSelectedPackage] = useState<SelectedPackageInfo[]>(
@@ -483,26 +483,23 @@ const ServicesPage: React.FC = () => {
 
 
 	interface ServiceItem {
-		name: string;
+		category_name: string;
 		icon: React.ReactNode;
 	}
 
 	interface Package {
-		id: string;
-		title: string;
-		warranty: string;
-		frequency: string;
-		duration: string;
-		image: string;
+		category_id: string;
+		description: string;
+		created_at: string;
+		partner_id: string;
+		price: number;
+		service_name: string;
+		updated_at: string;
 		services: ServiceItem[];
-		price: string;
-		discountPrice: string;
-		isRecommended?: boolean;
-		additionalCount?: number;
 	}
 
 	interface ServiceCategory {
-		title: string;
+		category_name: string;
 		packages: Package[];
 	}
 	
@@ -513,6 +510,7 @@ const ServicesPage: React.FC = () => {
 	const overalldata = async () => {
 		try {
 			const response = await getservicesoveralldata();
+			console.log(response)
 			setservice(response); // direct assignment
 		} catch (error) {
 			console.log(error);
@@ -522,6 +520,7 @@ const ServicesPage: React.FC = () => {
  useEffect(() => {
 overalldata();
  },[])
+
 	
 
 	const navigationItems = [
@@ -596,37 +595,42 @@ overalldata();
 						</div>
 					</div>
 					<div className='flex-1 overflow-y-auto max-h-[calc(100vh-120px)] py-4 scrollbar-hide'>
-						<nav className='px-4'>
-							<div className='space-y-2'>
-								{service.map((item, index) => (
-									<div
-										key={index}
-										onClick={() => {
-											handleNavClick(item.title);
-											setCurrentContent(item);
-										}}
-										className={`group relative flex items-center px-4 py-4 rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-[1.02] ${activeNavItem === item.title
-												? 'bg-gradient-to-r from-red-50 to-red-100 text-red-700 shadow-lg shadow-red-100/50 border border-red-200'
-												: 'text-gray-600 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-red-600 hover:shadow-md'
-											}`}
-									>
+							<nav className='px-4'>
+								<div className='space-y-2'>
+									{service.map((item, index) => (
+										
 										<div
-											className={`mr-4 flex-shrink-0 p-2 rounded-lg transition-all duration-300 ${activeNavItem === item.title
-													? 'bg-red-200/50 text-red-600'
-													: 'bg-gray-100 text-gray-500 group-hover:bg-red-100 group-hover:text-red-500'
+											key={index}
+											onClick={() => {
+												handleNavClick(index);
+												setCurrentContent(item);
+											}}
+
+											
+											className={`group relative flex items-center px-4 py-4 rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-[1.02] ${activeNavItem === item.index
+													? 'bg-gradient-to-r from-red-50 to-red-100 text-red-700 shadow-lg shadow-red-100/50 border border-red-200'
+													: 'text-gray-600 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-red-600 hover:shadow-md'
 												}`}
 										>
-											<svg className='w-4 h-4' viewBox='0 0 20 20' fill='currentColor'>
-												<circle cx='10' cy='10' r='5' />
-											</svg>
+											<div
+												className={`mr-4 flex-shrink-0 p-2 rounded-lg transition-all duration-300 ${activeNavItem === item.index
+														? 'bg-red-200/50 text-red-600'
+														: 'bg-gray-100 text-gray-500 group-hover:bg-red-100 group-hover:text-red-500'
+													}`}
+											>
+												<svg className='w-4 h-4' viewBox='0 0 20 20' fill='currentColor'>
+													<circle cx='10' cy='10' r='5' />
+												</svg>
+											</div>
+											<div>
+												<span className='text-sm font-semibold whitespace-nowrap transition-all duration-300'>
+													{item.category_name}
+												</span>
+											</div>
 										</div>
-										<span className='text-sm font-semibold whitespace-nowrap transition-all duration-300'>
-											{item.title}
-										</span>
-									</div>
-								))}
-							</div>
-						</nav>
+									))}
+								</div>
+							</nav>
 					</div>
 				</div>
 			</div>
@@ -635,6 +639,29 @@ overalldata();
 					<div className='mb-8'>
 						<h1 className='text-3xl font-bold text-[#9b111e] mb-2'>{currentContent.title}</h1>
 						<p className='text-gray-500'>Choose the perfect package for your vehicle</p>
+					</div>
+					{/* Place your existing package rendering logic here using currentContent.packages */}
+
+					<div>
+						{service.map((category, index) => (
+							<div key={index}>
+								<span className="font-bold text-lg">{category.category_name}</span>
+								<ul className="ml-4 list-disc">
+									{category.services.map((serviceItem, idx) => (
+										<React.Fragment key={idx}>
+											<li>Category ID: {serviceItem.category_id}</li>
+											<li>Createtd At: {serviceItem.created_at}</li>
+											<li>Description: {serviceItem.description}</li>
+											<li>PARTNER ID : {serviceItem.partner_id}</li>
+											<li>PRICE      : {serviceItem.price}</li>
+											<li>Service Name:{serviceItem.service_name}</li>
+											<li>SLUG        :{serviceItem.slug}</li>
+										</React.Fragment>
+									))}
+
+								</ul>
+							</div>
+						))}
 					</div>
 					{/* Place your existing package rendering logic here using currentContent.packages */}
 				</div>
@@ -647,6 +674,9 @@ overalldata();
 				/>
 			)}
 		</div>
+		
+
+		
   
 	);
 };
