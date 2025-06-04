@@ -1,10 +1,12 @@
-import { useState, useMemo } from "react";
+
+import { useState, useMemo,useEffect } from "react";
 import { X, Plus, Minus, Wrench, Car } from "lucide-react";
 import serviceImg from "../../assets/serviceimages/generalservice.png";
 import bgImage from "../../assets/checkout-bg_1_.png";
 import { toast } from "react-toastify";
 import { COLORS, FONTS } from "../../constants/constant";
-
+ import axios from 'axios';
+import {booking_cart} from "../../features/booking_cart/services/index"
 interface SparePart {
   id: string;
   name: string;
@@ -29,74 +31,85 @@ interface Service {
   category: string;
 }
 
-const initialParts: SparePart[] = [
-  {
-    id: "1",
-    name: "Brake Pad Set",
-    description: "High-quality ceramic brake pads for safe and smooth braking.",
-    imageUrl:
-      "https://boodmo.com/media/cache/catalog_part/images/parts/3fe3e3713e19d66a47bae04233a97cf4.webp",
-    inStock: true,
-    price: 1899,
-    discount: 20,
-    originalPrice: 2399,
-    compatibility: "Maruti Swift, Baleno",
-    category: "Brakes",
-  },
-  {
-    id: "2",
-    name: "Air Filter Element",
-    description:
-      "Durable air filter ensuring clean air intake and better mileage.",
-    imageUrl:
-      "https://boodmo.com/media/cache/catalog_part/images/parts/3fe3e3713e19d66a47bae04233a97cf4.webp",
-    inStock: true,
-    price: 499,
-    discount: 10,
-    originalPrice: 549,
-    compatibility: "Hyundai i20, Creta",
-    category: "Filters",
-  },
-  {
-    id: "3",
-    name: "Engine Oil 5W-30 (3L)",
-    description: "Premium synthetic oil for high-performance engines.",
-    imageUrl:
-      "https://boodmo.com/media/cache/catalog_part/images/parts/9fd50e122693b3b0e4ae4ee3724ca1b2.webp",
-    inStock: false,
-    price: 1299,
-    discount: 15,
-    originalPrice: 1529,
-    compatibility: "Honda City, Amaze",
-    category: "Oils",
-  },
-  {
-    id: "4",
-    name: "Headlight Assembly",
-    description: "Complete headlamp assembly with long-lasting brightness.",
-    imageUrl:
-      "https://boodmo.com/media/cache/catalog_part/images/parts/a808aff9788f47721e361dbf0d10bba8.webp",
-    inStock: true,
-    price: 3499,
-    discount: 25,
-    originalPrice: 4699,
-    compatibility: "Tata Nexon, Harrier",
-    category: "Lights",
-  },
-  {
-    id: "5",
-    name: "Wiper Blade Set",
-    description: "All-weather wiper blades with streak-free performance.",
-    imageUrl:
-      "https://boodmo.com/media/cache/catalog_part/images/parts/7371bac93f3021909d987178c1b3ffdc.webp",
-    inStock: true,
-    price: 799,
-    discount: 12,
-    originalPrice: 899,
-    compatibility: "Toyota Innova, Fortuner",
-    category: "Accessories",
-  },
-];
+
+interface Spare{
+product_id:number;
+product_name:string;
+price:number;
+brand:string;
+image:string;
+quantity:number;
+}
+
+
+// const initialParts: SparePart[] = [
+//   {
+//     id: "1",
+//     name: "Brake Pad Set",
+//     description: "High-quality ceramic brake pads for safe and smooth braking.",
+//     imageUrl:
+//       "https://boodmo.com/media/cache/catalog_part/images/parts/3fe3e3713e19d66a47bae04233a97cf4.webp",
+//     inStock: true,
+//     price: 1899,
+//     discount: 20,
+//     originalPrice: 2399,
+//     compatibility: "Maruti Swift, Baleno",
+//     category: "Brakes",
+//   },
+//   {
+//     id: "2",
+//     name: "Air Filter Element",
+//     description:
+//       "Durable air filter ensuring clean air intake and better mileage.",
+//     imageUrl:
+//       "https://boodmo.com/media/cache/catalog_part/images/parts/3fe3e3713e19d66a47bae04233a97cf4.webp",
+//     inStock: true,
+//     price: 499,
+//     discount: 10,
+//     originalPrice: 549,
+//     compatibility: "Hyundai i20, Creta",
+//     category: "Filters",
+//   },
+//   {
+//     id: "3",
+//     name: "Engine Oil 5W-30 (3L)",
+//     description: "Premium synthetic oil for high-performance engines.",
+//     imageUrl:
+//       "https://boodmo.com/media/cache/catalog_part/images/parts/9fd50e122693b3b0e4ae4ee3724ca1b2.webp",
+//     inStock: false,
+//     price: 1299,
+//     discount: 15,
+//     originalPrice: 1529,
+//     compatibility: "Honda City, Amaze",
+//     category: "Oils",
+//   },
+//   {
+//     id: "4",
+//     name: "Headlight Assembly",
+//     description: "Complete headlamp assembly with long-lasting brightness.",
+//     imageUrl:
+//       "https://boodmo.com/media/cache/catalog_part/images/parts/a808aff9788f47721e361dbf0d10bba8.webp",
+//     inStock: true,
+//     price: 3499,
+//     discount: 25,
+//     originalPrice: 4699,
+//     compatibility: "Tata Nexon, Harrier",
+//     category: "Lights",
+//   },
+//   {
+//     id: "5",
+//     name: "Wiper Blade Set",
+//     description: "All-weather wiper blades with streak-free performance.",
+//     imageUrl:
+// "https://boodmo.com/media/cache/catalog_part/images/parts/7371bac93f3021909d987178c1b3ffdc.webp",
+//     inStock: true,
+//     price: 799,
+//     discount: 12,
+//     originalPrice: 899,
+//     compatibility: "Toyota Innova, Fortuner",
+//     category: "Accessories",
+//   },
+// ];
 
 const initialServices: Service[] = [
   {
@@ -180,7 +193,7 @@ const initialServices: Service[] = [
 ];
 
 export default function SparePartsCart() {
-  const [parts, setParts] = useState<SparePart[]>(initialParts);
+  const [parts, setParts] = useState<Spare[]>();
   const [services, setServices] = useState<Service[]>(initialServices);
   const [confirmedPartOrders, setConfirmedPartOrders] = useState<
     { part: SparePart; quantity: number }[]
@@ -206,91 +219,205 @@ export default function SparePartsCart() {
   // const partCategories = [...new Set(parts.map((part) => part.category))]
   // const serviceCategories = [...new Set(services.map((service) => service.category))]
 
+  const [books, setBooks] = useState<Spare[]>([]);
+
+  const books_valid = async () => {
+    try {
+      const response = await booking_cart({});
+      console.log("API Response", response);
+
+      const productList = response?.data?.data?.[0]?.products;
+
+      if (Array.isArray(productList)) {
+        const validBooks = productList.map((part: any): Spare => ({
+          product_id: part.product_id || '',
+          product_name: part.product_name || '',
+          price: Number(part.price) || 0,
+          brand: part.brand || '',
+          image: part.image || '',
+          quantity: Number(part.quantity) || 0,
+       }));
+
+        setBooks(validBooks);
+        console.log('Api response data',validBooks)
+      }
+    } catch (error) {
+      console.error("Error fetching books", error);
+    }
+  };
+
+  useEffect(() => {
+    books_valid();
+  }, []);
+
+
+
+  
   // Filter and sort parts
-  const filteredParts = useMemo(() => {
-    return parts
-      .filter((part) => {
-        const matchesSearch =
-          part.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          part.description.toLowerCase().includes(searchQuery.toLowerCase());
-        const matchesPrice =
-          part.price >= priceRange[0] && part.price <= priceRange[1];
-        const matchesCategory =
-          selectedCategories.length === 0 ||
-          selectedCategories.includes(part.category);
-        const matchesStock = !showInStockOnly || part.inStock;
-        return matchesSearch && matchesPrice && matchesCategory && matchesStock;
-      })
-      .sort((a, b) => {
-        switch (sortBy) {
-          case "price-low":
-            return a.price - b.price;
-          case "price-high":
-            return b.price - a.price;
-          case "discount":
-            return b.discount - a.discount;
-          default:
-            return a.name.localeCompare(b.name);
-        }
-      });
-  }, [
-    parts,
-    searchQuery,
-    priceRange,
-    selectedCategories,
-    sortBy,
-    showInStockOnly,
-  ]);
+//   const filteredParts = useMemo(() => {
+//     return parts
+//       .filter((part) => {
+//         const matchesSearch =
+//           part.name.toLowerCase().includes(searchQuery.toLowerCase())
+
+// part.description.toLowerCase().includes(searchQuery.toLowerCase());
+//         const matchesPrice =
+//           part.price >= priceRange[0] && part.price <= priceRange[1];
+//         const matchesCategory =
+//           selectedCategories.length === 0 ||
+//           selectedCategories.includes(part.category);
+//         const matchesStock = !showInStockOnly || part.inStock;
+//         return matchesSearch && matchesPrice && matchesCategory && matchesStock;
+//       })
+//       .sort((a, b) => {
+//         switch (sortBy) {
+//           case "price-low":
+//             return a.price - b.price;
+//           case "price-high":
+//             return b.price - a.price;
+//           case "discount":
+//             return b.discount - a.discount;
+//           default:
+//             return a.name.localeCompare(b.name);
+//         }
+//       });
+//   }, [
+//     parts,
+//     searchQuery,
+//     priceRange,
+//     selectedCategories,
+//     sortBy,
+//     showInStockOnly,
+//   ]);
+
+
+const filteredParts = useMemo(() => {
+  return (parts || [])
+    .filter((part) => {
+      const matchesSearch =
+        part.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        part.description.toLowerCase().includes(searchQuery.toLowerCase()); 
+
+      const matchesPrice =
+        part.price >= priceRange[0] && part.price <= priceRange[1];
+
+      const matchesCategory =
+        selectedCategories.length === 0 ||
+        selectedCategories.includes(part.category);
+
+      const matchesStock = !showInStockOnly || part.inStock;
+
+      return (
+        matchesSearch &&
+        matchesPrice &&
+        matchesCategory &&
+        matchesStock
+      );
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case "price-low":
+          return a.price - b.price;
+        case "price-high":
+          return b.price - a.price;
+        case "discount":
+          return b.discount - a.discount;
+        default:
+          return a.name.localeCompare(b.name);
+      }
+    });
+}, [
+  parts,
+  searchQuery,
+  priceRange,
+  selectedCategories,
+  sortBy,
+  showInStockOnly,
+]);
+
+
+
 
   // Filter and sort services
-  const filteredServices = useMemo(() => {
-    return services
-      .filter((service) => {
-        const matchesSearch =
-          service.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          service.description
-            .join(" ")
-            .toLowerCase()
-            .includes(searchQuery.toLowerCase());
-        const matchesPrice =
-          service.price >= priceRange[0] && service.price <= priceRange[1];
-        const matchesCategory =
-          selectedCategories.length === 0 ||
-          selectedCategories.includes(service.category);
-        return matchesSearch && matchesPrice && matchesCategory;
-      })
-      .sort((a, b) => {
-        switch (sortBy) {
-          case "price-low":
-            return a.price - b.price;
-          case "price-high":
-            return b.price - a.price;
-          default:
-            return a.name.localeCompare(b.name);
-        }
-      });
-  }, [services, searchQuery, priceRange, selectedCategories, sortBy]);
+  // const filteredServices = useMemo(() => {
+  //   return services
+  //   .filter((service) => {
+  //       const matchesSearch =
+  //         service.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+  //         service.description
+  //           .join(" ")
+  //           .toLowerCase()
+  //           .includes(searchQuery.toLowerCase());
+  //       const matchesPrice =
+  //         service.price >= priceRange[0] && service.price <= priceRange[1];
+  //       const matchesCategory =
+  //         selectedCategories.length === 0 ||
+  //         selectedCategories.includes(service.category);
+  //       return matchesSearch && matchesPrice && matchesCategory;
+  //     })
+  //     .sort((a, b) => {
+  //       switch (sortBy) {
+  //         case "price-low":
+  //           return a.price - b.price;
+  //         case "price-high":
+  //           return b.price - a.price;
+  //         default:
+  //           return a.name.localeCompare(b.name);
+  //       }
+  //     });
+  // }, [services, searchQuery, priceRange, selectedCategories, sortBy]);
 
-  const handleDelete = (id: string) => {
-    setParts((prev) => prev.filter((part) => part.id !== id));
-    setServices((prev) => prev.filter((serv) => serv.id !== id));
-  };
+  // const handleDelete = (id: string) => {
+  //   setParts((prev) => prev.filter((part) => part.id !== id));
+  //   setServices((prev) => prev.filter((serv) => serv.id !== id));
+  // };
 
-  const handleConfirmPart = (id: string, quantity: number) => {
-    const part = parts.find((p) => p.id === id);
-    if (part) {
-      setConfirmedPartOrders((prev) => [...prev, { part, quantity }]);
-      setParts((prev) => prev.filter((p) => p.id !== id));
-    }
-  };
+  // const handleConfirmPart = (id: string, quantity: number) => {
+  //   const part = parts.find((p) => p.id === id);
+  //   if (part) {
+  //     setConfirmedPartOrders((prev) => [...prev, { part, quantity }]);
+  //     setParts((prev) => prev.filter((p) => p.id !== id));
+  //   }
+  // };
 
-  const handleConfirmService = (id: string, quantity: number) => {
-    const serv = services.find((s) => s.id === id);
-    if (serv) {
-      setConfirmedServiceOrders((prev) => [...prev, { serv, quantity }]);
-      setServices((prev) => prev.filter((s) => s.id !== id));
-    }
-  };
+  // const handleConfirmService = (id: string, quantity: number) => {
+  //   const serv = services.find((s) => s.id === id);
+  //   if (serv) {
+  //     setConfirmedServiceOrders((prev) => [...prev, { serv, quantity }]);
+  //     setServices((prev) => prev.filter((s) => s.id !== id));
+  //   }
+  // };
+
+const filteredServices = useMemo(() => {
+  if (!Array.isArray(services)) return [];
+
+  return services
+    .filter((service) => {
+      const matchesSearch =
+        service.name?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        (service.description || []).join(" ").toLowerCase().includes(searchQuery.toLowerCase());
+
+      const matchesPrice =
+        service.price >= priceRange[0] && service.price <= priceRange[1];
+
+      const matchesCategory =
+        selectedCategories.length === 0 ||
+        selectedCategories.includes(service.category);
+
+      return matchesSearch && matchesPrice && matchesCategory;
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case "price-low":
+          return a.price - b.price;
+        case "price-high":
+          return b.price - a.price;
+        default:
+          return a.name.localeCompare(b.name);
+      }
+    });
+}, [services, searchQuery, priceRange, selectedCategories, sortBy]);
+
 
   const totalPartPrice = confirmedPartOrders.reduce(
     (acc, { part, quantity }) => acc + part.price * quantity,
@@ -317,7 +444,7 @@ export default function SparePartsCart() {
   //   }
   // }
 
-  const SparePartCard = ({ part }: { part: SparePart }) => {
+  const SparePartCard = ({ part }: { part: Spare }) => {
     const [quantity, setQuantity] = useState(1);
 
     return (
@@ -488,7 +615,9 @@ export default function SparePartsCart() {
   return (
     <div
       className="min-h-screen bg-gray-50 p-4 "
+      // style={{ backgroundImage: url("${bgImage}") }}
       style={{ backgroundImage: `url("${bgImage}")` }}
+
     >
       <div className="max-w-7xl mx-auto">
         {/* Header */}
@@ -682,3 +811,164 @@ export default function SparePartsCart() {
     </div>
   );
 }
+
+
+// import React, { useEffect, useState } from "react";
+// import { Plus, Minus, X } from "react-feather";
+// import { booking_cart } from "../../features/booking_cart/services/index"; // Adjust your import path if needed
+
+// interface Spare {
+//   id: string;
+//   name: string;
+//   description: string;
+//   imageUrl: string;
+//   price: number;
+//   originalPrice: number;
+//   discount: number;
+//   inStock: boolean;
+//   compatibility: string;
+// }
+
+// export default function SparePartsCart() {
+//   const [parts, setParts] = useState<Spare[]>([]);
+
+//   // Fetch parts from API and map to interface
+//   const fetchSpareParts = async () => {
+//     try {
+//       const response = await booking_cart({});
+//       const productList = response?.data?.data?.[0]?.products;
+
+//       if (Array.isArray(productList)) {
+//         const formattedParts: Spare[] = productList.map((part: any) => ({
+//           id: part.product_id || "",
+//           name: part.product_name || "",
+//           description: part.description || "No description",
+//           imageUrl: part.image || "/placeholder.svg",
+//           price: Number(part.price) || 0,
+//           originalPrice: Number(part.original_price) || Number(part.price) || 0,
+//           discount: Number(part.discount) || 0,
+//           inStock: part.in_stock !== false,
+//           compatibility: part.compatibility || "Universal",
+//         }));
+
+//         setParts(formattedParts);
+//       }
+//     } catch (error) {
+//       console.error("Error fetching parts", error);
+//     }
+//   };
+
+//   useEffect(() => {
+//     fetchSpareParts();
+//   }, []);
+
+//   const handleConfirmPart = (id: string, qty: number) => {
+//     console.log("Confirm part:", id, "Quantity:", qty);
+//   };
+
+//   const handleDelete = (id: string) => {
+//     setParts((prev) => prev.filter((p) => p.id !== id));
+//   };
+
+//   return (
+//     <div className="p-6">
+//       <h2 className="text-2xl font-bold mb-4 text-red-700">Spare Parts</h2>
+//       {parts.length === 0 ? (
+//         <p>No spare parts found.</p>
+//       ) : (
+//         parts.map((part) => <SparePartCard key={part.id} part={part} onConfirm={handleConfirmPart} onDelete={handleDelete} />)
+//       )}
+//     </div>
+//   );
+// }
+
+// const SparePartCard = ({
+//   part,
+//   onConfirm,
+//   onDelete,
+// }: {
+//   part: Spare;
+//   onConfirm: (id: string, quantity: number) => void;
+//   onDelete: (id: string) => void;
+// }) => {
+//   const [quantity, setQuantity] = useState(1);
+
+//   return (
+//     <div className="rounded-lg shadow-md p-4 mb-4 border border-gray-200 hover:shadow-lg transition-shadow duration-300 bg-white">
+//       <div className="flex gap-4">
+//         <div className="relative w-36 flex-shrink-0">
+//           <img
+//             src={part.imageUrl}
+//             alt={part.name}
+//             className="object-cover rounded-lg h-full"
+//           />
+//           {part.discount > 0 && (
+//             <span className="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-semibold">
+//               {part.discount}% OFF
+//             </span>
+//           )}
+//         </div>
+//         <div className="flex-1">
+//           <div className="flex justify-between items-start mb-2">
+//             <h3 className="text-lg font-semibold text-gray-900">{part.name}</h3>
+//             <span
+//               className={`px-2 py-1 text-xs font-medium rounded-full ${
+//                 part.inStock
+//                   ? "bg-green-100 text-green-800"
+//                   : "bg-gray-100 text-gray-800"
+//               }`}
+//             >
+//               {part.inStock ? "In Stock" : "Out of Stock"}
+//             </span>
+//           </div>
+//           <p className="text-sm text-gray-600 mb-2">{part.description}</p>
+//           <p className="text-xs text-gray-500 mb-3">Compatible: {part.compatibility}</p>
+//           <div className="flex items-center justify-between">
+//             <div className="flex items-center gap-2">
+//               <span className="text-xl font-bold text-red-600">₹{part.price}</span>
+//               {part.originalPrice > part.price && (
+//                 <span className="text-sm text-gray-500 line-through">
+//                   ₹{part.originalPrice}
+//                 </span>
+//               )}
+//             </div>
+//             <div className="flex items-center gap-2">
+//               <div className="flex items-center border border-gray-300 rounded-lg">
+//                 <button
+//                   onClick={() => setQuantity(Math.max(1, quantity - 1))}
+//                   className="p-1 hover:bg-gray-100 transition-colors"
+//                 >
+//                   <Minus className="h-4 w-4" />
+//                 </button>
+//                 <span className="px-3 py-1 text-sm">{quantity}</span>
+//                 <button
+//                   onClick={() => setQuantity(quantity + 1)}
+//                   className="p-1 hover:bg-gray-100 transition-colors"
+//                 >
+//                   <Plus className="h-4 w-4" />
+//                 </button>
+//               </div>
+//               <button
+//                 onClick={() => onConfirm(part.id, quantity)}
+//                 disabled={!part.inStock}
+//                 className={`px-4 py-2 text-sm font-medium rounded-lg transition-colors ${
+//                   part.inStock
+//                     ? "bg-red-600 hover:bg-red-700 text-white"
+//                     : "bg-gray-300 text-gray-500 cursor-not-allowed"
+//                 }`}
+//               >
+//                 Confirm
+//               </button>
+//               <button
+//                 onClick={() => onDelete(part.id)}
+//                 className="p-2 text-red-600 border border-red-600 rounded-lg hover:bg-red-50 transition-colors"
+//               >
+//                 <X className="h-4 w-4" />
+//               </button>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };

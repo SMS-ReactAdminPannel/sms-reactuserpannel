@@ -174,17 +174,6 @@ export const Navbar: React.FC = () => {
 
 				{/* Search Bar */}
 				<div className='flex flex-1 justify-end'>
-<<<<<<< HEAD
-					
-                 <input type='text'
-                 className='px-2 py-1 text-[#9b111e] text-sm   focus:outline-none focus:ring-1   w-[290px]'
-                   placeholder='Search'
-                   value={search}
-                   onChange={(e) => setSearch(e.target.value)}
-/>
-
-					<button className='bg-red-900  px-4 py-2'>
-=======
 					<input
 						type='text'
 						className='px-4 py-2 text-[#9b111e] placeholder-gray-600 text-sm bg-[#fdefe9] rounded-l-md focus:outline-none focus:ring-[#9b111e] w-[290px] shadow-md'
@@ -194,7 +183,6 @@ export const Navbar: React.FC = () => {
 					/>
 
 					<button className='bg-red-900 px-3 py-2 rounded-r-md'>
->>>>>>> c38c1bbe39b8b37d19e12576fc26fddbb51d8960
 						<FiSearch
 							className='text-black text-xl'
 							color={COLORS.white}
@@ -423,36 +411,6 @@ export const Navbar: React.FC = () => {
 			</div>
 
 			{/* Bottom Navbar - Categories */}
-<<<<<<< HEAD
-		
- <div className="bg-[#fdefe9] px-4 py-6 flex items-center justify-center gap-20 overflow-x-auto scrollbar-hide">
-  {navData?.map((item, idx) => (
-    <NavLink
-      key={idx}
-      to={item.link}
-      style={{ fontSize: '20px' }}
-	className={({ isActive }) =>
-  `relative pb-2 text-lg font-semibold transition-all duration-300 ease-in-out whitespace-nowrap
-  ${
-    isActive
-      ? 'text-red-900 -translate-y-1 after:content-[""] after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-full after:bg-red-900 after:transition-all after:duration-300'
-      : 'text-red-800 after:content-[""] after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-0 after:bg-red-900 after:transition-all after:duration-300 hover:after:w-full'
-  }`
-}
->
-      {item.title}
-	  
-    </NavLink>
-	
-  ))}
-
- <div className='flex justify-end ml-20'>
-	<button className=" bg-red-800 hover:bg-red-900 text-white font-semibold py-2 px-4 rounded-full ">
-  Enquiry
-</button>
-</div>
-</div> 
-=======
 
 			<div className='bg-[#fdefe9] px-24 py-1.5 flex items-center justify-center gap-10 shadow-lg'>
 				{navData?.map((item, idx) => (
@@ -472,7 +430,6 @@ export const Navbar: React.FC = () => {
 						{item.title}
 					</NavLink>
 				))}
->>>>>>> c38c1bbe39b8b37d19e12576fc26fddbb51d8960
 
 				<div className='flex justify-end'>
 					<button

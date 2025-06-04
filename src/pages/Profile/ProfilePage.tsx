@@ -1,6 +1,3 @@
-<<<<<<< HEAD
-import SettingsPage from '../../components/account-settings/Accountsettings';
-=======
 import { useState } from "react";
 
 interface UserInfo {
@@ -171,7 +168,6 @@ const ProfilePage: React.FC = () => {
     CAR HISTORY
   </button>
 </div>
->>>>>>> c38c1bbe39b8b37d19e12576fc26fddbb51d8960
 
 
                     </div>
