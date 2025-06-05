@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
+import { getSparePartsById } from "../../features/spareparts";
 
 
 type MailItem = {
@@ -54,6 +55,22 @@ export default function GmailStyleInbox() {
     filter === "all" ? true : filter === "unread" ? m.unread : !m.unread
   );
 
+  const spare = async () => {
+    try{
+      const data = {}
+      const response = await getSparePartsById(data)
+      console.log(response)
+    }
+    catch(error){
+      console.log(error)
+    }
+  }
+
+  useEffect(() => {
+    spare();
+  })
+
+  spare();
 
   return (
     <div className="min-h-screen bg-[#FAF3EB] p-2 font-[Poppins]">

@@ -130,6 +130,9 @@ const SpareParts: React.FC = () => {
     part.spareparts_name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Add to cart button functions
+
+
 const handleAddToCart = async (part: SparePart) => {
   try {
     // Create payload with required fields
@@ -138,7 +141,8 @@ const handleAddToCart = async (part: SparePart) => {
                   price: part.price.toString(),
                   quantity: quantity.toString()
        }, 
-       type: 'spare',     
+       
+       type: 'service',     
     };
 
     console.log("🛒 Adding to cart:", payload);
