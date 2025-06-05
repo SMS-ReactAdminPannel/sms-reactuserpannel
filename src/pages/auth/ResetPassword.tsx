@@ -17,7 +17,7 @@ type ResetFormData = {
 
 const ResetPassword = () => {
 	const [step, setStep] = useState<'email' | 'otp' | 'reset'>('email');
-	const [storedOtp, setStoredOtp] = useState('');
+	//const [storedOtp, setStoredOtp] = useState('');
 	const [otpDigits, setOtpDigits] = useState(Array(6).fill(''));
 	const [AuthToken, setAuthToken] = useState('');
 
@@ -109,10 +109,11 @@ const handleOtpVerify = async () => {
 
   try {
 	const data = {AuthToken, otp: enteredOtp }
-    const response = await verifyotp(JSON.stringify(data)); // Your API call
-    console.log('OTP verified:', response);
+    const response:any = await verifyotp(JSON.stringify(data)); // Your API call
+    console.log('OTP verified:', response.data.data);
 
     if (response) {
+		localStorage.setItem('authToken', response.data.data);
       setStep('reset');
       clearErrors('otp');
     } else {
@@ -131,10 +132,11 @@ const onSubmit = async (data: ResetFormData) => {
   }
   try {
     const response = await resetPassword({
-      email: data.email,
-      newPassword: data.newPassword,
-      otp: otpDigits.join(''), // or data.otp if you store it in form
-	    AuthToken, 
+		newPassword: data.newPassword,
+        oldPassword:data.confirmPassword,
+		
+
+       
     });
     console.log('Password reset:', response);
 

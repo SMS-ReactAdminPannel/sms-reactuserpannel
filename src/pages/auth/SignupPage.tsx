@@ -7,7 +7,7 @@ import { signUp } from '../../features/auth';
 
 type SignupFormData = { 
   email: string;
-  phoneNumber: string;
+  phone: string;
   password: string;
   confirmPassword: string;
 };;
@@ -40,15 +40,16 @@ const SignupPage = () => {
   // };
 
   const onSubmit = async (data: SignupFormData) => {
-  const { email, phoneNumber, password } = data;
-
+        const { email, phone, password } = data;
+ 
   try {
-    const response = await signUp({ email, phone:phoneNumber, password });
+    const response = await signUp({ email,  phone, password });
+
     console.log('Signup response:', response);
 
-    if (response?.success) {
-      // Navigate to OTP page and pass response data to it
-      navigate('/verify-otp', { state: { data: response.data } });
+    if (response) {
+      localStorage.setItem('otpData', JSON.stringify({ token: response.data.data.token, otp: response.data.data.otp }));
+      navigate('/verify-otp');
     }
   } catch (error) {
     console.error('Signup error:', error);
@@ -66,7 +67,7 @@ const SignupPage = () => {
   <input
     type="tel"
     placeholder="Enter your phone number"
-    {...register('phoneNumber', {
+    {...register('phone', {
       required: 'Phone number is required',
       pattern: {
         value: /^[6-9]\d{9}$/,
@@ -74,11 +75,11 @@ const SignupPage = () => {
       },
     })}
     className={`w-full px-4 py-3 border text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9b111e] bg-white text-sm ${
-      errors.phoneNumber ? 'border-red-500' : 'border-[#d77c7c]'
+      errors.phone ? 'border-red-500' : 'border-[#d77c7c]'
     }`}
   />
-  {errors.phoneNumber && (
-    <span className="text-xs text-red-600">{errors.phoneNumber.message}</span>
+  {errors.phone && (
+    <span className="text-xs text-red-600">{errors.phone.message}</span>
   )}
 </div>
 

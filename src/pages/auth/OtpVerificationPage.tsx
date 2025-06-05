@@ -1,9 +1,11 @@
-import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { useNavigate, Link,  } from 'react-router-dom';
+
 
 import AuthLayout from './AuthLayout';
 import { useState, useRef } from 'react'; 
 import { useForm } from 'react-hook-form'; 
 import { verifyotp } from '../../features/auth';
+import { useAuth } from './AuthContext';
 
 type OtpFormData = {
   otp: string;
@@ -12,6 +14,7 @@ type OtpFormData = {
 const OtpVerificationPage = () => {
   const [otpDigits, setOtpDigits] = useState<string[]>(Array(6).fill(''));
   const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const { login } = useAuth(); // Assuming you have a useAuth hook for authentication context
 
   const {
     setError,
@@ -20,13 +23,15 @@ const OtpVerificationPage = () => {
   } = useForm<OtpFormData>();
 
 const navigate = useNavigate();
-  const location = useLocation();
-  const userData = location.state?.data;
 
-  console.log('User data from location state:', userData);
+
+
+const otpDataRaw = localStorage.getItem('otpData');
+const otpData = otpDataRaw ? JSON.parse(otpDataRaw) : null;
   
 
 
+console.log('otpData:', otpData);
   const handleOtpChange = (index: number, value: string) => {
     if (!/^\d?$/.test(value)) return;
     const updated = [...otpDigits];
@@ -51,30 +56,7 @@ const navigate = useNavigate();
     }
   };
 
-//  const handleOtpVerify = async () => {
-//   const enteredOtp = otpDigits.join('');
 
-//   if (enteredOtp.length !== 6) {
-//     setError('otp', { message: 'Please enter a valid 6-digit OTP' });
-//     return;
-//   }
-//   try {
-//     clearErrors('otp');
-//     if (response.success) {
-//       console.log('OTP verified successfully');
-//       navigate('/login'); // Or /signup if needed
-//     } else {
-//       setError('otp', {
-//         message: response?.message || 'OTP verification failed. Please try again.',
-//       });
-//     }
-//   } catch (error: any) {
-//     console.error('Error verifying OTP:', error);
-//     setError('otp', {
-//       message: error?.response?.data?.message || 'An error occurred during verification.',
-//     });
-//   }
-// };
 
 const handleOtpVerify = async () => {
   const enteredOtp = otpDigits.join('');
@@ -89,11 +71,15 @@ const handleOtpVerify = async () => {
 
     const response = await verifyotp({
       otp: enteredOtp,
-      email: userData?.email, 
+      AuthToken: otpData?.token, 
     });
 
-    if (response.success) {
-      navigate('/login');
+    console.log('OTP verification response:', response);
+
+    if (response) {
+      localStorage.removeItem('otpData'); 
+      login(response.data.data); // Assuming login function sets the user state
+      navigate('/');
     } else {
       setError('otp', {
         message: response?.message || 'OTP verification failed. Please try again.',
@@ -105,6 +91,7 @@ const handleOtpVerify = async () => {
     });
   }
 };
+
 
 
 
