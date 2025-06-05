@@ -2,6 +2,22 @@
 //484-----backend data fetching for overall
 
 
+import { FaCar } from "react-icons/fa";
+import { FaBatteryHalf } from "react-icons/fa";//<FaBatteryHalf />
+import { IoCarSportSharp } from "react-icons/io5";//<IoCarSportSharp />
+import { GiVileFluid } from "react-icons/gi";//<GiVileFluid />
+import { TbWiper } from "react-icons/tb";//<TbWiper />
+import { FaOilCan } from "react-icons/fa";//<FaOilCan />
+
+
+
+
+
+
+
+
+
+import image from '../../assets/CAR ENGINE SERVISE/Engine servise.jpg'
 
 
 
@@ -38,54 +54,71 @@ import SelectCarPage from './SelectCarPage';
 import { Await, useNavigate, useParams } from 'react-router-dom';
 import serviceImg from '../../assets/serviceimages/generalservice.png';
 import AutoPopup from './RightSidePopup';
-import CLIENT from '../../api/index'
-import Client from '../../api/index';
 import { getservicebyid, getservicesoveralldata } from '../../features/services/services';
 
 
-// interface ServiceItem {
-// 	name: string;
-// 	icon: React.ReactNode;
-// }
+interface ServiceItem {
+	name: string;
+	icon: React.ReactNode;
+}
 
-// interface ServicePackage {
-// 	id: string;
-// 	title: string;
-// 	warranty: string;
-// 	frequency: string;
-// 	isRecommended?: boolean;
-// 	duration: string;
-// 	services: ServiceItem[];
-// 	additionalCount?: number;
-// 	image: string;
-// 	price: string;
-// 	discountPrice: string;
-// }
+interface ServicePackage {
+	id: string;
+	title: string;
+	warranty: string;
+	frequency: string;
+	isRecommended?: boolean;
+	duration: string;
+	services: ServiceItem[];
+	additionalCount?: number;
+	image: string;
+	price: string;
+	discountPrice: string;
+}
 
-// interface ContentSection {
-// 	title: string;
-// 	packages: ServicePackage[];
-// }
+interface ContentSection {
+	title: string;
+	packages: ServicePackage[];
+}
 
-// interface SelectedPackageInfo {
-// 	packageId: string;
-// 	carDetails: CarSelect;
-// }
+interface SelectedPackageInfo {
+	packageId: string;
+	carDetails: string;
+}
+
+
+
+
+
 
 const ServicesPage: React.FC = () => {
-	const [selectedPackage, setSelectedPackage] = useState<SelectedPackageInfo[]>(
-		[]
-	);
-	const [selectedPackageId, setSelectedPackageId] = useState<string | null>(
-		null
-	);
-	const [activeNavItem, setActiveNavItem] =
-		useState<string>('Periodic Services');
-	const [expandedServices, setExpandedServices] = useState<{
-		[key: string]: boolean;
-	}>({});
+
+	const [selectedPackage, setSelectedPackage] = useState<SelectedPackageInfo[]>([]);
+
+	
+
+	const [selectedPackageId, setSelectedPackageId] = useState<string | null>(null);
+
+	const handleSelectCar = (packageId: string) => {
+		setSelectedPackageId(packageId);
+		console.log(`Selected package: ${packageId}`);
+		setShowForm(true);
+	};
+
+	const [activeNavItem, setActiveNavItem] = useState<string>('Periodic Services');
+
+	const handleNavClick = (navItem: string) => {
+		setActiveNavItem(navItem);
+		setSelectedPackage([]); // Reset selected package when switching sections
+		console.log(`Navigated to: ${navItem}`);
+	};
+
+	const [expandedServices, setExpandedServices] = useState<{[key: string]: boolean;}>({});
+
 	const [cart, setCart] = useState<SelectedPackageInfo[]>([]);
+
 	const [showCartNotification, setShowCartNotification] = useState(false);
+
 	// handle left and right on navbar
 	const { id } = useParams<{ id: string }>();
 
@@ -215,7 +248,7 @@ const ServicesPage: React.FC = () => {
 				},
 			],
 		},
-		Batteries: {
+		'Batteries': {
 			title: 'Battery Services & Replacement',
 			packages: [
 				{
@@ -521,6 +554,26 @@ const ServicesPage: React.FC = () => {
 overalldata();
  },[])
 
+	const [sendPages, setSendPages] = useState<ServiceCategory[]>([]);// data entering
+
+ 	const senddata = async () => {
+		try {
+			const response = await getsenddata();
+			console.log(response)
+			setSendPages(response);
+		} catch (error) {
+			console.log(error);
+		}
+	}
+
+
+	useEffect(() => {
+		senddata();
+	}, [])
+		
+	
+	
+
 	
 
 	const navigationItems = [
@@ -536,17 +589,9 @@ overalldata();
 		{ name: 'Insurance Claims', icon: <Shield className='w-6 h-6' /> },
 	];
 
-	const handleSelectCar = (packageId: string) => {
-		setSelectedPackageId(packageId);
-		console.log(`Selected package: ${packageId}`);
-		setShowForm(true);
-	};
+	
 
-	const handleNavClick = (navItem: string) => {
-		setActiveNavItem(navItem);
-		setSelectedPackage([]); // Reset selected package when switching sections
-		console.log(`Navigated to: ${navItem}`);
-	};
+	
 
 	// Auto popup message
 	useEffect(() => {
@@ -557,17 +602,20 @@ overalldata();
 		}
 	}, []);
 
+	// mini page data selection after click select
 	const handleCloseWelcome = () => {
 		setShowWelcomePopup(false);
 		localStorage.setItem('dismissedWelcomePopup', 'true');
 	};
-
+	////// more or less
 	const toggleExpandServices = (packageId: string) => {
 		setExpandedServices((prev) => ({
 			...prev,
 			[packageId]: !prev[packageId],
 		}));
 	};
+
+	
 
 	const [showForm, setShowForm] = useState<boolean>(false);
 	  
@@ -577,11 +625,24 @@ overalldata();
 	const currentContent =
 		contentSections[activeNavItem] || contentSections['Periodic Services'];
 
+
+	const [activeCategory, setActiveCategory] = useState(service[0]?.category_name || '');
+	
+	
+
+
+	
+	
+	
+		
+
 	return (
+		
 		<div className='min-h-screen bg-gray-50 flex flex-start'>
 			<div className='flex min-h-screen bg-gradient-to-br from-gray-50 to-gray-100'>
+				{/* Sidebar */}
 				<div className='fixed left-0 top-8 w-[280px] h-[800px] bg-white shadow-2xl flex flex-col z-10 border-r border-gray-100'>
-					<div className='p-6 border-b border-gray-100 flex-shrink-0 bg-gradient-to-r from-red-500 to-red-600'>
+					<div className='p-6 border-b border-gray-100 bg-gradient-to-r from-red-500 to-red-600'>
 						<div className='flex items-center space-x-3'>
 							<div className='w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm'>
 								<svg className='w-6 h-6 text-white' fill='none' stroke='currentColor' viewBox='0 0 24 24'>
@@ -594,90 +655,178 @@ overalldata();
 							</div>
 						</div>
 					</div>
-					<div className='flex-1 overflow-y-auto max-h-[calc(100vh-120px)] py-4 scrollbar-hide'>
-							<nav className='px-4'>
-								<div className='space-y-2'>
-									{service.map((item, index) => (
-										
-										<div
-											key={index}
-											onClick={() => {
-												handleNavClick(index);
-												setCurrentContent(item);
-											}}
 
-											
-											className={`group relative flex items-center px-4 py-4 rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-[1.02] ${activeNavItem === item.index
-													? 'bg-gradient-to-r from-red-50 to-red-100 text-red-700 shadow-lg shadow-red-100/50 border border-red-200'
-													: 'text-gray-600 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-red-600 hover:shadow-md'
-												}`}
-										>
-											<div
-												className={`mr-4 flex-shrink-0 p-2 rounded-lg transition-all duration-300 ${activeNavItem === item.index
-														? 'bg-red-200/50 text-red-600'
-														: 'bg-gray-100 text-gray-500 group-hover:bg-red-100 group-hover:text-red-500'
-													}`}
-											>
-												<svg className='w-4 h-4' viewBox='0 0 20 20' fill='currentColor'>
-													<circle cx='10' cy='10' r='5' />
-												</svg>
-											</div>
-											<div>
-												<span className='text-sm font-semibold whitespace-nowrap transition-all duration-300'>
-													{item.category_name}
-												</span>
+					{/* Nav Items */}
+					<div className='flex-1 overflow-y-auto max-h-[calc(100vh-120px)] py-4 scrollbar-hide'>
+						<nav className='px-4'>
+							<div className='space-y-2'>
+								{service.map((item, index) => (
+									<div
+										key={index}
+										onClick={() => {
+											setActiveCategory(item.category_name);
+											setCurrentContent(item);
+											setActiveNavItem(index);
+										}}
+										className={`group flex items-center px-4 py-4 rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-[1.02] ${activeNavItem === index
+											? 'bg-gradient-to-r from-red-50 to-red-100 text-red-700 shadow-lg border border-red-200'
+											: 'text-gray-600 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-red-600 hover:shadow-md'
+											}`}
+									>
+										<div className={`mr-4 flex-shrink-0 p-2 rounded-lg transition-all duration-300 ${activeNavItem === index
+											? 'bg-red-200/50 text-red-600'
+											: 'bg-gray-100 text-gray-500 group-hover:bg-red-100 group-hover:text-red-500'
+											}`}>
+											<div className='w-[40px] h-[40px] flex justify-center'>
+												<FaCar className='text-red-900 w-10 h-8' />
 											</div>
 										</div>
-									))}
-								</div>
-							</nav>
+										<div>
+											<span className='text-sm font-semibold whitespace-nowrap transition-all duration-300'>
+												{item.category_name}
+											</span>
+										</div>
+									</div>
+								))}
+							</div>
+						</nav>
 					</div>
 				</div>
 			</div>
-			<div className='ml-72 bg-gray-50 min-h-screen'>
+
+			{/* Main Content */}
+			<div className='ml-72 bg-gray-50 min-h-screen w-full'>
 				<div className='max-w-4xl mx-auto px-6 py-8'>
 					<div className='mb-8'>
 						<h1 className='text-3xl font-bold text-[#9b111e] mb-2'>{currentContent.title}</h1>
 						<p className='text-gray-500'>Choose the perfect package for your vehicle</p>
 					</div>
-					{/* Place your existing package rendering logic here using currentContent.packages */}
 
-					<div>
-						{service.map((category, index) => (
-							<div key={index}>
-								<span className="font-bold text-lg">{category.category_name}</span>
-								<ul className="ml-4 list-disc">
-									{category.services.map((serviceItem, idx) => (
-										<React.Fragment key={idx}>
-											<li>Category ID: {serviceItem.category_id}</li>
-											<li>Createtd At: {serviceItem.created_at}</li>
-											<li>Description: {serviceItem.description}</li>
-											<li>PARTNER ID : {serviceItem.partner_id}</li>
-											<li>PRICE      : {serviceItem.price}</li>
-											<li>Service Name:{serviceItem.service_name}</li>
-											<li>SLUG        :{serviceItem.slug}</li>
-										</React.Fragment>
+					<div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+						{service
+							.filter((category) => category.category_name === activeCategory)
+							.map((category, index) => (
+								<div key={index} className='p-4 border rounded-lg shadow bg-white'>
+									<h2 className='text-xl font-semibold mb-4 text-gray-800'>{category.category_name}</h2>
+
+									{contentSections['Periodic Services'].packages.slice(0, 1).map((pkg, pkgIndex) => (
+										<div key={pkgIndex}>
+											<h3 className='text-lg font-bold text-red-800'>{pkg.title}</h3>
+											<p className='text-red-500'>
+												<span>{pkg.warranty}</span>
+												<span className='ml-4'>{pkg.frequency}</span>
+											</p>
+
+											<div className='grid grid-cols-1 md:grid-cols-2 gap-3 my-4'>
+												{pkg.services
+													.slice(0, expandedServices[pkg.id] ? pkg.services.length : 4)
+													.map((service, index) => (
+														<div key={index} className='flex items-center text-sm hover:text-red-400 group'>
+															<div className='w-5 h-5 rounded-full flex items-center justify-center mr-3'>
+																{service.icon}
+															</div>
+															<span className='group-hover:text-red-400'>{service.name}</span>
+														</div>
+													))}
+											</div>
+
+											{pkg.services.length > 4 && (
+												<button
+													onClick={() => toggleExpandServices(pkg.id)}
+													className='text-blue-600 text-sm font-medium hover:text-blue-800 flex items-center mb-4'
+												>
+													{expandedServices[pkg.id] ? (
+														<>
+															<ChevronUp className='w-4 h-4 mr-1' /> Show Less
+														</>
+													) : (
+														<>
+															<ChevronDown className='w-4 h-4 mr-1' /> View More
+														</>
+													)}
+												</button>
+											)}
+
+											{/* Action Buttons */}
+											<div className='flex justify-between items-center mt-6'>
+												{selectedPackage.some((p) => p.packageId === pkg.id) ? (
+													<>
+														<div className='text-right mb-2'>
+															<span className='line-through text-gray-400 mr-2 text-sm'>{pkg.price}</span>
+															<span className='text-red-600 font-bold text-xl'>{pkg.discountPrice}</span>
+														</div>
+
+														{cart.some((item) => item.packageId === pkg.id) ? (
+															<button
+																onClick={() => navigate('/booking-cart')}
+																className='px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors'
+															>
+																Go to Cart
+															</button>
+														) : (
+															<button
+																onClick={() => {
+																	const packageToAdd = selectedPackage.find((p) => p.packageId === pkg.id);
+																	if (packageToAdd) {
+																		setCart([...cart, packageToAdd]);
+																		setShowCartNotification(true);
+																		setTimeout(() => setShowCartNotification(false), 3000);
+																	}
+																}}
+																className='px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-900 transition-colors'
+															>
+																Add to Cart
+															</button>
+														)}
+													</>
+												) : (
+													<button
+														onClick={() => handleSelectCar(pkg.id)}
+														className='px-4 py-2 rounded-lg font-semibold bg-white border-2 border-red-500 text-red-500 hover:bg-red-50 hover:text-red-700 transition-all duration-200 shadow-md hover:shadow-lg'
+													>
+														SELECT CAR
+													</button>
+												)}
+											</div>
+
+											{/* Car Selection Form */}
+											{showForm && selectedPackageId === pkg.id && (
+												<div className='fixed inset-0 bg-black bg-opacity-50 flex justify-end items-center z-50 p-4'>
+													<SelectCarPage
+														onClose={() => setShowForm(false)}
+														setSelectedPackage={(carDetails) => {
+															setSelectedPackage((prev) => [
+																...prev,
+																{
+																	packageId: selectedPackageId,
+																	carDetails,
+																},
+															]);
+															setShowForm(false);
+														}}
+														packageId={selectedPackageId}
+													/>
+												</div>
+											)}
+
+										</div>
 									))}
-
-								</ul>
-							</div>
-						))}
+								</div>
+							))}
 					</div>
-					{/* Place your existing package rendering logic here using currentContent.packages */}
+
+					{/* Cart Notification */}
+					{showCartNotification && (
+						<div className='fixed top-[70px] right-[10px] bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg z-50'>
+							Item added to cart successfully!
+						</div>
+					)}
 				</div>
 			</div>
-			{showWelcomePopup && (
-				<AutoPopup
-					onClose={handleCloseWelcome}
-					title='Welcome to Car Services'
-					message='Explore our comprehensive service packages. Select what your vehicle needs and book an appointment with ease.'
-				/>
-			)}
 		</div>
-		
-
-		
-  
+											
+									
+	
 	);
 };
 
