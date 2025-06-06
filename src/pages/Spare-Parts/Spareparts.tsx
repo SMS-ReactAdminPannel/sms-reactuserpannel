@@ -444,38 +444,36 @@ const SpareParts: React.FC = () => {
 				</div>
 			)}
 
-			{/* Bottom Full Width Section */}
-			<div className='w-full py-12 px-6 flex flex-col-2 lg:flex-row items-center gap-8'>
-				<div className='flex-1 max-w-2xl lg:order-1'>
-					<h2 className='text-4xl font-bold text-[#9b111e] mb-6'>
-						Professional Auto Service & Support
-					</h2>
-					<p className='text-gray-700 mb-6 text-lg leading-relaxed'>
-						Need help installing your spare parts? Our certified technicians
-						provide expert installation services and comprehensive support. We
-						ensure your vehicle gets the best care with genuine parts and
-						professional service.
-					</p>
-					<div className='flex flex-wrap gap-4 mb-8'>
-						<div className='bg-white px-4 py-2 rounded-full text-sm border shadow-sm'>
-							✓ Expert Installation
-						</div>
-						<div className='bg-white px-4 py-2 rounded-full text-sm border shadow-sm'>
-							✓ Quality Guarantee
-						</div>
-						<div className='bg-white px-4 py-2 rounded-full text-sm border shadow-sm'>
-							✓ 24/7 Support
-						</div>
-					</div>
-				</div>
-				<div className='flex-1 lg:order-2'>
-					<img
-						src='https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80'
-						alt='Professional Auto Service'
-						className='w-full h-[400px] object-cover rounded-lg shadow-lg'
-					/>
-				</div>
-			</div>
+     {/* Bottom Full Width Section */}
+<div className="w-full py-12 px-6 flex flex-col-2 lg:flex-row items-center gap-8">
+  <div className="flex-1 max-w-2xl lg:order-1">
+    <h2 className="text-4xl font-bold text-[#9b111e] mb-6">
+      Professional Auto Service & Support
+    </h2>
+    <p className="text-gray-700 mb-6 text-lg leading-relaxed">
+      Need help installing your spare parts? Our certified technicians provide expert installation services and comprehensive support. We ensure your vehicle gets the best care with genuine parts and professional service.
+    </p>
+    <div className="flex flex-wrap gap-4 mb-8">
+      <div className="bg-white px-4 py-2 rounded-full text-sm border shadow-sm">
+        ✓ Expert Installation
+      </div>
+      <div className="bg-white px-4 py-2 rounded-full text-sm border shadow-sm">
+        ✓ Quality Guarantee
+      </div>   
+      <div className="bg-white px-4 py-2 rounded-full text-sm border shadow-sm">
+        ✓ 24/7 Support
+      </div>
+    </div>
+    
+  </div>
+  <div className="flex-1 lg:order-2">
+    <img
+      src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
+      alt="Professional Auto Service"
+      className="w-full h-[400px] object-cover rounded-lg shadow-lg"
+    />
+  </div>
+</div>
 
 			<div className='max-w-full px-4 md:px-6 lg:px-8 bg-[#fae9eb] py-6'>
 				<div className='text-center mt-10 mb-12'>
