@@ -105,6 +105,15 @@ class Client {
 			getAll: (params: string) =>
 				httpClient.get(API_END_POINTS.notification.getAll, params),
 		},
+
+		bookings: {
+			getAll: (params: string) =>
+				httpClient.get(API_END_POINTS.bookings.getAll, params),
+			getProduct: (params: string) =>
+				httpClient.get(API_END_POINTS.bookings.getProduct, params),
+			getService: (params: string) =>
+				httpClient.get(API_END_POINTS.bookings.getService, params),
+		},
 	};
 }
 
