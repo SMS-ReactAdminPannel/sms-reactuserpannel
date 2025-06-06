@@ -45,4 +45,4 @@ export const getSparePartsById = async (data: string) => {
         console.log(error)
     }
 
-}
+} 
