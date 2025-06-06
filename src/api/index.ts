@@ -1,5 +1,5 @@
 import httpClient from './httpClient';
-import { API_END_POINTS } from './httpEndPoints';
+import { API_END_POINTS } from './httpEndpoints';
 
 class Client {
 	user = {

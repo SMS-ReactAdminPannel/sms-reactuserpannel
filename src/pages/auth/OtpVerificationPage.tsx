@@ -1,29 +1,37 @@
+import { useNavigate, Link,  } from 'react-router-dom';
 
-import { useNavigate, Link } from 'react-router-dom';
+
 import AuthLayout from './AuthLayout';
 import { useState, useRef } from 'react'; 
 import { useForm } from 'react-hook-form'; 
-
+import { verifyotp } from '../../features/auth';
+import { useAuth } from './AuthContext';
 
 type OtpFormData = {
   otp: string;
 };
 
 const OtpVerificationPage = () => {
-  const [storedOtp, setStoredOtp] = useState('123456'); // Simulate stored OTP
   const [otpDigits, setOtpDigits] = useState<string[]>(Array(6).fill(''));
   const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
+  const { login } = useAuth(); // Assuming you have a useAuth hook for authentication context
 
   const {
-    register,
-    handleSubmit,
     setError,
     clearErrors,
     formState: { errors },
   } = useForm<OtpFormData>();
 
-  const navigate = useNavigate();
+const navigate = useNavigate();
 
+
+
+const otpDataRaw = localStorage.getItem('otpData');
+const otpData = otpDataRaw ? JSON.parse(otpDataRaw) : null;
+  
+
+
+console.log('otpData:', otpData);
   const handleOtpChange = (index: number, value: string) => {
     if (!/^\d?$/.test(value)) return;
     const updated = [...otpDigits];
@@ -48,24 +56,48 @@ const OtpVerificationPage = () => {
     }
   };
 
-  const handleOtpVerify = () => {
-    const enteredOtp = otpDigits.join('');
-    if (enteredOtp) {
-      clearErrors('otp');
-      navigate('/signup');
-    } else {
-      setError('otp', { message: 'Invalid OTP' });
-    }
-  };
 
-  const onSubmit = (data: OtpFormData) => {
-    // fallback handler - not used since button is of type 'button'
-    console.log('OTP submitted:', data.otp);
-  };
+
+const handleOtpVerify = async () => {
+  const enteredOtp = otpDigits.join('');
+
+  if (enteredOtp.length !== 6) {
+    setError('otp', { message: 'Please enter a valid 6-digit OTP' });
+    return;
+  }
+
+  try {
+    clearErrors('otp');
+
+    const response = await verifyotp({
+      otp: enteredOtp,
+      AuthToken: otpData?.token, 
+    });
+
+    console.log('OTP verification response:', response);
+
+    if (response) {
+      localStorage.removeItem('otpData'); 
+      login(response.data.data); // Assuming login function sets the user state
+      navigate('/');
+    } else {
+      setError('otp', {
+        message: response?.message || 'OTP verification failed. Please try again.',
+      });
+    }
+  } catch (error: any) {
+    setError('otp', {
+      message: error?.response?.data?.message || 'An error occurred during verification.',
+    });
+  }
+};
+
+
+
 
   return (
     <AuthLayout title="Verify OTP">
-      <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+      <form className="space-y-6">
         <div className="flex flex-col space-y-3">
           <label className="text-sm font-semibold text-white">Enter the 6-digit OTP</label>
           <div className="flex justify-between space-x-2">
