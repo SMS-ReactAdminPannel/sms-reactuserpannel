@@ -1,11 +1,18 @@
 import Client from "../../../api";
 
-export const booking_cart = async ( data : any) => {
-try{
-    const BOOKINGCARTINDEX = await new Client().user.booking_cart.getAll(data)
-    return BOOKINGCARTINDEX;
+interface BookingCartData {
+  userId?: string;
+  token?: string;
+
 }
-catch(error){
-    console.log("Error bookingCart",error)
-}
-}
+
+export const booking_cart = async (data: BookingCartData) => {
+  try {
+    const response = await new Client().user.booking_cart.getAll(data);
+    console.log("Booking Cart Response:", response);
+    return response;
+  } catch (error: any) {
+    console.error("Error fetching booking cart:", error?.response || error?.message || error);
+    return null; 
+  }
+};
