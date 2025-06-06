@@ -599,7 +599,7 @@ export default function SparePartsCart() {
           </div>
         </div>
 
-        <div className="grid grid-cols-1  gap-6">
+        <div className="grid grid-cols-1 mx-auto max-w-6xl gap-6">
           {/* Main Content */}
           <div className="">
             {/* Service Page */}
