@@ -13,10 +13,10 @@ import  ServiceCategory  from '../../../api/index';
 
 
 
-export const getsenddata = async (): Promise<ServiceCategory[]> => {
+export const addToBookingCart = async (data:any): Promise<ServiceCategory[]> => {
     try {
         const client = new Client();
-        const response = await client.user.services.service_category.post();
+        const response = await client.user.booking_cart.post(data);
 
         if (response?.data?.data && Array.isArray(response.data.data)) {
             return response.data.data as ServiceCategory[];
