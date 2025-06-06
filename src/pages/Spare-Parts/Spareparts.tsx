@@ -62,7 +62,7 @@ const SpareParts: React.FC = () => {
 
   const totalSlides: number = parts.length;
 
-  // Fixed API integration with proper error handling
+  // get Data API integration 
   const fetchSpareParts = async () => {
     try {
       setLoading(true);
@@ -185,6 +185,7 @@ const handleAddToCart = async (part: SparePart) => {
 
     const response = await postSparePartsData(payload);
 
+  
   } catch (error) {
     console.error("❌ Error adding to cart:", error);
   } finally {
