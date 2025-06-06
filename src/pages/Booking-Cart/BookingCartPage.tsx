@@ -4,6 +4,7 @@ import serviceImg from "../../assets/serviceimages/generalservice.png";
 import bgImage from "../../assets/checkout-bg_1_.png";
 import { toast } from "react-toastify";
 import { COLORS, FONTS } from "../../constants/constant";
+import { getSparePartsById } from "../../features/spareparts";
 
 interface SparePart {
   id: string;
@@ -233,6 +234,23 @@ export default function SparePartsCart() {
   const [showInStockOnly, setShowInStockOnly] = useState(false);
 
 
+  // get Data from spareparts and services
+
+  const getSpareAndServiceData = async () => {
+    try{
+      const data = {}
+      const response = await getSparePartsById(data);
+      console.log('Spare and Service', response)
+    }
+    catch(error) {
+      console.log(error)
+    }
+  }
+
+  useEffect( () => {
+    getSpareAndServiceData();
+  })
+
     // Scroll - Line animation
 
     const cartTitle = useScrollAnimation<HTMLHeadingElement>();
@@ -358,7 +376,7 @@ export default function SparePartsCart() {
     const [quantity, setQuantity] = useState(1);
 
     return (
-      <div className=" rounded-lg shadow-md p-4 mb-4  border border-gray-200 hover:shadow-lg transition-shadow duration-300  bg-white">
+      <div className=" rounded-lg shadow-md p-4 mb-4 max-w-6xl mx-auto border border-gray-200 hover:shadow-lg transition-shadow duration-300  bg-white">
         <div className="flex gap-4">
           <div className="relative w-36  flex-shrink-0">
             <img
@@ -530,7 +548,7 @@ export default function SparePartsCart() {
       <div className="max-w-7xl mx-auto">
         {/* Header */}
 
-        <h1 ref={cartTitle.elementRef} className=""  >
+        <h1 ref={cartTitle.elementRef} className="text-center  "  >
            <span className="inline-block pb-1 relative text-3xl font-bold text-[#9b111e] mb-6">
              My Cart
              <span 
@@ -544,7 +562,7 @@ export default function SparePartsCart() {
         
 
         {/* Tabs */}
-        <div className="mb-6">
+        <div className="mb-6 ml-16">
           <div className="relative inline-flex p-1 bg-[#FAF3EB] rounded-full border border-gray-300">
             <button
               onClick={() => setActiveTab("service")}
@@ -554,8 +572,8 @@ export default function SparePartsCart() {
                   : "text-black "
               }`}
             >
-              <Wrench className="text-lg" />
-              SparePart Orders
+              <Wrench className="text-lg"  />
+              SparePart Orders 
             </button>
 
             <button

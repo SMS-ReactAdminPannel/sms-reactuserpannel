@@ -79,7 +79,7 @@ const SpareParts: React.FC = () => {
           const validatedParts = response.data.data.map((part: any) => {
             return {
               id: part._id || '',
-              spareparts_name: part.spareparts_name || '',
+              spareparts_name: part.productName || '',
               price: Number(part.price) || 0,
               stock: part.stock || '',
               images: Array.isArray(part.images) ? part.images : [part.image || ''],
@@ -568,7 +568,7 @@ const handleAddToCart = async (part: SparePart) => {
             </div>
 
             <div>
-            {selectedPart.stock ? (<button
+            { parseInt(selectedPart.stock) >= quantity ? (<button
               onClick={() => handleAddToCart(selectedPart)}
               className="mt-2 w-full bg-[#9b111e] text-white px-4 py-2 rounded hover:bg-[#7f0d18] transition"
             >

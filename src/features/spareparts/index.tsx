@@ -3,6 +3,7 @@ import Client from "../../api"
 export const getSparePartsData = async ( data : any) => {
     try{
     const spareparts = await new Client().user.spare_parts.getAll(data);
+    console.log(spareparts);
     return spareparts;
     }
     catch(error){
