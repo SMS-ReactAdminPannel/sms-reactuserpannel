@@ -590,7 +590,7 @@ const OrdersPage: React.FC = () => {
                   setSortBy("date");
                   // setShowOldOrders(false);
                 }}
-                className="ml-[500px] px-4 py-1 text-gray-500 rounded-xl hover:text-white hover:bg-red-700 transition-all duration-200 shadow-sm hover:shadow-md font-medium text-sm"
+                className="ml-[400px] px-4 py-1 text-gray-500 rounded-xl hover:text-white hover:bg-red-700 transition-all duration-200 shadow-sm hover:shadow-md font-medium text-sm"
               >
                 Reset Filters
               </button>

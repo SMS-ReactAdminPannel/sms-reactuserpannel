@@ -1,64 +1,57 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { ShoppingCart } from 'lucide-react'
+import { ShoppingCart } from 'lucide-react';
 import { Search, X } from 'lucide-react';
-import { getSparePartsData, postSparePartsData } from '../../features/spareparts';
-import spareimg from '../../assets/CAR DIFFERENTIAL/Car differential.jpg'
+import {
+	getSparePartsData,
+	postSparePartsData,
+} from '../../features/spareparts';
+import spareimg from '../../assets/CAR DIFFERENTIAL/Car differential.jpg';
 
 interface SparePart {
-  id: string;
-  spareparts_name: string;
-  price: number;
-  stock: string;
-  images: string[];
-  type: string;
-  image: string;
+	id: string;
+	spareparts_name: string;
+	price: number;
+	stock: string;
+	images: string[];
+	type: string;
+	image: string;
 }
 
-  // Custom hook for Scroll Animation
-
-		const useScrollAnimation = <T extends HTMLElement = HTMLElement>(options = {}) => {
-		  const [isVisible, setIsVisible] = useState(false);
-		  const elementRef = useRef<T>(null);
-		
-		  useEffect(() => {
-			const observer = new IntersectionObserver(
-			  ([entry]) => {
-				setIsVisible(entry.isIntersecting);
-			  },
-			  {
-				threshold: 0.1,
-				rootMargin: '0px 0px -50px 0px',
-				...options
-			  }
-			);
-		
-			if (elementRef.current) {
-			  observer.observe(elementRef.current);
-			}
-		
-			return () => {
-			  if (elementRef.current) {
-				observer.unobserve(elementRef.current);
-			  }
-			};
-		  }, []);
-	  
-		  return { elementRef, isVisible };
-		};
-
+    // Custom hook for Scroll Animation
+    
+        const useScrollAnimation = <T extends HTMLElement = HTMLElement>(options = {}) => {
+          const [isVisible, setIsVisible] = useState(false);
+          const elementRef = useRef<T>(null);
+        
+          useEffect(() => {
+          const observer = new IntersectionObserver(
+            ([entry]) => {
+            setIsVisible(entry.isIntersecting);
+            },
+            {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px',
+            ...options
+            }
+          );
+        
+          if (elementRef.current) {
+            observer.observe(elementRef.current);
+          }
+        
+          return () => {
+            if (elementRef.current) {
+            observer.unobserve(elementRef.current);
+            }
+          };
+          }, []);
+        
+          return { elementRef, isVisible };
+        };
+    
 
 
 const SpareParts: React.FC = () => {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-  const [selectedPart, setSelectedPart] = useState<SparePart | null>(null);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [quantity, setQuantity] = useState(1);
-  const [currentIndex, setCurrentIndex] = useState<number>(0);
-  const [parts, setParts] = useState<SparePart[]>([]);
-  
-  // Add loading and error states
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
   const [selectedPart, setSelectedPart] = useState<SparePart | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
@@ -76,62 +69,53 @@ const SpareParts: React.FC = () => {
 
   //const totalSlides: number = parts.length;
 
-	// Fixed API integration with proper error handling
-	const fetchSpareParts = async () => {
-		try {
-			setLoading(true);
-			setError(null);
+	// get Data API integration 
+  const fetchSpareParts = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      
+      const data = {}; // Make sure this matches your API requirements
+      const response = await getSparePartsData(data);
+      
+      // Check if response has the expected structure
+      if (response && response.data && response.data.data) {
+        // Validate that the data is an array
+        if (Array.isArray(response.data.data)) {
+          // Map and validate each item to ensure it matches SparePart interface
+          const validatedParts = response.data.data.map((part: any) => {
+            return {
+              id: part._id || '',
+              spareparts_name: part.productName || '',
+              price: Number(part.price) || 0,
+              stock: part.stock || '',
+              images: Array.isArray(part.images) ? part.images : [part.image || ''],
+              type: part.type || '',
+              image: part.image || (Array.isArray(part.images) ? part.images[0] : '')
+            };
+          });
+          
+          setParts(validatedParts);
+        } else {
+          throw new Error('API response data is not an array');
+        }
+      } else {
+        throw new Error('Invalid API response structure');
+      }
+    } catch (error) {
+      console.error('Error fetching spare parts:', error);
+      setError(error instanceof Error ? error.message : 'Failed to fetch spare parts');
+      
+      // Optional: Set fallback data for development
+      setParts([]);
+    } finally {
+      setLoading(false);
+    }
+  }
 
-			const data = {}; // Make sure this matches your API requirements
-			const response = await getSparePartsData(data);
-
-			console.log('API Response:', response);
-
-			// Check if response has the expected structure
-			if (response && response.data && response.data.data) {
-				// Validate that the data is an array
-				if (Array.isArray(response.data.data)) {
-					// Map and validate each item to ensure it matches SparePart interface
-					const validatedParts = response.data.data.map((part: any) => {
-						return {
-							id: part._id || '',
-							spareparts_name: part.spareparts_name || '',
-							price: Number(part.price) || 0,
-							stock: part.stock || '',
-							images: Array.isArray(part.images)
-								? part.images
-								: [part.image || ''],
-							type: part.type || '',
-							image:
-								part.image ||
-								(Array.isArray(part.images) ? part.images[0] : ''),
-						};
-					});
-
-					setParts(validatedParts);
-					console.log('Validated Parts:', validatedParts);
-				} else {
-					throw new Error('API response data is not an array');
-				}
-			} else {
-				throw new Error('Invalid API response structure');
-			}
-		} catch (error) {
-			console.error('Error fetching spare parts:', error);
-			setError(
-				error instanceof Error ? error.message : 'Failed to fetch spare parts'
-			);
-
-			// Optional: Set fallback data for development
-			setParts([]);
-		} finally {
-			setLoading(false);
-		}
-	};
-
-	useEffect(() => {
-		fetchSpareParts();
-	}, []);
+  useEffect(() => {
+    fetchSpareParts();
+  }, []);
 
   // Fixed auto-scroll functionality with proper dependency
  {/*} useEffect(() => {
@@ -191,48 +175,32 @@ const SpareParts: React.FC = () => {
 		part.spareparts_name.toLowerCase().includes(searchTerm.toLowerCase())
 	);
 
-	const handleAddToCart = async (part: SparePart) => {
-		try {
-			// Create payload with required fields
-			const payload = {
-				products: {
-					productId: part.id,
-					price: part.price.toString(),
-					quantity: quantity.toString(),
-				},
-				type: 'spare',
-			};
+	// Add to cart button functions
 
-			console.log('🛒 Adding to cart:', payload);
+const handleAddToCart = async (part: SparePart) => {
+  try {
+    const payload = {
+      products: {
+        productId: part.id,
+        price: part.price?.toString(),
+        quantity: quantity
+      },
+      type: 'spare'
+    };
 
-			// Show loading state
-			setLoading(true);
+    setLoading(true);
 
-			// Make API call
-			const response = await postSparePartsData(payload);
+    const response = await postSparePartsData(payload);
 
-    if (response) {
-      // Success notification
-      console.log("✅ Added to cart successfully:", response);
-      // You might want to show a toast notification here
-      alert(`${part.spareparts_name} added to cart!`);
-      
-      // Reset quantity
-      setQuantity(1);
-      
-      // Close modal if open
-      setSelectedPart(null);
-    } else {
-      console.warn("⚠️ No response received from API");
-    }
+  
   } catch (error) {
     console.error("❌ Error adding to cart:", error);
-    // Show error message to user
-    console.log("Failed to add item to cart. Please try again.");
   } finally {
+    console.log("📦 handleAddToCart finished");
     setLoading(false);
   }
 };
+
 //filteredParts --- usage to show only 8 initially
 const displayedParts = showAllProducts ? filteredParts : filteredParts.slice(0, 8);
 
@@ -248,25 +216,23 @@ const displayedParts = showAllProducts ? filteredParts : filteredParts.slice(0, 
 		);
 	}
 
-	// Show error state
-	if (error) {
-		return (
-			<div className='p-12 flex justify-center items-center min-h-screen'>
-				<div className='text-center'>
-					<div className='text-red-600 text-xl mb-4'>Error: {error}</div>
-					<button
-						onClick={fetchSpareParts}
-						className='bg-[#9b111e] text-white px-6 py-2 rounded hover:bg-red-700 transition'
-					>
-						Retry
-					</button>
-				</div>
-			</div>
-		);
-	}
+    const offerTitle = useScrollAnimation<HTMLHeadingElement>()
 
   return (
     <div className="p-16 mx-8 ">
+      
+      {/* <h1 ref={offerTitle.elementRef} className="text-center  "  >
+           <span className="inline-block pb-1 relative text-4xl font-bold text-[#9b111e]">
+            Spare Parts
+             <span 
+               className={`absolute top-[50px] left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+                offerTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
+               }`}
+             ></span>
+           </span>
+         </h1> */}
+
+
        <h1 className="text-4xl font-bold text-[#9b111e] text-center">
           Spare Parts
         </h1>
@@ -328,51 +294,6 @@ const displayedParts = showAllProducts ? filteredParts : filteredParts.slice(0, 
 
 
 
-      {/* Product Grid */}
-      <div className="max-w-6xl mx-auto grid grid-cols-5 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-4 mb-8 px-2">
-        {filteredParts.length === 0 ? (
-          <div className="col-span-full text-center py-8">
-            <p className="text-gray-500 text-lg">
-              {searchTerm ? 'No products found matching your search.' : 'No products available.'}
-            </p>
-          </div>
-        ) : (
-          filteredParts.map((part, index) => (
-            <div
-              key={part.id}
-              className="group relative border rounded-lg overflow-hidden shadow transition-transform duration-300 cursor-pointer bg-[#efe7d0] hover:scale-105 hover:shadow-[0_0_10px_rgba(155,17,30,0.5)]"
-              onClick={() => setSelectedPart(part)}
-              onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => setHoveredIndex(null)}
-              style={{ minHeight: '260px' }}
-            >
-              <div className="h-[180px] flex justify-center items-center overflow-hidden">
-                <img
-                  src={ spareimg
-                    // (hoveredIndex === index && part.images && part.images[1]) || 
-                    //   part.images[0] || part.image || spareimg
-                  }
-                  alt={part.spareparts_name}
-                  className="max-w-[160px] max-h-[160px] w-auto h-auto object-cover transition-all duration-300 ease-in-out rounded-md"
-                  onError={(e) => {
-                    // Fallback for broken images
-                    (e.target as HTMLImageElement).src = spareimg;
-                  }}
-                />
-              </div>
-              <div className="p-3 relative">
-                <div className="text-xs font-semibold line-clamp-2 mb-1">{part.spareparts_name}</div>
-                <div className="text-xs text-gray-600 mb-1">{part.type}</div>
-                <div className="text-sm font-bold text-[#9b111e]">
-                  ₹{part.price.toLocaleString()}
-                </div>
-                <div
-                  className={`mt-1 text-xs font-semibold ${
-                    part.stock ? 'text-green-600' : 'text-red-600'
-                  }`}
-                >
-                  {part.stock ? 'In Stock' : 'Out of Stock'}
-                </div>
 {/* Product Grid */}
 <div className=' mx-auto'>
   <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mb-8 px-2">
@@ -402,7 +323,7 @@ const displayedParts = showAllProducts ? filteredParts : filteredParts.slice(0, 
                 alt={part.spareparts_name}
                 className="max-w-[160px] max-h-[160px] w-auto h-auto object-cover transition-all duration-300 ease-in-out rounded-md"
                 onError={(e) => {
-                  (e.target as HTMLImageElement).src = 'https://via.placeholder.com/160x160?text=No+Image';
+                  (e.target as HTMLImageElement).src = spareimg;
                 }}
               />
             </div>
@@ -420,21 +341,6 @@ const displayedParts = showAllProducts ? filteredParts : filteredParts.slice(0, 
                 {part.stock ? 'In Stock' : 'Out of Stock'}
               </div>
 
-                {/* Cart Icon Button */}
-                <button
-                  className="absolute bottom-2 right-2 bg-white p-1 rounded-full shadow hover:bg-[#9b111e] hover:text-white transition"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handleAddToCart(part);
-                  }}
-                >
-                  <ShoppingCart size={18} />
-                </button>
-              </div>
-            </div>
-          ))
-        )}
-      </div>
               {/* Cart Icon Button */}
               <button
                 className="absolute bottom-2 right-2 bg-white p-1 rounded-full shadow hover:bg-[#9b111e] hover:text-white transition"
@@ -482,14 +388,6 @@ const displayedParts = showAllProducts ? filteredParts : filteredParts.slice(0, 
 </div>
 
       {/* Bundles Section - Only show if there are parts */}
-      {parts.length > 0 && (
-        <div className="bg-gray-100 mt-16 transition-shadow p-8">
-          <div className="mb-8 text-center">
-            <h2 className="inline-block text-2xl font-bold text-[#9b111e] border-b-4 border-[#9b111e] pb-1">
-              OUR BUNDLES
-            </h2>
-          </div>
-      {/* Bundles Section - Only show if there are parts */}
 
 {parts.length > 0 && (
   <div className="bg-gray-100 mt-16 transition-shadow p-8">
@@ -499,53 +397,6 @@ const displayedParts = showAllProducts ? filteredParts : filteredParts.slice(0, 
       </h2>
     </div>
 
-          <div className="overflow-hidden mt-10 relative">
-            <div
-              className="flex transition-transform duration-500 ease-in-out"
-              style={{
-                transform: `translateX(-${currentIndex * 320}px)`
-              }}
-              onTouchStart={handleTouchStart}
-              onTouchEnd={handleTouchEnd}
-            >
-              {parts.map((part) => (
-                <div
-                  key={part.id}
-                  className="min-w-[300px] flex-shrink-0 mr-5"
-                >
-                  <div
-                    className="bg-gradient-to-br rounded-lg p-6 text-center text-white h-64 flex flex-col justify-center items-center shadow-2xl transition-transform duration-300 hover:-translate-y-2 cursor-pointer relative overflow-hidden"
-                  >
-                    {/* Background Image with Overlay */}
-                    <div 
-                      className="absolute inset-0 bg-cover bg-center blur-[2px]"
-                      // style={{ backgroundImage: `url(${part.image || (part.images && part.images[0]) || spareimg})` }}
-                      style={{ backgroundImage: `url(${spareimg})` }}
-                    />
-                    <div className="absolute inset-0 bg-black opacity-10" />
-                    
-                    {/* Content */}
-                    <div className="relative z-10 flex flex-col items-center">
-                      <div className="w-16 h-16 mb-4 rounded-full bg-white bg-opacity-20 flex items-center justify-center backdrop-blur-sm">
-                        <img
-                          // src={part.image || (part.images && part.images[0]) || spareimg}
-                          src = {spareimg}
-                          alt={part.spareparts_name}
-                          className="w-12 h-12 object-cover rounded-full"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src = 'https://via.placeholder.com/48x48?text=No+Image';
-                          }}
-                        />
-                      </div>
-                      <div className="text-xl font-bold mb-2">
-                        {part.spareparts_name}
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
     <div className="overflow-hidden mt-10 relative">
       <div
         className="flex transition-transform duration-500 ease-in-out"
@@ -565,7 +416,8 @@ const displayedParts = showAllProducts ? filteredParts : filteredParts.slice(0, 
               {/* Background Image with Overlay */}
               <div 
                 className="absolute inset-0 bg-cover bg-center blur-[2px]"
-                style={{ backgroundImage: `url(${part.image || (part.images && part.images[0]) || spareimg})` }}
+                // style={{ backgroundImage: `url(${part.image || (part.images && part.images[0]) })`|| spareimg }
+                style={{ backgroundImage: `url(${spareimg}` }}
               />
               <div className="absolute inset-0 bg-black opacity-10" />
               
@@ -573,11 +425,11 @@ const displayedParts = showAllProducts ? filteredParts : filteredParts.slice(0, 
               <div className="relative z-10 flex flex-col items-center">
                 <div className="w-16 h-16 mb-4 rounded-full bg-white bg-opacity-20 flex items-center justify-center backdrop-blur-sm">
                   <img
-                    src={part.image || (part.images && part.images[0]) || spareimg}
+                    src={spareimg}
                     alt={part.spareparts_name}
                     className="w-12 h-12 object-cover rounded-full"
                     onError={(e) => {
-                      (e.target as HTMLImageElement).src = 'https://via.placeholder.com/48x48?text=No+Image';
+                      (e.target as HTMLImageElement).src = spareimg;
                     }}
                   />
                 </div>
@@ -591,23 +443,6 @@ const displayedParts = showAllProducts ? filteredParts : filteredParts.slice(0, 
       </div>
     </div>
 
-          {/* Navigation Buttons */}
-          <div className="flex justify-center mt-6 space-x-4">
-            <button
-              onClick={prevSlide}
-              className="bg-[#9b111e] text-white px-6 py-2 rounded-lg hover:bg-red-800 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
-              aria-label="Previous slide"
-            >
-              ← Previous
-            </button>
-            <button
-              onClick={nextSlide}
-              className="bg-[#9b111e] text-white px-6 py-2 rounded-lg hover:bg-red-800 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
-              aria-label="Next slide"
-            >
-              Next →
-            </button>
-          </div>
     {/* Navigation Buttons - Updated with infinite loop logic */}
     <div className="flex justify-center mt-6 space-x-4">
       <button
@@ -642,21 +477,6 @@ const displayedParts = showAllProducts ? filteredParts : filteredParts.slice(0, 
       </button>
     </div>
 
-          {/* Dots Indicator */}
-          <div className="flex justify-center mt-4 space-x-2">
-            {parts.map((_, index) => (
-              <button
-                key={index}
-                onClick={() => goToSlide(index)}
-                className={`w-3 h-3 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 ${
-                  index === currentIndex ? 'bg-[#9b111e]' : 'bg-gray-400 hover:bg-gray-500'
-                }`}
-                aria-label={`Go to slide ${index + 1}`}
-              />
-            ))}
-          </div>
-        </div>
-      )}
     {/* Dots Indicator - Show only for real items */}
     <div className="flex justify-center mt-4 space-x-2">
       {parts.map((_, index) => (
@@ -780,43 +600,54 @@ const displayedParts = showAllProducts ? filteredParts : filteredParts.slice(0, 
               &times;
             </button>
 
-            {/* Product Image */}
-            <div className="mb-4 flex justify-center">
-              <img
-                src={selectedPart.images && selectedPart.images[0] ? selectedPart.images[0] : selectedPart.image || spareimg}
-                alt={selectedPart.spareparts_name}
-                className="w-48 h-48 object-cover rounded-lg shadow-md"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = spareimg;
-                }}
-              />
-            </div>
+						{/* Product Image */}
+						<div className='mb-4 flex justify-center'>
+							<img
+								src={
+									selectedPart.images && selectedPart.images[0]
+										? selectedPart.images[0]
+										: selectedPart.image || spareimg
+								}
+								alt={selectedPart.spareparts_name}
+								className='w-48 h-48 object-cover rounded-lg shadow-md'
+								onError={(e) => {
+									(e.target as HTMLImageElement).src = spareimg;
+								}}
+							/>
+						</div>
 
-            <h2 className="text-lg font-bold mb-2">{selectedPart.spareparts_name}</h2>
-            <p className="text-sm text-gray-600 mb-1">Type: {selectedPart.type}</p>
+						<h2 className='text-lg font-bold mb-2'>
+							{selectedPart.spareparts_name}
+						</h2>
+						<p className='text-sm text-gray-600 mb-1'>
+							Type: {selectedPart.type}
+						</p>
 
-            <div className="flex items-center gap-2 mb-4">
-              <span className="text-sm font-medium">Quantity:</span>
-              <button
-                onClick={() => setQuantity(prev => Math.max(prev - 1, 1))}
-                className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-              >
-                -
-              </button>
-              <span className="px-2">{quantity}</span>
-              <button
-                onClick={() => setQuantity(prev => prev + 1)}
-                className="px-2 py-1 bg-gray-200 rounded hover:bg-gray-300"
-              >
-                +
-              </button>
-            </div>
+						<div className='flex items-center gap-2 mb-4'>
+							<span className='text-sm font-medium'>Quantity:</span>
+							<button
+								onClick={() => setQuantity((prev) => Math.max(prev - 1, 1))}
+								className='px-2 py-1 bg-gray-200 rounded hover:bg-gray-300'
+							>
+								-
+							</button>
+							<span className='px-2'>{quantity}</span>
+							<button
+								onClick={() => setQuantity((prev) => prev + 1)}
+								className='px-2 py-1 bg-gray-200 rounded hover:bg-gray-300'
+							>
+								+
+							</button>
+						</div>
 
-            <div className="text-sm mt-3 mb-2">
-              Total Price: <span className="font-semibold text-[#9b111e]">₹{(selectedPart.price * quantity).toLocaleString()}</span>
-            </div>
+						<div className='text-sm mt-3 mb-2'>
+							Total Price:{' '}
+							<span className='font-semibold text-[#9b111e]'>
+								₹{(selectedPart.price * quantity).toLocaleString()}
+							</span>
+						</div>
 
-            <div>
+						<div>
             { parseInt(selectedPart.stock) >= quantity ? (<button
               onClick={() => handleAddToCart(selectedPart)}
               className="mt-2 w-full bg-[#9b111e] text-white px-4 py-2 rounded hover:bg-[#7f0d18] transition"
@@ -828,11 +659,11 @@ const displayedParts = showAllProducts ? filteredParts : filteredParts.slice(0, 
             </span>)
             }
             </div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
+					</div>
+				</div>
+			)}
+		</div>
+	);
 };
 
 export default SpareParts;

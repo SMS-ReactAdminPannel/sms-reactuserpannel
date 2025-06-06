@@ -82,7 +82,7 @@ const Offer: React.FC = () => {
            <span className="inline-block pb-1 relative text-3xl md:text-4xl font-bold text-center text-red-900 mb-10">
              🔧 Yes Mechanic Special Offers
              <span 
-               className={`absolute top-11 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+               className={`absolute top-[50px] left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
                 offerTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
                }`}
              ></span>
