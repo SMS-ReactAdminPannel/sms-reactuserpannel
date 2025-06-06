@@ -1,5 +1,5 @@
 import type React from "react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Search,
   Package,
@@ -11,6 +11,8 @@ import {
   MapPin,
 } from "lucide-react";
 import bgImage from "../../assets/checkout-bg_1_.png";
+// import { getBookingData } from "../../features/Bookings/service";
+// import { getSparePartsById } from "../../features/spareparts";
 
 // OrderDetails Interface
 interface OrderDetails {
@@ -23,6 +25,40 @@ interface OrderDetails {
   compatibility: string;
   type: "spare" | "service";
 }
+
+// Custom hook for Scroll Animation
+
+		const useScrollAnimation = <T extends HTMLElement = HTMLElement>(options = {}) => {
+		  const [isVisible, setIsVisible] = useState(false);
+		  const elementRef = useRef<T>(null);
+		
+		  useEffect(() => {
+			const observer = new IntersectionObserver(
+			  ([entry]) => {
+				setIsVisible(entry.isIntersecting);
+			  },
+			  {
+				threshold: 0.1,
+				rootMargin: '0px 0px -50px 0px',
+				...options
+			  }
+			);
+		
+			if (elementRef.current) {
+			  observer.observe(elementRef.current);
+			}
+		
+			return () => {
+			  if (elementRef.current) {
+				observer.unobserve(elementRef.current);
+			  }
+			};
+		  }, []);
+	  
+		  return { elementRef, isVisible };
+		};
+
+
 
 // Sample Data - Combined all orders
 const allOrders: OrderDetails[] = [
@@ -160,6 +196,34 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
   const isCompleted = orderDate && orderDate < new Date();
   const isOld =
     orderDate && orderDate < new Date(Date.now() - 365 * 24 * 60 * 60 * 1000); // Older than 1 year
+
+
+  // scrolln - line animation
+
+  
+
+
+  // get data from booking_cart
+
+  // const getBookingDatas = async () => {
+  //  try{
+  //   const data = {};
+  //   const response = await getSparePartsById(data);
+  //   console.log(`Booking data :` ,response);
+  //   console.log("final Booking :", response?.data?.data);
+  //  } 
+
+  //  catch(error){    
+  //   console.log(`Booking error :` , error);
+  // }
+  // }
+
+  // useEffect(() => {
+  //   getBookingDatas();
+  // },[])
+
+  
+
 
   //this is card inside
   return (
@@ -315,6 +379,8 @@ const OrdersPage: React.FC = () => {
   const [sortBy, setSortBy] = useState<"date" | "price" | "name">("date");
   const [showOldOrders, setShowOldOrders] = useState(false);
 
+  const orderTitle = useScrollAnimation<HTMLHeadingElement>();
+
   const filteredOrders = allOrders
     .filter((order) => {
       const matchesSearch =
@@ -360,7 +426,17 @@ const OrdersPage: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-red-900 mb-2">My Orders</h1>
+          <h1 
+                        ref={orderTitle.elementRef}                                              >
+                        <span className="inline-block pb-1 relative text-4xl font-bold text-red-900 mb-2">
+                          My Orders
+                          <span 
+                            className={`absolute top-12 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+                              orderTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
+                            }`}
+                          ></span>
+                        </span>
+                      </h1>
           <p className="text-red-600 text-lg">
             Track and manage all your orders in one place
           </p>

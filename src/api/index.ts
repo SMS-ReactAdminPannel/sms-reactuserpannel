@@ -81,6 +81,7 @@ class Client {
 			patch: (params: string, data: string) =>
 				httpClient.patch(API_END_POINTS.service_bookings.patch, params, data),
 		},
+
 		offer: {},
 		auth: {
 			login: (data: string) =>

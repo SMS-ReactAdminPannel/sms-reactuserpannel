@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { ShoppingCart } from 'lucide-react'
 import { Search, X } from 'lucide-react';
 import { getSparePartsData, postSparePartsData } from '../../features/spareparts';
@@ -13,6 +13,39 @@ interface SparePart {
   type: string;
   image: string;
 }
+
+  // Custom hook for Scroll Animation
+
+		const useScrollAnimation = <T extends HTMLElement = HTMLElement>(options = {}) => {
+		  const [isVisible, setIsVisible] = useState(false);
+		  const elementRef = useRef<T>(null);
+		
+		  useEffect(() => {
+			const observer = new IntersectionObserver(
+			  ([entry]) => {
+				setIsVisible(entry.isIntersecting);
+			  },
+			  {
+				threshold: 0.1,
+				rootMargin: '0px 0px -50px 0px',
+				...options
+			  }
+			);
+		
+			if (elementRef.current) {
+			  observer.observe(elementRef.current);
+			}
+		
+			return () => {
+			  if (elementRef.current) {
+				observer.unobserve(elementRef.current);
+			  }
+			};
+		  }, []);
+	  
+		  return { elementRef, isVisible };
+		};
+
 
 
 const SpareParts: React.FC = () => {
@@ -38,8 +71,6 @@ const SpareParts: React.FC = () => {
       const data = {}; // Make sure this matches your API requirements
       const response = await getSparePartsData(data);
       
-      console.log('API Response:', response);
-      
       // Check if response has the expected structure
       if (response && response.data && response.data.data) {
         // Validate that the data is an array
@@ -58,7 +89,6 @@ const SpareParts: React.FC = () => {
           });
           
           setParts(validatedParts);
-          console.log('Validated Parts:', validatedParts);
         } else {
           throw new Error('API response data is not an array');
         }
@@ -130,48 +160,35 @@ const SpareParts: React.FC = () => {
     part.spareparts_name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Add to cart button functions
+    const spareTitle = useScrollAnimation<HTMLHeadingElement>();
+		const productTitle = useScrollAnimation<HTMLHeadingElement>();
+		const bundleTitle = useScrollAnimation<HTMLHeadingElement>();
+		const categoryTitle = useScrollAnimation<HTMLHeadingElement>();
 
+
+
+
+  // Add to cart button functions
 
 const handleAddToCart = async (part: SparePart) => {
   try {
-    // Create payload with required fields
     const payload = {
-      products: { productId: part.id,
-                  price: part.price.toString(),
-                  quantity: quantity.toString()
-       }, 
-       
-       type: 'service',     
+      products: {
+        productId: part.id,
+        price: part.price?.toString(),
+        quantity: quantity
+      },
+      type: 'spare'
     };
 
-    console.log("🛒 Adding to cart:", payload);
-
-    // Show loading state
     setLoading(true);
-    
-    // Make API call
+
     const response = await postSparePartsData(payload);
 
-    if (response) {
-      // Success notification
-      console.log("✅ Added to cart successfully:", response);
-      // You might want to show a toast notification here
-      alert(`${part.spareparts_name} added to cart!`);
-      
-      // Reset quantity
-      setQuantity(1);
-      
-      // Close modal if open
-      setSelectedPart(null);
-    } else {
-      console.warn("⚠️ No response received from API");
-    }
   } catch (error) {
     console.error("❌ Error adding to cart:", error);
-    // Show error message to user
-    console.log("Failed to add item to cart. Please try again.");
   } finally {
+    console.log("📦 handleAddToCart finished");
     setLoading(false);
   }
 };
@@ -188,22 +205,6 @@ const handleAddToCart = async (part: SparePart) => {
     );
   }
 
-  // Show error state
-  if (error) {
-    return (
-      <div className="p-12 flex justify-center items-center min-h-screen">
-        <div className="text-center">
-          <div className="text-red-600 text-xl mb-4">Error: {error}</div>
-          <button 
-            onClick={fetchSpareParts}
-            className="bg-[#9b111e] text-white px-6 py-2 rounded hover:bg-red-700 transition"
-          >
-            Retry
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="p-12">
@@ -289,15 +290,15 @@ const handleAddToCart = async (part: SparePart) => {
             >
               <div className="h-[180px] flex justify-center items-center overflow-hidden">
                 <img
-                  src={
-                    (hoveredIndex === index && part.images && part.images[1]) || 
-                      part.images[0] || part.image || spareimg
+                  src={ spareimg
+                    // (hoveredIndex === index && part.images && part.images[1]) || 
+                    //   part.images[0] || part.image || spareimg
                   }
                   alt={part.spareparts_name}
                   className="max-w-[160px] max-h-[160px] w-auto h-auto object-cover transition-all duration-300 ease-in-out rounded-md"
                   onError={(e) => {
                     // Fallback for broken images
-                    (e.target as HTMLImageElement).src = 'https://via.placeholder.com/160x160?text=No+Image';
+                    (e.target as HTMLImageElement).src = spareimg;
                   }}
                 />
               </div>
@@ -360,7 +361,8 @@ const handleAddToCart = async (part: SparePart) => {
                     {/* Background Image with Overlay */}
                     <div 
                       className="absolute inset-0 bg-cover bg-center blur-[2px]"
-                      style={{ backgroundImage: `url(${part.image || (part.images && part.images[0]) || spareimg})` }}
+                      // style={{ backgroundImage: `url(${part.image || (part.images && part.images[0]) || spareimg})` }}
+                      style={{ backgroundImage: `url(${spareimg})` }}
                     />
                     <div className="absolute inset-0 bg-black opacity-10" />
                     
@@ -368,7 +370,8 @@ const handleAddToCart = async (part: SparePart) => {
                     <div className="relative z-10 flex flex-col items-center">
                       <div className="w-16 h-16 mb-4 rounded-full bg-white bg-opacity-20 flex items-center justify-center backdrop-blur-sm">
                         <img
-                          src={part.image || (part.images && part.images[0]) || spareimg}
+                          // src={part.image || (part.images && part.images[0]) || spareimg}
+                          src = {spareimg}
                           alt={part.spareparts_name}
                           className="w-12 h-12 object-cover rounded-full"
                           onError={(e) => {
@@ -534,7 +537,7 @@ const handleAddToCart = async (part: SparePart) => {
                 alt={selectedPart.spareparts_name}
                 className="w-48 h-48 object-cover rounded-lg shadow-md"
                 onError={(e) => {
-                  (e.target as HTMLImageElement).src = 'https://via.placeholder.com/192x192?text=No+Image';
+                  (e.target as HTMLImageElement).src = spareimg;
                 }}
               />
             </div>

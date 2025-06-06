@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import {
 	Clock,
 	Wrench,
@@ -49,6 +49,39 @@ interface SelectedPackageInfo {
 	packageId: string;
 	carDetails: CarSelect;
 }
+
+	// Scroll-line animation
+
+const useScrollAnimation = <T extends HTMLElement = HTMLElement>(options = {}) => {
+		  const [isVisible, setIsVisible] = useState(false);
+		  const elementRef = useRef<T>(null);
+		
+		  useEffect(() => {
+			const observer = new IntersectionObserver(
+			  ([entry]) => {
+				setIsVisible(entry.isIntersecting);
+			  },
+			  {
+				threshold: 0.1,
+				rootMargin: '0px 0px -50px 0px',
+				...options
+			  }
+			);
+		
+			if (elementRef.current) {
+			  observer.observe(elementRef.current);
+			}
+		
+			return () => {
+			  if (elementRef.current) {
+				observer.unobserve(elementRef.current);
+			  }
+			};
+		  }, []);
+	  
+		  return { elementRef, isVisible };
+		};
+
 
 const ServicesPage: React.FC = () => {
 	const [selectedPackage, setSelectedPackage] = useState<SelectedPackageInfo[]>(
@@ -484,6 +517,11 @@ const ServicesPage: React.FC = () => {
 		console.log(`Navigated to: ${navItem}`);
 	};
 
+		// Scroll - line animation
+		const serviceTitle = useScrollAnimation<HTMLHeadingElement>();
+
+
+
 	// Auto popup message
 	useEffect(() => {
 		// Check if user has previously dismissed the popup
@@ -612,9 +650,20 @@ const ServicesPage: React.FC = () => {
 				{/* Main Content */}
 				<div className='max-w-4xl mx-auto px-6 py-8'>
 					<div className='mb-8'>
-						<h1 className='text-3xl font-bold text-[#9b111e] mb-2'>
+						<h1 
+						  ref={serviceTitle.elementRef}
+						  
+						>
+						  <span className="inline-block pb-1 relative text-3xl font-bold text-[#9b111e] mb-2">
 							{currentContent.title}
+							<span 
+							  className={`absolute top-11 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+								serviceTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
+							  }`}
+							></span>
+						  </span>
 						</h1>
+						
 						<p className='text-gray-500'>
 							Choose the perfect package for your vehicle
 						</p>
