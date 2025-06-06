@@ -24,7 +24,7 @@ export const postSparePartsData = async (data: any) => {
 
 // check stored spare parts data
 
-export const getSparePartsById = async (data: string) => {
+export const getBookingCartData = async (data: string) => {
     try{
         const response = await new Client().user.booking_cart.getAll(data)
         return response;

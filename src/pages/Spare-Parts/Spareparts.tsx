@@ -19,35 +19,35 @@ interface SparePart {
 
     // Custom hook for Scroll Animation
     
-        const useScrollAnimation = <T extends HTMLElement = HTMLElement>(options = {}) => {
-          const [isVisible, setIsVisible] = useState(false);
-          const elementRef = useRef<T>(null);
+        // const useScrollAnimation = <T extends HTMLElement = HTMLElement>(options = {}) => {
+        //   const [isVisible, setIsVisible] = useState(false);
+        //   const elementRef = useRef<T>(null);
         
-          useEffect(() => {
-          const observer = new IntersectionObserver(
-            ([entry]) => {
-            setIsVisible(entry.isIntersecting);
-            },
-            {
-            threshold: 0.1,
-            rootMargin: '0px 0px -50px 0px',
-            ...options
-            }
-          );
+        //   useEffect(() => {
+        //   const observer = new IntersectionObserver(
+        //     ([entry]) => {
+        //     setIsVisible(entry.isIntersecting);
+        //     },
+        //     {
+        //     threshold: 0.1,
+        //     rootMargin: '0px 0px -50px 0px',
+        //     ...options
+        //     }
+        //   );
         
-          if (elementRef.current) {
-            observer.observe(elementRef.current);
-          }
+        //   if (elementRef.current) {
+        //     observer.observe(elementRef.current);
+        //   }
         
-          return () => {
-            if (elementRef.current) {
-            observer.unobserve(elementRef.current);
-            }
-          };
-          }, []);
+        //   return () => {
+        //     if (elementRef.current) {
+        //     observer.unobserve(elementRef.current);
+        //     }
+        //   };
+        //   }, []);
         
-          return { elementRef, isVisible };
-        };
+        //   return { elementRef, isVisible };
+        // };
     
 
 
@@ -216,23 +216,11 @@ const displayedParts = showAllProducts ? filteredParts : filteredParts.slice(0, 
 		);
 	}
 
-    const offerTitle = useScrollAnimation<HTMLHeadingElement>()
+    // const offerTitle = useScrollAnimation<HTMLHeadingElement>()
 
   return (
     <div className="p-16 mx-8 ">
       
-      {/* <h1 ref={offerTitle.elementRef} className="text-center  "  >
-           <span className="inline-block pb-1 relative text-4xl font-bold text-[#9b111e]">
-            Spare Parts
-             <span 
-               className={`absolute top-[50px] left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
-                offerTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
-               }`}
-             ></span>
-           </span>
-         </h1> */}
-
-
        <h1 className="text-4xl font-bold text-[#9b111e] text-center">
           Spare Parts
         </h1>
