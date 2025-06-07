@@ -1,8 +1,7 @@
-
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { Plus, Minus, X, Wrench, Car } from "lucide-react";
-import { getBookingCartData } from "../../features/spareparts/index";
-import { toast } from "react-toastify"; // Optional if using toast
+import { booking_cart, postBookingProduct } from "../../features/BookingCart/service";
+import { toast } from "react-toastify"; 
 import bgImage from '../../assets/checkout-bg_1_.png';
 import serviceImg from "../../assets/serviceimages/generalservice.png"
 
@@ -19,17 +18,51 @@ interface spare {
   stock:number;
 }
 
-interface Service {
-  id: number;
-  name: string;
-  price: number;
-  imageUrl: string;
-  hour: string;
-  description: string[];
-  originalPrice?: number;
+interface cartId {
+  cartId : string;
 }
 
+interface service {
+  _id: number;
+  service_name: string;
+  price: number;
+  // imageUrl: string;
+  description:string;
+  // originalPrice?: number;
+}
 
+    // Custom hook for Scroll Animation
+    
+        const useScrollAnimation = <T extends HTMLElement = HTMLElement>(options = {}) => {
+          const [isVisible, setIsVisible] = useState(false);
+          const elementRef = useRef<T>(null);
+        
+          useEffect(() => {
+          const observer = new IntersectionObserver(
+            ([entry]) => {
+            setIsVisible(entry.isIntersecting);
+            },
+            {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px',
+            ...options
+            }
+          );
+        
+          if (elementRef.current) {
+            observer.observe(elementRef.current);
+          }
+        
+          return () => {
+            if (elementRef.current) {
+            observer.unobserve(elementRef.current);
+            }
+          };
+          }, []);
+        
+          return { elementRef, isVisible };
+        };
+    
 
 
 // Main Component
@@ -38,45 +71,33 @@ export default function SparePartsCart() {
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"service" | "ServiceBookingPage">("service");
 
-  // Dummy service data (replace with real API later)
-  const [services, setServices] = useState<Service[]>([
-    {
-      id: 1,
-      name: "Oil Change",
-      price: 499,
-      imageUrl: "serviceImg",
-      hour: "1 hr",
-      description: ["Engine oil", "Filter", "Top-up"],
-      originalPrice: 699
-    },
-    {
-      id: 2,
-      name: "Brake Service",
-      price: 899,
-      imageUrl: "serviceImg",
-      hour: "2 hrs",
-      description: ["Pads", "Fluid", "Check-up"],
-      originalPrice: 1099
-    }
-  ]);
+  const [services, setServices] = useState<service[]>([]);
 
   const [confirmedPartOrders, setConfirmedPartOrders] = useState<{ part: spare; quantity: number }[]>([]);
-  const [confirmedServiceOrders, setConfirmedServiceOrders] = useState<{ serv: Service; quantity: number }[]>([]);
+  const [confirmedServiceOrders, setConfirmedServiceOrders] = useState<{ serv: service; quantity: number }[]>([]);
   const [showSummary, setShowSummary] = useState(false);
   const [showsSummary, setShowsSummary] = useState(false);
-
+  const [cartId, setCartId] = useState<cartId[]>([])
   const totalPartPrice = confirmedPartOrders.reduce((acc, cur) => acc + cur.part.price * cur.quantity, 0);
   const totalServicePrice = confirmedServiceOrders.reduce((acc, cur) => acc + cur.serv.price * cur.quantity, 0);
 
+  // text-line animation
+  const cartTitle = useScrollAnimation<HTMLHeadingElement>()
+
+  console.log(cartId);
+
 const books_valid = async () => {
   try {
-    const response = await getBookingCartData({});
+    const response = await booking_cart({});
     const cartData = response?.data?.data;
 
     if (!Array.isArray(cartData)) return;
 
+    // Map spares
     const spareEntry = cartData.find((item) => item.type === "spare");
-
+        const cartId = spareEntry._id
+        setCartId(cartId);
+        
     if (spareEntry?.products) {
       const spares = spareEntry.products.map((product: any): spare => ({
         _id: product._id || 0,
@@ -89,20 +110,70 @@ const books_valid = async () => {
         description: product.productId?.description || "",
         stock: Number(product.productId?.stock) || 0,
       }));
-
       setBooks(spares);
     }
+
+const serviceEntry = cartData.find((item) => item.type === "service");
+console.log(serviceEntry);
+
+if (serviceEntry?.services) {
+  const mappedServices = serviceEntry.services.map((service: any): service => ({
+    _id: service._id || "0",
+    service_name: service.service_name || "Unknown",
+    price: Number(service.price) || 0,
+    description: service.description || "",
+  }));
+
+  setServices(mappedServices);
+}
+
+
   } catch (error) {
-    console.error("Error fetching books", error);
+    console.error("Error fetching books/services", error);
   } finally {
     setLoading(false);
   }
 };
 
-
   useEffect(() => {
     books_valid();
+     setActiveTab("ServiceBookingPage");
   }, []);
+
+  // handle Place Order function
+  
+      const placeOrder = async (orders: { part: cartId;}[]) => {
+  try {
+    // Since backend expects cartId directly, we'll take the first order's cartId
+    // (Assuming you're confirming one order at a time)
+    if (orders.length === 0) {
+      throw new Error("No orders to confirm");
+    }
+
+    const payload = {
+      cartId: orders[0].part.cartId, // Send cartId directly
+    };
+
+    console.log("Final payload:", payload); // Debug log
+
+    const response = await postBookingProduct(payload);
+    console.log("Response:", response);
+    
+    toast.success("Order placed successfully! 🎉", { autoClose: 2000 });
+    setConfirmedPartOrders([]); // Clear confirmed orders
+
+  } catch (error) {
+    console.error("Order placement error:", {
+      error: error.message,
+      response: error.response?.data
+    });
+    toast.error(error.response?.data?.message || "Failed to place order");
+  } finally {
+    setLoading(false);
+  }
+};
+
+  
 
 
   const handleConfirmPart = (product_id: number, quantity: number) => {
@@ -114,7 +185,7 @@ const books_valid = async () => {
   };
 
   const handleConfirmService = (serviceId: number, quantity: number) => {
-    const serv = services.find((s) => s.id === serviceId);
+    const serv = services.find((s) => s._id === serviceId);
     if (serv) {
       setConfirmedServiceOrders((prev) => [...prev, { serv, quantity }]);
       setShowsSummary(true);
@@ -123,7 +194,7 @@ const books_valid = async () => {
 
   const handleDelete = (id: number) => {
     setBooks((prev) => prev.filter((p) => p._id !== id));
-    setServices((prev) => prev.filter((s) => s.id !== id));
+    setServices((prev) => prev.filter((s) => s._id !== id));
   };
 
   const filteredParts = books;
@@ -133,19 +204,20 @@ const books_valid = async () => {
     const [quantity, setQuantity] = useState(part.quantity || 1);
 
     return (
-      <div className="rounded-lg shadow-md p-4 mb-4 border border-gray-200 bg-white">
+      <div className="rounded-lg shadow-md max-w-6xl mx-auto p-4 mb-4 border border-gray-200 bg-white">
         <div className="flex gap-4">
           <div className="w-36">
             <img src={part.image ? part.image : "https://boodmo.com/media/cache/catalog_part/images/parts/3fe3e3713e19d66a47bae04233a97cf4.webp"}
                alt={part.productName}
               className="rounded-lg object-cover w-full h-full" />
+
               {part.discount>0&&(<span className="absolute-top-2-right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-semibold">{part.discount}%OFF</span>)}
           </div>
           <div className="flex-1">
             <div className="flex justify-between items-start mb-2">
               <h3 className="text-lg font-semibold">{part. productName}</h3>
-              <span className={`px-2 py-1 text-xs rounded-full ${part.inStock ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}`}>
-                {part.inStock ? "In Stock" : "Out of Stock"}
+              <span className={`px-2 py-1 text-xs rounded-full ${part.stock ? "bg-green-100 text-green-800" : "bg-gray-100 text-gray-800"}`}>
+                {part.stock ? "In Stock" : "Out of Stock"}
               </span>
             </div>
             {/* <p className="text-sm text-gray-600">{part.description}</p> */}
@@ -161,8 +233,8 @@ const books_valid = async () => {
                 <button onClick={() => setQuantity(Math.max(1, quantity - 1))}><Minus size={16} /></button>
                 <span>{quantity}</span>
                 <button onClick={() => setQuantity(quantity + 1)}><Plus size={16} /></button>
-                <button onClick={() => handleConfirmPart(part.product_id, quantity)} className="bg-red-600 text-white px-3 py-1 rounded-lg">Confirm</button>
-                <button onClick={() => handleDelete(part.product_id)}><X className="text-red-600" /></button>
+                <button onClick={() => handleConfirmPart(part._id, quantity)} className="bg-red-600 text-white px-3 py-1 rounded-lg">Confirm</button>
+                <button onClick={() => handleDelete(part._id)}><X className="text-red-600" /></button>
               </div>
             </div>
           </div>
@@ -171,7 +243,7 @@ const books_valid = async () => {
     );
   };
 
-  const ServiceCard = ({ service }: { service: Service }) => {
+  const ServiceCard = ({ serv}: { serv: service }) => {
     const [quantity, setQuantity] = useState(1);
 
     return (
@@ -179,33 +251,33 @@ const books_valid = async () => {
         <div className="flex gap-4">
           <div className="w-48">
          
-<img  src={service.imageUrl ? service.imageUrl : serviceImg} className="rounded-lg object-cover w-full h-full"/>
+{/* <img  src={service.imageUrl ? service.imageUrl : serviceImg} className="rounded-lg object-cover w-full h-full"/> */}
 
           </div>
-          <div className="flex-1">
+          <div className="flex-1 ">
             <div className="flex justify-between">
-              <h3 className="text-lg font-semibold">{service.name}</h3>
-              <span className="text-xs bg-red-50 text-red-600 border border-red-200 px-2 py-1 rounded-full">{service.hour}</span>
+              <h3 className="text-lg font-semibold">{serv.service_name}</h3>
+              {/* <span className="text-xs bg-red-50 text-red-600 border border-red-200 px-2 py-1 rounded-full">{service.hour}</span> */}
             </div>
-            <ul className="grid grid-cols-2 text-sm text-gray-600 mt-2">
+            {/* <ul className="grid grid-cols-2 text-sm text-gray-600 mt-2">
               {service.description.map((desc, i) => (
                 <li key={i} className="flex items-start gap-1">
                   <div className="w-1 h-1 bg-red-600 rounded-full mt-2" />
                   {desc}
                 </li>
               ))}
-            </ul>
+            </ul> */}
             <div className="flex justify-between items-center mt-4">
               <div className="flex gap-2">
-                <span className="text-xl font-bold text-red-600">₹{service.price}</span>
-                {service.originalPrice > service.price && <span className="line-through text-sm text-gray-500">₹{service.originalPrice}</span>}
+                <span className="text-xl font-bold text-red-600">₹{serv.price}</span>
+                {serv.originalPrice > serv.price && <span className="line-through text-sm text-gray-500">₹{service.originalPrice}</span>}
               </div>
               <div className="flex items-center gap-2">
                 <button onClick={() => setQuantity(Math.max(1, quantity - 1))}><Minus size={16} /></button>
                 <span>{quantity}</span>
                 <button onClick={() => setQuantity(quantity + 1)}><Plus size={16} /></button>
-                <button onClick={() => handleConfirmService(service.id, quantity)} className="bg-red-600 text-white px-3 py-1 rounded-lg">Confirm</button>
-                <button onClick={() => handleDelete(service.id)}><X className="text-red-600" /></button>
+                <button onClick={() => handleConfirmService(serv._id, quantity)} className="bg-red-600 text-white px-3 py-1 rounded-lg">Confirm</button>
+                <button onClick={() => handleDelete(serv._id)}><X className="text-red-600" /></button>
               </div>
             </div>
           </div>
@@ -215,14 +287,27 @@ const books_valid = async () => {
   };
 
   return (
-  // <div className="min-h-screen bg-gray-50-p-4"  style={{ backgroundImage: `url("${bgImage}")` }}>
-    <div className="min-h-screen p-6 bg-gray-100" style={{ backgroundImage: `url("${bgImage}")` }}>
+  // <div className="min-h-screen bg-gray-50-p-4"  style={{ backgroundImage: url("${bgImage}") }}>
+    <div className="min-h-screen p-6 bg-gray-100" style={{ backgroundImage: `url(${bgImage})` }}>
    <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <h1 className="text-3xl font-bold text-[#9b111e] mb-6">My Cart</h1>
+        <h1 
+                      ref={cartTitle.elementRef}
+                      className="text-center" 
+                    >
+                      <span className="inline-block pb-1 relative text-3xl font-bold text-[#9b111e] mb-6">
+                        My Cart
+                        <span 
+                          className={`absolute top-11 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+                            cartTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
+                          }`}
+                        ></span>
+                      </span>
+                    </h1>
+        
 
         {/* Tabs */}
-        <div className="mb-6">
+        <div className="mb-6 ml-[65px]">
           <div className="relative inline-flex p-1 bg-[#FAF3EB] rounded-full border border-gray-300">
             <button
               onClick={() => setActiveTab("service")}
@@ -258,7 +343,7 @@ const books_valid = async () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-1  gap-6">
+        <div className="grid grid-cols-1 max-w-6xl mx-auto gap-6">
           {/* Main Content */}
           <div className="">
             {/* Service Page */}
@@ -280,13 +365,15 @@ const books_valid = async () => {
               </div>
             )}
 
+
+
             {/* Service Booking Page */}
-            {activeTab === "ServiceBookingPage" && (
+            { activeTab === "ServiceBookingPage" && (
               <div>
                 {filteredServices.length > 0 ? (
                   <div className="space-y-4">
-                    {filteredServices.map((service) => (
-                      <ServiceCard key={service.id} service={service} />
+                    {filteredServices.map((serv) => (
+                      <ServiceCard key={serv._id} serv={serv} />
                     ))}
                   </div>
                 ) : (
@@ -323,7 +410,7 @@ const books_valid = async () => {
                 </div>
                 <div className="space-y-2 mb-4">
                   {confirmedPartOrders.map(({ part, quantity }) => (
-                    <div key={part.id} className="flex justify-between text-sm">
+                    <div key={part._id} className="flex justify-between text-sm">
                       <span>
                         {part.productName} x {quantity}
                       </span>
@@ -341,10 +428,16 @@ const books_valid = async () => {
                   <button
                     type="submit"
                     className="flex justify-center gap-2 items-center mx-auto shadow-xl text-lg bg-gray-50 backdrop-blur-md lg:font-semibold isolation-auto border-gray-50 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-[#9b111e] hover:text-gray-50 before:-z-10 before:aspect-square before:hover:scale-150 before:hover:duration-700 relative z-10 px-6 py-2 overflow-hidden border-2 rounded-full group"
-                    onClick={() =>
-                      toast("Order Confirmed 🎉", { autoClose: 1000 })
-                    }
-                  >
+                    onClick={async () => {
+                      try {
+                        if (confirmedPartOrders.length > 0) {
+                          await placeOrder(confirmedPartOrders);
+                        }
+                      } catch (error: any) {
+                        toast.error(error.message || "Failed to place order");
+                      }
+                    }}
+                         >
                     {" "}
                     Place Order
                   </button>
@@ -374,9 +467,9 @@ const books_valid = async () => {
 
                 <div className="space-y-2 mb-4">
                   {confirmedServiceOrders.map(({ serv, quantity }) => (
-                    <div key={serv.id} className="flex justify-between text-sm">
+                    <div key={serv._id} className="flex justify-between text-sm">
                       <span>
-                        {serv.name} x {quantity}
+                        {serv.service_name} x {quantity}
                       </span>
                       <span>₹{serv.price * quantity}</span>
                     </div>
@@ -392,9 +485,15 @@ const books_valid = async () => {
                   <button
                     type="submit"
                     className="flex justify-center gap-2 items-center mx-auto shadow-xl text-lg bg-gray-50 backdrop-blur-md lg:font-semibold isolation-auto border-gray-50 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-[#9b111e] hover:text-gray-50 before:-z-10 before:aspect-square before:hover:scale-150 before:hover:duration-700 relative z-10 px-6 py-2 overflow-hidden border-2 rounded-full group"
-                    onClick={() =>
-                      toast("Order Confirmed 🎉", { autoClose: 1000 })
-                    }
+                    onClick={async () => {
+                      try {
+                        if (confirmedPartOrders.length > 0) {
+                          await placeOrder(confirmedPartOrders);
+                        }
+                      } catch (error: any) {
+                        toast.error(error.message || "Failed to place order");
+                      }
+                    }}
                   >
                     {" "}
                     Place Order

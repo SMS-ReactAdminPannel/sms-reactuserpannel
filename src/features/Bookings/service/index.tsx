@@ -12,20 +12,9 @@ export const getBookingAll = async (data: any) => {
     }
 }
 
-export const getBookingProduct = async (data: any) => {
+export const postBookingService = async (data: any) => {
     try{
-        const response = await new Client().user.bookings.getProduct(data)
-        console.log('get product data :',response)
-        return response;
-    }
-    catch(error){
-        console.log(error)
-    }
-}
-
-export const getBookingService = async (data: any) => {
-    try{
-        const response = await new Client().user.bookings.getService(data)
+        const response = await new Client().user.bookings.postService(data)
         console.log('get Service data : ',response)
         return response
     }

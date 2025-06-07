@@ -11,7 +11,7 @@ import {
   MapPin,
 } from "lucide-react";
 import bgImage from "../../assets/checkout-bg_1_.png";
-import { getBookingAll, getBookingProduct, getBookingService } from "../../features/Bookings/service";
+import { getBookingAll, postBookingProduct, postBookingService } from "../../features/Bookings/service";
 
 
 // OrderDetails Interface
@@ -225,42 +225,42 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 
   // get data from product
 
-  const getBookingProductData = async () => {
-   try{
-    const data = {};
-    const response = await getBookingProduct(data);
-    console.log(`Product data :` ,response);
-    console.log("final Booking :", response?.data?.data);
-   } 
+  // const getBookingProductData = async () => {
+  //  try{
+  //   const data = {};
+  //   const response = await postBookingProduct(data);
+  //   console.log(`Product data :` ,response);
+  //   console.log("final Booking :", response?.data?.data);
+  //  } 
 
-   catch(error){    
-    console.log(`Booking error :` , error);
-  }
-  }
+  //  catch(error){    
+  //   console.log(`Booking error :` , error);
+  // }
+  // }
 
-  useEffect(() => {
-    getBookingProductData();
-  },[])
+  // useEffect(() => {
+  //   getBookingProductData();
+  // },[])
 
   
     // get data from Service
 
-  const getBookingServiceData = async () => {
-   try{
-    const data = {};
-    const response = await getBookingService(data);
-    console.log(`Service data :` ,response);
-    console.log("final Booking :", response?.data?.data);
-   } 
+  // const getBookingServiceData = async () => {
+  //  try{
+  //   const data = {};
+  //   const response = await getBookingService(data);
+  //   console.log(`Service data :` ,response);
+  //   console.log("final Booking :", response?.data?.data);
+  //  } 
 
-   catch(error){    
-    console.log(`Booking error :` , error);
-  }
-  }
+  //  catch(error){    
+  //   console.log(`Booking error :` , error);
+  // }
+  // }
 
-  useEffect(() => {
-    getBookingServiceData();
-  },[])
+  // useEffect(() => {
+  //   getBookingServiceData();
+  // },[])
 
 
 

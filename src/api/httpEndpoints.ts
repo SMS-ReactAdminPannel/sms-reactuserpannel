@@ -61,7 +61,7 @@ export const API_END_POINTS = {
 
 	bookings: {
 		getAll: '/api/customer/cartbooking/all',
-		postProduct: '/api/customer/cart/product/confirm',
+		postProduct: '/api/customer/cartbooking/product/confirm',
 		postService: '/api/customer/cartbooking/service/confirm',
 	},
 };
