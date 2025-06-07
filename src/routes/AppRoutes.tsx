@@ -19,6 +19,7 @@ import SignupPage from '../pages/auth/SignupPage';
 import ResetPassword from '../pages/auth/ResetPassword';
 import { HomePageIntro } from '../pages/HomeIntro/HomePageIntro';
 import { useAuth } from '../pages/auth/AuthContext';
+import ContactPage from '../pages/ContactPage/ContactPage';
 
 const AppRoutes = () => {
 	const { isAuthenticated } = useAuth();
@@ -50,6 +51,7 @@ const AppRoutes = () => {
 				<Route path='sos' element={<SOSPage />} />
 				<Route path='help-center' element={<HelpCenter />} />
 				<Route path='faqs' element={<FaqPage />} />
+				<Route path='contact-us' element={<ContactPage />} />
 				<Route path='*' element={<Navigate to='/' />} />
 			</Route>
 		</Routes>

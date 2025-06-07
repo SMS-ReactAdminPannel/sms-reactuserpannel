@@ -1,659 +1,479 @@
-import type React from "react";
-import { useState, useEffect, useRef } from "react";
+import type React from 'react';
+import { useState, useEffect, useRef, useMemo } from 'react';
 import {
-  Search,
-  Package,
-  Wrench,
-  CheckCircle,
-  Calendar,
-  Truck,
-  Clock,
-  MapPin,
-} from "lucide-react";
-import bgImage from "../../assets/checkout-bg_1_.png";
-import { getBookingAll } from "../../features/Bookings/service";
+	Search,
+	Package,
+	Wrench,
+	CheckCircle,
+	Calendar,
+	Truck,
+	Clock,
+	MapPin,
+} from 'lucide-react';
+import bgImage from '../../assets/checkout-bg_1_.png';
+import { getBookingAll } from '../../features/Bookings/service';
 
-
-// OrderDetails Interface
 interface OrderDetails {
-  id: string;
-  name: string;
-  imageUrl: string;
-  description: string;
-  date?: string;
-  price: number;
-  compatibility: string;
-  type: "spare" | "service";
+	id: string;
+	uuid: string;
+	name: string;
+	imageUrl?: string;
+	description?: string;
+	date: string;
+	price: number;
+	status: 'pending' | 'completed' | 'delivered';
+	type: 'spare' | 'service';
+	products?: Array<{
+		productId: {
+			_id: string;
+			productName: string;
+			price: string;
+			slug: string;
+			brand: string;
+		} | null;
+		quantity: number;
+		price: string;
+		_id: string;
+	}>;
+	services?: Array<{
+		service_name: string;
+		description: string;
+		price: number;
+		uuid: string;
+		_id: string;
+	}>;
 }
 
-// Custom hook for Scroll Animation
+const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
+	options = {}
+) => {
+	const [isVisible, setIsVisible] = useState(false);
+	const elementRef = useRef<T>(null);
 
-		const useScrollAnimation = <T extends HTMLElement = HTMLElement>(options = {}) => {
-		  const [isVisible, setIsVisible] = useState(false);
-		  const elementRef = useRef<T>(null);
-		
-		  useEffect(() => {
-			const observer = new IntersectionObserver(
-			  ([entry]) => {
+	useEffect(() => {
+		const observer = new IntersectionObserver(
+			([entry]) => {
 				setIsVisible(entry.isIntersecting);
-			  },
-			  {
+			},
+			{
 				threshold: 0.1,
 				rootMargin: '0px 0px -50px 0px',
-				...options
-			  }
-			);
-		
-			if (elementRef.current) {
-			  observer.observe(elementRef.current);
+				...options,
 			}
-		
-			return () => {
-			  if (elementRef.current) {
+		);
+		if (elementRef.current) {
+			observer.observe(elementRef.current);
+		}
+		return () => {
+			if (elementRef.current) {
 				observer.unobserve(elementRef.current);
-			  }
-			};
-		  }, []);
-	  
-		  return { elementRef, isVisible };
+			}
 		};
+	}, []);
 
-
-
-// Sample Data - Combined all orders
-const allOrders: OrderDetails[] = [
-  {
-    id: "1",
-    name: "Brake Pad Set",
-    price: 1800,
-    imageUrl:
-      "https://mountuneusa.com/cdn/shop/products/2364-BPR-EY-2.jpg?v=1679085769",
-    description: "High-quality ceramic brake pads for safe and smooth braking.",
-    date: "2025-01-15", // Future date - In Progress
-    compatibility: "Honda City",
-    type: "spare",
-  },
-  {
-    id: "2",
-    name: "Air Filter Element",
-    price: 500,
-    imageUrl:
-      "https://ix-cdn.b2e5.com/images/27094/27094_64f064db089b431fb5edb0d696b3ee39_1539205525.jpeg",
-    description:
-      "Durable air filter ensuring clean air intake and better mileage.",
-    date: "2024-01-10",
-    compatibility: "Hyundai i20",
-    type: "spare",
-  },
-  {
-    id: "3",
-    name: "Engine Oil 5W-30 (3L)",
-    price: 700,
-    imageUrl:
-      "https://www.veedolindia.com/sites/default/files/assets/products/01_TAKE-OFF-4T-RACING-10W-50-SP-MA2.jpg",
-    description: "Premium synthetic oil for high-performance engines.",
-    date: "2025-01-20", // Future date - In Progress
-    compatibility: "Universal",
-    type: "spare",
-  },
-  {
-    id: "4",
-    name: "Headlight Assembly",
-    price: 900,
-    imageUrl:
-      "https://ragillyspares.com/cdn/shop/files/719k8aSruQL._SL1500.jpg?v=1683808827",
-    description: "Complete headlamp assembly with long-lasting brightness.",
-    date: "2023-06-01",
-    compatibility: "Maruti Swift",
-    type: "spare",
-  },
-  {
-    id: "5",
-    name: "Wiper Blade Set",
-    price: 1000,
-    imageUrl:
-      "https://cdn11.bigcommerce.com/s-fqaftp/images/stencil/1280x1280/ products/17091/39298/D3WIPEBOSCHA1__94725.1620205879.jpg?c=2?imbypass=on",
-    description: "All-weather wiper blades with streak-free performance.",
-    date: "2024-05-20",
-    compatibility: "Toyota Corolla",
-    type: "spare",
-  },
-  {
-    id: "6",
-    name: "Transmission Fluid",
-    price: 850,
-    imageUrl:
-      "https://i5.walmartimages.com/seo/Super-Tech-MERCON-V-Automatic-Transmission-Fluid-1-Quart_f916ff04-41c6-496b-be51-cb2642c23f80.a3727600f85548013ae5d72232f876cf.jpeg",
-    description: "High-performance transmission fluid for smooth gear shifts.",
-    date: "2025-01-25", // Future date - In Progress
-    compatibility: "Ford Focus",
-    type: "spare",
-  },
-  {
-    id: "7",
-    name: "Spark Plugs Set",
-    price: 1200,
-    imageUrl:
-      "https://images-cdn.ubuy.co.in/634d135710a6ca0e676a098a-new-ngk-standard-spark-plug-b8hs10-5126.jpg",
-    description: "Premium iridium spark plugs for better engine performance.",
-    date: "2025-01-18", // Future date - In Progress
-    compatibility: "Volkswagen Golf",
-    type: "spare",
-  },
-  {
-    id: "s1",
-    name: "Oil Change Service",
-    price: 2000,
-    imageUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQxmvTKOLWVAdnoDPRQZTYZJ90KDVlVzMhQA&s",
-    description: "Complete oil change service with premium synthetic oil",
-    compatibility: "First Class Service",
-    date: "2025-01-12", // Future date - In Progress
-    type: "service",
-  },
-  {
-    id: "s2",
-    name: "Tire Rotation",
-    price: 1000,
-    imageUrl:
-      "https://allmakescollision.ca/wp-content/uploads/2022/04/heveAdeZhFtnsUOwTf1tUf08fFeRMxMTRuX3IqlD.jpg",
-    description: "Professional tire rotation and balancing service",
-    compatibility: "First Class Service",
-    date: "2019-03-01",
-    type: "service",
-  },
-  {
-    id: "s3",
-    name: "Brake Inspection",
-    price: 1500,
-    imageUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYfW70xQsp2FOJGbhI_Maejt6jHAdJrQtZuw&s",
-    description: "Comprehensive brake system inspection and maintenance",
-    compatibility: "Premium Service",
-    date: "2025-01-22", // Future date - In Progress
-    type: "service",
-  },
-  {
-    id: "s4",
-    name: "AC Service",
-    price: 2500,
-    imageUrl:
-      "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJhOk79SOrDJDnjXvam5PcDVMQ4MlCsX3h-w&s",
-    description: "Complete air conditioning system service and gas refill",
-    compatibility: "Premium Service",
-    date: "2025-01-30", // Future date - In Progress
-    type: "service",
-  },
-];
+	return { elementRef, isVisible };
+};
 
 // OrderCard Component
 interface OrderCardProps {
-  order: OrderDetails;
+	order: OrderDetails;
 }
 
 const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
-  const orderDate = order.date ? new Date(order.date) : null;
-  const isCompleted = orderDate && orderDate < new Date();
-  const isOld =
-    orderDate && orderDate < new Date(Date.now() - 365 * 24 * 60 * 60 * 1000); // Older than 1 year
+	const orderDate = new Date(order.date);
+	const isCompleted =
+		order.status === 'completed' || order.status === 'delivered';
+	const isOld = orderDate < new Date(Date.now() - 365 * 24 * 60 * 60 * 1000);
 
+	// Determine if it's a service or product order
+	const isService = order.type === 'service';
+	const items = isService ? order.services : order.products;
+	const firstItem = items?.[0];
 
-  // scrolln - line animation
+	// Get name and description based on order type
+	const getName = () => {
+		if (isService) {
+			return order.services?.[0]?.service_name || 'Service Order';
+		}
+		return order.products?.[0]?.productId?.productName || 'Product Order';
+	};
 
-  
+	const getDescription = () => {
+		if (isService) {
+			return order.services?.[0]?.description || 'Service appointment';
+		}
+		return `Order containing ${order.products?.length || 0} items`;
+	};
 
+	const getPrice = () => {
+		return isService
+			? order.services?.reduce((sum, service) => sum + (service.price || 0), 0)
+			: order.products?.reduce(
+					(sum, product) => sum + parseInt(product.price) * product.quantity,
+					0
+			  );
+	};
 
-  // get data from booking_cart
+	return (
+		<div className='opacity-90 rounded-2xl shadow-lg-red-300 border max-w-6xl mx-auto border-red-800 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:border-red-300'>
+			<div className='flex flex-col'>
+				<div className='flex flex-row'>
+					{/* Image Section */}
+					<div className='md:w-48 h-48 md:h-auto relative overflow-hidden rounded-lg shadow-md'>
+						{/* Placeholder image since API doesn't provide images */}
+						<div className='w-full h-full bg-red-100 flex items-center justify-center'>
+							{isService ? (
+								<Wrench className='w-16 h-16 text-gray-400' />
+							) : (
+								<Package className='w-16 h-16 text-gray-400' />
+							)}
+						</div>
 
-  // const getBookingDatas = async () => {
-  //  try{
-  //   const data = {};
-  //   const response = await getBookingAll(data);
-  //   console.log(`Booking data :` ,response);
-  //   console.log("final Booking :", response?.data?.data);
-  //  } 
+						{/* Type badge (top-left) */}
+						<div className='absolute top-3 left-3 z-10'>
+							<span
+								className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+									isService
+										? 'bg-purple-100 text-purple-800'
+										: 'bg-blue-100 text-blue-800'
+								}`}
+							>
+								{isService ? (
+									<>
+										<Wrench className='w-3 h-3 mr-1' />
+										Service
+									</>
+								) : (
+									<>
+										<Package className='w-3 h-3 mr-1' />
+										Product
+									</>
+								)}
+							</span>
+						</div>
 
-  //  catch(error){    
-  //   console.log(`Booking error :` , error);
-  // }
-  // }
+						{/* Status badge (top-right) */}
+						{/* <div className='absolute top-3 right-3 z-10'>
+							<span
+								className={`px-2 py-1 text-xs font-medium rounded-full ${
+									isCompleted
+										? 'bg-green-100 text-green-700'
+										: 'bg-orange-100 text-orange-700'
+								}`}
+							>
+								{order.status || (isCompleted ? 'Completed' : 'Pending')}
+							</span>
+						</div> */}
+					</div>
 
-  // useEffect(() => {
-  //   getBookingDatas();
-  // },[])
+					{/* Content Section */}
+					<div className='flex-1 p-6'>
+						<div className='flex flex-col h-full'>
+							{/* Header */}
+							<div className='flex justify-between'>
+								{/* name and description */}
+								<div>
+									<div>
+										<h3 className='text-xl font-bold text-red-900 mb-1'>
+											{getName()}
+										</h3>
+										<p className='text-red-700 text-sm leading-relaxed'>
+											{getDescription()}
+										</p>
+									</div>
+									<div>
+										{/* Date Section */}
+										<div className='flex items-center text-sm text-red-700'>
+											<Calendar className='w-4 h-4 text-red-800 mr-2' />
+											<span>
+												{orderDate.toLocaleDateString('en-US', {
+													year: 'numeric',
+													month: 'long',
+													day: 'numeric',
+												})}
+											</span>
+										</div>
+									</div>
+								</div>
+								<div>
+									<div className='text-2xl font-bold text-gray-900'>
+										₹{getPrice().toLocaleString()}
+									</div>
+									{isOld && (
+										<span className='text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full mt-1 inline-block'>
+											Old Order
+										</span>
+									)}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+				{/* Actions */}
+				<div className='flex items-center justify-between p-2'>
+					<div className='flex items-center space-x-4'>
+						{isCompleted ? (
+							<div className='flex items-center text-green-600 text-sm font-medium'>
+								<CheckCircle className='w-4 h-4 mr-1' />
+								Completed
+							</div>
+						) : (
+							<div className='flex items-center text-orange-600 text-sm font-medium'>
+								<Clock className='w-4 h-4 mr-1' />
+								{order.status || 'Pending'}
+							</div>
+						)}
+					</div>
 
+					<div className='flex space-x-2'>
+						<button className='px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors'>
+							View Details
+						</button>
 
-  // get data from product
-
-  // const getBookingProductData = async () => {
-  //  try{
-  //   const data = {};
-  //   const response = await postBookingProduct(data);
-  //   console.log(`Product data :` ,response);
-  //   console.log("final Booking :", response?.data?.data);
-  //  } 
-
-  //  catch(error){    
-  //   console.log(`Booking error :` , error);
-  // }
-  // }
-
-  // useEffect(() => {
-  //   getBookingProductData();
-  // },[])
-
-  
-    // get data from Service
-
-  // const getBookingServiceData = async () => {
-  //  try{
-  //   const data = {};
-  //   const response = await getBookingService(data);
-  //   console.log(`Service data :` ,response);
-  //   console.log("final Booking :", response?.data?.data);
-  //  } 
-
-  //  catch(error){    
-  //   console.log(`Booking error :` , error);
-  // }
-  // }
-
-  // useEffect(() => {
-  //   getBookingServiceData();
-  // },[])
-
-
-
-  //this is card inside
-  return (
-    <div className=" opacity-90 rounded-2xl shadow-lg-red-300 border max-w-6xl mx-auto border-red-200 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:border-red-300 ">
-      <div className="flex flex-col">
-        <div className="flex flex-row ">
-          {/* Image Section */}
-
-          <div className="md:w-48 h-48 md:h-auto relative overflow-hidden rounded-lg shadow-md">
-            {/* Image fills the entire container */}
-            <img
-              src={order.imageUrl || "/placeholder.svg"}
-              alt={order.name}
-              className="w-full h-full object-cover"
-            />
-
-            {/* Type badge (top-left) */}
-            <div className="absolute top-3 left-3 z-10">
-              <span
-                className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                  order.type === "spare"
-                    ? "bg-blue-100 text-blue-800"
-                    : "bg-purple-100 text-purple-800"
-                }`}
-              >
-                {order.type === "spare" ? (
-                  <>
-                    <Package className="w-3 h-3 mr-1" />
-                    Spare Part
-                  </>
-                ) : (
-                  <>
-                    <Wrench className="w-3 h-3 mr-1" />
-                    Service
-                  </>
-                )}
-              </span>
-            </div>
-
-            {/* Status badge (top-right) */}
-            <div className="absolute top-3 right-3 z-10">
-              <span
-                className={`px-2 py-1 text-xs font-medium rounded-full ${
-                  isCompleted
-                    ? "bg-green-100 text-green-700"
-                    : "bg-orange-100 text-orange-700"
-                }`}
-              >
-                {isCompleted ? "Delivered" : "In Progress"}
-              </span>
-            </div>
-
-            {/* Completed overlay ribbon (center or bottom) */}
-            {/* {isCompleted && (
-              <div className="absolute bottom-0 left-0 w-full bg-green-600 bg-opacity-75 text-white text-xs font-semibold text-center py-1">
-                ✅ Completed
-              </div>
-            )} */}
-          </div>
-
-          {/* Content Section */}
-          <div className="flex-1 p-6">
-            <div className="flex flex-col h-full">
-              {/* Header */}
-              <div className="  flex  justify-between">
-                {/* name nd des */}
-                <div className="">
-                  <div className="">
-                    <h3 className="text-xl font-bold text-red-900 mb-1">
-                      {order.name}
-                    </h3>
-                    <p className="text-red-700 text-sm leading-relaxed">
-                      {order.description}
-                    </p>
-                  </div>
-                  <div>
-                    <div className="flex items-center text-sm">
-                      <MapPin className="w-4 h-4 text-red-800 mr-2" />
-                      <span className="text-red-700 font-medium">
-                        {order.compatibility}
-                      </span>
-                    </div>
-                    {/* Date Section */}
-                    {order.date && (
-                      <div className="flex items-center text-sm text-red-700">
-                        <Calendar className="w-4 h-4 text-red-800 mr-2" />
-                        <span>
-                          {new Date(order.date).toLocaleDateString("en-US", {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          })}
-                        </span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-                <div className="">
-                  <div className="text-2xl font-bold text-gray-900">
-                    ₹{order.price.toLocaleString()}
-                  </div>
-
-                  {isOld && (
-                    <span className="text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full mt-1 inline-block">
-                      Old Order
-                    </span>
-                  )}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        {/* Actions */}
-        <div className="flex items-center justify-between p-2 ">
-          <div className="flex items-center space-x-4">
-            {isCompleted ? (
-              <div className="flex items-center text-green-600 text-sm font-medium">
-                <CheckCircle className="w-4 h-4 mr-1" />
-                Completed
-              </div>
-            ) : (
-              <div className="flex items-center text-orange-600 text-sm font-medium">
-                <Clock className="w-4 h-4 mr-1" />
-                In Progress
-              </div>
-            )}
-           </div>
- 
-           <div className="flex space-x-2">
-            <button className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
-              View Details
-            </button>
-
-            {order.type === "service" && (
-              <button className="px-4 py-2 text-sm font-medium text-white bg-[#9b111e] rounded-lg hover:from-red-200 hover:to-red-100 transition-all duration-200 shadow-sm hover:shadow-md">
-                <Truck className="w-4 h-4 mr-1 inline" />
-                Track Order
-              </button>
-            )}
-          </div>
-        </div>
-      </div>
-    </div>
-  );
+						{/* {isService && (
+							<button className='px-4 py-2 text-sm font-medium text-white bg-[#9b111e] rounded-lg hover:from-red-200 hover:to-red-100 transition-all duration-200 shadow-sm hover:shadow-md'>
+								<Truck className='w-4 h-4 mr-1 inline' />
+								Track Order
+							</button>
+						)} */}
+					</div>
+				</div>
+			</div>
+		</div>
+	);
 };
 
-// Main OrdersPage Component
 const OrdersPage: React.FC = () => {
-  const [orderDatas, setOrderDatas] = useState<OrderDetails[]>([])
-  const [searchTerm, setSearchTerm] = useState("");
-  const [filterType, setFilterType] = useState<"all" | "spare" | "service">(
-    "all"
-  );
-  const [sortBy, setSortBy] = useState<"date" | "price" | "name">("date");
-  // const [showOldOrders, setShowOldOrders] = useState(false);
+	const [searchTerm, setSearchTerm] = useState('');
+	const [filterType, setFilterType] = useState<'all' | 'spare' | 'service'>(
+		'all'
+	);
+	const [sortBy, setSortBy] = useState<'date' | 'price' | 'name'>('date');
+	const [orders, setOrders] = useState<OrderDetails[]>([]);
+	const orderTitle = useScrollAnimation<HTMLHeadingElement>();
 
-  const orderTitle = useScrollAnimation<HTMLHeadingElement>();
+	useEffect(() => {
+		const fetchOrders = async () => {
+			try {
+				const response = await getBookingAll({});
+				console.log('Fetched orders:', response);
+				if (response?.data) {
+					const transformedOrders = [
+						...(response.data.productConfirm?.map((productOrder: any) => ({
+							id: productOrder._id,
+							uuid: productOrder.uuid,
+							name:
+								productOrder.products?.[0]?.productId?.productName ||
+								'Product Order',
+							date: productOrder.confirm_Date,
+							price: productOrder.amount,
+							status: productOrder.status,
+							type: 'spare',
+							products: productOrder.products,
+						})) || []),
 
-  // get spare Parts data
+						...(response.data.serviceConfirm?.map((serviceOrder: any) => ({
+							id: serviceOrder._id,
+							uuid: serviceOrder.uuid,
+							name: serviceOrder.services?.[0]?.service_name || 'Service Order',
+							description: serviceOrder.services?.[0]?.description,
+							date: serviceOrder.confirm_Date,
+							price: serviceOrder.amount,
+							status: serviceOrder.status,
+							type: 'service',
+							services: serviceOrder.services,
+						})) || []),
+					];
 
-  console.log('Final order Data : ', orderDatas);
+					setOrders(transformedOrders);
+				}
+			} catch (err) {
+				console.error('Error fetching orders:', err);
+			}
+		};
 
-  const getBookingDatas = async () => {
-   try{
-    const data = {};
-    const response = await getBookingAll(data);
-    console.log(`Booking data :` ,response);
-    console.log("final Booking :", response?.data?.productConfirm[0]);
-    const result =  response?.data?.productConfirm[0];
-    const final = result.map((part: any ) => {
-      // return{
-      // total : part.amount,
-      // status : part.status,
-     console.log('final Result : ', part.products[1].productId.category,) 
-      // image : part.products[1].image,
-      // name : part.products[1].productId.productName
-      // }
-    });
-    console.log("final order data :", final)
-    setOrderDatas(final);
-   } 
+		fetchOrders();
+	}, []);
 
-   catch(error){    
-    console.log(`Booking error :` , error);
-  }
-  }
+	const filteredOrders = useMemo(() => {
+		return orders
+			.filter((order) => {
+				const matchesSearch =
+					order.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+					(order.description &&
+						order.description.toLowerCase().includes(searchTerm.toLowerCase()));
+				const matchesType = filterType === 'all' || order.type === filterType;
+				return matchesSearch && matchesType;
+			})
+			.sort((a, b) => {
+				switch (sortBy) {
+					case 'date':
+						return new Date(b.date).getTime() - new Date(a.date).getTime();
+					case 'price':
+						return b.price - a.price;
+					case 'name':
+						return a.name.localeCompare(b.name);
+					default:
+						return 0;
+				}
+			});
+	}, [orders, searchTerm, filterType, sortBy]);
 
-  useEffect(() => {
-    getBookingDatas();
-  },[])
+	const totalOrders = filteredOrders.length;
+	const completedOrders = filteredOrders.filter(
+		(order) => order.status === 'completed' || order.status === 'delivered'
+	).length;
 
-  const filteredOrders = allOrders
-    .filter((order) => {
-      const matchesSearch =
-        order.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        order.description.toLowerCase().includes(searchTerm.toLowerCase());
-      const matchesType = filterType === "all" || order.type === filterType;
+	return (
+		<div
+			className='min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100'
+			style={{ backgroundImage: `url("${bgImage}")` }}
+		>
+			<div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
+				{/* Header */}
+				<div className='mb-8'>
+					<h1 className='text-center' ref={orderTitle.elementRef}>
+						<span className='inline-block pb-1 relative text-4xl font-bold text-red-900 mb-2'>
+							My Orders
+							<span
+								className={`absolute top-12 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+									orderTitle.isVisible
+										? 'scale-x-100 w-full'
+										: 'scale-x-0 w-full'
+								}`}
+							></span>
+						</span>
+					</h1>
+					<p className='text-red-600 text-lg max-w-6xl mx-auto'>
+						Track and manage all your orders in one place
+					</p>
 
-      // Check if order is old (older than 1 year)
-      // const orderDate = order.date ? new Date(order.date) : null;
-      // const isOld =
-      //   orderDate &&
-      //   orderDate < new Date(Date.now() - 365 * 24 * 60 * 60 * 1000);
-      // // const matchesOldFilter = !showOldOrders || isOld;
+					{/* Stats */}
+					<div className='flex space-x-6 mt-4 max-w-6xl mx-auto text-[#9b111e]'>
+						<div className='bg-white rounded-lg px-4 py-2 shadow-sm border'>
+							<span className='text-2xl font-bold text-gray-900'>
+								{totalOrders}
+							</span>
+							<span className=' ml-2'>Total Orders</span>
+						</div>
+						<div className='bg-white rounded-lg px-4 py-2 shadow-sm border'>
+							<span className='text-2xl font-bold text-green-600'>
+								{completedOrders}
+							</span>
+							<span className=' ml-2'>Completed</span>
+						</div>
+						<div className='bg-white rounded-lg px-4 py-2 shadow-sm border'>
+							<span className='text-2xl font-bold text-orange-600'>
+								{totalOrders - completedOrders}
+							</span>
+							<span className=' ml-2'>In Progress</span>
+						</div>
+					</div>
+				</div>
 
-      return matchesSearch && matchesType ;
-    })
-    .sort((a, b) => {
-      switch (sortBy) {
-        case "date":
-          return (
-            new Date(b.date || 0).getTime() - new Date(a.date || 0).getTime()
-          );
-        case "price":
-          return b.price - a.price;
-        case "name":
-          return a.name.localeCompare(b.name);
-        default:
-          return 0;
-      }
-    });
+				{/* Filters and Search */}
+				<div className='bg-[#FAF3EB] rounded-2xl shadow-sm max-w-6xl mx-auto border border-gray-100 p-6 mb-8'>
+					<div className='flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between'>
+						{/* Search */}
+						<div className='relative flex-1 max-w-md'>
+							<Search className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5' />
+							<input
+								type='text'
+								value={searchTerm}
+								placeholder='Search orders...'
+								onChange={(e) => setSearchTerm(e.target.value)}
+								className='w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all'
+							/>
+						</div>
 
-  const totalOrders = filteredOrders.length;
-  const completedOrders = filteredOrders.filter((order) => {
-    const orderDate = order.date ? new Date(order.date) : null;
-    return orderDate && orderDate < new Date();
-  }).length;
+						{/* Filters */}
+						<div className='flex flex-wrap gap-3'>
+							{/* Filter Buttons */}
+							<div className='flex bg-gray-100 rounded-xl p-1'>
+								<button
+									onClick={() => setFilterType('all')}
+									className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+										filterType === 'all'
+											? 'bg-white text-gray-900 shadow-sm'
+											: 'text-gray-600 hover:text-gray-900'
+									}`}
+								>
+									All Orders
+								</button>
+								<button
+									onClick={() => setFilterType('spare')}
+									className={`px-4 py-2 rounded-lg  text-sm font-medium transition-all flex items-center ${
+										filterType === 'spare'
+											? 'bg-white text-gray-900 shadow-sm'
+											: 'text-gray-600 hover:text-gray-900'
+									}`}
+								>
+									<Package className='w-4 h-4 mr-1' />
+									Spare Parts
+								</button>
+								<button
+									onClick={() => setFilterType('service')}
+									className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${
+										filterType === 'service'
+											? 'bg-white text-gray-900 shadow-sm'
+											: 'text-gray-600 hover:text-gray-900'
+									}`}
+								>
+									<Wrench className='w-4 h-4 mr-1' />
+									Services
+								</button>
+							</div>
 
-  return (
-    <div
-      className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100"
-      style={{ backgroundImage: `url("${bgImage}")` }}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1           className = "text-center"
-                        ref={orderTitle.elementRef}                                              >
-                        <span className="inline-block pb-1 relative text-4xl font-bold text-red-900 mb-2">
-                          My Orders
-                          <span 
-                            className={`absolute top-12 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
-                              orderTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
-                            }`}
-                          ></span>
-                        </span>
-                      </h1>
-          <p className="text-red-600 text-lg max-w-6xl mx-auto">
-            Track and manage all your orders in one place
-          </p>
+							{/* Sort Dropdown */}
+							<select
+								value={sortBy}
+								onChange={(e) =>
+									setSortBy(e.target.value as 'date' | 'price' | 'name')
+								}
+								className='px-4 py-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent text-smpx-6 py-2 bg-gradient-to-r from-red-600 to-red-700 text-gray-600 rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-200 shadow-sm hover:shadow-md font-medium text-sm'
+							>
+								<option value='date'>Sort by Date</option>
+								<option value='price'>Sort by Price</option>
+								<option value='name'>Sort by Name</option>
+							</select>
 
-          {/* Stats */}
-          <div className="flex space-x-6 mt-4 max-w-6xl mx-auto text-[#9b111e]">
-            <div className="bg-white rounded-lg px-4 py-2 shadow-sm border">
-              <span className="text-2xl font-bold text-gray-900">
-                {totalOrders}
-              </span>
-              <span className=" ml-2">Total Orders</span>
-            </div>
-            <div className="bg-white rounded-lg px-4 py-2 shadow-sm border">
-              <span className="text-2xl font-bold text-green-600">
-                {completedOrders}
-              </span>
-              <span className=" ml-2">Completed</span>
-            </div>
-            <div className="bg-white rounded-lg px-4 py-2 shadow-sm border">
-              <span className="text-2xl font-bold text-orange-600">
-                {totalOrders - completedOrders}
-              </span>
-              <span className=" ml-2">In Progress</span>
-            </div>
-          </div>
-        </div>
+							{/* Reset Button */}
+							<button
+								onClick={() => {
+									setSearchTerm('');
+									setFilterType('all');
+									setSortBy('date');
+								}}
+								className='ml-[400px] px-4 py-1 text-gray-500 rounded-xl hover:text-white hover:bg-red-700 transition-all duration-200 shadow-sm hover:shadow-md font-medium text-sm'
+							>
+								Reset Filters
+							</button>
+						</div>
+					</div>
+				</div>
 
-        {/* Filters and Search */}
-        <div className="bg-[#FAF3EB] rounded-2xl shadow-sm max-w-6xl mx-auto border border-gray-100 p-6 mb-8">
-          <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
-            {/* Search */}
-            <div className="relative flex-1 max-w-md">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5" />
-              <input
-                type="text"
-                value={searchTerm}
-                placeholder="Search orders..."
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all"
-              />
-            </div>
-
-            {/* Filters */}
-            <div className="flex flex-wrap gap-3">
-              {/* Filter Buttons */}
-              <div className="flex bg-gray-100 rounded-xl p-1">
-                <button
-                  onClick={() => setFilterType("all")}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-                    filterType === "all"
-                      ? "bg-white text-gray-900 shadow-sm"
-                      : "text-gray-600 hover:text-gray-900"
-                  }`}
-                >
-                  All Orders
-                </button>
-                <button
-                  onClick={() => setFilterType("spare")}
-                  className={`px-4 py-2 rounded-lg  text-sm font-medium transition-all flex items-center ${
-                    filterType === "spare"
-                      ? "bg-white text-gray-900 shadow-sm"
-                      : "text-gray-600 hover:text-gray-900"
-                  }`}
-                >
-                  <Package className="w-4 h-4 mr-1" />
-                  Spare Parts
-                </button>
-                <button
-                  onClick={() => setFilterType("service")}
-                  className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${
-                    filterType === "service"
-                      ? "bg-white text-gray-900 shadow-sm"
-                      : "text-gray-600 hover:text-gray-900"
-                  }`}
-                >
-                  <Wrench className="w-4 h-4 mr-1" />
-                  Services
-                </button>
-              </div>
-
-              {/* Old Orders Toggle
-              <button
-                onClick={() => setShowOldOrders(!showOldOrders)}
-                className={`px-4 py-2 rounded-xl hover:shadow-xl text-sm font-medium transition-all flex items-center ${
-                  showOldOrders
-                    ? "bg-red-700 text-white shadow-sm"
-                    : "bg-gray-100 text-gray-600 hover:bg-gray-200"
-                }`}
-              >
-                <Calendar className="w-4 h-4 mr-1" />
-                {showOldOrders ? "Showing Old Orders" : "Show Old Orders"}
-              </button> */}
-
-              {/* Sort Dropdown */}
-              <select
-                value={sortBy}
-                onChange={(e) =>
-                  setSortBy(e.target.value as "date" | "price" | "name")
-                }
-                className="px-4 py-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent text-smpx-6 py-2 bg-gradient-to-r from-red-600 to-red-700 text-gray-600 rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-200 shadow-sm hover:shadow-md font-medium text-sm"
-              >
-                <option value="date" >Sort by Date</option>
-                <option value="price">Sort by Price</option>
-                <option value="name">Sort by Name</option>
-              </select>
-
-              {/* Reset Button */}
-              <button
-                onClick={() => {
-                  setSearchTerm("");
-                  setFilterType("all");
-                  setSortBy("date");
-                  // setShowOldOrders(false);
-                }}
-                className="ml-[400px] px-4 py-1 text-gray-500 rounded-xl hover:text-white hover:bg-red-700 transition-all duration-200 shadow-sm hover:shadow-md font-medium text-sm"
-              >
-                Reset Filters
-              </button>
-            </div>
-          </div>
-        </div>
-
-        {/* Orders List */}
-        <div className="space-y-6">
-          {filteredOrders.length > 0 ? (
-            filteredOrders.map((order) => (
-              <OrderCard key={order.id} order={order} />
-            ))
-          ) : (
-            <div className="text-center py-16 bg-white rounded-2xl shadow-sm border border-gray-100">
-              <Package className="h-16 w-16 text-gray-400 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-gray-900 mb-2">
-                No orders found
-              </h3>
-              <p className="text-gray-600 max-w-md mx-auto">
-                Try adjusting your search terms or filters to find what you're
-                looking for.
-              </p>
-            </div>
-          )}
-        </div>
-      </div>
-    </div>
-  );
+				{/* Orders List */}
+				<div className='space-y-6'>
+					{filteredOrders.length > 0 ? (
+						filteredOrders.map((order) => (
+							<OrderCard key={order.id} order={order} />
+						))
+					) : (
+						<div className='text-center py-16 bg-white rounded-2xl shadow-sm border border-gray-100'>
+							<Package className='h-16 w-16 text-gray-400 mx-auto mb-4' />
+							<h3 className='text-xl font-semibold text-gray-900 mb-2'>
+								No orders found
+							</h3>
+							<p className='text-gray-600 max-w-md mx-auto'>
+								Try adjusting your search terms or filters to find what you're
+								looking for.
+							</p>
+						</div>
+					)}
+				</div>
+			</div>
+		</div>
+	);
 };
 
 export default OrdersPage;

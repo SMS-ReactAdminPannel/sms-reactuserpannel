@@ -147,27 +147,27 @@ const SpareParts: React.FC = () => {
 		(e.currentTarget as HTMLElement).dataset.startX = startX.toString();
 	};
 
- const handleTouchEnd = (e: React.TouchEvent): void => {
-  const startX = parseFloat((e.currentTarget as HTMLElement).dataset.startX || '0');
-  const endX = e.changedTouches[0].clientX;
-  const diff = startX - endX;
+	const handleTouchEnd = (e: React.TouchEvent): void => {
+		const startX = parseFloat(
+			(e.currentTarget as HTMLElement).dataset.startX || '0'
+		);
+		const endX = e.changedTouches[0].clientX;
+		const diff = startX - endX;
 
-  if (Math.abs(diff) > 50) {
-    if (diff > 0) {
-      // Swipe left - next
-      setCurrentIndex(prev => {
-        if (prev >= parts.length - 1) return 0;
-        return prev + 1;
-      });
-    } else {
-      // Swipe right - previous
-      setCurrentIndex(prev => {
-        if (prev <= 0) return parts.length;
-        return prev - 1;
-      });
-    }
-  }
-};
+		if (Math.abs(diff) > 50) {
+			if (diff > 0) {
+				setCurrentIndex((prev) => {
+					if (prev >= parts.length - 1) return 0;
+					return prev + 1;
+				});
+			} else {
+				setCurrentIndex((prev) => {
+					if (prev <= 0) return parts.length;
+					return prev - 1;
+				});
+			}
+		}
+	};
 
 	const filteredParts = parts.filter((part) =>
 		part.spareparts_name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -285,104 +285,112 @@ const displayedParts = showAllProducts ? filteredParts : filteredParts.slice(0, 
         </h1>
       
 
-      {/*-----------------------------------------------------------------------------------------------------------------------------------------*/}
+			{/*-----------------------------------------------------------------------------------------------------------------------------------------*/}
 
+			{/* Product Grid */}
+			<div className=' mx-auto'>
+				<div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mb-8 px-2'>
+					{displayedParts.length === 0 ? (
+						<div className='col-span-full text-center py-8'>
+							<p className='text-gray-500 text-lg'>
+								{searchTerm
+									? 'No products found matching your search.'
+									: 'No products available.'}
+							</p>
+						</div>
+					) : (
+						<>
+							{displayedParts.map((part, index) => (
+								<div
+									key={part.id}
+									className='group relative border rounded-lg overflow-hidden shadow transition-transform duration-300 cursor-pointer bg-[#efe7d0] hover:scale-105 hover:shadow-[0_0_10px_rgba(155,17,30,0.5)]'
+									onClick={() => setSelectedPart(part)}
+									onMouseEnter={() => setHoveredIndex(index)}
+									onMouseLeave={() => setHoveredIndex(null)}
+									style={{ minHeight: '260px' }}
+								>
+									<div className='h-[180px] flex justify-center items-center overflow-hidden'>
+										<img
+											src={
+												(hoveredIndex === index &&
+													part.images &&
+													part.images[1]) ||
+												part.images[0] ||
+												part.image ||
+												spareimg
+											}
+											alt={part.spareparts_name}
+											className='max-w-[160px] max-h-[160px] w-auto h-auto object-cover transition-all duration-300 ease-in-out rounded-md'
+											onError={(e) => {
+												(e.target as HTMLImageElement).src = spareimg;
+											}}
+										/>
+									</div>
+									<div className='p-3 relative'>
+										<div className='text-xs font-semibold line-clamp-2 mb-1'>
+											{part.spareparts_name}
+										</div>
+										<div className='text-xs text-gray-600 mb-1'>
+											{part.type}
+										</div>
+										<div className='text-sm font-bold text-[#9b111e]'>
+											₹{part.price.toLocaleString()}
+										</div>
+										<div
+											className={`mt-1 text-xs font-semibold ${
+												part.stock ? 'text-green-600' : 'text-red-600'
+											}`}
+										>
+											{part.stock ? 'In Stock' : 'Out of Stock'}
+										</div>
 
+										{/* Cart Icon Button */}
+										<button
+											className='absolute bottom-2 right-2 bg-white p-1 rounded-full shadow hover:bg-[#9b111e] hover:text-white transition'
+											onClick={(e) => {
+												e.stopPropagation();
+												handleAddToCart(part);
+											}}
+										>
+											<ShoppingCart size={18} />
+										</button>
+									</div>
+								</div>
+							))}
+						</>
+					)}
+				</div>
 
-{/* Product Grid */}
-<div className=' mx-auto'>
-  <div className="grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mb-8 px-2">
-    {displayedParts.length === 0 ? (
-      <div className="col-span-full text-center py-8">
-        <p className="text-gray-500 text-lg">
-          {searchTerm ? 'No products found matching your search.' : 'No products available.'}
-        </p>
-      </div>
-    ) : (
-      <>
-        {displayedParts.map((part, index) => (
-          <div
-            key={part.id}
-            className="group relative border rounded-lg overflow-hidden shadow transition-transform duration-300 cursor-pointer bg-[#efe7d0] hover:scale-105 hover:shadow-[0_0_10px_rgba(155,17,30,0.5)]"
-            onClick={() => setSelectedPart(part)}
-            onMouseEnter={() => setHoveredIndex(index)}
-            onMouseLeave={() => setHoveredIndex(null)}
-            style={{ minHeight: '260px' }}
-          >
-            <div className="h-[180px] flex justify-center items-center overflow-hidden">
-              <img
-                src={
-                  (hoveredIndex === index && part.images && part.images[1]) || 
-                  part.images[0] || part.image || spareimg
-                }
-                alt={part.spareparts_name}
-                className="max-w-[160px] max-h-[160px] w-auto h-auto object-cover transition-all duration-300 ease-in-out rounded-md"
-                onError={(e) => {
-                  (e.target as HTMLImageElement).src = spareimg;
-                }}
-              />
-            </div>
-            <div className="p-3 relative">
-              <div className="text-xs font-semibold line-clamp-2 mb-1">{part.spareparts_name}</div>
-              <div className="text-xs text-gray-600 mb-1">{part.type}</div>
-              <div className="text-sm font-bold text-[#9b111e]">
-                ₹{part.price.toLocaleString()}
-              </div>
-              <div
-                className={`mt-1 text-xs font-semibold ${
-                  part.stock ? 'text-green-600' : 'text-red-600'
-                }`}
-              >
-                {part.stock ? 'In Stock' : 'Out of Stock'}
-              </div>
+				{/* View All/Show Less Buttons */}
+				<div className='flex justify-center gap-4 mt-6'>
+					{!showAllProducts && filteredParts.length > 8 && (
+						<button
+							onClick={() => setShowAllProducts(true)}
+							className='bg-[#9b111e] text-white px-6 py-2 rounded-md hover:bg-[#7a0d17] transition-colors duration-200'
+						>
+							View All Products ({filteredParts.length})
+						</button>
+					)}
 
-              {/* Cart Icon Button */}
-              <button
-                className="absolute bottom-2 right-2 bg-white p-1 rounded-full shadow hover:bg-[#9b111e] hover:text-white transition"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleAddToCart(part);
-                }}
-              >
-                <ShoppingCart size={18} />
-              </button>
-            </div>
-          </div>
-        ))}
-      </>
-    )}
-  </div>
+					{showAllProducts && (
+						<button
+							onClick={() => {
+								setShowAllProducts(false);
+								// Optional: Scroll back to top of grid
+								window.scrollTo({
+									top: 0,
+									behavior: 'smooth',
+								});
+							}}
+							className='bg-[#9b111e] text-white px-6 py-2 rounded-md hover:bg-[#7a0d17] transition-colors duration-200'
+						>
+							Show Less
+						</button>
+					)}
+				</div>
+			</div>
 
-  {/* View All/Show Less Buttons */}
-  <div className="flex justify-center gap-4 mt-6">
-    {!showAllProducts && filteredParts.length > 8 && (
-      <button
-        onClick={() => setShowAllProducts(true)}
-        className="bg-[#9b111e] text-white px-6 py-2 rounded-md hover:bg-[#7a0d17] transition-colors duration-200"
-      >
-        View All Products ({filteredParts.length})
-      </button>
-    )}
-    
-    {showAllProducts && (
-      <button
-        onClick={() => {
-          setShowAllProducts(false);
-          // Optional: Scroll back to top of grid
-          window.scrollTo({
-            top: 0,
-            behavior: 'smooth'
-          });
-        }}
-        className="bg-[#9b111e] text-white px-6 py-2 rounded-md hover:bg-[#7a0d17] transition-colors duration-200"
-      >
-        Show Less
-      </button>
-    )}
-  </div>
-</div>
-
-      {/* Bundles Section - Only show if there are parts */}
+			{/* Bundles Section - Only show if there are parts */}
 
 {parts.length > 0 && (
   
@@ -444,85 +452,90 @@ const displayedParts = showAllProducts ? filteredParts : filteredParts.slice(0, 
       </div>
     </div>
 
-    {/* Navigation Buttons - Updated with infinite loop logic */}
-    <div className="flex justify-center mt-6 space-x-4">
-      <button
-        onClick={() => {
-          setCurrentIndex(prev => {
-            if (prev <= 0) {
-              // When at the beginning, jump to the "virtual" end (but visually seamless)
-              return parts.length;
-            }
-            return prev - 1;
-          });
-        }}
-        className="bg-[#9b111e] text-white px-6 py-2 rounded-lg hover:bg-red-800 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
-        aria-label="Previous slide"
-      >
-        ← Previous
-      </button>
-      <button
-        onClick={() => {
-          setCurrentIndex(prev => {
-            if (prev >= parts.length - 1) {
-              // When at the end, jump to the "virtual" beginning (but visually seamless)
-              return 0;
-            }
-            return prev + 1;
-          });
-        }}
-        className="bg-[#9b111e] text-white px-6 py-2 rounded-lg hover:bg-red-800 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50"
-        aria-label="Next slide"
-      >
-        Next →
-      </button>
-    </div>
+					{/* Navigation Buttons - Updated with infinite loop logic */}
+					<div className='flex justify-center mt-6 space-x-4'>
+						<button
+							onClick={() => {
+								setCurrentIndex((prev) => {
+									if (prev <= 0) {
+										// When at the beginning, jump to the "virtual" end (but visually seamless)
+										return parts.length;
+									}
+									return prev - 1;
+								});
+							}}
+							className='bg-[#9b111e] text-white px-6 py-2 rounded-lg hover:bg-red-800 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50'
+							aria-label='Previous slide'
+						>
+							← Previous
+						</button>
+						<button
+							onClick={() => {
+								setCurrentIndex((prev) => {
+									if (prev >= parts.length - 1) {
+										// When at the end, jump to the "virtual" beginning (but visually seamless)
+										return 0;
+									}
+									return prev + 1;
+								});
+							}}
+							className='bg-[#9b111e] text-white px-6 py-2 rounded-lg hover:bg-red-800 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50'
+							aria-label='Next slide'
+						>
+							Next →
+						</button>
+					</div>
 
-    {/* Dots Indicator - Show only for real items */}
-    <div className="flex justify-center mt-4 space-x-2">
-      {parts.map((_, index) => (
-        <button
-          key={index}
-          onClick={() => setCurrentIndex(index)}
-          className={`w-3 h-3 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 ${
-            index === currentIndex ? 'bg-[#9b111e]' : 'bg-gray-400 hover:bg-gray-500'
-          }`}
-          aria-label={`Go to slide ${index + 1}`}
-        />
-      ))}
-    </div>
-  </div>
-)}
+					{/* Dots Indicator - Show only for real items */}
+					<div className='flex justify-center mt-4 space-x-2'>
+						{parts.map((_, index) => (
+							<button
+								key={index}
+								onClick={() => setCurrentIndex(index)}
+								className={`w-3 h-3 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 ${
+									index === currentIndex
+										? 'bg-[#9b111e]'
+										: 'bg-gray-400 hover:bg-gray-500'
+								}`}
+								aria-label={`Go to slide ${index + 1}`}
+							/>
+						))}
+					</div>
+				</div>
+			)}
 
-      {/* Bottom Full Width Section */}
-      <div className="w-full py-12 px-6 flex flex-col-2 lg:flex-row items-center gap-8">
-        <div className="flex-1 max-w-2xl lg:order-1">
-          <h2 className="text-4xl font-bold text-[#9b111e] mb-6">
-            Professional Auto Service & Support
-          </h2>
-          <p className="text-gray-700 mb-6 text-lg leading-relaxed">
-            Need help installing your spare parts? Our certified technicians provide expert installation services and comprehensive support. We ensure your vehicle gets the best care with genuine parts and professional service.
-          </p>
-          <div className="flex flex-wrap gap-4 mb-8">
-            <div className="bg-white px-4 py-2 rounded-full text-sm border shadow-sm">
-              ✓ Expert Installation
-            </div>
-            <div className="bg-white px-4 py-2 rounded-full text-sm border shadow-sm">
-              ✓ Quality Guarantee
-            </div>
-            <div className="bg-white px-4 py-2 rounded-full text-sm border shadow-sm">
-              ✓ 24/7 Support
-            </div>
-          </div>
-        </div>
-        <div className="flex-1 lg:order-2">
-          <img
-            src="https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
-            alt="Professional Auto Service"
-            className="w-full h-[400px] object-cover rounded-lg shadow-lg"
-          />
-        </div>
-      </div>
+			{/* Bottom Full Width Section */}
+			<div className='w-full py-12 px-6 flex flex-col-2 lg:flex-row items-center gap-8'>
+				<div className='flex-1 max-w-2xl lg:order-1'>
+					<h2 className='text-4xl font-bold text-[#9b111e] mb-6'>
+						Professional Auto Service & Support
+					</h2>
+					<p className='text-gray-700 mb-6 text-lg leading-relaxed'>
+						Need help installing your spare parts? Our certified technicians
+						provide expert installation services and comprehensive support. We
+						ensure your vehicle gets the best care with genuine parts and
+						professional service.
+					</p>
+					<div className='flex flex-wrap gap-4 mb-8'>
+						<div className='bg-white px-4 py-2 rounded-full text-sm border shadow-sm'>
+							✓ Expert Installation
+						</div>
+						<div className='bg-white px-4 py-2 rounded-full text-sm border shadow-sm'>
+							✓ Quality Guarantee
+						</div>
+						<div className='bg-white px-4 py-2 rounded-full text-sm border shadow-sm'>
+							✓ 24/7 Support
+						</div>
+					</div>
+				</div>
+				<div className='flex-1 lg:order-2'>
+					<img
+						src='https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80'
+						alt='Professional Auto Service'
+						className='w-full h-[400px] object-cover rounded-lg shadow-lg'
+					/>
+				</div>
+			</div>
 
       <div className="max-w-full px-4 md:px-6 lg:px-8 bg-[#fae9eb] py-6">
         <h1 className = "text-center"
@@ -589,23 +602,23 @@ const displayedParts = showAllProducts ? filteredParts : filteredParts.slice(0, 
         </div>
       </div>
 
-      {/* Edit Product Modal */}
-      {selectedPart && (
-        <div 
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4"
-          onClick={() => setSelectedPart(null)}
-        >
-          <div 
-            className="bg-white rounded-xl p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto relative"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <button
-              onClick={() => setSelectedPart(null)}
-              className="absolute top-2 right-2 text-3xl font-bold text-gray-600 hover:text-red-600"
-              aria-label="Close modal"
-            >
-              &times;
-            </button>
+			{/* Edit Product Modal */}
+			{selectedPart && (
+				<div
+					className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 px-4'
+					onClick={() => setSelectedPart(null)}
+				>
+					<div
+						className='bg-white rounded-xl p-6 max-w-lg w-full max-h-[90vh] overflow-y-auto relative'
+						onClick={(e) => e.stopPropagation()}
+					>
+						<button
+							onClick={() => setSelectedPart(null)}
+							className='absolute top-2 right-2 text-3xl font-bold text-gray-600 hover:text-red-600'
+							aria-label='Close modal'
+						>
+							&times;
+						</button>
 
 						{/* Product Image */}
 						<div className='mb-4 flex justify-center'>
@@ -655,17 +668,19 @@ const displayedParts = showAllProducts ? filteredParts : filteredParts.slice(0, 
 						</div>
 
 						<div>
-            { parseInt(selectedPart.stock) >= quantity ? (<button
-              onClick={() => handleAddToCart(selectedPart)}
-              className="mt-2 w-full bg-[#9b111e] text-white px-4 py-2 rounded hover:bg-[#7f0d18] transition"
-            >
-              Add to Cart
-            </button>) : 
-            (<span className="text-sm font-semibold text-red-700 cursor-pointer hover:underline mt-2">
-              Out of Stock
-            </span>)
-            }
-            </div>
+							{parseInt(selectedPart.stock) >= quantity ? (
+								<button
+									onClick={() => handleAddToCart(selectedPart)}
+									className='mt-2 w-full bg-[#9b111e] text-white px-4 py-2 rounded hover:bg-[#7f0d18] transition'
+								>
+									Add to Cart
+								</button>
+							) : (
+								<span className='text-sm font-semibold text-red-700 cursor-pointer hover:underline mt-2'>
+									Out of Stock
+								</span>
+							)}
+						</div>
 					</div>
 				</div>
 			)}
