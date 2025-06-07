@@ -1,5 +1,5 @@
 import type React from "react";
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   Search,
   Package,
@@ -11,6 +11,8 @@ import {
   MapPin,
 } from "lucide-react";
 import bgImage from "../../assets/checkout-bg_1_.png";
+import { getBookingAll, postBookingProduct, postBookingService } from "../../features/Bookings/service";
+
 
 // OrderDetails Interface
 interface OrderDetails {
@@ -23,6 +25,40 @@ interface OrderDetails {
   compatibility: string;
   type: "spare" | "service";
 }
+
+// Custom hook for Scroll Animation
+
+		const useScrollAnimation = <T extends HTMLElement = HTMLElement>(options = {}) => {
+		  const [isVisible, setIsVisible] = useState(false);
+		  const elementRef = useRef<T>(null);
+		
+		  useEffect(() => {
+			const observer = new IntersectionObserver(
+			  ([entry]) => {
+				setIsVisible(entry.isIntersecting);
+			  },
+			  {
+				threshold: 0.1,
+				rootMargin: '0px 0px -50px 0px',
+				...options
+			  }
+			);
+		
+			if (elementRef.current) {
+			  observer.observe(elementRef.current);
+			}
+		
+			return () => {
+			  if (elementRef.current) {
+				observer.unobserve(elementRef.current);
+			  }
+			};
+		  }, []);
+	  
+		  return { elementRef, isVisible };
+		};
+
+
 
 // Sample Data - Combined all orders
 const allOrders: OrderDetails[] = [
@@ -161,9 +197,76 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
   const isOld =
     orderDate && orderDate < new Date(Date.now() - 365 * 24 * 60 * 60 * 1000); // Older than 1 year
 
+
+  // scrolln - line animation
+
+  
+
+
+  // get data from booking_cart
+
+  const getBookingDatas = async () => {
+   try{
+    const data = {};
+    const response = await getBookingAll(data);
+    console.log(`Booking data :` ,response);
+    console.log("final Booking :", response?.data?.data);
+   } 
+
+   catch(error){    
+    console.log(`Booking error :` , error);
+  }
+  }
+
+  useEffect(() => {
+    getBookingDatas();
+  },[])
+
+
+  // get data from product
+
+  // const getBookingProductData = async () => {
+  //  try{
+  //   const data = {};
+  //   const response = await postBookingProduct(data);
+  //   console.log(`Product data :` ,response);
+  //   console.log("final Booking :", response?.data?.data);
+  //  } 
+
+  //  catch(error){    
+  //   console.log(`Booking error :` , error);
+  // }
+  // }
+
+  // useEffect(() => {
+  //   getBookingProductData();
+  // },[])
+
+  
+    // get data from Service
+
+  // const getBookingServiceData = async () => {
+  //  try{
+  //   const data = {};
+  //   const response = await getBookingService(data);
+  //   console.log(`Service data :` ,response);
+  //   console.log("final Booking :", response?.data?.data);
+  //  } 
+
+  //  catch(error){    
+  //   console.log(`Booking error :` , error);
+  // }
+  // }
+
+  // useEffect(() => {
+  //   getBookingServiceData();
+  // },[])
+
+
+
   //this is card inside
   return (
-    <div className=" opacity-90 rounded-2xl shadow-lg-red-300 border border-red-200 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:border-red-300 ">
+    <div className=" opacity-90 rounded-2xl shadow-lg-red-300 border max-w-6xl mx-auto border-red-200 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:border-red-300 ">
       <div className="flex flex-col">
         <div className="flex flex-row ">
           {/* Image Section */}
@@ -313,7 +416,9 @@ const OrdersPage: React.FC = () => {
     "all"
   );
   const [sortBy, setSortBy] = useState<"date" | "price" | "name">("date");
-  const [showOldOrders, setShowOldOrders] = useState(false);
+  // const [showOldOrders, setShowOldOrders] = useState(false);
+
+  const orderTitle = useScrollAnimation<HTMLHeadingElement>();
 
   const filteredOrders = allOrders
     .filter((order) => {
@@ -323,13 +428,13 @@ const OrdersPage: React.FC = () => {
       const matchesType = filterType === "all" || order.type === filterType;
 
       // Check if order is old (older than 1 year)
-      const orderDate = order.date ? new Date(order.date) : null;
-      const isOld =
-        orderDate &&
-        orderDate < new Date(Date.now() - 365 * 24 * 60 * 60 * 1000);
-      const matchesOldFilter = !showOldOrders || isOld;
+      // const orderDate = order.date ? new Date(order.date) : null;
+      // const isOld =
+      //   orderDate &&
+      //   orderDate < new Date(Date.now() - 365 * 24 * 60 * 60 * 1000);
+      // // const matchesOldFilter = !showOldOrders || isOld;
 
-      return matchesSearch && matchesType && matchesOldFilter;
+      return matchesSearch && matchesType ;
     })
     .sort((a, b) => {
       switch (sortBy) {
@@ -360,13 +465,23 @@ const OrdersPage: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <div className="mb-8">
-          <h1 className="text-4xl font-bold text-red-900 mb-2">My Orders</h1>
-          <p className="text-red-600 text-lg">
+          <h1           className = "text-center"
+                        ref={orderTitle.elementRef}                                              >
+                        <span className="inline-block pb-1 relative text-4xl font-bold text-red-900 mb-2">
+                          My Orders
+                          <span 
+                            className={`absolute top-12 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+                              orderTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
+                            }`}
+                          ></span>
+                        </span>
+                      </h1>
+          <p className="text-red-600 text-lg max-w-6xl mx-auto">
             Track and manage all your orders in one place
           </p>
 
           {/* Stats */}
-          <div className="flex space-x-6 mt-4 text-[#9b111e]">
+          <div className="flex space-x-6 mt-4 max-w-6xl mx-auto text-[#9b111e]">
             <div className="bg-white rounded-lg px-4 py-2 shadow-sm border">
               <span className="text-2xl font-bold text-gray-900">
                 {totalOrders}
@@ -389,7 +504,7 @@ const OrdersPage: React.FC = () => {
         </div>
 
         {/* Filters and Search */}
-        <div className="bg-[#FAF3EB] rounded-2xl shadow-sm border border-gray-100 p-6 mb-8">
+        <div className="bg-[#FAF3EB] rounded-2xl shadow-sm max-w-6xl mx-auto border border-gray-100 p-6 mb-8">
           <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
             {/* Search */}
             <div className="relative flex-1 max-w-md">
@@ -441,7 +556,7 @@ const OrdersPage: React.FC = () => {
                 </button>
               </div>
 
-              {/* Old Orders Toggle */}
+              {/* Old Orders Toggle
               <button
                 onClick={() => setShowOldOrders(!showOldOrders)}
                 className={`px-4 py-2 rounded-xl hover:shadow-xl text-sm font-medium transition-all flex items-center ${
@@ -452,7 +567,7 @@ const OrdersPage: React.FC = () => {
               >
                 <Calendar className="w-4 h-4 mr-1" />
                 {showOldOrders ? "Showing Old Orders" : "Show Old Orders"}
-              </button>
+              </button> */}
 
               {/* Sort Dropdown */}
               <select
@@ -460,9 +575,9 @@ const OrdersPage: React.FC = () => {
                 onChange={(e) =>
                   setSortBy(e.target.value as "date" | "price" | "name")
                 }
-                className="px-4 py-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent text-smpx-6 py-2 bg-gradient-to-r from-red-600 to-red-700 text-gray-600 rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-200 shadow-sm hover:shadow-md font-medium text-sm"
+                className="px-4 py-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent text-smpx-6 py-2 bg-gradient-to-r from-red-600 to-red-700 text-gray-600 rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-200 shadow-sm hover:shadow-md font-medium text-sm"
               >
-                <option value="date">Sort by Date</option>
+                <option value="date" >Sort by Date</option>
                 <option value="price">Sort by Price</option>
                 <option value="name">Sort by Name</option>
               </select>
@@ -473,9 +588,9 @@ const OrdersPage: React.FC = () => {
                   setSearchTerm("");
                   setFilterType("all");
                   setSortBy("date");
-                  setShowOldOrders(false);
+                  // setShowOldOrders(false);
                 }}
-                className="px-6 py-2 bg-gradient-to-r from-red-600 to-red-700 text-gray-500 rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-200 shadow-sm hover:shadow-md font-medium text-sm"
+                className="ml-[400px] px-4 py-1 text-gray-500 rounded-xl hover:text-white hover:bg-red-700 transition-all duration-200 shadow-sm hover:shadow-md font-medium text-sm"
               >
                 Reset Filters
               </button>

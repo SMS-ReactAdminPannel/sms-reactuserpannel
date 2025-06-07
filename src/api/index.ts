@@ -81,6 +81,7 @@ class Client {
 			patch: (params: string, data: string) =>
 				httpClient.patch(API_END_POINTS.service_bookings.patch, params, data),
 		},
+
 		offer: {},
 		auth: {
 			login: (data: string) =>
@@ -108,8 +109,8 @@ class Client {
 		bookings: {
 			getAll: (params: string) =>
 				httpClient.get(API_END_POINTS.bookings.getAll, params),
-			postProduct: (params: string) =>
-				httpClient.get(API_END_POINTS.bookings.postProduct, params),
+			postProduct: (data: any) =>
+				httpClient.post(API_END_POINTS.bookings.postProduct, data),
 			postService: (params: string) =>
 				httpClient.get(API_END_POINTS.bookings.postService, params),
 		},

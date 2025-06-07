@@ -1,4 +1,5 @@
 import React from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 
 type ServiceOffer = {
@@ -37,14 +38,62 @@ const serviceOffers: ServiceOffer[] = [
   },
 ];
 
+  // Scroll - line animation
+
+    const useScrollAnimation = <T extends HTMLElement = HTMLElement>(options = {}) => {
+          const [isVisible, setIsVisible] = useState(false);
+          const elementRef = useRef<T>(null);
+        
+          useEffect(() => {
+          const observer = new IntersectionObserver(
+            ([entry]) => {
+            setIsVisible(entry.isIntersecting);
+            },
+            {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px',
+            ...options
+            }
+          );
+        
+          if (elementRef.current) {
+            observer.observe(elementRef.current);
+          }
+        
+          return () => {
+            if (elementRef.current) {
+            observer.unobserve(elementRef.current);
+            }
+          };
+          }, []);
+        
+          return { elementRef, isVisible };
+        };
+
+
 const Offer: React.FC = () => {
+
+    const offerTitle = useScrollAnimation<HTMLHeadingElement>()
+
   return (
     <div className="p-6 bg-gradient-to-br from-blue-50 to-blue-100 min-h-screen">
-      <h1 className="text-3xl md:text-4xl font-bold text-center text-red-900 mb-10">
-        🔧 Yes Mechanic Special Offers
+
+      <h1 ref={offerTitle.elementRef} className="text-center  "  >
+           <span className="inline-block pb-1 relative text-3xl md:text-4xl font-bold text-center text-red-900 mb-10">
+             🔧 Yes Mechanic Special Offers
+             <span 
+               className={`absolute top-[50px] left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+                offerTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
+               }`}
+             ></span>
+           </span>
+         </h1>
+
+      <h1 className="">
+        
       </h1>
 
-      <div className="grid gap-6 grid-cols-3 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 grid-cols-3 max-w-6xl mx-auto sm:grid-cols-2 lg:grid-cols-3">
         {serviceOffers.map((offer, index) => (
           <motion.div
             key={index}

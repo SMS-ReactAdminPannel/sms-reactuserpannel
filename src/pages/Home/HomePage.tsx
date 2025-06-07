@@ -17,7 +17,7 @@ import { RiCustomerService2Fill } from 'react-icons/ri';
 import MustCare from '../../components/bookings/BookingsPage';
 import { COLORS, FONTS } from '../../constants/constant';
 import { TfiLayoutLineSolid } from 'react-icons/tfi';
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
 	FaTools,
 	FaSnowflake,
@@ -63,9 +63,44 @@ interface ServiceCardProps {
 	color: string;
 }
 
-const HomePage: React.FC = () => {
-	const cardData: ServiceCardProps[] = [
-		{
+	// Custom hook for Scroll Animation
+
+		const useScrollAnimation = <T extends HTMLElement = HTMLElement>(options = {}) => {
+		  const [isVisible, setIsVisible] = useState(false);
+		  const elementRef = useRef<T>(null);
+		
+		  useEffect(() => {
+			const observer = new IntersectionObserver(
+			  ([entry]) => {
+				setIsVisible(entry.isIntersecting);
+			  },
+			  {
+				threshold: 0.1,
+				rootMargin: '0px 0px -50px 0px',
+				...options
+			  }
+			);
+		
+			if (elementRef.current) {
+			  observer.observe(elementRef.current);
+			}
+		
+			return () => {
+			  if (elementRef.current) {
+				observer.unobserve(elementRef.current);
+			  }
+			};
+		  }, []);
+	  
+		  return { elementRef, isVisible };
+		};
+
+
+
+		const HomePage: React.FC = () => {
+
+			const cardData: ServiceCardProps[] = [
+				{
 			id: 1,
 			icon: <FaTools size={42} />,
 			title: 'Periodic Services',
@@ -126,6 +161,13 @@ const HomePage: React.FC = () => {
 			color: 'bg-white border-[#9b111e]',
 		},
 	];
+
+			// Create separate hooks for each title
+		const servicesTitle = useScrollAnimation<HTMLHeadingElement>();
+		const careTitle = useScrollAnimation<HTMLHeadingElement>();
+		const discoverTitle = useScrollAnimation<HTMLHeadingElement>();
+		const contactTitle = useScrollAnimation<HTMLHeadingElement>();
+
 	return (
 		<>
 			<div className='h-[80vh]'>
@@ -134,12 +176,22 @@ const HomePage: React.FC = () => {
 			</div>
 			<div className=''>
 				<div className='px-24 my-8 h-[75vh]'>
-					<h1
-						className='text-2xl mb-10 text-red-900 text-center underline'
-						style={{ ...FONTS.header, fontWeight: 600 }}
-					>
-						Available Services
-					</h1>
+					
+				<h1 
+    		      ref={servicesTitle.elementRef}
+    		      className="text-2xl mb-10 text-red-900 text-center" 
+    		      style={{ ...FONTS.header, fontWeight: 700 }}
+    		    >
+    		      <span className="inline-block pb-1 relative">
+    		        Available Services
+    		        <span 
+    		          className={`absolute top-9 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+    		            servicesTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
+    		          }`}
+    		        ></span>
+    		      </span>
+    		    </h1>
+					
 					<div className='grid grid-cols-5 grid-rows-2 gap-4 max-w-6xl mx-auto mb-5'>
 						{cardData.map((card) => (
 							<Link
@@ -173,13 +225,21 @@ const HomePage: React.FC = () => {
 				<div className='mt-4'>
 					<div className={`bg-[url(${bgImg2})] h-[95vh]`}>
 						<div className='px-24 py-10'>
-							<h1
-								className='text-3xl text-red-900 text-center pb-10 underline'
-								style={{ ...FONTS.header, fontWeight: 600 }}
-							>
-								Care Advantages
-							</h1>
-							<div className='flex space-x-6 items-center justify-center'>
+									<h1 
+       								   ref={careTitle.elementRef}
+       								   className="text-2xl mb-10 text-red-900 text-center" 
+       								   style={{ ...FONTS.header, fontWeight: 700 }}
+       								 >
+       								   <span className="inline-block pb-1 relative">
+       								     Care Advantages
+       								     <span 
+       								       className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+       								         careTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
+       								       }`}
+       								     ></span>
+       								   </span>
+       								 </h1>
+										<div className='flex space-x-6 items-center justify-center'>
 								<div className='border-r border-gray-600 pr-6 text-center'>
 									<div className='ml-20'>
 										<MdHomeFilled size={28} color={COLORS.primary} />
@@ -217,12 +277,20 @@ const HomePage: React.FC = () => {
 
 					<div className='px-24 pb-8'>
 						<div className='py-12'>
-							<h1
-								className='text-3xl text-red-900 text-center pb-8 underline'
-								style={{ ...FONTS.header, fontWeight: 600 }}
-							>
-								Discover Our Services
-							</h1>
+							<h1 
+    		   				   ref={discoverTitle.elementRef}
+    		   				   className="text-2xl mb-10 text-red-900 text-center" 
+    		   				   style={{ ...FONTS.header, fontWeight: 700 }}
+    		   				 >
+    		   				   <span className="inline-block pb-1 relative">
+    		   				     Discover Our Services
+    		   				     <span 
+    		   				       className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+    		   				         discoverTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
+    		   				       }`}
+    		   				     ></span>
+    		   				   </span>
+    		   				 </h1>
 							<div className='flex mt-5 justify-around gap-10'>
 								<div>
 									<img
@@ -359,12 +427,22 @@ const HomePage: React.FC = () => {
 				</div>
 				<div className={`bg-[url(${bgImg3})] h-[85vh] mt-5`}>
 					<div className='px-24 pt-2'>
-						<h1
-							className='text-3xl text-center text-red-900 py-10 underline'
-							style={{ ...FONTS.header, fontWeight: 600 }}
-						>
-							Customised Care For All Your Needs
-						</h1>
+						<h1 
+    		   				   ref={contactTitle.elementRef}
+    		   				   className="text-2xl mb-10 text-red-900 text-center" 
+    		   				   style={{ ...FONTS.header, fontWeight: 700 }}
+    		   				 >
+    		   				   <span className="inline-block pb-1 relative">
+    		   				     Customised Care For All Your Needs
+    		   				     <span 
+    		   				       className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+    		   				         contactTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
+    		   				       }`}
+    		   				     ></span>
+    		   				   </span>
+    		   				 </h1>
+							
+						
 						<div className='flex justify-center gap-6 mt-4 mb-10 flex-wrap'>
 							<div className='flex flex-col items-center text-center bg-[#fdefe9] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
 								<GrWorkshop size={32} color={COLORS.primary} />
