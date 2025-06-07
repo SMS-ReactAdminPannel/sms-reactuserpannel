@@ -98,8 +98,8 @@ class Client {
 				httpClient.post(API_END_POINTS.auth.post_resend_otp, data),
 			getUserProfile: (params: string) =>
 				httpClient.get(API_END_POINTS.auth.get, params),
-			updateUserProfile: (params: string, data: string) =>
-				httpClient.update(API_END_POINTS.auth.put, data, params),
+			updateUserProfile: (data: string) =>
+				httpClient.update(API_END_POINTS.auth.put, data),
 		},
 		notification: {
 			getAll: (params: string) =>
