@@ -2,6 +2,11 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaArrowLeft } from "react-icons/fa";
 import { getAllNotifications } from "../../features/Notification/services";
+import { Mail } from "lucide-react";
+import { MdSubject } from "react-icons/md";
+
+import dayjs from "dayjs";
+
 
 type MailItem = {
   sender: string;
@@ -10,27 +15,36 @@ type MailItem = {
   Message: string;
   updated_at: string;
   unread: boolean;
+  recipient_type: string;
+
+
 };
 
 export default function GmailStyleInbox() {
   const navigate = useNavigate();
   const [selectedMail, setSelectedMail] = useState<MailItem | null>(null);
   const [filter, setFilter] = useState<"all" | "unread" | "read">("all");
-   const [mails,setMails] = useState<MailItem[]>([]);
+  const [mails, setMails] = useState<MailItem[]>([]);
 
 
-  const filteredMails = mails.filter((mail) =>
-    filter === "all" ? true : filter === "unread" ? mail.unread : !mail.unread
-);
+  const filteredMails = mails
+    .filter((mail) => mail.recipient_type === "user") // only user notifications
+    .filter((mail) =>
+      filter === "all" ? true : filter === "unread" ? mail.unread : !mail.unread
+    );
+
+  console.log(filteredMails)
+
+  console.log(mails, "mails")
   
 
-  const fetchAllNotifications = async () => {
+  const fetchAllNotifications = async () => { 
     try {
-  
+
       const response = await getAllNotifications("");
-    
+
       //console.log(response, "Notifications Fetch Succesful");
-      const data:MailItem[] = response?.data?.data || [];
+      const data: MailItem[] = response?.data?.data || [];
       console.log("Fetched Notifications:", data);
       setMails(data);
     }
@@ -41,11 +55,11 @@ export default function GmailStyleInbox() {
   }
   useEffect(() => {
     fetchAllNotifications();
-  }, []);  
+  }, []);
 
   return (
     <div className="min-h-screen bg-[#FAF3EB] p-2 font-[Poppins]">
-      <div className="flex items-center mb-6">
+      <div className="flex items-center mb-6 mt-6">
         <button
           onClick={() => navigate(-1)}
           className="flex items-center text-[#9b111e] hover:underline mr-4 pl-2"
@@ -55,6 +69,7 @@ export default function GmailStyleInbox() {
         <h1 className="text-3xl font-bold text-[#9b111e]">Notification</h1>
       </div>
       <div className="flex h-[80vh] border rounded-2xl overflow-hidden shadow-lg bg-white">
+      
         {/* Sidebar */}
         <aside className="w-64 border-r bg-[#fdefe9] p-6">
           <h2 className="text-lg font-semibold text-[#9b111e] mb-4">Filters</h2>
@@ -62,13 +77,18 @@ export default function GmailStyleInbox() {
             {["all", "unread", "read"].map((f) => (
               <button
                 key={f}
-                onClick={() => setFilter(f)}
+                onClick={() => setFilter(f as "all" | "unread" | "read")}
+                //className={`block w-full text-left px-4 py-2 rounded-lg transition-all duration-200 ${filter === f
+                //</div> ? "bg-gradient-to-r from-red-600 to-red-800 text-white font-semibold shadow-md"
+                //  : "text-gray-700 hover:bg-gray-100"
                 className={`block w-full text-left px-4 py-2 rounded-lg transition-all duration-200 ${filter === f
-                  ? "bg-gradient-to-r from-red-600 to-red-800 text-white font-semibold shadow-md"
-                  : "text-gray-700 hover:bg-gray-100"
+                    ? "bg-[#9b111e] text-white" // Selected button style
+                    : "bg-transparent text-gray-700 hover:bg-gray-100" // Default style
                   }`}
               >
                 {f.charAt(0).toUpperCase() + f.slice(1)}
+                
+                
               </button>
             ))}
           </div>
@@ -77,36 +97,48 @@ export default function GmailStyleInbox() {
         {/* Main list*/}
         <main className="flex-1 flex">
           <section className="w-1/2 overflow-y-auto border-r custom-scroll px-4 py-4 space-y-4">
-            {filteredMails.map((mail,index) => (
+            {filteredMails.map((mail, index) => (
+              
               <div
                 key={index}
                 onClick={() => setSelectedMail(mail)}
-                 className={`cursor-pointer flex items-start gap-4 p-4 rounded-xl hover:bg-blue-50 transition duration-150 ${mail.unread
+                
+                className={`cursor-pointer flex gap-4 p-4  rounded-xl hover:bg-blue-50 transition duration-150 ${mail.unread
                   ? "bg-gray-100 font-semibold"
                   : "border border-gray-200"
                   }`}
-              > 
+              >
+
                 <div className="p-[1px] rounded-full bg-gradient-to-r from-red-600 to-red-800 inline-block">
-                  <div className="w-10 h-10 flex items-center justify-center bg-white text-red-600 rounded-full">
+                  <img
+    src="\src/assets/images/istockphoto-1998660059-1024x1024.jpg"
+    className=" rounded-full w-10  h-10 object-cover" />
+                  <div className="">
                     {mail.sender?.toUpperCase()}
+
                   </div>
                 </div>
                 <div className="flex-1">
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-sm text-gray-800">{mail.sender}</span>
-                    <span className="text-xs text-gray-500">{mail.updated_at}</span>
-                  </div>
-                  <p className="text-sm font-medium text-[#9b111e]">
+                  <div className="flex items-center justify-between" >
+                    
+                    <span className="text-sm text-gray-800  ">{mail.sender}</span>
+                    
+
+                  
+                  <p className="text-sm font-medium text-[#9b111e] mt-2" >
                     {mail.title}
                   </p>
-                  <p className="text-xs text-gray-600 truncate">
+                  <p className="text-xs text-gray-500 mt-2">
+                      {dayjs(mail.updated_at).format("DD-MM-YYYY h:mm A")}</p>
+                  {/* <p className="text-xs text-gray-600 truncate">
                     {mail.preview}
-                  </p>
+                  </p> */}
                 </div>
+              </div>
               </div>
             ))}
             {filteredMails.length === 0 && (
-              <div className="text-center text-gray-400 text-sm mt-20">
+              <div className="h-full flex items-center justify-center text-gray-400 text-sm ">
                 No mails found for this filter.
               </div>
             )}
@@ -123,11 +155,11 @@ export default function GmailStyleInbox() {
                   ← Back to list
                 </button>
 
-                <h2 className="text-2xl font-bold text-gray-800 mb-2">
+                <h2 className="text-2xl font-bold text-gray-800 ">
                   {selectedMail.title}
                 </h2>
 
-                <div className="flex items-center text-lg text-gray-600 mb-4">
+                <div className="flex items-center justify-end text-lg text-gray-600 mb-4">
                   <div className="w-10 h-10 flex items-center justify-center bg-gradient-to-r from-red-600 to-red-800 text-white rounded-full mr-3 uppercase font-bold">
                     {selectedMail.sender}
                   </div>
@@ -135,8 +167,12 @@ export default function GmailStyleInbox() {
                     <p className="font-semibold text-gray-800 capitalize">
                       {selectedMail.sender}
                     </p>
-                    <p className="text-sm text-gray-500">{selectedMail.updated_at}</p>
+                    <div className="flex justify-center">
+                    <span className="text-sm text-gray-500  text-right block ">
+                      {dayjs(selectedMail.updated_at).format("DD-MM-YYYY h:mm A")}
+                    </span>
                   </div>
+                </div>
                 </div>
 
                 <hr className="my-4 border-t-1 border-gray-400" />
@@ -147,6 +183,7 @@ export default function GmailStyleInbox() {
               </div>
             ) : (
               <div className="h-full flex items-center justify-center text-gray-400 text-sm">
+              
                 Select an email to preview
               </div>
             )}

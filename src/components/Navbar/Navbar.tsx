@@ -11,6 +11,8 @@ import dummyImage from '../../assets/navbar/dummyimage.png';
 import CustomDropdown from './Customdropdown';
 import TruckIcon from '../../assets/carimages/delivery-truck.png';
 import LocationIcon from '../../assets/carimages/location.png';
+import { getAllNotifications } from '../../features/Notification/services';
+import { FaArrowLeft } from 'react-icons/fa';
 
 interface User {
 	name: string;
@@ -30,6 +32,20 @@ interface Notification {
 	isRead: boolean;
 }
 
+
+type MailItem = {
+  sender: string;
+  title: string;
+  preview: string;
+  Message: string;
+  updated_at: string;
+  unread: boolean;
+  recipient_type: string;
+
+
+};
+
+
 export const Navbar: React.FC = () => {
 	const [isBellActive, setIsBellActive] = useState(false);
 	const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -42,6 +58,41 @@ export const Navbar: React.FC = () => {
 	const dropdownRef = useRef<HTMLDivElement | null>(null);
 	const notificationRef = useRef<HTMLDivElement | null>(null);
 	const [search, setSearch] = useState('');
+	const [mails, setMails] = useState<MailItem[]>([]);
+
+	
+	  const [selectedMail, setSelectedMail] = useState<MailItem | null>(null);
+	  const [filter, setFilter] = useState<"all" | "unread" | "read">("all");
+	  
+	
+
+
+  const filteredMails = mails
+	.filter((mail) => mail.recipient_type === "user") // only user notifications
+	.filter((mail) =>
+	  filter === "unread" ? mail.unread : null
+	);
+  
+
+  const fetchAllNotifications = async () => { 
+	try {
+
+	  const response = await getAllNotifications("");
+
+	  //console.log(response, "Notifications Fetch Succesful");
+	  const data: MailItem[] = response?.data?.data || [];
+	  console.log("Fetched Notifications:", data);
+	  setMails(data);
+	}
+	catch (error) {
+	  console.log("Error Fetching Notifications:", error);
+
+	}
+  }
+  useEffect(() => {
+	fetchAllNotifications();
+  }, []);
+
 
 	const [notifications] = useState<Notification[]>([
 		{
@@ -239,27 +290,28 @@ export const Navbar: React.FC = () => {
 									<h3 className='text-white font-bold'>Notifications</h3>
 								</div>
 								<div className='max-h-80 overflow-y-auto'>
-									{notifications.length > 0 ? (
-										notifications.map((notification) => (
+									{filteredMails.length > 0 ? (
+										filteredMails.map((notification) => (
 											<div
 												key={notification.id}
-												className={`group relative p-3 border-b hover:bg-gray-50 transition-colors duration-150 ${
-													notification.isRead ? 'bg-white' : 'bg-red-50'
+												className={`group relative p-3 border-b hover:bg-gray-50 transition-colors duration-150 bg-red-50
 												}`}
 											>
 												{/* This vertical red line will now appear on hover */}
+											
 												<div className='absolute left-0 top-0 h-full w-1 bg-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-200'></div>
 
 												<div className='flex justify-between items-start'>
 													<p className='text-sm text-gray-800'>
-														{notification.message}
+														{notification.title}
 													</p>
-													{!notification.isRead && (
+													{/* {!notification.isRead && (
 														<span className='w-2 h-2 rounded-full bg-red-600 mt-1 ml-2'></span>
-													)}
+													)} */}
 												</div>
+												
 												<p className='text-xs text-gray-500 mt-1'>
-													{notification.time}
+													{notification.updated_at}
 												</p>
 											</div>
 										))
@@ -413,8 +465,10 @@ export const Navbar: React.FC = () => {
 			{/* Bottom Navbar - Categories */}
 
 			<div className='bg-[#fdefe9] px-24 py-1.5 flex items-center justify-center gap-10 shadow-lg'>
+				
 				{navData?.map((item, idx) => (
 					<NavLink
+					
 						key={idx}
 						to={item.link}
 						style={{ ...FONTS.paragraph, fontWeight: 600, fontSize: '16px' }}
@@ -424,20 +478,26 @@ export const Navbar: React.FC = () => {
 		isActive
 			? 'text-red-900 after:content-[""] after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-full after:bg-red-900 after:transition-all after:duration-300'
 			: 'text-red-800 after:content-[""] after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-0 after:bg-red-900 after:transition-all after:duration-300 hover:after:w-full'
+			
 	}`
 						}
 					>
+						
 						{item.title}
+						
 					</NavLink>
 				))}
 
 				<div className='flex justify-end'>
+
 					<button
 						className='bg-red-900 hover:bg-red-800 text-white py-2 px-4 rounded-full'
 						style={{ ...FONTS.paragraph, fontWeight: 600 }}
+
 					>
 						Enquiry
 					</button>
+								
 				</div>
 			</div>
 			<div className=' shadow-lg'></div>
