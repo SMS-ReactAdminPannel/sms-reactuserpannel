@@ -11,7 +11,7 @@ import {
   MapPin,
 } from "lucide-react";
 import bgImage from "../../assets/checkout-bg_1_.png";
-import { getBookingAll, postBookingProduct, postBookingService } from "../../features/Bookings/service";
+import { getBookingAll } from "../../features/Bookings/service";
 
 
 // OrderDetails Interface
@@ -205,22 +205,22 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 
   // get data from booking_cart
 
-  const getBookingDatas = async () => {
-   try{
-    const data = {};
-    const response = await getBookingAll(data);
-    console.log(`Booking data :` ,response);
-    console.log("final Booking :", response?.data?.data);
-   } 
+  // const getBookingDatas = async () => {
+  //  try{
+  //   const data = {};
+  //   const response = await getBookingAll(data);
+  //   console.log(`Booking data :` ,response);
+  //   console.log("final Booking :", response?.data?.data);
+  //  } 
 
-   catch(error){    
-    console.log(`Booking error :` , error);
-  }
-  }
+  //  catch(error){    
+  //   console.log(`Booking error :` , error);
+  // }
+  // }
 
-  useEffect(() => {
-    getBookingDatas();
-  },[])
+  // useEffect(() => {
+  //   getBookingDatas();
+  // },[])
 
 
   // get data from product
@@ -411,6 +411,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 
 // Main OrdersPage Component
 const OrdersPage: React.FC = () => {
+  const [orderDatas, setOrderDatas] = useState<OrderDetails[]>([])
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState<"all" | "spare" | "service">(
     "all"
@@ -419,6 +420,39 @@ const OrdersPage: React.FC = () => {
   // const [showOldOrders, setShowOldOrders] = useState(false);
 
   const orderTitle = useScrollAnimation<HTMLHeadingElement>();
+
+  // get spare Parts data
+
+  console.log('Final order Data : ', orderDatas);
+
+  const getBookingDatas = async () => {
+   try{
+    const data = {};
+    const response = await getBookingAll(data);
+    console.log(`Booking data :` ,response);
+    console.log("final Booking :", response?.data?.productConfirm[0]);
+    const result =  response?.data?.productConfirm[0];
+    const final = result.map((part: any ) => {
+      // return{
+      // total : part.amount,
+      // status : part.status,
+     console.log('final Result : ', part.products[1].productId.category,) 
+      // image : part.products[1].image,
+      // name : part.products[1].productId.productName
+      // }
+    });
+    console.log("final order data :", final)
+    setOrderDatas(final);
+   } 
+
+   catch(error){    
+    console.log(`Booking error :` , error);
+  }
+  }
+
+  useEffect(() => {
+    getBookingDatas();
+  },[])
 
   const filteredOrders = allOrders
     .filter((order) => {

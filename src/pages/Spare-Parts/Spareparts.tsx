@@ -19,35 +19,35 @@ interface SparePart {
 
     // Custom hook for Scroll Animation
     
-        // const useScrollAnimation = <T extends HTMLElement = HTMLElement>(options = {}) => {
-        //   const [isVisible, setIsVisible] = useState(false);
-        //   const elementRef = useRef<T>(null);
+        const useScrollAnimation = <T extends HTMLElement = HTMLElement>(options = {}) => {
+          const [isVisible, setIsVisible] = useState(false);
+          const elementRef = useRef<T>(null);
         
-        //   useEffect(() => {
-        //   const observer = new IntersectionObserver(
-        //     ([entry]) => {
-        //     setIsVisible(entry.isIntersecting);
-        //     },
-        //     {
-        //     threshold: 0.1,
-        //     rootMargin: '0px 0px -50px 0px',
-        //     ...options
-        //     }
-        //   );
+          useEffect(() => {
+          const observer = new IntersectionObserver(
+            ([entry]) => {
+            setIsVisible(entry.isIntersecting);
+            },
+            {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px',
+            ...options
+            }
+          );
         
-        //   if (elementRef.current) {
-        //     observer.observe(elementRef.current);
-        //   }
+          if (elementRef.current) {
+            observer.observe(elementRef.current);
+          }
         
-        //   return () => {
-        //     if (elementRef.current) {
-        //     observer.unobserve(elementRef.current);
-        //     }
-        //   };
-        //   }, []);
+          return () => {
+            if (elementRef.current) {
+            observer.unobserve(elementRef.current);
+            }
+          };
+          }, []);
         
-        //   return { elementRef, isVisible };
-        // };
+          return { elementRef, isVisible };
+        };
     
 
 
@@ -64,15 +64,15 @@ const SpareParts: React.FC = () => {
 
   
   // Add loading and error states
-  const [loading, setLoading] = useState(false);
+
   const [error, setError] = useState<string | null>(null);
 
   //const totalSlides: number = parts.length;
 
 	// get Data API integration 
-  const fetchSpareParts = async () => {
+   const fetchSpareParts = async () => {
     try {
-      setLoading(true);
+      
       setError(null);
       
       const data = {}; // Make sure this matches your API requirements
@@ -108,9 +108,7 @@ const SpareParts: React.FC = () => {
       
       // Optional: Set fallback data for development
       setParts([]);
-    } finally {
-      setLoading(false);
-    }
+    } 
   }
 
   useEffect(() => {
@@ -188,7 +186,7 @@ const handleAddToCart = async (part: SparePart) => {
       type: 'spare'
     };
 
-    setLoading(true);
+    
 
     const response = await postSparePartsData(payload);
 
@@ -197,33 +195,34 @@ const handleAddToCart = async (part: SparePart) => {
     console.error("❌ Error adding to cart:", error);
   } finally {
     console.log("📦 handleAddToCart finished");
-    setLoading(false);
   }
 };
 
 //filteredParts --- usage to show only 8 initially
 const displayedParts = showAllProducts ? filteredParts : filteredParts.slice(0, 8);
 
-	// Show loading state
-	if (loading) {
-		return (
-			<div className='p-12 flex justify-center items-center min-h-screen'>
-				<div className='text-center'>
-					<div className='animate-spin rounded-full h-32 w-32 border-b-2 border-[#9b111e] mx-auto mb-4'></div>
-					<p className='text-xl text-gray-600'>Loading spare parts...</p>
-				</div>
-			</div>
-		);
-	}
+    const offerTitle = useScrollAnimation<HTMLHeadingElement>()
+    const productTitle = useScrollAnimation<HTMLHeadingElement>()
+    const bundleTitle = useScrollAnimation<HTMLHeadingElement>()
+    const categoryTitle = useScrollAnimation<HTMLHeadingElement>()
 
-    // const offerTitle = useScrollAnimation<HTMLHeadingElement>()
 
   return (
-    <div className="p-16 mx-8 ">
-      
-       <h1 className="text-4xl font-bold text-[#9b111e] text-center">
-          Spare Parts
+    <div className="p-12 mx-8 ">
+
+      <h1 className = "text-center"
+          ref={offerTitle.elementRef}                                              >
+          <span className="inline-block pb-1 relative text-4xl font-bold text-[#9b111e] mb-2">
+            My Orders
+            <span 
+              className={`absolute top-12 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+                offerTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
+              }`}
+            ></span>
+          </span>
         </h1>
+      
+       
       <div className="flex items-center justify-end flex-wrap gap-4 mt-6 mb-6">
         {/* Search Bar */}
         <div className="relative w-full max-w-md">
@@ -272,11 +271,19 @@ const displayedParts = showAllProducts ? filteredParts : filteredParts.slice(0, 
 				</div>
 			</div>
 
-      <div className="relative flex items-center justify-between mt-16 mb-10">
-        <h2 className="absolute left-1/2 transform -translate-x-1/2 text-3xl font-bold text-[#9b111e] border-b-4 border-[#9b111e] pb-1">
-          Products
-        </h2>
-      </div>
+     
+        <h1 className = "text-center"
+          ref={productTitle.elementRef}                                              >
+          <span className="inline-block pb-1 relative text-4xl font-bold text-[#9b111e] mb-2">
+            Products
+            <span 
+              className={`absolute top-11 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+                productTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
+              }`}
+            ></span>
+          </span>
+        </h1>
+      
 
       {/*-----------------------------------------------------------------------------------------------------------------------------------------*/}
 
@@ -378,12 +385,18 @@ const displayedParts = showAllProducts ? filteredParts : filteredParts.slice(0, 
       {/* Bundles Section - Only show if there are parts */}
 
 {parts.length > 0 && (
+  
   <div className="bg-gray-100 mt-16 transition-shadow p-8">
-    <div className="mb-8 text-center">
-      <h2 className="inline-block text-2xl font-bold text-[#9b111e] border-b-4 border-[#9b111e] pb-1">
+       <h1 className="text-center" ref={bundleTitle.elementRef}>
+      <span className="inline-block pb-1 relative text-4xl font-bold text-[#9b111e] mb-2">
         OUR BUNDLES
-      </h2>
-    </div>
+         <span 
+      className={`absolute top-11 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+        bundleTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
+      }`}
+    ></span>
+      </span>
+    </h1>
 
     <div className="overflow-hidden mt-10 relative">
       <div
@@ -512,11 +525,17 @@ const displayedParts = showAllProducts ? filteredParts : filteredParts.slice(0, 
       </div>
 
       <div className="max-w-full px-4 md:px-6 lg:px-8 bg-[#fae9eb] py-6">
-        <div className="text-center mt-10 mb-12">
-          <h1 className="inline-block text-2xl font-bold text-[#9b111e] border-b-4 border-[#9b111e] pb-1">
+        <h1 className = "text-center"
+          ref={categoryTitle.elementRef}                                              >
+          <span className="inline-block pb-1 relative text-4xl font-bold text-[#9b111e] mb-2">
             BY CATEGORIES
-          </h1>
-        </div>
+            <span 
+              className={`absolute top-11 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+                categoryTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
+              }`}
+            ></span>
+          </span>
+        </h1>
 
         <div className="grid grid-cols-4 sm:grid-cols-2 mdplus:grid-cols-2 lg:grid-cols-4 gap-6">
           {[

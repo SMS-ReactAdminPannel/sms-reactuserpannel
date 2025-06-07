@@ -4,6 +4,7 @@ import { booking_cart, postBookingProduct } from "../../features/BookingCart/ser
 import { toast } from "react-toastify"; 
 import bgImage from '../../assets/checkout-bg_1_.png';
 import serviceImg from "../../assets/serviceimages/generalservice.png"
+import { LiaCartPlusSolid } from "react-icons/lia";
 
 // Types
 interface spare {
@@ -77,7 +78,7 @@ export default function SparePartsCart() {
   const [confirmedServiceOrders, setConfirmedServiceOrders] = useState<{ serv: service; quantity: number }[]>([]);
   const [showSummary, setShowSummary] = useState(false);
   const [showsSummary, setShowsSummary] = useState(false);
-  const [cartId, setCartId] = useState<cartId[]>([])
+  const [cartId, setCartId] = useState<string>('')
   const totalPartPrice = confirmedPartOrders.reduce((acc, cur) => acc + cur.part.price * cur.quantity, 0);
   const totalServicePrice = confirmedServiceOrders.reduce((acc, cur) => acc + cur.serv.price * cur.quantity, 0);
 
@@ -142,16 +143,13 @@ if (serviceEntry?.services) {
 
   // handle Place Order function
   
-      const placeOrder = async (orders: { part: cartId;}[]) => {
+      const placeOrder = async () => {
   try {
     // Since backend expects cartId directly, we'll take the first order's cartId
     // (Assuming you're confirming one order at a time)
-    if (orders.length === 0) {
-      throw new Error("No orders to confirm");
-    }
 
     const payload = {
-      cartId: orders[0].part.cartId, // Send cartId directly
+      cartId: cartId, // Send cartId directly
     };
 
     console.log("Final payload:", payload); // Debug log
@@ -431,7 +429,7 @@ if (serviceEntry?.services) {
                     onClick={async () => {
                       try {
                         if (confirmedPartOrders.length > 0) {
-                          await placeOrder(confirmedPartOrders);
+                          await placeOrder();
                         }
                       } catch (error: any) {
                         toast.error(error.message || "Failed to place order");
@@ -486,10 +484,9 @@ if (serviceEntry?.services) {
                     type="submit"
                     className="flex justify-center gap-2 items-center mx-auto shadow-xl text-lg bg-gray-50 backdrop-blur-md lg:font-semibold isolation-auto border-gray-50 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-[#9b111e] hover:text-gray-50 before:-z-10 before:aspect-square before:hover:scale-150 before:hover:duration-700 relative z-10 px-6 py-2 overflow-hidden border-2 rounded-full group"
                     onClick={async () => {
-                      try {
-                        if (confirmedPartOrders.length > 0) {
-                          await placeOrder(confirmedPartOrders);
-                        }
+                      try { 
+                          await placeOrder();
+                        
                       } catch (error: any) {
                         toast.error(error.message || "Failed to place order");
                       }
