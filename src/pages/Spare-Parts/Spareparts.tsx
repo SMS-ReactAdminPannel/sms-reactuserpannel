@@ -17,85 +17,130 @@ interface SparePart {
 	image: string;
 }
 
-// Custom hook for Scroll Animation
+    // Custom hook for Scroll Animation
+    
+        const useScrollAnimation = <T extends HTMLElement = HTMLElement>(options = {}) => {
+          const [isVisible, setIsVisible] = useState(false);
+          const elementRef = useRef<T>(null);
+        
+          useEffect(() => {
+          const observer = new IntersectionObserver(
+            ([entry]) => {
+            setIsVisible(entry.isIntersecting);
+            },
+            {
+            threshold: 0.1,
+            rootMargin: '0px 0px -100px 0px',
+            ...options
+            }
+          );
+        
+          if (elementRef.current) {
+            observer.observe(elementRef.current);
+          }
+        
+          return () => {
+            if (elementRef.current) {
+            observer.unobserve(elementRef.current);
+            }
+          };
+          }, []);
+        
+          return { elementRef, isVisible };
+        };
+    
 
-// const useScrollAnimation = <T extends HTMLElement = HTMLElement>(options = {}) => {
-//   const [isVisible, setIsVisible] = useState(false);
-//   const elementRef = useRef<T>(null);
-
-//   useEffect(() => {
-//   const observer = new IntersectionObserver(
-//     ([entry]) => {
-//     setIsVisible(entry.isIntersecting);
-//     },
-//     {
-//     threshold: 0.1,
-//     rootMargin: '0px 0px -50px 0px',
-//     ...options
-//     }
-//   );
-
-//   if (elementRef.current) {
-//     observer.observe(elementRef.current);
-//   }
-
-//   return () => {
-//     if (elementRef.current) {
-//     observer.unobserve(elementRef.current);
-//     }
-//   };
-//   }, []);
-
-//   return { elementRef, isVisible };
-// };
 
 const SpareParts: React.FC = () => {
-	const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
-	const [selectedPart, setSelectedPart] = useState<SparePart | null>(null);
-	const [searchTerm, setSearchTerm] = useState('');
-	const [quantity, setQuantity] = useState(1);
-	const [currentIndex, setCurrentIndex] = useState<number>(0);
-	const [parts, setParts] = useState<SparePart[]>([]);
-	const [showAllProducts, setShowAllProducts] = useState(false);
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [selectedPart, setSelectedPart] = useState<SparePart | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [quantity, setQuantity] = useState(1);
+  const [currentIndex, setCurrentIndex] = useState<number>(0);
+  const [parts, setParts] = useState<SparePart[]>([]);
 
-	const fetchSpareParts = async () => {
-		try {
-			const response = await getSparePartsData({});
+  const [showAllProducts, setShowAllProducts] = useState(false);  //product page cards
+  
 
-			if (response && response.data && response.data.data) {
-				if (Array.isArray(response.data.data)) {
-					const validatedParts = response.data.data.map((part: any) => {
-						return {
-							id: part._id || '',
-							spareparts_name: part.productName || '',
-							price: Number(part.price) || 0,
-							stock: part.stock || '',
-							images: Array.isArray(part.images)
-								? part.images
-								: [part.image || ''],
-							type: part.type || '',
-							image:
-								part.image ||
-								(Array.isArray(part.images) ? part.images[0] : ''),
-						};
-					});
+  
+  // Add loading and error states
 
-					setParts(validatedParts);
-				} else {
-					throw new Error('API response data is not an array');
-				}
-			} else {
-				throw new Error('Invalid API response structure');
-			}
-		} catch (error) {
-			console.error('Error fetching spare parts:', error);
-			setParts([]);
-		}
-	};
+  const [error, setError] = useState<string | null>(null);
 
-	useEffect(() => {
-		fetchSpareParts();
-	}, []);
+  //const totalSlides: number = parts.length;
+
+	// get Data API integration 
+   const fetchSpareParts = async () => {
+    try {
+      
+      setError(null);
+      
+      const data = {}; // Make sure this matches your API requirements
+      const response = await getSparePartsData(data);
+      
+      // Check if response has the expected structure
+      if (response && response.data && response.data.data) {
+        // Validate that the data is an array
+        if (Array.isArray(response.data.data)) {
+          // Map and validate each item to ensure it matches SparePart interface
+          const validatedParts = response.data.data.map((part: any) => {
+            return {
+              id: part._id || '',
+              spareparts_name: part.productName || '',
+              price: Number(part.price) || 0,
+              stock: part.stock || '',
+              images: Array.isArray(part.images) ? part.images : [part.image || ''],
+              type: part.type || '',
+              image: part.image || (Array.isArray(part.images) ? part.images[0] : '')
+            };
+          });
+          
+          setParts(validatedParts);
+        } else {
+          throw new Error('API response data is not an array');
+        }
+      } else {
+        throw new Error('Invalid API response structure');
+      }
+    } catch (error) {
+      console.error('Error fetching spare parts:', error);
+      setError(error instanceof Error ? error.message : 'Failed to fetch spare parts');
+      
+      // Optional: Set fallback data for development
+      setParts([]);
+    } 
+  }
+
+  useEffect(() => {
+    fetchSpareParts();
+  }, []);
+
+  // Fixed auto-scroll functionality with proper dependency
+ {/*} useEffect(() => {
+    if (totalSlides === 0) return; // Don't start interval if no slides
+    
+    const interval = setInterval(() => {
+      setCurrentIndex((prevIndex) => (prevIndex + 1) % totalSlides);
+    }, 7000);
+
+    return () => clearInterval(interval);
+  }, [totalSlides]);*/}
+
+  // const goToSlide = (index: number): void => {
+  //   setCurrentIndex(index);
+  // };
+
+  // const nextSlide = (): void => {
+  //   if (totalSlides > 0) {
+  //     setCurrentIndex((prevIndex) => (prevIndex + 1) % totalSlides);
+  //   }
+  // };
+
+  // const prevSlide = (): void => {
+  //   if (totalSlides > 0) {
+  //     setCurrentIndex((prevIndex) => (prevIndex - 1 + totalSlides) % totalSlides);
+  //   }
+  // };
 
 	const handleTouchStart = (e: React.TouchEvent): void => {
 		const startX = e.touches[0].clientX;
@@ -130,61 +175,77 @@ const SpareParts: React.FC = () => {
 
 	// Add to cart button functions
 
-	const handleAddToCart = async (part: SparePart) => {
-		try {
-			const payload = {
-				products: {
-					productId: part.id,
-					price: part.price?.toString(),
-					quantity: quantity,
-				},
-				type: 'spare',
-			};
-			const response = await postSparePartsData(payload);
-      if(response){
-        console.log('Part added to cart successfully:', response);
-        setSelectedPart(null); 
-        setQuantity(1);
-      }
-		} catch (error) {
-			console.error(' Error adding to cart:', error);
-		} finally {
-			console.log(' handleAddToCart finished');
-		}
-	};
+const handleAddToCart = async (part: SparePart) => {
+  try {
+    const payload = {
+      products: {
+        productId: part.id,
+        price: part.price?.toString(),
+        quantity: quantity
+      },
+      type: 'spare'
+    };
 
-	const displayedParts = showAllProducts
-		? filteredParts
-		: filteredParts.slice(0, 8);
+    
 
-	return (
-		<div className='p-16 mx-8 '>
-			<h1 className='text-4xl font-bold text-[#9b111e] text-center'>
-				Spare Parts
-			</h1>
-			<div className='flex items-center justify-end flex-wrap gap-4 mt-6 mb-6'>
-				{/* Search Bar */}
-				<div className='relative w-full max-w-md'>
-					<input
-						type='text'
-						placeholder='Search by product name...'
-						className='border border-gray-300 rounded-full px-5 py-2 pr-10 w-full focus:outline-none focus:ring-2 focus:ring-[#9b111e]'
-						value={searchTerm}
-						onChange={(e) => setSearchTerm(e.target.value)}
-					/>
-					<button
-						className='absolute right-3 top-[85%] -translate-y-1/2 text-xl text-[#de687a] hover:text-red-600 transition-all duration-200 hover:scale-105 hover:bg-[#f1a2a9] p-1 rounded-full'
-						onClick={() => {
-							if (searchTerm !== '') {
-								setSearchTerm('');
-							}
-						}}
-						aria-label={searchTerm ? 'Clear search' : 'Search'}
-					>
-						{searchTerm ? <X size={20} /> : <Search size={16} />}
-					</button>
-				</div>
-			</div>
+    const response = await postSparePartsData(payload);
+
+  
+  } catch (error) {
+    console.error("❌ Error adding to cart:", error);
+  } finally {
+    console.log("📦 handleAddToCart finished");
+  }
+};
+
+//filteredParts --- usage to show only 8 initially
+const displayedParts = showAllProducts ? filteredParts : filteredParts.slice(0, 8);
+
+    const offerTitle = useScrollAnimation<HTMLHeadingElement>()
+    const productTitle = useScrollAnimation<HTMLHeadingElement>()
+    const bundleTitle = useScrollAnimation<HTMLHeadingElement>()
+    const categoryTitle = useScrollAnimation<HTMLHeadingElement>()
+
+
+  return (
+    <div className="p-12 mx-8 ">
+
+      <h1 className = "text-center"
+          ref={offerTitle.elementRef}                                              >
+          <span className="inline-block pb-1 relative text-4xl font-bold text-[#9b111e] mb-2">
+            My Orders
+            <span 
+              className={`absolute top-12 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+                offerTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
+              }`}
+            ></span>
+          </span>
+        </h1>
+      
+       
+      <div className="flex items-center justify-end flex-wrap gap-4 mt-6 mb-6">
+        {/* Search Bar */}
+        <div className="relative w-full max-w-md">
+          <input
+            type="text"
+            placeholder="Search by product name..."
+            className="border border-gray-300 rounded-full px-5 py-2 pr-10 w-full focus:outline-none focus:ring-2 focus:ring-[#9b111e]"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+          <button
+            className="absolute right-3 top-[85%] -translate-y-1/2 text-xl text-[#de687a] hover:text-red-600 transition-all duration-200 hover:scale-105 hover:bg-[#f1a2a9] p-1 rounded-full"
+            onClick={() => {
+              if (searchTerm !== '') {
+                setSearchTerm('');
+              }
+            }}
+            aria-label={searchTerm ? "Clear search" : "Search"}
+          >
+            {searchTerm ? <X size={20} /> : <Search size={16} />}
+          </button>
+        </div>
+      </div>
 
 			{/* Hero Card */}
 			<div className='mb-8 w-full bg-gray-100 rounded-xl shadow p-4 md:p-6 flex flex-row lg:flex-row items-center gap-6 hover:shadow-lg transition-shadow duration-300 h-[280px]'>
@@ -210,11 +271,19 @@ const SpareParts: React.FC = () => {
 				</div>
 			</div>
 
-			<div className='relative flex items-center justify-between mt-16 mb-10'>
-				<h2 className='absolute left-1/2 transform -translate-x-1/2 text-3xl font-bold text-[#9b111e] border-b-4 border-[#9b111e] pb-1'>
-					Products
-				</h2>
-			</div>
+     
+        <h1 className = "text-center"
+          ref={productTitle.elementRef}                                              >
+          <span className="inline-block pb-1 relative text-4xl font-bold text-[#9b111e] mb-2">
+            Products
+            <span 
+              className={`absolute top-11 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+                productTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
+              }`}
+            ></span>
+          </span>
+        </h1>
+      
 
 			{/*-----------------------------------------------------------------------------------------------------------------------------------------*/}
 
@@ -323,61 +392,65 @@ const SpareParts: React.FC = () => {
 
 			{/* Bundles Section - Only show if there are parts */}
 
-			{parts.length > 0 && (
-				<div className='bg-gray-100 mt-16 transition-shadow p-8'>
-					<div className='mb-8 text-center'>
-						<h2 className='inline-block text-2xl font-bold text-[#9b111e] border-b-4 border-[#9b111e] pb-1'>
-							OUR BUNDLES
-						</h2>
-					</div>
+{parts.length > 0 && (
+  
+  <div className="bg-gray-100 mt-16 transition-shadow p-8">
+       <h1 className="text-center" ref={bundleTitle.elementRef}>
+      <span className="inline-block pb-1 relative text-4xl font-bold text-[#9b111e] mb-2">
+        OUR BUNDLES
+         <span 
+      className={`absolute top-11 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+        bundleTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
+      }`}
+    ></span>
+      </span>
+    </h1>
 
-					<div className='overflow-hidden mt-10 relative'>
-						<div
-							className='flex transition-transform duration-500 ease-in-out'
-							style={{
-								transform: `translateX(-${currentIndex * 320}px)`,
-							}}
-							onTouchStart={handleTouchStart}
-							onTouchEnd={handleTouchEnd}
-						>
-							{/* Add clones at the beginning and end for seamless looping */}
-							{[...parts.slice(-3), ...parts, ...parts.slice(0, 3)].map(
-								(part, index) => (
-									<div
-										key={`${part.id}-${index}`} // Unique key for cloned items
-										className='min-w-[300px] flex-shrink-0 mr-5'
-									>
-										<div className='bg-gradient-to-br rounded-lg p-6 text-center text-white h-64 flex flex-col justify-center items-center shadow-2xl transition-transform duration-300 hover:-translate-y-2 cursor-pointer relative overflow-hidden'>
-											{/* Background Image with Overlay */}
-											<div
-												className='absolute inset-0 bg-cover bg-center blur-[2px]'
-												// style={{ backgroundImage: `url(${part.image || (part.images && part.images[0]) })`|| spareimg }
-												style={{ backgroundImage: `url(${spareimg}` }}
-											/>
-											<div className='absolute inset-0 bg-black opacity-10' />
-
-											{/* Content */}
-											<div className='relative z-10 flex flex-col items-center'>
-												<div className='w-16 h-16 mb-4 rounded-full bg-white bg-opacity-20 flex items-center justify-center backdrop-blur-sm'>
-													<img
-														src={spareimg}
-														alt={part.spareparts_name}
-														className='w-12 h-12 object-cover rounded-full'
-														onError={(e) => {
-															(e.target as HTMLImageElement).src = spareimg;
-														}}
-													/>
-												</div>
-												<div className='text-xl font-bold mb-2'>
-													{part.spareparts_name}
-												</div>
-											</div>
-										</div>
-									</div>
-								)
-							)}
-						</div>
-					</div>
+    <div className="overflow-hidden mt-10 relative">
+      <div
+        className="flex transition-transform duration-500 ease-in-out"
+        style={{
+          transform: `translateX(-${currentIndex * 320}px)`
+        }}
+        onTouchStart={handleTouchStart}
+        onTouchEnd={handleTouchEnd}
+      >
+        {/* Add clones at the beginning and end for seamless looping */}
+        {[...parts.slice(-3), ...parts, ...parts.slice(0, 3)].map((part, index) => (
+          <div
+            key={`${part.id}-${index}`} // Unique key for cloned items
+            className="min-w-[300px] flex-shrink-0 mr-5"
+          >
+            <div className="bg-gradient-to-br rounded-lg p-6 text-center text-white h-64 flex flex-col justify-center items-center shadow-2xl transition-transform duration-300 hover:-translate-y-2 cursor-pointer relative overflow-hidden">
+              {/* Background Image with Overlay */}
+              <div 
+                className="absolute inset-0 bg-cover bg-center blur-[2px]"
+                // style={{ backgroundImage: `url(${part.image || (part.images && part.images[0]) })`|| spareimg }
+                style={{ backgroundImage: `url(${spareimg}` }}
+              />
+              <div className="absolute inset-0 bg-black opacity-10" />
+              
+              {/* Content */}
+              <div className="relative z-10 flex flex-col items-center">
+                <div className="w-16 h-16 mb-4 rounded-full bg-white bg-opacity-20 flex items-center justify-center backdrop-blur-sm">
+                  <img
+                    src={spareimg}
+                    alt={part.spareparts_name}
+                    className="w-12 h-12 object-cover rounded-full"
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = spareimg;
+                    }}
+                  />
+                </div>
+                <div className="text-xl font-bold mb-2">
+                  {part.spareparts_name}
+                </div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
 
 					{/* Navigation Buttons - Updated with infinite loop logic */}
 					<div className='flex justify-center mt-6 space-x-4'>
@@ -464,92 +537,70 @@ const SpareParts: React.FC = () => {
 				</div>
 			</div>
 
-			<div className='max-w-full px-4 md:px-6 lg:px-8 bg-[#fae9eb] py-6'>
-				<div className='text-center mt-10 mb-12'>
-					<h1 className='inline-block text-2xl font-bold text-[#9b111e] border-b-4 border-[#9b111e] pb-1'>
-						BY CATEGORIES
-					</h1>
-				</div>
+      <div className="max-w-full px-4 md:px-6 lg:px-8 bg-[#fae9eb] py-6">
+        <h1 className = "text-center"
+          ref={categoryTitle.elementRef}                                              >
+          <span className="inline-block pb-1 relative text-4xl font-bold text-[#9b111e] mb-2">
+            BY CATEGORIES
+            <span 
+              className={`absolute top-11 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+                categoryTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
+              }`}
+            ></span>
+          </span>
+        </h1>
 
-				<div className='grid grid-cols-4 sm:grid-cols-2 mdplus:grid-cols-2 lg:grid-cols-4 gap-6'>
-					{[
-						{
-							title: 'Wheels and Tires',
-							image:
-								'https://img.freepik.com/free-vector/realistic-complete-set-car-wheels_1284-29765.jpg?ga=GA1.1.1244886688.1725532511&semt=ais_hybrid&w=740',
-							items: [
-								'Bearings & Hubs',
-								'Chrome Rims',
-								'Hybrid Tyres',
-								'Seasonal Tyres',
-								'Wheel Bolts',
-							],
-						},
-						{
-							title: 'Body Parts',
-							image:
-								'https://img.freepik.com/premium-photo/two-metal-pistons-white_241146-682.jpg?ga=GA1.1.1244886688.1725532511&semt=ais_hybrid&w=740',
-							items: [
-								'Headlights',
-								'Accelerator',
-								'Bumpers',
-								'Clutch',
-								'Washers',
-							],
-						},
-						{
-							title: 'Performance Parts',
-							image:
-								'https://img.freepik.com/free-psd/3d-style-mechanical-item-isolated-transparent-background_191095-13746.jpg?ga=GA1.1.1244886688.1725532511&semt=ais_hybrid&w=740',
-							items: [
-								'Drive Belts',
-								'Engine Gasket',
-								'Fuel Pumps',
-								'Head Bolts',
-								'Piston Rings',
-							],
-						},
-						{
-							title: 'Maintenance',
-							image:
-								'https://img.freepik.com/free-vector/engine-pistons-system-composition-with-realistic-image-assembled-metal-engine-elements-isolated_1284-53969.jpg?ga=GA1.1.1244886688.1725532511&semt=ais_hybrid&w=740',
-							items: [
-								'Cleaners',
-								'Antifreeze',
-								'Engine Oil',
-								'Repair Kits',
-								'Bodypaint',
-							],
-						},
-					].map(({ title, image, items }, index) => (
-						<div
-							key={index}
-							className='flex flex-col gap-4 p-6 border rounded-xl shadow-md'
-						>
-							<div className='flex justify-between items-center'>
-								<h2 className='text-md font-bold uppercase text-[#9b111e]'>
-									{title}
-								</h2>
-								<img
-									src={image}
-									alt={title}
-									className='w-16 h-16 object-contain ml-2'
-								/>
-							</div>
-							<ul className='space-y-1 text-sm'>
-								{items.map((item, idx) => (
-									<li key={idx} className='hover:underline cursor-pointer'>
-										{item}
-									</li>
-								))}
-							</ul>
-							<span className='text-sm font-semibold text-red-700 cursor-pointer hover:underline mt-2'>
-								ALL CATEGORIES →
-							</span>
-						</div>
-					))}
-				</div>
-			</div>
+        <div className="grid grid-cols-4 sm:grid-cols-2 mdplus:grid-cols-2 lg:grid-cols-4 gap-6">
+          {[
+            {
+              title: "Wheels and Tires",
+              image: "https://img.freepik.com/free-vector/realistic-complete-set-car-wheels_1284-29765.jpg?ga=GA1.1.1244886688.1725532511&semt=ais_hybrid&w=740",
+              items: ["Bearings & Hubs", "Chrome Rims", "Hybrid Tyres", "Seasonal Tyres", "Wheel Bolts"],
+            },
+            {
+              title: "Body Parts",
+              image: "https://img.freepik.com/premium-photo/two-metal-pistons-white_241146-682.jpg?ga=GA1.1.1244886688.1725532511&semt=ais_hybrid&w=740",
+              items: ["Headlights", "Accelerator", "Bumpers", "Clutch", "Washers"],
+            },
+            {
+              title: "Performance Parts",
+              image: "https://img.freepik.com/free-psd/3d-style-mechanical-item-isolated-transparent-background_191095-13746.jpg?ga=GA1.1.1244886688.1725532511&semt=ais_hybrid&w=740",
+              items: ["Drive Belts", "Engine Gasket", "Fuel Pumps", "Head Bolts", "Piston Rings"],
+            },
+            {
+              title: "Maintenance",
+              image: "https://img.freepik.com/free-vector/engine-pistons-system-composition-with-realistic-image-assembled-metal-engine-elements-isolated_1284-53969.jpg?ga=GA1.1.1244886688.1725532511&semt=ais_hybrid&w=740",
+              items: ["Cleaners", "Antifreeze", "Engine Oil", "Repair Kits", "Bodypaint"],
+            },
+          ].map(({ title, image, items }, index) => (
+            <div
+              key={index}
+              className="flex flex-col gap-4 p-6 border rounded-xl shadow-md"
+            >
+              <div className="flex justify-between items-center">
+                <h2 className="text-md font-bold uppercase text-[#9b111e]">
+                  {title}
+                </h2>
+                <img
+                  src={image}
+                  alt={title}
+                  className="w-16 h-16 object-contain ml-2"
+                />
+              </div>
+              <ul className="space-y-1 text-sm">
+                {items.map((item, idx) => (
+                  <li key={idx} className="hover:underline cursor-pointer">
+                    {item}
+                  </li>
+                ))}
+              </ul>
+              <span className="text-sm font-semibold text-red-700 cursor-pointer hover:underline mt-2">
+                ALL CATEGORIES →
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
 
 			{/* Edit Product Modal */}
 			{selectedPart && (
