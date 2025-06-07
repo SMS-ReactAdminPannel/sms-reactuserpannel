@@ -112,7 +112,7 @@ class Client {
 			postProduct: (data: any) =>
 				httpClient.post(API_END_POINTS.bookings.postProduct, data),
 			postService: (params: string) =>
-				httpClient.get(API_END_POINTS.bookings.postService, params),
+				httpClient.post(API_END_POINTS.bookings.postService, params),
 		},
 	};
 }

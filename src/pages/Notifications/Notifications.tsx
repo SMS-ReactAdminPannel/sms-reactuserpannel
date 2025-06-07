@@ -12,6 +12,8 @@ type MailItem = {
 	updated_at: string;
 	unread: boolean;
 	recipient_type: string;
+	created_at: string;
+
 };
 
 export default function GmailStyleInbox() {
@@ -21,23 +23,25 @@ export default function GmailStyleInbox() {
 	const [mails, setMails] = useState<MailItem[]>([]);
 
 	const filteredMails = mails
-		.filter((mail) => mail.recipient_type === 'user') // only user notifications
+		.filter((mail) => mail.recipient_type === 'user')
 		.filter((mail) =>
-			filter === 'all' ? true : filter === 'unread' ? mail.unread : !mail.unread
+			filter === 'all'
+				? true
+				: filter === 'unread'
+				? !mail.is_read
+				: mail.is_read
 		);
-
-	console.log(filteredMails);
-
-	console.log(mails, 'mails');
 
 	const fetchAllNotifications = async () => {
 		try {
-			const response = await getAllNotifications('');
-
-			//console.log(response, "Notifications Fetch Succesful");
+			const response = await getAllNotifications({});
 			const data: MailItem[] = response?.data?.data || [];
-			console.log('Fetched Notifications:', data);
-			setMails(data);
+			const sortedData = data.sort(
+				(b, a) =>
+					new Date(b?.created_at).getTime() -
+					new Date(a?.created_date).getTime()
+			);
+			setMails(sortedData);
 		} catch (error) {
 			console.log('Error Fetching Notifications:', error);
 		}
