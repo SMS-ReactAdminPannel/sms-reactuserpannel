@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import bgImage from '../../assets/checkout-bg_1_.png';
 import serviceImg from "../../assets/serviceimages/generalservice.png"
 import { LiaCartPlusSolid } from "react-icons/lia";
+import { postBookingService } from "../../features/Bookings/service";
 
 // Types
 interface spare {
@@ -79,13 +80,12 @@ export default function SparePartsCart() {
   const [showSummary, setShowSummary] = useState(false);
   const [showsSummary, setShowsSummary] = useState(false);
   const [cartId, setCartId] = useState<string>('')
+  const [serviceId, setServiceCartId] = useState<string>('')
   const totalPartPrice = confirmedPartOrders.reduce((acc, cur) => acc + cur.part.price * cur.quantity, 0);
   const totalServicePrice = confirmedServiceOrders.reduce((acc, cur) => acc + cur.serv.price * cur.quantity, 0);
 
   // text-line animation
   const cartTitle = useScrollAnimation<HTMLHeadingElement>()
-
-  console.log(cartId);
 
 const books_valid = async () => {
   try {
@@ -115,7 +115,8 @@ const books_valid = async () => {
     }
 
 const serviceEntry = cartData.find((item) => item.type === "service");
-console.log(serviceEntry);
+    const serviceId = serviceEntry._id
+    setServiceCartId(serviceId)
 
 if (serviceEntry?.services) {
   const mappedServices = serviceEntry.services.map((service: any): service => ({
@@ -152,10 +153,8 @@ if (serviceEntry?.services) {
       cartId: cartId, // Send cartId directly
     };
 
-    console.log("Final payload:", payload); // Debug log
-
     const response = await postBookingProduct(payload);
-    console.log("Response:", response);
+
     
     toast.success("Order placed successfully! 🎉", { autoClose: 2000 });
     setConfirmedPartOrders([]); // Clear confirmed orders
@@ -171,7 +170,29 @@ if (serviceEntry?.services) {
   }
 };
 
-  
+    // Service Order post
+    
+    const placeServiceOrder = async () => {
+  try {
+    const payload = {
+      cartId: serviceId, // Send cartId directly
+    };
+    const response = await postBookingService(payload);
+    
+    toast.success("Order placed successfully! 🎉", { autoClose: 2000 });
+    setConfirmedPartOrders([]); // Clear confirmed orders
+
+  } catch (error) {
+    console.error("Order placement error:", {
+      error: error.message,
+      response: error.response?.data
+    });
+    toast.error(error.response?.data?.message || "Failed to place order");
+  } finally {
+    setLoading(false);
+  }
+};
+
 
 
   const handleConfirmPart = (product_id: number, quantity: number) => {
@@ -485,7 +506,7 @@ if (serviceEntry?.services) {
                     className="flex justify-center gap-2 items-center mx-auto shadow-xl text-lg bg-gray-50 backdrop-blur-md lg:font-semibold isolation-auto border-gray-50 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-[#9b111e] hover:text-gray-50 before:-z-10 before:aspect-square before:hover:scale-150 before:hover:duration-700 relative z-10 px-6 py-2 overflow-hidden border-2 rounded-full group"
                     onClick={async () => {
                       try { 
-                          await placeOrder();
+                          await placeServiceOrder();
                         
                       } catch (error: any) {
                         toast.error(error.message || "Failed to place order");

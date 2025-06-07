@@ -256,7 +256,6 @@ const OrdersPage: React.FC = () => {
 		const fetchOrders = async () => {
 			try {
 				const response = await getBookingAll({});
-				console.log('Fetched orders:', response);
 				if (response?.data) {
 					const transformedOrders = [
 						...(response.data.productConfirm?.map((productOrder: any) => ({
