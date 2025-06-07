@@ -109,9 +109,9 @@ class Client {
 			getAll: (params: string) =>
 				httpClient.get(API_END_POINTS.bookings.getAll, params),
 			postProduct: (params: string) =>
-				httpClient.get(API_END_POINTS.bookings.postProduct, params),
+				httpClient.post(API_END_POINTS.bookings.postProduct, params),
 			postService: (params: string) =>
-				httpClient.get(API_END_POINTS.bookings.postService, params),
+				httpClient.post(API_END_POINTS.bookings.postService, params),
 		},
 	};
 }
