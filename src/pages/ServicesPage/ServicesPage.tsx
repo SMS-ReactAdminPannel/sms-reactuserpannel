@@ -586,25 +586,40 @@ overalldata();
 
 	const [sendPages, setSendPages] = useState<ServiceCategory[]>([]);// data entering
 
- 	const senddata = async () => {
+ 	// const senddata = async () => {
+	// 	try {
+	// 		const data = {
+	// 			service : ["service id"],
+	// 			type: "service"
+	// 		}
+	// 		const response = await addToBookingCart(data);
+	// 		console.log(response)
+	// 		setSendPages(response);
+	// 	} catch (error) {
+	// 		console.log(error);
+	// 	}
+	// }
+	const senddata = async (pkgId: string) => {
 		try {
 			const data = {
-				service : ["service id"],
-				type: "service"
-			}
-			const response = await addToBookingCart(data);
-			console.log(response)
-			setSendPages(response);
+				service: [pkgId],
+				type: "service",
+			};
+			const response = await addToBookingCart(data); // returns an array of ServiceCategory
+			console.log("API Response:", response);
+			return response;
 		} catch (error) {
-			console.log(error);
+			console.error("API Error:", error);
+			return [];
 		}
-	}
+	};
+	  
+	  
 
 
 	useEffect(() => {
 		senddata();
-	}, [])
-		
+	}, []);
 	
 	
 
@@ -655,18 +670,9 @@ overalldata();
 
 	const [activeCategory, setActiveCategory] = useState(service[0]?.category_name || '');
 	
-// for image
-// 	const categoryImages = {
-// 		'Engine Service': image1,
-// 		'Car Dismantle': image2,
-// 		'Car Differential': image3,
-// 		'Car Bumper': image4,
-//   };
 
-	const getCategoryImage = (categoryName) => {
-		if (!categoryName) return image1;
-		return categoryImages[categoryName.toLowerCase()] || image1;
-  };
+
+	
   		
 
 
@@ -678,14 +684,15 @@ const getCategoryImage = (categoryName) => {
 	  case 'sample-1':
 		return image2;
 	  case 'books':
-		return image3;
+		return image2;
 	  case 'new-sample-category':
-		return image4;
+		return image3;
 	  default:
 		return '/images/default.jpg'; // fallback image
 	}
   };
-  
+
+	
   
 
 	return (	
@@ -776,7 +783,7 @@ const getCategoryImage = (categoryName) => {
 															className='w-[100%] h-[250px] object-cover rounded'
 														/>
 													</div>
-
+													
 													<h3 className='text-xl font-bold text-red-800 my-4'>{pkg.title}</h3>
 													<div className='absolute'>
 														<div className='relative font-bold flex flex-row items-center w-[122px] bottom-[40px] left-[445px] px-3 py-1 rounded-full bg-red-600 text-white text-sm'>
@@ -825,25 +832,41 @@ const getCategoryImage = (categoryName) => {
 																</div>
 																{cart.some((item) => item.packageId === pkg.id) ? (
 																	<button
-																		onClick={() => navigate('/booking-cart')}
-																		className='px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors'
-																	>
-																		Go to Cart
-																	</button>
+																	onClick={() =>
+																	  navigate('/booking-cart', {
+																		state: { sendPages },
+																	  })
+																	}
+																	className='px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors'
+																  >
+																	Go to Cart
+																  </button>
+																  
 																) : (
-																	<button
-																		onClick={() => {
-																			const packageToAdd = selectedPackage.find((p) => p.packageId === pkg.id);
-																			if (packageToAdd) {
-																				setCart([...cart, packageToAdd]);
-																				setShowCartNotification(true);
-																				setTimeout(() => setShowCartNotification(false), 3000);
-																			}
-																		}}
-																		className='px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-900 transition-colors'
-																	>
-																		Add to Cart
-																	</button>
+																		<button
+																			onClick={async () => {
+																				const packageToAdd = selectedPackage.find((p) => p.packageId === pkg.id);
+
+																				if (packageToAdd) {
+																					setCart((prevCart) => [...prevCart, packageToAdd]);
+																					setShowCartNotification(true);
+																					setTimeout(() => setShowCartNotification(false), 3000);
+
+																					// Call API and get booking data
+																					const bookingData = await senddata(pkg.id);
+
+																					// Navigate to /booking-cart with the booking data as state
+																					if (bookingData.length > 0) {
+																						navigate("/booking-cart", { state: { sendPages: bookingData } });
+																					}
+																				}
+																			}}
+																			className='px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-900 transition-colors'
+																		>
+																			Add to Cart
+																		</button>
+															  
+
 																)}
 															</>
 														) : (
