@@ -15,6 +15,7 @@ interface SparePart {
 	images: string[];
 	type: string;
 	image: string;
+	category?: string; 
 }
 
     // Custom hook for Scroll Animation
@@ -58,6 +59,15 @@ const SpareParts: React.FC = () => {
   const [quantity, setQuantity] = useState(1);
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [parts, setParts] = useState<SparePart[]>([]);
+   const [categories, setCategories] = useState<
+  {
+    id: string;
+    title: string;
+    image: string;
+    items: string[];
+  }[]
+>([]);
+
 
   const [showAllProducts, setShowAllProducts] = useState(false);  //product page cards
   
@@ -77,6 +87,7 @@ const SpareParts: React.FC = () => {
       
       const data = {}; // Make sure this matches your API requirements
       const response = await getSparePartsData(data);
+	  console.log("🚀 Raw API Response:", response);
       
       // Check if response has the expected structure
       if (response && response.data && response.data.data) {
@@ -91,11 +102,16 @@ const SpareParts: React.FC = () => {
               stock: part.stock || '',
               images: Array.isArray(part.images) ? part.images : [part.image || ''],
               type: part.type || '',
-              image: part.image || (Array.isArray(part.images) ? part.images[0] : '')
+              image: part.image || (Array.isArray(part.images) ? part.images[0] : ''),
+              category: part.category || 'Uncategorized' 
             };
           });
           
           setParts(validatedParts);
+		  const categoriesData = transformToCategories(validatedParts);
+		  console.log("📦 Transformed Categories:", categoriesData);
+		 setCategories(categoriesData);
+
         } else {
           throw new Error('API response data is not an array');
         }
@@ -108,8 +124,33 @@ const SpareParts: React.FC = () => {
       
       // Optional: Set fallback data for development
       setParts([]);
-    } 
+    setCategories([]);
+
+    }
   }
+
+  const transformToCategories = (parts: SparePart[]) =>{
+	const categoriesMap = parts.reduce((acc, part) => {
+		const categoryName = part.category || 'Uncategorized';
+		if (!acc[categoryName]) {
+			acc[categoryName] = {
+				id: categoryName.toLowerCase().replace(/\s+/g, '-'),
+
+				title : categoryName,
+				image :part.image || spareimg,
+				items: [],
+			};
+		}
+		 if (!acc[categoryName].items.includes(part.spareparts_name)) {
+        acc[categoryName].items.push(part.spareparts_name);
+		}
+		return acc;
+	}, {} as Record<string, { id: string; title: string; image: string; items: string[] }>);
+
+
+	   // Convert to array and limit to 4 categories for display
+    return Object.values(categoriesMap).slice(0, 4);
+  };
 
   useEffect(() => {
     fetchSpareParts();
@@ -274,7 +315,7 @@ const displayedParts = showAllProducts ? filteredParts : filteredParts.slice(0, 
      
         <h1 className = "text-center"
           ref={productTitle.elementRef}                                              >
-          <span className="inline-block pb-1 relative text-4xl font-bold text-[#9b111e] mb-2">
+          <span className="inline-block pb-1 relative text-4xl font-bold text-[#9b111e] mb-10">
             Products
             <span 
               className={`absolute top-11 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
@@ -303,7 +344,7 @@ const displayedParts = showAllProducts ? filteredParts : filteredParts.slice(0, 
 							{displayedParts.map((part, index) => (
 								<div
 									key={part.id}
-									className='group relative border rounded-lg overflow-hidden shadow transition-transform duration-300 cursor-pointer bg-[#efe7d0] hover:scale-105 hover:shadow-[0_0_10px_rgba(155,17,30,0.5)]'
+									className='group relative border rounded-lg overflow-hidden shadow transition-transform duration-300 cursor-pointer bg-[#efe7d0] hover:scale-103 hover:shadow-[0_0_10px_rgba(155,17,30,0.5)]'
 									onClick={() => setSelectedPart(part)}
 									onMouseEnter={() => setHoveredIndex(index)}
 									onMouseLeave={() => setHoveredIndex(null)}
@@ -320,20 +361,20 @@ const displayedParts = showAllProducts ? filteredParts : filteredParts.slice(0, 
 												spareimg
 											}
 											alt={part.spareparts_name}
-											className='max-w-[160px] max-h-[160px] w-auto h-auto object-cover transition-all duration-300 ease-in-out rounded-md'
+											className='pt-4 w-auto h-auto rounded object-cover transition-all duration-300 ease-in-out rounded-md'
 											onError={(e) => {
 												(e.target as HTMLImageElement).src = spareimg;
 											}}
 										/>
 									</div>
-									<div className='p-3 relative'>
-										<div className='text-xs font-semibold line-clamp-2 mb-1'>
+									<div className='p-6 px-12 relative'>
+										<div className='text-xl font-bold line-clamp-2 mb-1'>
 											{part.spareparts_name}
 										</div>
-										<div className='text-xs text-gray-600 mb-1'>
+										<div className='text-md text-gray-600 mb-1'>
 											{part.type}
 										</div>
-										<div className='text-sm font-bold text-[#9b111e]'>
+										<div className='text-md font-bold text-[#9b111e]'>
 											₹{part.price.toLocaleString()}
 										</div>
 										<div
@@ -346,13 +387,13 @@ const displayedParts = showAllProducts ? filteredParts : filteredParts.slice(0, 
 
 										{/* Cart Icon Button */}
 										<button
-											className='absolute bottom-2 right-2 bg-white p-1 rounded-full shadow hover:bg-[#9b111e] hover:text-white transition'
+											className='absolute bottom-4 right-5 bg-white p-3 rounded-full shadow hover:bg-[#9b111e] hover:text-white transition'
 											onClick={(e) => {
 												e.stopPropagation();
 												handleAddToCart(part);
 											}}
 										>
-											<ShoppingCart size={18} />
+											<ShoppingCart size={28} />
 										</button>
 									</div>
 								</div>
@@ -540,7 +581,7 @@ const displayedParts = showAllProducts ? filteredParts : filteredParts.slice(0, 
       <div className="max-w-full px-4 md:px-6 lg:px-8 bg-[#fae9eb] py-6">
         <h1 className = "text-center"
           ref={categoryTitle.elementRef}                                              >
-          <span className="inline-block pb-1 relative text-4xl font-bold text-[#9b111e] mb-2">
+          <span className="inline-block pb-1 relative text-4xl font-bold text-[#9b111e] mb-10">
             BY CATEGORIES
             <span 
               className={`absolute top-11 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
@@ -550,8 +591,8 @@ const displayedParts = showAllProducts ? filteredParts : filteredParts.slice(0, 
           </span>
         </h1>
 
-        <div className="grid grid-cols-4 sm:grid-cols-2 mdplus:grid-cols-2 lg:grid-cols-4 gap-6">
-          {[
+        <div className="grid grid-cols-4 sm:grid-cols-2 mdplus:grid-cols-2 lg:grid-cols-4 gap-6 ">
+          {/* {[
             {
               title: "Wheels and Tires",
               image: "https://img.freepik.com/free-vector/realistic-complete-set-car-wheels_1284-29765.jpg?ga=GA1.1.1244886688.1725532511&semt=ais_hybrid&w=740",
@@ -572,24 +613,29 @@ const displayedParts = showAllProducts ? filteredParts : filteredParts.slice(0, 
               image: "https://img.freepik.com/free-vector/engine-pistons-system-composition-with-realistic-image-assembled-metal-engine-elements-isolated_1284-53969.jpg?ga=GA1.1.1244886688.1725532511&semt=ais_hybrid&w=740",
               items: ["Cleaners", "Antifreeze", "Engine Oil", "Repair Kits", "Bodypaint"],
             },
-          ].map(({ title, image, items }, index) => (
+          ]. */}
+
+		   {categories.map(({ id, title, image, items }) => (
             <div
-              key={index}
-              className="flex flex-col gap-4 p-6 border rounded-xl shadow-md"
+              key={id}
+              className="flex flex-col gap-4 p-6 border rounded-xl shadow-md bg-[#efe7d0] "
             >
               <div className="flex justify-between items-center">
-                <h2 className="text-md font-bold uppercase text-[#9b111e]">
+                <h2 className="text-md font-bold uppercase text-[#9b111e] ">
                   {title}
                 </h2>
                 <img
                   src={image}
                   alt={title}
-                  className="w-16 h-16 object-contain ml-2"
+                  className="w-40 h-30 object-contain ml-2 rounded-md shadow-sm "
+				   onError={(e) => {
+            (e.target as HTMLImageElement).src = spareimg;
+          }}
                 />
               </div>
               <ul className="space-y-1 text-sm">
-                {items.map((item, idx) => (
-                  <li key={idx} className="hover:underline cursor-pointer">
+                {items.slice(0, 5).map((item, idx) => (
+                  <li key={`${id}-${idx}`} className="hover:underline cursor-pointer">
                     {item}
                   </li>
                 ))}
