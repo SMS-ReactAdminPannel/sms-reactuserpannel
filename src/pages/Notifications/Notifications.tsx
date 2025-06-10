@@ -13,7 +13,6 @@ type MailItem = {
 	unread: boolean;
 	recipient_type: string;
 	created_at: string;
-
 };
 
 export default function GmailStyleInbox() {
@@ -46,6 +45,7 @@ export default function GmailStyleInbox() {
 			console.log('Error Fetching Notifications:', error);
 		}
 	};
+
 	useEffect(() => {
 		fetchAllNotifications();
 	}, []);

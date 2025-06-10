@@ -103,7 +103,7 @@ const Offer: React.FC = () => {
 						transition={{ delay: index * 0.15, duration: 0.5 }}
 						className='relative rounded-xl shadow-lg p-4 bg-white/70 backdrop-blur-md border border-white/30'
 					>
-						<span className='absolute top-2 right-2 bg-gradient-to-r from-red-500 to-orange-500 text-white text-xs font-semibold px-2 py-1 rounded-full shadow-sm'>
+						<span className='absolute top-2 right-2 bg-red-800 text-white text-xs font-semibold px-2 py-1 rounded-md shadow-sm'>
 							{offer.badge}
 						</span>
 

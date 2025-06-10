@@ -10,6 +10,7 @@ import ProfileMenu from '../home/ProfileMenu';
 import CustomDropdown from './Customdropdown';
 import TruckIcon from '../../assets/carimages/delivery-truck.png';
 import { getAllNotifications } from '../../features/Notification/services';
+import { booking_cart } from '../../features/BookingCart/service';
 
 type MailItem = {
 	sender: string;
@@ -34,6 +35,7 @@ export const Navbar: React.FC = () => {
 	const notificationRef = useRef<HTMLDivElement | null>(null);
 	const [search, setSearch] = useState('');
 	const [mails, setMails] = useState<MailItem[]>([]);
+	const [cartCount, setCartCount] = useState(0);
 
 	const filteredMails = mails
 		.filter((mail) => mail.recipient_type === 'user')
@@ -57,8 +59,24 @@ export const Navbar: React.FC = () => {
 			console.log('Error Fetching Notifications:', error);
 		}
 	};
+
+	const fetchBookingCartCount = async () => {
+		try {
+			const response = await booking_cart({});
+			if (response) {
+				setCartCount(
+					response.data.data[0].services.length +
+						response.data.data[1].products.length
+				);
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
 	useEffect(() => {
 		fetchAllNotifications();
+		fetchBookingCartCount();
 	}, []);
 
 	// Handle outside clicks for dropdown & notifications
@@ -107,6 +125,21 @@ export const Navbar: React.FC = () => {
 		{ title: 'Bookings', link: '/bookings' },
 		{ title: 'Offers', link: '/announcement' },
 	];
+
+	const formatDate = (isoString: string) => {
+		const date = new Date(isoString);
+		const day = String(date.getDate()).padStart(2, '0');
+		const month = String(date.getMonth() + 1).padStart(2, '0');
+		const year = String(date.getFullYear()).slice(-2);
+		let hours = date.getHours();
+		const minutes = String(date.getMinutes()).padStart(2, '0');
+		const ampm = hours >= 12 ? 'pm' : 'am';
+		hours = hours % 12;
+		hours = hours ? hours : 12;
+		const formattedHours = String(hours).padStart(2, '0');
+		const formatted = `${day}-${month}-${year} ${formattedHours}:${minutes}${ampm}`;
+		return formatted;
+	};
 
 	return (
 		<header className='bg-white text-white w-full fixed top-0 z-50'>
@@ -203,12 +236,12 @@ export const Navbar: React.FC = () => {
 												<div className='absolute left-0 top-0 h-full w-1 bg-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-200'></div>
 
 												<div className='flex justify-between items-start'>
-													<p className='text-sm text-gray-800'>
+													<p className='text-sm text-red-900 font-semibold'>
 														{notification.title}
 													</p>
 												</div>
-												<p className='text-xs text-gray-500 mt-1'>
-													{notification?.created_at}
+												<p className='text-xs text-red-800 mt-1 text-right'>
+													{formatDate(notification?.created_at)}
 												</p>
 											</div>
 										))
@@ -349,9 +382,9 @@ export const Navbar: React.FC = () => {
 							navigate('/booking-cart');
 						}}
 					>
-						<FaShoppingCart className='text-2xl cursor-pointer text-red-900' />
-						<span className='absolute -top-2 left-4 bg-red-900 text-white text-xs rounded-full px-1'>
-							0
+						<FaShoppingCart className='text-3xl cursor-pointer text-red-900' />
+						<span className='absolute w-min-5 h-min-5 -top-2 left-4 bg-red-500 text-white text-xs rounded-full px-1 py-0.5 cursor-pointer'>
+							{cartCount || 0}
 						</span>
 					</div>
 				</div>

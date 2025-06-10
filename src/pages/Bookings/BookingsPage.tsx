@@ -8,10 +8,12 @@ import {
 	Calendar,
 	Truck,
 	Clock,
-	MapPin,
 } from 'lucide-react';
 import bgImage from '../../assets/checkout-bg_1_.png';
 import { getBookingAll } from '../../features/Bookings/service';
+
+import serviceImg from '../../assets/serviceimages/generalservice.png';
+import spareImg from '../../assets/CAR GEAR/car gear.jpg';
 
 interface OrderDetails {
 	id: string;
@@ -74,11 +76,9 @@ const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 	return { elementRef, isVisible };
 };
 
-// OrderCard Component
 interface OrderCardProps {
 	order: OrderDetails;
 }
-
 const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 	const orderDate = new Date(order.date);
 	const isCompleted =
@@ -115,17 +115,25 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 	};
 
 	return (
-		<div className='opacity-90 rounded-2xl shadow-lg-red-300 border max-w-6xl mx-auto border-red-800 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 hover:border-red-300'>
+		<div className='opacity-90 rounded-2xl shadow-lg-red-300 border max-w-6xl mx-auto border-red-800 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:border-red-700'>
 			<div className='flex flex-col'>
 				<div className='flex flex-row'>
 					{/* Image Section */}
-					<div className='md:w-48 h-48 md:h-auto relative overflow-hidden rounded-lg shadow-md'>
+					<div className='md:w-48 h-40  relative overflow-hidden rounded-lg shadow-md'>
 						{/* Placeholder image since API doesn't provide images */}
-						<div className='w-full h-full bg-red-100 flex items-center justify-center'>
+						<div className='w-full h-full bg-gray-100 flex items-center justify-center'>
 							{isService ? (
-								<Wrench className='w-16 h-16 text-gray-400' />
+								<img
+									src={serviceImg}
+									alt='service-image'
+									className='w-full h-full'
+								/>
 							) : (
-								<Package className='w-16 h-16 text-gray-400' />
+								<img
+									src={spareImg}
+									alt='service-image'
+									className='w-full h-full'
+								/>
 							)}
 						</div>
 
@@ -151,19 +159,6 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 								)}
 							</span>
 						</div>
-
-						{/* Status badge (top-right) */}
-						{/* <div className='absolute top-3 right-3 z-10'>
-							<span
-								className={`px-2 py-1 text-xs font-medium rounded-full ${
-									isCompleted
-										? 'bg-green-100 text-green-700'
-										: 'bg-orange-100 text-orange-700'
-								}`}
-							>
-								{order.status || (isCompleted ? 'Completed' : 'Pending')}
-							</span>
-						</div> */}
 					</div>
 
 					{/* Content Section */}
@@ -226,16 +221,16 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 					</div>
 
 					<div className='flex space-x-2'>
-						<button className='px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors'>
+						<button className='px-4 py-2 text-sm font-medium text-gray-700 bg-gray-300 rounded-lg hover:bg-gray-200 transition-colors'>
 							View Details
 						</button>
 
-						{/* {isService && (
-							<button className='px-4 py-2 text-sm font-medium text-white bg-[#9b111e] rounded-lg hover:from-red-200 hover:to-red-100 transition-all duration-200 shadow-sm hover:shadow-md'>
+						{
+							<button className='px-4 py-2 text-sm font-medium text-white bg-[#9b111e] rounded-lg hover:bg-red-700 transition-all duration-200 shadow-sm hover:shadow-md'>
 								<Truck className='w-4 h-4 mr-1 inline' />
 								Track Order
 							</button>
-						)} */}
+						}
 					</div>
 				</div>
 			</div>
@@ -381,7 +376,7 @@ const OrdersPage: React.FC = () => {
 								value={searchTerm}
 								placeholder='Search orders...'
 								onChange={(e) => setSearchTerm(e.target.value)}
-								className='w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all'
+								className='w-[482px] pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all'
 							/>
 						</div>
 
@@ -443,7 +438,7 @@ const OrdersPage: React.FC = () => {
 									setFilterType('all');
 									setSortBy('date');
 								}}
-								className='ml-[400px] px-4 py-1 text-gray-500 rounded-xl hover:text-white hover:bg-red-700 transition-all duration-200 shadow-sm hover:shadow-md font-medium text-sm'
+								className='ml-[400px] px-4 py-1 text-gray-500 bg-red-800 text-white rounded-xl hover:text-white hover:bg-red-700 transition-all duration-200 shadow-sm hover:shadow-md font-medium text-sm'
 							>
 								Reset Filters
 							</button>
