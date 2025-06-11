@@ -20,7 +20,13 @@ interface OrderDetails {
   description: string;
   date?: string;
   price: number;
+  sellingPrice:number;
+  discount:number;
   compatibility: string;
+  status:string;
+  update:string;
+  currentLocation:string;
+  EstimatedDelivery:string;
   type: "spare" | "service";
 }
 
@@ -29,123 +35,190 @@ const allOrders: OrderDetails[] = [
   {
     id: "1",
     name: "Brake Pad Set",
+    sellingPrice:3000,
     price: 1800,
+    discount:50,
     imageUrl:
       "https://mountuneusa.com/cdn/shop/products/2364-BPR-EY-2.jpg?v=1679085769",
     description: "High-quality ceramic brake pads for safe and smooth braking.",
     date: "2025-01-15", // Future date - In Progress
     compatibility: "Honda City",
+    status:"Transit",
+    update:"2 hours ago",
+    currentLocation:"Chennai",
+    EstimatedDelivery:"1222",
     type: "spare",
   },
   {
     id: "2",
     name: "Air Filter Element",
+    sellingPrice:3000,
     price: 500,
+    discount:50,
     imageUrl:
       "https://ix-cdn.b2e5.com/images/27094/27094_64f064db089b431fb5edb0d696b3ee39_1539205525.jpeg",
     description:
       "Durable air filter ensuring clean air intake and better mileage.",
     date: "2024-01-10",
     compatibility: "Hyundai i20",
+    status:"Transit",
+    update:"2 hours ago",
+    currentLocation:"Chennai",
+    EstimatedDelivery:"1222",
     type: "spare",
   },
   {
     id: "3",
     name: "Engine Oil 5W-30 (3L)",
+    sellingPrice:3000,
     price: 700,
+     discount:50,
     imageUrl:
       "https://www.veedolindia.com/sites/default/files/assets/products/01_TAKE-OFF-4T-RACING-10W-50-SP-MA2.jpg",
     description: "Premium synthetic oil for high-performance engines.",
     date: "2025-01-20", // Future date - In Progress
     compatibility: "Universal",
+    status:"Transit",
+     update:"2 hours ago",
+    currentLocation:"Chennai",
+    EstimatedDelivery:"1222",
     type: "spare",
   },
   {
     id: "4",
     name: "Headlight Assembly",
+    sellingPrice:3000,
     price: 900,
+     discount:50,
     imageUrl:
       "https://ragillyspares.com/cdn/shop/files/719k8aSruQL._SL1500.jpg?v=1683808827",
     description: "Complete headlamp assembly with long-lasting brightness.",
     date: "2023-06-01",
     compatibility: "Maruti Swift",
+    status:"Transit",
+    update:"2 hours ago",
+    currentLocation:"Chennai",
+    EstimatedDelivery:"1222",
     type: "spare",
+
   },
   {
     id: "5",
     name: "Wiper Blade Set",
+    sellingPrice:3000,
     price: 1000,
+     discount:50,
     imageUrl:
       "https://cdn11.bigcommerce.com/s-fqaftp/images/stencil/1280x1280/ products/17091/39298/D3WIPEBOSCHA1__94725.1620205879.jpg?c=2?imbypass=on",
     description: "All-weather wiper blades with streak-free performance.",
     date: "2024-05-20",
     compatibility: "Toyota Corolla",
+    status:"Transit",
+    update:"2 hours ago",
+    currentLocation:"Chennai",
+    EstimatedDelivery:"1222",
     type: "spare",
   },
   {
     id: "6",
     name: "Transmission Fluid",
+    sellingPrice:3000,
     price: 850,
+     discount:50,
     imageUrl:
       "https://i5.walmartimages.com/seo/Super-Tech-MERCON-V-Automatic-Transmission-Fluid-1-Quart_f916ff04-41c6-496b-be51-cb2642c23f80.a3727600f85548013ae5d72232f876cf.jpeg",
     description: "High-performance transmission fluid for smooth gear shifts.",
     date: "2025-01-25", // Future date - In Progress
     compatibility: "Ford Focus",
+    status:"Transit",
+    update:"2 hours ago",
+    currentLocation:"Chennai",
+    EstimatedDelivery:"1222",
     type: "spare",
   },
   {
     id: "7",
     name: "Spark Plugs Set",
     price: 1200,
+    sellingPrice:3000,
+     discount:50,
     imageUrl:
       "https://images-cdn.ubuy.co.in/634d135710a6ca0e676a098a-new-ngk-standard-spark-plug-b8hs10-5126.jpg",
     description: "Premium iridium spark plugs for better engine performance.",
     date: "2025-01-18", // Future date - In Progress
     compatibility: "Volkswagen Golf",
+    status:"Transit",
+     update:"2 hours ago",
+    currentLocation:"Chennai",
+    EstimatedDelivery:"1222",
     type: "spare",
   },
   {
     id: "s1",
     name: "Oil Change Service",
+    sellingPrice:3000,
     price: 2000,
+     discount:50,
     imageUrl:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRQxmvTKOLWVAdnoDPRQZTYZJ90KDVlVzMhQA&s",
     description: "Complete oil change service with premium synthetic oil",
     compatibility: "First Class Service",
     date: "2025-01-12", // Future date - In Progress
+    status:"Transit",
+     update:"2 hours ago",
+    currentLocation:"Chennai",
+    EstimatedDelivery:"1222",
     type: "service",
   },
   {
     id: "s2",
     name: "Tire Rotation",
     price: 1000,
+    sellingPrice:3000,
+     discount:50,
     imageUrl:
       "https://allmakescollision.ca/wp-content/uploads/2022/04/heveAdeZhFtnsUOwTf1tUf08fFeRMxMTRuX3IqlD.jpg",
     description: "Professional tire rotation and balancing service",
     compatibility: "First Class Service",
     date: "2019-03-01",
+    status:"Transit",
+    update:"2 hours ago",
+    currentLocation:"Chennai",
+    EstimatedDelivery:"1222",
     type: "service",
   },
   {
     id: "s3",
     name: "Brake Inspection",
     price: 1500,
+    sellingPrice:3000,
+     discount:50,
     imageUrl:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYfW70xQsp2FOJGbhI_Maejt6jHAdJrQtZuw&s",
     description: "Comprehensive brake system inspection and maintenance",
     compatibility: "Premium Service",
-    date: "2025-01-22", // Future date - In Progress
+    date: "2025-01-22",
+    status:"Transit",
+    update:"2 hours ago",
+    currentLocation:"Chennai",
+    EstimatedDelivery:"1222", // Future date - In Progress
     type: "service",
   },
   {
     id: "s4",
     name: "AC Service",
+    sellingPrice:3000,
     price: 2500,
+     discount:50,
     imageUrl:
       "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJhOk79SOrDJDnjXvam5PcDVMQ4MlCsX3h-w&s",
     description: "Complete air conditioning system service and gas refill",
     compatibility: "Premium Service",
-    date: "2025-01-30", // Future date - In Progress
+    date: "2025-01-30", 
+    status:"Transit",
+    update:"2 hours ago",
+    currentLocation:"Chennai",
+    EstimatedDelivery:"1222",// Future date - In Progress
     type: "service",
   },
 ];
@@ -155,7 +228,11 @@ interface OrderCardProps {
   order: OrderDetails;
 }
 
+// import { useState } from "react"; // Ensure this is at the top
+
+
 const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
+    const [showDetails, setShowDetails] = useState(false);
   const orderDate = order.date ? new Date(order.date) : null;
   const isCompleted = orderDate && orderDate < new Date();
   const isOld =
@@ -289,22 +366,98 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
            </div>
  
            <div className="flex space-x-2">
-            <button className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
+            {/* <button className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
               View Details
-            </button>
+            </button> */}
+<button
+  onClick={() => setShowDetails(!showDetails)}
+  className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+>
+  {showDetails ? "Hide Details" : "View Details"}
+</button>
 
-            {order.type === "service" && (
-              <button className="px-4 py-2 text-sm font-medium text-white bg-[#9b111e] rounded-lg hover:from-red-200 hover:to-red-100 transition-all duration-200 shadow-sm hover:shadow-md">
-                <Truck className="w-4 h-4 mr-1 inline" />
-                Track Order
-              </button>
-            )}
           </div>
         </div>
       </div>
+      
+
+{showDetails && (
+  <div className="bg-red-50 text-red-900 px-4 py-4 border-t border-red-200 transition-all duration-300 text-sm mt-2">
+
+    {/* Flex Row: Price on left, Tracking on right */}
+    <div className="flex flex-row justify-between items-start gap-6">
+
+      {/* Left: Price Details */}
+      <div className="w-1/2 space-y-2">
+        <p>
+          <strong>Compatibility <span className="ml-4">:</span> </strong>
+          <span className="ml-8">{order.compatibility}</span>
+        </p>
+        <p>
+          <strong>Original Price<span className="ml-4">:</span></strong>{" "}
+          <span className="line-through text-gray-500 ml-9">
+            ₹{order.sellingPrice.toLocaleString()}
+          </span>
+        </p>
+        <p>
+          <strong>Final Price<span className="ml-9">:</span></strong>{" "}
+          <span className="text-green-700 font-semibold ml-9">
+            ₹{order.price.toLocaleString()}
+          </span>
+        </p>
+        <p>
+          <strong>You Saved<span className="ml-9">:</span></strong>{" "}
+          <span className="text-green-600 font-medium ml-9">
+            ₹{order.discount} ({Math.round((order.discount / order.price) * 100)}% OFF)
+          </span>
+        </p>
+      </div>
+
+      {/* Divider */}
+      <div className="w-px bg-red-300" />
+<div className="w-1/2 space-y-2 border border-dashed border-red-300 rounded-lg p-4 bg-red-100 text-sm">
+  {/* Status */}
+
+
+    <div className="flex items-start">
+    <span className="w-5">🚚</span>
+    <strong className="w-20">Status</strong >
+        <p><span className="mr-4">:</span> {order.status}  </p>
+  </div>
+
+
+    <div className="flex items-start">
+    <span className="w-5">📍</span>
+    <strong className="w-20">Location </strong >
+        <p><span className="mr-4">:</span>   {order.date ? new Date(order.date).toLocaleDateString() : "N/A"}</p>
+  </div>
+
+
+
+  {/* Delivery Date */}
+  <div className="flex items-start">
+    <span className="w-6">📅</span>
+    <strong className="w-20">Delivery </strong >
+        <p><span className="mr-4">:</span>   {order.date ? new Date(order.date).toLocaleDateString() : "N/A"}</p>
+  </div>
+
+ 
+<div className="flex items-start">
+    <span className="w-6">🕒</span>
+    <strong className="w-20">update </strong >
+        <p><span className="mr-4">:</span>   {order.update}</p>
+  </div>
+</div>
+
+    </div>
+  </div>
+)}
+
+
     </div>
   );
 };
+
 
 // Main OrdersPage Component
 const OrdersPage: React.FC = () => {

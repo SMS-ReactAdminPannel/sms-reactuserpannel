@@ -39,7 +39,7 @@ export default function SparePartsCart() {
   const [confirmedServiceOrders, setConfirmedServiceOrders] = useState<{ serv: service; quantity: number }[]>([]);
   const [showSummary, setShowSummary] = useState(false);
   const [showsSummary, setShowsSummary] = useState(false);
-
+   
   const totalPartPrice = confirmedPartOrders.reduce((acc, cur) => acc + cur.part.price * cur.quantity, 0);
   const totalServicePrice = confirmedServiceOrders.reduce((acc, cur) => acc + cur.serv.price * cur.quantity, 0);
 
@@ -67,25 +67,8 @@ const books_valid = async () => {
       setBooks(spares);
     }
 
-    // // Map services
-    // const serviceEntry = cartData.find((item) => item.type ===  "service");
-    // console.log(serviceEntry)
-    // if (serviceEntry?.products) {
-    //   const mappedServices = serviceEntry.products.map((product: any): service => ({
-    //     _id: product._id || 0,
-    //     service_name: product.serviceId?.service_name || "Unknown",
-    //     price: Number(product.price) || 0,
-    //     // imageUrl: product.serviceId?.imageUrl || "",
-    //     // hour: product.serviceId?.hour || "",
-    //     description: product.serviceId?.description || [],
-    //     // quantity: Number(product.quantity) || 0,
-    //     // originalPrice: Number(product.serviceId?.originalPrice) || undefined,
-    //   }));
-
-    //   setServices(mappedServices);
-    // }
 const serviceEntry = cartData.find((item) => item.type === "service");
-console.log(serviceEntry);
+console.log("services pages",serviceEntry);
 
 if (serviceEntry?.services) {
   const mappedServices = serviceEntry.services.map((service: any): service => ({
@@ -143,11 +126,10 @@ if (serviceEntry?.services) {
       <div className="rounded-lg shadow-md p-4 mb-4 border border-gray-200 bg-white">
         <div className="flex gap-4">
           <div className="w-36">
-            <img src={part.image ? part.image : "https://boodmo.com/media/cache/catalog_part/images/parts/3fe3e3713e19d66a47bae04233a97cf4.webp"}
+            {/* <img src={part.image ? part.image : "https://boodmo.com/media/cache/catalog_part/images/parts/3fe3e3713e19d66a47bae04233a97cf4.webp"}
                alt={part.productName}
               className="rounded-lg object-cover w-full h-full" />
-
-              {part.discount>0&&(<span className="absolute-top-2-right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-semibold">{part.discount}%OFF</span>)}
+              {part.discount>0&&(<span className="absolute-top-2-right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-semibold">{part.discount}%OFF</span>)} */}
           </div>
           <div className="flex-1">
             <div className="flex justify-between items-start mb-2">
