@@ -3,32 +3,24 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../pages/auth/AuthContext';
 import { COLORS, FONTS } from '../../constants/constant';
 import Logo from '../../assets/LOGO.jpg';
-import { FiSearch, FiShoppingCart } from 'react-icons/fi';
+import { FiSearch } from 'react-icons/fi';
 import { FaShoppingCart } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import ProfileMenu from '../home/ProfileMenu';
-import dummyImage from '../../assets/navbar/dummyimage.png';
 import CustomDropdown from './Customdropdown';
 import TruckIcon from '../../assets/carimages/delivery-truck.png';
-import LocationIcon from '../../assets/carimages/location.png';
+import { getAllNotifications } from '../../features/Notification/services';
+import { booking_cart } from '../../features/BookingCart/service';
 
-interface User {
-	name: string;
-	phone: string;
-	email: string;
-	avatar: string;
-	role: string;
-	location: string;
-	joinDate: string;
-	status: string;
-}
-
-interface Notification {
-	id: number;
-	message: string;
-	time: string;
-	isRead: boolean;
-}
+type MailItem = {
+	sender: string;
+	title: string;
+	preview: string;
+	Message: string;
+	updated_at: string;
+	unread: boolean;
+	recipient_type: string;
+};
 
 export const Navbar: React.FC = () => {
 	const [isBellActive, setIsBellActive] = useState(false);
@@ -42,45 +34,50 @@ export const Navbar: React.FC = () => {
 	const dropdownRef = useRef<HTMLDivElement | null>(null);
 	const notificationRef = useRef<HTMLDivElement | null>(null);
 	const [search, setSearch] = useState('');
+	const [mails, setMails] = useState<MailItem[]>([]);
+	const [cartCount, setCartCount] = useState(0);
 
-	const [notifications] = useState<Notification[]>([
-		{
-			id: 1,
-			message: 'New task assigned to you: Project Review',
-			time: '5 minutes ago',
-			isRead: true,
-		},
-		{
-			id: 2,
-			message: 'Your report has been approved',
-			time: '1 hour ago',
-			isRead: true,
-		},
-		{
-			id: 3,
-			message: 'System maintenance scheduled for tomorrow',
-			time: '3 hours ago',
-			isRead: true,
-		},
-		{
-			id: 4,
-			message: 'Welcome to the dashboard! Take a tour',
-			time: '1 day ago',
-			isRead: true,
-		},
-	]);
+	const filteredMails = mails
+		.filter((mail) => mail.recipient_type === 'user')
+		.slice(0, 4);
 
-	const [user] = useState<User>({
-		name: 'John Doe',
-		phone: '+1 856-589-998-1236',
-		email: 'johndoe3108@gmail.com',
-		avatar:
-			'https://img.freepik.com/free-photo/cute-smiling-young-man-with-bristle-looking-satisfied_176420-18989.jpg?semt=ais_hybrid&w=740',
-		role: 'System Administrator',
-		location: 'San Francisco, CA',
-		joinDate: 'August 17, 2018',
-		status: 'Active',
-	});
+	const unReadMails = mails.filter(
+		(mail) => mail.recipient_type === 'user' && !mail.is_read
+	);
+
+	const fetchAllNotifications = async () => {
+		try {
+			const response = await getAllNotifications('');
+			const data: MailItem[] = response?.data?.data || [];
+			const sortedData = data.sort(
+				(a, b) =>
+					new Date(b?.created_at).getTime() -
+					new Date(a?.created_date).getTime()
+			);
+			setMails(sortedData);
+		} catch (error) {
+			console.log('Error Fetching Notifications:', error);
+		}
+	};
+
+	const fetchBookingCartCount = async () => {
+		try {
+			const response = await booking_cart({});
+			if (response) {
+				setCartCount(
+					response.data.data[0].services.length +
+						response.data.data[1].products.length
+				);
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	};
+
+	useEffect(() => {
+		fetchAllNotifications();
+		fetchBookingCartCount();
+	}, []);
 
 	// Handle outside clicks for dropdown & notifications
 	useEffect(() => {
@@ -107,33 +104,17 @@ export const Navbar: React.FC = () => {
 		setShowNotifications((prev) => !prev);
 		setTimeout(() => setIsBellActive(false), 150);
 	};
-	const handleSosClick = () => {
-		navigate('/sos');
-	};
 
 	const handleViewAllNotifications = () => {
 		setShowNotifications(false);
 		navigate('/notifications');
 	};
 
-	const toggleDropdown = () => {
-		setIsDropdownOpen((prev) => !prev);
-	};
-
-	const handleUserUpdate = (updatedUser: User) => {
-		// Handle user update if needed in navbar
-		// For now, we'll just log it since the ProfileModal manages its own state
-		console.log('User updated:', updatedUser);
-	};
-
-	const unreadCount = notifications.filter((n) => !n.isRead).length;
+	const unreadCount = unReadMails.length;
 
 	const handleLogout = () => {
 		setShowLogoutConfirm(true);
 		setIsDropdownOpen(false);
-		// logout();
-		// navigate('/');
-		// console.log('User logged out');
 	};
 
 	const navData = [
@@ -144,6 +125,21 @@ export const Navbar: React.FC = () => {
 		{ title: 'Bookings', link: '/bookings' },
 		{ title: 'Offers', link: '/announcement' },
 	];
+
+	const formatDate = (isoString: string) => {
+		const date = new Date(isoString);
+		const day = String(date.getDate()).padStart(2, '0');
+		const month = String(date.getMonth() + 1).padStart(2, '0');
+		const year = String(date.getFullYear()).slice(-2);
+		let hours = date.getHours();
+		const minutes = String(date.getMinutes()).padStart(2, '0');
+		const ampm = hours >= 12 ? 'pm' : 'am';
+		hours = hours % 12;
+		hours = hours ? hours : 12;
+		const formattedHours = String(hours).padStart(2, '0');
+		const formatted = `${day}-${month}-${year} ${formattedHours}:${minutes}${ampm}`;
+		return formatted;
+	};
 
 	return (
 		<header className='bg-white text-white w-full fixed top-0 z-50'>
@@ -193,17 +189,6 @@ export const Navbar: React.FC = () => {
 
 				{/* Right Side Options */}
 				<div className='flex items-center text-sm gap-3'>
-					{/* SOS Emergency Icon */}
-					{/* <div className='relative'>
-						<span className='absolute inline-flex h-8 w-8 rounded-full bg-red-400 opacity-75 animate-ping'></span>
-						<div className='absolute -top-1 -right-1 w-3.5 h-3.5 bg-yellow-500 border-2 border-white rounded-full z-20' />
-						<button
-							onClick={handleSosClick}
-							className='relative z-10 inline-flex items-center justify-center w-10 h-10 rounded-full bg-gradient-to-r from-red-600 to-red-800 text-white font-bold text-sm shadow-lg hover:scale-105 transition-transform'
-						>
-							SOS
-						</button>
-					</div> */}
 					<div className='relative' ref={notificationRef}>
 						<button
 							aria-label='Notifications'
@@ -239,27 +224,24 @@ export const Navbar: React.FC = () => {
 									<h3 className='text-white font-bold'>Notifications</h3>
 								</div>
 								<div className='max-h-80 overflow-y-auto'>
-									{notifications.length > 0 ? (
-										notifications.map((notification) => (
+									{filteredMails.length > 0 ? (
+										filteredMails.map((notification) => (
 											<div
-												key={notification.id}
-												className={`group relative p-3 border-b hover:bg-gray-50 transition-colors duration-150 ${
-													notification.isRead ? 'bg-white' : 'bg-red-50'
+												key={notification._id}
+												className={`group relative p-3 border-b hover:bg-gray-50 transition-colors duration-150 bg-red-50
 												}`}
 											>
 												{/* This vertical red line will now appear on hover */}
+
 												<div className='absolute left-0 top-0 h-full w-1 bg-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-200'></div>
 
 												<div className='flex justify-between items-start'>
-													<p className='text-sm text-gray-800'>
-														{notification.message}
+													<p className='text-sm text-red-900 font-semibold'>
+														{notification.title}
 													</p>
-													{!notification.isRead && (
-														<span className='w-2 h-2 rounded-full bg-red-600 mt-1 ml-2'></span>
-													)}
 												</div>
-												<p className='text-xs text-gray-500 mt-1'>
-													{notification.time}
+												<p className='text-xs text-red-800 mt-1 text-right'>
+													{formatDate(notification?.created_at)}
 												</p>
 											</div>
 										))
@@ -358,8 +340,6 @@ export const Navbar: React.FC = () => {
 									Logout Successfully!
 								</p>
 							</div>
-
-							{/* Tailwind custom animation via <style> tag (works well for small scoped styles) */}
 							<style>
 								{`
             @keyframes fade-in {
@@ -402,9 +382,9 @@ export const Navbar: React.FC = () => {
 							navigate('/booking-cart');
 						}}
 					>
-						<FaShoppingCart className='text-2xl cursor-pointer text-red-900' />
-						<span className='absolute -top-2 left-4 bg-red-900 text-white text-xs rounded-full px-1'>
-							0
+						<FaShoppingCart className='text-3xl cursor-pointer text-red-900' />
+						<span className='absolute w-min-5 h-min-5 -top-2 left-4 bg-red-500 text-white text-xs rounded-full px-1 py-0.5 cursor-pointer'>
+							{cartCount || 0}
 						</span>
 					</div>
 				</div>
@@ -435,6 +415,7 @@ export const Navbar: React.FC = () => {
 					<button
 						className='bg-red-900 hover:bg-red-800 text-white py-2 px-4 rounded-full'
 						style={{ ...FONTS.paragraph, fontWeight: 600 }}
+						onClick={() => navigate('/contact-us')}
 					>
 						Enquiry
 					</button>

@@ -1,16 +1,16 @@
 import httpClient from './httpClient';
-import { API_END_POINTS } from './httpEndPoints';
+import { API_END_POINTS } from './httpEndpoints';
 
 class Client {
 	user = {
 		services: {
 			service_category: {
-				getById: (params: string) =>
+				getById: (params?: string) =>
 					httpClient.get(
 						API_END_POINTS.services.service_category.getById,
 						params
 					),
-				getAll: (params: string) =>
+				getAll: (params?: string) =>
 					httpClient.get(
 						API_END_POINTS.services.service_category.getAll,
 						params
@@ -35,9 +35,9 @@ class Client {
 			service: {
 				post: (data: string) =>
 					httpClient.post(API_END_POINTS.services.service.post, data),
-				getById: (params: string) =>
+				getById: (params?: string) =>
 					httpClient.get(API_END_POINTS.services.service.getById, params),
-				getAll: (params: string) =>
+				getAll: (params?: string) =>
 					httpClient.get(API_END_POINTS.services.service.get, params),
 				put: (params: string, data: string) =>
 					httpClient.update(API_END_POINTS.services.service.put, params, data),
@@ -81,6 +81,7 @@ class Client {
 			patch: (params: string, data: string) =>
 				httpClient.patch(API_END_POINTS.service_bookings.patch, params, data),
 		},
+
 		offer: {},
 		auth: {
 			login: (data: string) =>
@@ -97,12 +98,21 @@ class Client {
 				httpClient.post(API_END_POINTS.auth.post_resend_otp, data),
 			getUserProfile: (params: string) =>
 				httpClient.get(API_END_POINTS.auth.get, params),
-			updateUserProfile: (params: string, data: string) =>
-				httpClient.update(API_END_POINTS.auth.put, data, params),
+			updateUserProfile: (data: string) =>
+				httpClient.update(API_END_POINTS.auth.put, data),
 		},
 		notification: {
 			getAll: (params: string) =>
 				httpClient.get(API_END_POINTS.notification.getAll, params),
+		},
+
+		bookings: {
+			getAll: (params: string) =>
+				httpClient.get(API_END_POINTS.bookings.getAll, params),
+			postProduct: (data: any) =>
+				httpClient.post(API_END_POINTS.bookings.postProduct, data),
+			postService: (params: string) =>
+				httpClient.post(API_END_POINTS.bookings.postService, params),
 		},
 	};
 }

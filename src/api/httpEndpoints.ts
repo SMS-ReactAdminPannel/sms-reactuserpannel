@@ -58,4 +58,10 @@ export const API_END_POINTS = {
 	notification: {
 		getAll: '/api/notifications/',
 	},
+
+	bookings: {
+		getAll: '/api/customer/cartbooking/all',
+		postProduct: '/api/customer/cartbooking/product/confirm',
+		postService: '/api/customer/cartbooking/service/confirm',
+	},
 };

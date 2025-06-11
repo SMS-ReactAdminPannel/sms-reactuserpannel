@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiLogOut, FiSettings, FiUser } from 'react-icons/fi';
-import profileImage from '../../assets/navbar/profileimage.jpg';
+import profileImage from '../../assets/profile_picture.jpg';
 
 type ProfileMenuProps = {
 	handleLogout: () => void;

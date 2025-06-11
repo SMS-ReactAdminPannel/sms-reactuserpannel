@@ -5,6 +5,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FONTS } from '../../constants/constant';
 import { useAuth } from './AuthContext';
 import AuthLayout from './AuthLayout';
+import { loginUser } from '../../features/auth'; // Adjust the import path as necessary
 
 type FormData = {
 	email: string;
@@ -14,6 +15,7 @@ type FormData = {
 
 const LoginPage = () => {
 	const [showPassword, setShowPassword] = useState(false);
+  const [error , setError] = useState<string | null>(null);
 	const { login } = useAuth();
 	const navigate = useNavigate();
 
@@ -23,17 +25,37 @@ const LoginPage = () => {
 		formState: { errors },
 	} = useForm<FormData>();
 
-	const onSubmit = (data: FormData) => {
-		console.log('Login data:', data);
-		if (data.email && data.password) {
-			login();
-			navigate('/');
-		}
-	};
+const onSubmit = async (data: FormData) => {
+   console.log('Form submitted with data:', data);
+  setError(null);
+
+  try {
+    const response = await loginUser(data);
+
+    console.log('Login successful:', response);
+    if (response) {
+      login(response.data.data);
+      navigate('/');
+    } else {
+      setError(response?.message || 'Login failed. Please try again.');
+    }
+  } catch (error) {
+    console.error('Login error:', error);
+    setError('An error occurred during login. Please try again.');
+  } finally {
+    
+  }
+};  // Removed extra closing brace here
 
   return (
     <AuthLayout title="User Login">
       <form onSubmit={handleSubmit(onSubmit)} className='space-y-6 '>
+         {/* Error message display */}
+        {error && (
+          <div className="p-3 text-sm text-white bg-red-500 rounded-md">
+            {error}
+          </div>
+        )}
         {/* Email Field */}
         <div className='flex flex-col space-y-2'>
           <label className='text-sm font-bold text-white '>Email Address</label>
@@ -103,7 +125,7 @@ const LoginPage = () => {
 					type='submit'
 					className='w-full py-3 text-white font-semibold rounded-full shadow-md hover:shadow-xl transition-all duration-300 hover:brightness-110 text-sm bg-gradient-to-r from-[#9b111e] to-[#d23c3c]'
 				>
-					Login
+          Login
 				</button>
 
         {/* Links */}
@@ -116,7 +138,7 @@ const LoginPage = () => {
           <div className='text-center mt-1'>
             <p className='text-white '>
               Don't have an account?{' '}
-              <Link to='/enter-email-or-phone' className='text-[#d23c3c] font-semibold hover:underline'>
+              <Link to='/signup ' className='text-[#d23c3c] font-semibold hover:underline'>
                 Sign up
               </Link>
             </p>

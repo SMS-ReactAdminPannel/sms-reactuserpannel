@@ -14,20 +14,18 @@ import { LuCarTaxiFront } from 'react-icons/lu';
 import { PiSealCheckBold } from 'react-icons/pi';
 import { LuHandshake } from 'react-icons/lu';
 import { RiShieldStarFill } from 'react-icons/ri';
-import { MdDateRange, MdOutlineTireRepair } from 'react-icons/md';
+import { MdDateRange } from 'react-icons/md';
 import { MdHomeFilled } from 'react-icons/md';
 import { FaLocationDot } from 'react-icons/fa6';
 import { TbCertificate } from 'react-icons/tb';
 import { RiCustomerService2Fill } from 'react-icons/ri';
 import MustCare from '../../components/bookings/BookingsPage';
 import { COLORS, FONTS } from '../../constants/constant';
-import { TfiLayoutLineSolid } from 'react-icons/tfi';
-import React from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
 	FaTools,
 	FaSnowflake,
 	FaBatteryThreeQuarters,
-	FaTruckMonster,
 	FaCarAlt,
 	FaSearch,
 	FaLightbulb,
@@ -67,6 +65,40 @@ interface ServiceCardProps {
 	title: string;
 	color: string;
 }
+
+// Custom hook for Scroll Animation
+
+const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
+	options = {}
+) => {
+	const [isVisible, setIsVisible] = useState(false);
+	const elementRef = useRef<T>(null);
+
+	useEffect(() => {
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				setIsVisible(entry.isIntersecting);
+			},
+			{
+				threshold: 0.1,
+				rootMargin: '0px 0px -50px 0px',
+				...options,
+			}
+		);
+
+		if (elementRef.current) {
+			observer.observe(elementRef.current);
+		}
+
+		return () => {
+			if (elementRef.current) {
+				observer.unobserve(elementRef.current);
+			}
+		};
+	}, []);
+
+	return { elementRef, isVisible };
+};
 
 const HomePage: React.FC = () => {
 	const cardData: ServiceCardProps[] = [
@@ -131,6 +163,37 @@ const HomePage: React.FC = () => {
 			color: 'bg-white border-[#9b111e]',
 		},
 	];
+
+	// Create separate hooks for each title
+	const servicesTitle = useScrollAnimation<HTMLHeadingElement>();
+	const careTitle = useScrollAnimation<HTMLHeadingElement>();
+	const discoverTitle = useScrollAnimation<HTMLHeadingElement>();
+	const contactTitle = useScrollAnimation<HTMLHeadingElement>();
+	const [isLoading, setIsLoading] = useState(true);
+
+	const fetchHomePageData = () => {
+		try {
+			setIsLoading(false);
+		} catch (error) {
+			console.log(error);
+		} finally {
+			setIsLoading(false);
+		}
+	};
+
+	useEffect(() => {
+		fetchHomePageData();
+	}, []);
+
+	if (isLoading) {
+		return (
+			<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
+				<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
+				<p className='text-red-500 text-lg font-semibold'>Loading...</p>
+			</div>
+		);
+	}
+
 	return (
 		<>
 			<div className='h-[80vh]'>
@@ -140,11 +203,22 @@ const HomePage: React.FC = () => {
 			<div className=''>
 				<div className='px-24 my-8 h-[75vh]'>
 					<h1
-						className='text-2xl mb-10 text-red-900 text-center underline'
-						style={{ ...FONTS.header, fontWeight: 600 }}
+						ref={servicesTitle.elementRef}
+						className='text-2xl mb-10 text-red-900 text-center'
+						style={{ ...FONTS.header, fontWeight: 700 }}
 					>
-						Available Services
+						<span className='inline-block pb-1 relative'>
+							Available Services
+							<span
+								className={`absolute top-9 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+									servicesTitle.isVisible
+										? 'scale-x-100 w-full'
+										: 'scale-x-0 w-full'
+								}`}
+							></span>
+						</span>
 					</h1>
+
 					<div className='grid grid-cols-5 grid-rows-2 gap-4 max-w-6xl mx-auto mb-5'>
 						{cardData.map((card) => (
 							<Link
@@ -179,10 +253,20 @@ const HomePage: React.FC = () => {
 					<div className={`bg-[url(${bgImg2})] h-[95vh]`}>
 						<div className='px-24 py-10'>
 							<h1
-								className='text-3xl text-red-900 text-center pb-10 underline'
-								style={{ ...FONTS.header, fontWeight: 600 }}
+								ref={careTitle.elementRef}
+								className='text-2xl mb-10 text-red-900 text-center'
+								style={{ ...FONTS.header, fontWeight: 700 }}
 							>
-								Care Advantages
+								<span className='inline-block pb-1 relative'>
+									Care Advantages
+									<span
+										className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+											careTitle.isVisible
+												? 'scale-x-100 w-full'
+												: 'scale-x-0 w-full'
+										}`}
+									></span>
+								</span>
 							</h1>
 							<div className='flex space-x-6 items-center justify-center'>
 								<div className='border-r border-gray-600 pr-6 text-center'>
@@ -223,10 +307,20 @@ const HomePage: React.FC = () => {
 					<div className='px-24 pb-8'>
 						<div className='py-12'>
 							<h1
-								className='text-3xl text-red-900 text-center pb-8 underline'
-								style={{ ...FONTS.header, fontWeight: 600 }}
+								ref={discoverTitle.elementRef}
+								className='text-2xl mb-10 text-red-900 text-center'
+								style={{ ...FONTS.header, fontWeight: 700 }}
 							>
-								Discover Our Services
+								<span className='inline-block pb-1 relative'>
+									Discover Our Services
+									<span
+										className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+											discoverTitle.isVisible
+												? 'scale-x-100 w-full'
+												: 'scale-x-0 w-full'
+										}`}
+									></span>
+								</span>
 							</h1>
 							<div className='flex mt-5 justify-around gap-10'>
 								<div>
@@ -363,13 +457,24 @@ const HomePage: React.FC = () => {
 					</div>
 				</div>
 				<div className={`bg-[url(${bgImg3})] h-[85vh] mt-5`}>
-					<div className='px-24 pt-2'>
+					<div className='px-24 pt-8'>
 						<h1
-							className='text-3xl text-center text-red-900 py-10 underline'
-							style={{ ...FONTS.header, fontWeight: 600 }}
+							ref={contactTitle.elementRef}
+							className='text-2xl mb-10 text-red-900 text-center'
+							style={{ ...FONTS.header, fontWeight: 700 }}
 						>
-							Customised Care For All Your Needs
+							<span className='inline-block pb-4 relative'>
+								Customised Care For All Your Needs
+								<span
+									className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+										contactTitle.isVisible
+											? 'scale-x-100 w-full'
+											: 'scale-x-0 w-full'
+									}`}
+								></span>
+							</span>
 						</h1>
+
 						<div className='flex justify-center gap-6 mt-4 mb-10 flex-wrap'>
 							<div className='flex flex-col items-center text-center bg-[#fdefe9] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
 								<GrWorkshop size={32} color={COLORS.primary} />
@@ -604,7 +709,7 @@ const HomePage: React.FC = () => {
 								</ol>
 							</div>
 							<div className='w-[900px]'>
-								<div className='grid grid-cols-1 gap-3 p-4'>
+								<div className='grid grid-cols-1 gap-2 px-6'>
 									<div className=''>
 										<hr className='w-full border-[2px] border-red-900' />
 
