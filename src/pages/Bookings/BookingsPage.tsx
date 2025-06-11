@@ -246,6 +246,7 @@ const OrdersPage: React.FC = () => {
 	const [sortBy, setSortBy] = useState<'date' | 'price' | 'name'>('date');
 	const [orders, setOrders] = useState<OrderDetails[]>([]);
 	const orderTitle = useScrollAnimation<HTMLHeadingElement>();
+	const [isLoading, setIsLoading] = useState(true);
 
 	useEffect(() => {
 		const fetchOrders = async () => {
@@ -280,9 +281,12 @@ const OrdersPage: React.FC = () => {
 					];
 
 					setOrders(transformedOrders);
+					setIsLoading(false);
 				}
 			} catch (err) {
 				console.error('Error fetching orders:', err);
+			} finally {
+				setIsLoading(false);
 			}
 		};
 
@@ -317,6 +321,15 @@ const OrdersPage: React.FC = () => {
 	const completedOrders = filteredOrders.filter(
 		(order) => order.status === 'completed' || order.status === 'delivered'
 	).length;
+
+	if (isLoading) {
+		return (
+			<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
+				<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
+				<p className='text-red-500 text-lg font-semibold'>Loading...</p>
+			</div>
+		);
+	}
 
 	return (
 		<div

@@ -20,6 +20,7 @@ export default function GmailStyleInbox() {
 	const [selectedMail, setSelectedMail] = useState<MailItem | null>(null);
 	const [filter, setFilter] = useState<'all' | 'unread' | 'read'>('all');
 	const [mails, setMails] = useState<MailItem[]>([]);
+	const [isLoading, setIsLoading] = useState(true);
 
 	const filteredMails = mails
 		.filter((mail) => mail.recipient_type === 'user')
@@ -41,14 +42,26 @@ export default function GmailStyleInbox() {
 					new Date(a?.created_date).getTime()
 			);
 			setMails(sortedData);
+			setIsLoading(false);
 		} catch (error) {
 			console.log('Error Fetching Notifications:', error);
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
 	useEffect(() => {
 		fetchAllNotifications();
 	}, []);
+
+	if (isLoading) {
+		return (
+			<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
+				<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
+				<p className='text-red-500 text-lg font-semibold'>Loading...</p>
+			</div>
+		);
+	}
 
 	return (
 		<div className='min-h-screen bg-[#FAF3EB] p-2 font-[Poppins]'>

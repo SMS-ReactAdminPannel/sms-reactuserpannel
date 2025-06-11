@@ -5,12 +5,12 @@ class Client {
 	user = {
 		services: {
 			service_category: {
-				getById: (params: string) =>
+				getById: (params?: string) =>
 					httpClient.get(
 						API_END_POINTS.services.service_category.getById,
 						params
 					),
-				getAll: (params: string) =>
+				getAll: (params?: string) =>
 					httpClient.get(
 						API_END_POINTS.services.service_category.getAll,
 						params
@@ -35,9 +35,9 @@ class Client {
 			service: {
 				post: (data: string) =>
 					httpClient.post(API_END_POINTS.services.service.post, data),
-				getById: (params: string) =>
+				getById: (params?: string) =>
 					httpClient.get(API_END_POINTS.services.service.getById, params),
-				getAll: (params: string) =>
+				getAll: (params?: string) =>
 					httpClient.get(API_END_POINTS.services.service.get, params),
 				put: (params: string, data: string) =>
 					httpClient.update(API_END_POINTS.services.service.put, params, data),

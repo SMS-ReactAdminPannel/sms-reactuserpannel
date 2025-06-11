@@ -62,7 +62,7 @@ const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 // Main Component
 export default function SparePartsCart() {
 	const [books, setBooks] = useState<spare[]>([]);
-	const [loading, setLoading] = useState(true);
+	const [isLoading, setIsLoading] = useState(true);
 	const [activeTab, setActiveTab] = useState<'service' | 'ServiceBookingPage'>(
 		'service'
 	);
@@ -93,6 +93,9 @@ export default function SparePartsCart() {
 	const books_valid = async () => {
 		try {
 			const response = await booking_cart({});
+			if (response) {
+				setIsLoading(false);
+			}
 			const cartData = response?.data?.data;
 
 			if (!Array.isArray(cartData)) return;
@@ -135,7 +138,7 @@ export default function SparePartsCart() {
 		} catch (error) {
 			console.error('Error fetching books/services', error);
 		} finally {
-			setLoading(false);
+			setIsLoading(false);
 		}
 	};
 
@@ -143,6 +146,15 @@ export default function SparePartsCart() {
 		books_valid();
 		setActiveTab('ServiceBookingPage');
 	}, []);
+
+	if (isLoading) {
+		return (
+			<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
+				<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
+				<p className='text-red-500 text-lg font-semibold'>Loading...</p>
+			</div>
+		);
+	}
 
 	// handle Place Order function
 	const placeOrder = async () => {
@@ -163,7 +175,7 @@ export default function SparePartsCart() {
 			});
 			toast.error(error.response?.data?.message || 'Failed to place order');
 		} finally {
-			setLoading(false);
+			setIsLoading(false);
 		}
 	};
 
@@ -182,7 +194,7 @@ export default function SparePartsCart() {
 			console.error('Order placement error:', error);
 			toast.error(error.response?.data?.message || 'Failed to place order');
 		} finally {
-			setLoading(false);
+			setIsLoading(false);
 		}
 	};
 

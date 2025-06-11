@@ -73,23 +73,14 @@ const SpareParts: React.FC = () => {
 	// Add loading and error states
 
 	const [error, setError] = useState<string | null>(null);
+	const [isLoading, setIsLoading] = useState(true);
 
-	//const totalSlides: number = parts.length;
-
-	// get Data API integration
 	const fetchSpareParts = async () => {
 		try {
 			setError(null);
-
-			const data = {}; // Make sure this matches your API requirements
-			const response = await getSparePartsData(data);
-			console.log('🚀 Raw API Response:', response);
-
-			// Check if response has the expected structure
+			const response = await getSparePartsData({});
 			if (response && response.data && response.data.data) {
-				// Validate that the data is an array
 				if (Array.isArray(response.data.data)) {
-					// Map and validate each item to ensure it matches SparePart interface
 					const validatedParts = response.data.data.map((part: any) => {
 						return {
 							id: part._id || '',
@@ -110,6 +101,7 @@ const SpareParts: React.FC = () => {
 					setParts(validatedParts);
 					const categoriesData = transformToCategories(validatedParts);
 					setCategories(categoriesData);
+					setIsLoading(false);
 				} else {
 					throw new Error('API response data is not an array');
 				}
@@ -123,6 +115,8 @@ const SpareParts: React.FC = () => {
 			);
 			setParts([]);
 			setCategories([]);
+		} finally {
+			setIsLoading(false);
 		}
 	};
 
@@ -143,7 +137,6 @@ const SpareParts: React.FC = () => {
 			return acc;
 		}, {} as Record<string, { id: string; title: string; image: string; items: string[] }>);
 
-		// Convert to array and limit to 4 categories for display
 		return Object.values(categoriesMap).slice(0, 4);
 	};
 
@@ -208,6 +201,15 @@ const SpareParts: React.FC = () => {
 	const productTitle = useScrollAnimation<HTMLHeadingElement>();
 	const bundleTitle = useScrollAnimation<HTMLHeadingElement>();
 	const categoryTitle = useScrollAnimation<HTMLHeadingElement>();
+
+	if (isLoading) {
+		return (
+			<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
+				<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
+				<p className='text-red-500 text-lg font-semibold'>Loading...</p>
+			</div>
+		);
+	}
 
 	return (
 		<div className='p-12 mx-8 '>
