@@ -114,7 +114,16 @@ class Client {
 			postService: (params: string) =>
 				httpClient.post(API_END_POINTS.bookings.postService, params),
 		},
-	};
-}
 
+		enquiry: {
+			post: (data: any) => 
+				httpClient.post(API_END_POINTS.enquiry.post, data),
+			getAll: (data: any) =>
+				httpClient.get(API_END_POINTS.enquiry.getAll, data),
+			update: (params: string, data: any) =>
+				httpClient.update(API_END_POINTS.enquiry.update, params, data),
+	
+	},
+}
+}
 export default Client;

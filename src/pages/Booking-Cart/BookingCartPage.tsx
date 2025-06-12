@@ -25,6 +25,8 @@ interface service {
 	service_name: string;
 	price: number;
 	description: string;
+	image: string;
+	is_active: boolean;
 }
 
 const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
@@ -78,13 +80,12 @@ export default function SparePartsCart() {
 	const [showsSummary, setShowsSummary] = useState(false);
 	const [cartId, setCartId] = useState<string>('');
 	const [serviceId, setServiceCartId] = useState<string>('');
-	const totalPartPrice = confirmedPartOrders.reduce(
-		(acc, cur) => acc + cur.part.price * cur.quantity,
-		0
+	const totalPartPrice = books.reduce(
+	  (acc, part) => acc + part.price * part.quantity, 0
 	);
-	const totalServicePrice = confirmedServiceOrders.reduce(
-		(acc, cur) => acc + cur.serv.price * cur.quantity,
-		0
+
+	const totalServicePrice = services.reduce(
+    (acc, serv) => acc + serv.price, 0
 	);
 
 	// text-line animation
@@ -93,6 +94,7 @@ export default function SparePartsCart() {
 	const books_valid = async () => {
 		try {
 			const response = await booking_cart({});
+			console.log('Booking Cart :', response)
 			if (response) {
 				setIsLoading(false);
 			}
@@ -110,7 +112,8 @@ export default function SparePartsCart() {
 						productName: product.productId?.productName || 'Unknown',
 						price: Number(product.price) || 0,
 						brand: product.productId?.brand || 'Generic',
-						image: product.productId?.image || '',
+						image : bgImage,
+						// image: product.productId?.image || '',
 						quantity: Number(product.quantity) || 1,
 						category: product.productId?.category || '',
 						description: product.productId?.description || '',
@@ -131,6 +134,8 @@ export default function SparePartsCart() {
 						service_name: service.service_name || 'Unknown',
 						price: Number(service.price) || 0,
 						description: service.description || '',
+						image: service.productId?.image || bgImage,
+						is_active:service.productId?.stock || true,
 					})
 				);
 				setServices(mappedServices);
@@ -147,14 +152,14 @@ export default function SparePartsCart() {
 		setActiveTab('ServiceBookingPage');
 	}, []);
 
-	if (isLoading) {
-		return (
-			<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-				<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-				<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-			</div>
-		);
-	}
+	// if (isLoading) {
+	// 	return (
+	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
+	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
+	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
+	// 		</div>
+	// 	);
+	// }
 
 	// handle Place Order function
 	const placeOrder = async () => {
@@ -227,7 +232,7 @@ export default function SparePartsCart() {
 		const [quantity, setQuantity] = useState(part.quantity || 1);
 
 		return (
-			<div className='border rounded-lg shadow max-w-xl mx-left p-4 mb-6 bg-white hover:shadow-md transition duration-300'>
+			<div className='border rounded-lg h-[190px] shadow max-w-xl mx-left p-4 mb-6 bg-white hover:shadow-md transition duration-300'>
 	<div className='flex justify-star gap-4'>
 		<div className='w-32 h-32 relative group overflow-hidden rounded border'>
 			<img
@@ -247,14 +252,15 @@ export default function SparePartsCart() {
 		</div>
 		
 		<div className='flex-1 flex flex-col justify-between'>
+			<div className={`relative left-[325px] text-xs px-2 w-[60px] py-0.5 rounded font-medium ${part.stock ? 'bg-green-100 text-green-700' : 'bg-red-700 text-white'}`}>
+						{part.stock ? 'In Stock' : 'Out of Stock'}
+					</div>
 			<div>
 				<div className='flex justify-between items-start'>
 					<h3 className='text-base font-semibold text-gray-800'>{part.productName}</h3>
-					<span className={`text-xs px-2 py-0.5 rounded font-medium ${part.stock ? 'bg-green-100 text-green-700' : 'bg-red-700 text-white'}`}>
-						{part.stock ? 'In Stock' : 'Out of Stock'}
-					</span>
+					
 				</div>
-				<p className='text-sm text-gray-600 mb-6'>
+				<p className='text-sm text-gray-600 mb-2'>
 					{part.description || 'High quality ceramic brake pads for safe and smooth braking'}
 				</p>
 			</div>
@@ -265,29 +271,18 @@ export default function SparePartsCart() {
 					<span className='line-through text-sm text-gray-400 '>₹{Math.round(part.price * 1.3)}</span>
 				</div>
 
-				<div className='flex items-center gap-2'>
-					<button
-						className='p-1.5 border rounded hover:bg-gray-100 transition'
-						onClick={() => setQuantity(Math.max(1, quantity - 1))}
-					>
-						<Minus size={14} />
-					</button>
-					<span className='px-2 font-medium'>{quantity}</span>
-					<button
-						className='p-1.5 border rounded hover:bg-gray-100 transition'
-						onClick={() => setQuantity(quantity + 1)}
-					>
-						<Plus size={14} />
-					</button>
+				<div className='flex gap-2'>
+	
+					<span className='px-2 font-medium'>Quantity : {quantity}</span>
 					
 					<button
-						className='bg-[#9b111e] hover:bg-red-700 text-white px-4 py-1.5 rounded font-semibold transition ml-48'
-							onClick={() => handleConfirmPart(part._id, quantity)}
+					    className='bg-[#9b111e] ml-[180px] hover:bg-red-700 text-white px-4 py-1.5 rounded font-semibold transition ml-48'
+					    onClick={() => handleDelete(part._id)}
 					>
-						REMOVE
+					    REMOVE
 					</button>
 				</div>
-			<div className="text-sm text-green-700 font-medium mt-2 flex items-center gap-1">
+			<div className="text-sm text-green-700 font-medium flex items-center gap-1">
 					<span className="text-base">🚚</span>
 
 	Delivery by <span className="font-semibold ml-1">Sat, Jun 14</span>
@@ -302,48 +297,57 @@ export default function SparePartsCart() {
 		const [quantity, setQuantity] = useState(1);
 
 		return (
-			<div className='bg-white rounded-lg shadow-md p-4 mb-4 border'>
-				
-				<div className='flex gap-4'>
-					<div className='w-48'></div>
-					<div className='flex-1 '>
-						<div className='flex justify-between'>
-							<h3 className='text-lg font-semibold'>{serv.service_name}</h3>
-						</div>
-						<div className='flex justify-between items-center mt-4'>
-							<div className='flex gap-2'>
-								<span className='text-xl font-bold text-red-600'>
-									₹{serv.price}
-								</span>
-								{serv.originalPrice > serv.price && (
-									<span className='line-through text-sm text-gray-500'>
-										₹{service.originalPrice}
-									</span>
-								)}
-							</div>
-							<div className='flex items-center gap-2'>
-								<button onClick={() => setQuantity(Math.max(1, quantity - 1))}>
-									<Minus size={16} />
-								</button>
-								<span>{quantity}</span>
-								<button onClick={() => setQuantity(quantity + 1)}>
-									<Plus size={16} />
-								</button>
-								<button
-									Click={() => handleConfirmService(serv._id, quantity)}
-									className='bg-[#9b111e] text-white px-3 py-1 rounded-lg'
-								>
-									Confirm
-								</button>
-								<button onClick={() => handleDelete(serv._id)}>
-									
-								</button>
-								
-							</div>
-						</div>
-					</div>
+			<div className='border rounded-lg h-[190px] shadow max-w-xl mx-left p-4 mb-6 bg-white hover:shadow-md transition duration-300'>
+	<div className='flex justify-star gap-4'>
+		<div className='w-32 h-32 relative group overflow-hidden rounded border'>
+			<img
+				src={
+					serv.image
+						? serv.image
+						: 'https://boodmo.com/media/cache/catalog_part/images/parts/3fe3e3713e19d66a47bae04233a97cf4.webp'
+				}
+				alt={serv.service_name}
+				className='object-contain w-full h-full p-2 transition-transform duration-300 group-hover:scale-105'
+			/>
+			{serv.discount > 0 && (
+				<span className='absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-0.5 rounded font-semibold'>
+					{serv.discount}% OFF
+				</span>
+			)}
+		</div>
+		
+		<div className='flex-1 flex flex-col justify-between'>
+			<span className={`relative left-[325px] text-xs px-2 w-[65px] py-0.5 rounded font-medium ${serv.is_active ? 'bg-green-100 text-green-700' : 'bg-red-700 text-white'}`}>
+						{serv.is_active ? 'Available' : 'Not Available'}
+					</span>
+			<div>
+				<div className='flex justify-between items-start'>
+					<h3 className='text-base font-semibold text-gray-800'>{serv.service_name}</h3>
 				</div>
+				<p className='text-sm text-gray-600 mb-6'>
+					{serv.description || 'High quality ceramic brake pads for safe and smooth braking'}
+				</p>
 			</div>
+
+			
+				<div className='flex gap-2 items-center'>
+					<span className='text-lg font-bold text-red-600'>₹{serv.price}</span>
+					<span className='line-through text-sm text-gray-400 '>₹{Math.round(serv.price * 1.3)}</span>
+				</div>
+
+				<div className='flex gap-2 '>
+
+					<button
+					    className='bg-[#9b111e] mt-[-16px] ml-[289px]  hover:bg-red-700 text-white px-4 py-1.5 rounded font-semibold transition ml-48'
+					    onClick={() => handleDelete(serv._id)}
+					>
+					    REMOVE
+					</button>
+				</div>
+		</div>
+	</div>
+</div>
+
 		);
 	};
 
@@ -443,38 +447,40 @@ export default function SparePartsCart() {
 					</div>
 
 					{/* Summary Sidebar */}
-					<div className=''>
+					<div className=' fixed w-[500px] ml-[80px] left-1/2 '>
 						{/* Parts Summary */}
-						{confirmedPartOrders.length > 0 && showSummary && (
-							<div className='bg-white rounded-lg shadow-md p-4 mb-6'>
-								<div className='flex justify-between items-center mb-4'>
+						{books.length > 0 && activeTab === 'service' && (
+							<div className='bg-white rounded-lg shadow-md p-4 mb-6  '>
+								<div className='flex justify-between items-center mb-1'>
 									<div>
-										<h2 className='text-xl font-semibold text-red-600'>
-											Summary
+										<h2 className='text-lg font-semibold text-red-600'>
+											PRICE DETAILS
 										</h2>
-										<h3 className='text-base font-semibold text-red-600'>
-											Confirmed Part Orders
-										</h3>
-									</div>
-									<button
-										onClick={() => setShowSummary(false)}
-										className='px-3 py-1 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition-colors'
-									>
-										Close
-									</button>
+										</div>
 								</div>
+								<div className='border-t border-orange-200 pt-2 w-full'></div>
+								<h3 className='text-base font-semibold text-black-600 mb-4'>
+											Confirmed Service Orders</h3>
+
 								<div className='space-y-2 mb-4'>
-									{confirmedPartOrders.map(({ part, quantity }) => (
 										<div
-											key={part._id}
+											
 											className='flex justify-between text-sm'
 										>
 											<span>
-												{part.productName} x {quantity}
-											</span>
-											<span>₹{part.price * quantity}</span>
+											price ({books.length} items)
+										</span>
+										<span>₹{totalPartPrice }</span>
 										</div>
-									))}
+										<div className='flex justify-between text-sm'>
+										<span>Discount</span>
+										<span> - ₹ 0</span>
+										</div>
+										<div className='flex justify-between text-sm'>
+										<span>Delivery Charges</span>
+										<span> <del>₹100</del> <span className='text-green-600 font-bold'>Free</span> </span>
+										</div>
+									
 								</div>
 								<div className='border-t border-orange-200 pt-2 mb-4'>
 									<div className='flex justify-between font-bold text-orange-700'>
@@ -485,10 +491,10 @@ export default function SparePartsCart() {
 								<div className='flex justify-center'>
 									<button
 										type='submit'
-										className='flex justify-center gap-2 items-center mx-auto shadow-xl text-lg bg-gray-50 backdrop-blur-md lg:font-semibold isolation-auto border-gray-50 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-[#9b111e] hover:text-gray-50 before:-z-10 before:aspect-square before:hover:scale-150 before:hover:duration-700 relative z-10 px-6 py-2 overflow-hidden border-2 rounded-full group'
+										className='flex justify-center gap-2 items-center mx-auto shadow-xl text-lg text-white bg-[#9b111e] backdrop-blur-md lg:font-semibold isolation-auto border-gray-50 relative z-10 px-6 py-2 overflow-hidden border-2 rounded-full group'
 										onClick={async () => {
 											try {
-												if (confirmedPartOrders.length > 0) {
+												if (books.length > 0) {
 													await placeOrder();
 												}
 											} catch (error: any) {
@@ -504,37 +510,35 @@ export default function SparePartsCart() {
 						)}
 
 						{/* Services Summary */}
-						{confirmedServiceOrders.length > 0 && showsSummary && (
+						{services.length > 0 && activeTab === 'ServiceBookingPage' && (	
 							<div className='bg-white rounded-lg shadow-md p-4 '>
-								<div className='flex justify-between items-center mb-4'>
+								<div className='flex justify-between items-center mb-1'>
 									<div>
-										<h2 className='text-xl font-semibold text-red-600'>
-											Summary
+										<h2 className='text-lg font-semibold text-red-600'>
+											PRICE DETAILS
 										</h2>
-										<h3 className='text-base font-semibold text-red-600'>
-											Confirmed Part Orders
-										</h3>
-									</div>
-									<button
-										onClick={() => setShowsSummary(false)}
-										className='px-3 py-1 bg-gray-400 text-white rounded-lg hover:bg-gray-500 transition-colors'
-									>
-										Close
-									</button>
+										
 								</div>
-
+								</div>
+								<div className='border-t border-orange-200 pt-2 w-full'></div>
+								<h3 className='text-base font-semibold text-black-600 mb-4'>
+											Confirmed Service Orders</h3>
 								<div className='space-y-2 mb-4'>
-									{confirmedServiceOrders.map(({ serv, quantity }) => (
-										<div
-											key={serv._id}
-											className='flex justify-between text-sm'
-										>
+									<div className='flex justify-between text-sm'>
 											<span>
-												{serv.service_name} x {quantity}
-											</span>
-											<span>₹{serv.price * quantity}</span>
+											price ({services.length} items)
+										</span>
+										<span>₹{totalServicePrice }</span>
 										</div>
-									))}
+										<div className='flex justify-between text-sm'>
+										<span>Discount</span>
+										<span> - ₹ 0</span>
+										</div>
+										<div className='flex justify-between text-sm'>
+										<span>Delivery Charges</span>
+										<span> <del>₹100</del> <span className='text-green-600 font-bold'>Free</span> </span>
+										</div>
+										
 								</div>
 								<div className='border-t border-orange-200 pt-2 mb-4'>
 									<div className='flex justify-between font-bold text-orange-700'>
@@ -545,7 +549,7 @@ export default function SparePartsCart() {
 								<div className='flex justify-center'>
 									<button
 										type='submit'
-										className='flex justify-center gap-2 items-center mx-auto shadow-xl text-lg bg-gray-50 backdrop-blur-md lg:font-semibold isolation-auto border-gray-50 before:absolute before:w-full before:transition-all before:duration-700 before:hover:w-full before:-left-full before:hover:left-0 before:rounded-full before:bg-[#9b111e] hover:text-gray-50 before:-z-10 before:aspect-square before:hover:scale-150 before:hover:duration-700 relative z-10 px-6 py-2 overflow-hidden border-2 rounded-full group'
+										className='flex justify-center gap-2 items-center mx-auto shadow-xl text-lg text-white bg-[#9b111e] backdrop-blur-md lg:font-semibold isolation-auto border-gray-50 relative z-10 px-6 py-2 overflow-hidden border-2 rounded-full group'
 										onClick={async () => {
 											try {
 												await placeServiceOrder();
