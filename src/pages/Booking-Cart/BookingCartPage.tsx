@@ -223,84 +223,87 @@ export default function SparePartsCart() {
 	const filteredServices = services;
 
 	const SparePartCard = ({ part }: { part: spare }) => {
+
 		const [quantity, setQuantity] = useState(part.quantity || 1);
 
 		return (
-			<div className='rounded-lg shadow-md max-w-6xl mx-auto p-4 mb-4 border border-gray-200 bg-white'>
-				<div className='flex gap-4'>
-					<div className='w-36'>
-						<img
-							src={
-								part.image
-									? part.image
-									: 'https://boodmo.com/media/cache/catalog_part/images/parts/3fe3e3713e19d66a47bae04233a97cf4.webp'
-							}
-							alt={part.productName}
-							className='rounded-lg object-cover w-full h-full'
-						/>
-
-						{part.discount > 0 && (
-							<span className='absolute-top-2-right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full font-semibold'>
-								{part.discount}%OFF
-							</span>
-						)}
-					</div>
-					<div className='flex-1'>
-						<div className='flex justify-between items-start mb-2'>
-							<h3 className='text-lg font-semibold'>{part.productName}</h3>
-							<span
-								className={`px-2 py-1 text-xs rounded-full ${
-									part.stock
-										? 'bg-green-100 text-green-800'
-										: 'bg-gray-100 text-gray-800'
-								}`}
-							>
-								{part.stock ? 'In Stock' : 'Out of Stock'}
-							</span>
-						</div>
-						<p className='text-sm text-gray-600'>
-							{part.description ||
-								'High quality ceramic brake pads for safe and smooth breaking'}
-						</p>
-						<div className='flex items-center justify-between mt-4'>
-							<div className='flex items-center gap-2'>
-								<span className='text-xl font-bold text-red-600'>
-									₹{part.price}
-								</span>
-								<span className='line-through text-sm text-gray-500'>
-									₹{Math.round(part.price * 1.3)}
-								</span>
-							</div>
-							<div className='flex items-center gap-2'>
-								<button onClick={() => setQuantity(Math.max(1, quantity - 1))}>
-									<Minus size={16} />
-								</button>
-								<span>{quantity}</span>
-								<button onClick={() => setQuantity(quantity + 1)}>
-									<Plus size={16} />
-								</button>
-								<button
-									onClick={() => handleConfirmPart(part._id, quantity)}
-									className='bg-red-600 text-white px-3 py-1 rounded-lg'
-								>
-									Confirm
-								</button>
-								<button onClick={() => handleDelete(part._id)}>
-									<X className='text-red-600' />
-								</button>
-							</div>
-						</div>
-					</div>
+			<div className='border rounded-lg shadow max-w-xl mx-left p-4 mb-6 bg-white hover:shadow-md transition duration-300'>
+	<div className='flex justify-star gap-4'>
+		<div className='w-32 h-32 relative group overflow-hidden rounded border'>
+			<img
+				src={
+					part.image
+						? part.image
+						: 'https://boodmo.com/media/cache/catalog_part/images/parts/3fe3e3713e19d66a47bae04233a97cf4.webp'
+				}
+				alt={part.productName}
+				className='object-contain w-full h-full p-2 transition-transform duration-300 group-hover:scale-105'
+			/>
+			{part.discount > 0 && (
+				<span className='absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-0.5 rounded font-semibold'>
+					{part.discount}% OFF
+				</span>
+			)}
+		</div>
+		
+		<div className='flex-1 flex flex-col justify-between'>
+			<div>
+				<div className='flex justify-between items-start'>
+					<h3 className='text-base font-semibold text-gray-800'>{part.productName}</h3>
+					<span className={`text-xs px-2 py-0.5 rounded font-medium ${part.stock ? 'bg-green-100 text-green-700' : 'bg-red-700 text-white'}`}>
+						{part.stock ? 'In Stock' : 'Out of Stock'}
+					</span>
 				</div>
+				<p className='text-sm text-gray-600 mb-6'>
+					{part.description || 'High quality ceramic brake pads for safe and smooth braking'}
+				</p>
 			</div>
+
+			
+				<div className='flex gap-2 items-center'>
+					<span className='text-lg font-bold text-red-600'>₹{part.price}</span>
+					<span className='line-through text-sm text-gray-400 '>₹{Math.round(part.price * 1.3)}</span>
+				</div>
+
+				<div className='flex items-center gap-2'>
+					<button
+						className='p-1.5 border rounded hover:bg-gray-100 transition'
+						onClick={() => setQuantity(Math.max(1, quantity - 1))}
+					>
+						<Minus size={14} />
+					</button>
+					<span className='px-2 font-medium'>{quantity}</span>
+					<button
+						className='p-1.5 border rounded hover:bg-gray-100 transition'
+						onClick={() => setQuantity(quantity + 1)}
+					>
+						<Plus size={14} />
+					</button>
+					
+					<button
+						className='bg-[#9b111e] hover:bg-red-700 text-white px-4 py-1.5 rounded font-semibold transition ml-48'
+							onClick={() => handleConfirmPart(part._id, quantity)}
+					>
+						REMOVE
+					</button>
+				</div>
+			<div className="text-sm text-green-700 font-medium mt-2 flex items-center gap-1">
+					<span className="text-base">🚚</span>
+
+	Delivery by <span className="font-semibold ml-1">Sat, Jun 14</span>
+</div>
+		</div>
+	</div>
+</div>
+
 		);
 	};
-
 	const ServiceCard = ({ serv }: { serv: service }) => {
 		const [quantity, setQuantity] = useState(1);
 
 		return (
 			<div className='bg-white rounded-lg shadow-md p-4 mb-4 border'>
+				
 				<div className='flex gap-4'>
 					<div className='w-48'></div>
 					<div className='flex-1 '>
@@ -327,14 +330,15 @@ export default function SparePartsCart() {
 									<Plus size={16} />
 								</button>
 								<button
-									onClick={() => handleConfirmService(serv._id, quantity)}
-									className='bg-red-600 text-white px-3 py-1 rounded-lg'
+									Click={() => handleConfirmService(serv._id, quantity)}
+									className='bg-[#9b111e] text-white px-3 py-1 rounded-lg'
 								>
 									Confirm
 								</button>
 								<button onClick={() => handleDelete(serv._id)}>
-									<X className='text-red-600' />
+									
 								</button>
+								
 							</div>
 						</div>
 					</div>
@@ -396,7 +400,7 @@ export default function SparePartsCart() {
 					</div>
 				</div>
 
-				<div className='grid grid-cols-1 max-w-6xl mx-auto gap-6'>
+				<div className='grid grid-cols-2 max-w-6xl mx-auto gap-6'>
 					{/* Main Content */}
 					<div className=''>
 						{/* Service Page */}
