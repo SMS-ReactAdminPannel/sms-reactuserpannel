@@ -1,7 +1,10 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
-import { getAllNotifications } from '../../features/Notification/services';
+import {
+	getAllNotifications,
+	updateNotificationById,
+} from '../../features/Notification/services';
 import dayjs from 'dayjs';
 
 type MailItem = {
@@ -63,6 +66,19 @@ export default function GmailStyleInbox() {
 		);
 	}
 
+	const handleUpdateNotification = async (notification: any) => {
+		setSelectedMail(notification);
+		if (!notification?.is_read) {
+			try {
+				await updateNotificationById({
+					uuid: notification?.uuid,
+				});
+			} catch (error) {
+				console.log(error);
+			}
+		}
+	};
+
 	return (
 		<div className='min-h-screen bg-[#FAF3EB] p-2 font-[Poppins]'>
 			<div className='flex items-center mb-6 mt-6'>
@@ -82,14 +98,14 @@ export default function GmailStyleInbox() {
 						{['all', 'unread', 'read'].map((f) => (
 							<button
 								key={f}
-								onClick={() => setFilter(f as 'all' | 'unread' | 'read')}
-								//className={`block w-full text-left px-4 py-2 rounded-lg transition-all duration-200 ${filter === f
-								//</div> ? "bg-gradient-to-r from-red-600 to-red-800 text-white font-semibold shadow-md"
-								//  : "text-gray-700 hover:bg-gray-100"
+								onClick={() => {
+									setFilter(f as 'all' | 'unread' | 'read');
+									setSelectedMail(null);
+								}}
 								className={`block w-full text-left px-4 py-2 rounded-lg transition-all duration-200 ${
 									filter === f
-										? 'bg-[#9b111e] text-white' // Selected button style
-										: 'bg-transparent text-gray-700 hover:bg-gray-100' // Default style
+										? 'bg-[#9b111e] text-white'
+										: 'bg-transparent text-gray-700 hover:bg-gray-100'
 								}`}
 							>
 								{f.charAt(0).toUpperCase() + f.slice(1)}
@@ -104,7 +120,7 @@ export default function GmailStyleInbox() {
 						{filteredMails.map((mail, index) => (
 							<div
 								key={index}
-								onClick={() => setSelectedMail(mail)}
+								onClick={() => handleUpdateNotification(mail)}
 								className={`cursor-pointer flex gap-4 p-4  rounded-xl hover:bg-blue-50 transition duration-150 ${
 									mail.unread
 										? 'bg-gray-100 font-semibold'
@@ -130,9 +146,6 @@ export default function GmailStyleInbox() {
 										<p className='text-xs text-gray-500 mt-2'>
 											{dayjs(mail.updated_at).format('DD-MM-YYYY h:mm A')}
 										</p>
-										{/* <p className="text-xs text-gray-600 truncate">
-                    {mail.preview}
-                  </p> */}
 									</div>
 								</div>
 							</div>

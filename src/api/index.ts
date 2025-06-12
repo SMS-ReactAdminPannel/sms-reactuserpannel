@@ -104,6 +104,11 @@ class Client {
 		notification: {
 			getAll: (params: string) =>
 				httpClient.get(API_END_POINTS.notification.getAll, params),
+			update: (params: any) =>
+				httpClient.update(
+					API_END_POINTS.notification.update.replace(':uuid', params.uuid),
+					params
+				),
 		},
 
 		bookings: {

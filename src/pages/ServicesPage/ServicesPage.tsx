@@ -10,12 +10,14 @@ import {
 	Lightbulb,
 	ChevronUp,
 	ChevronDown,
+	X,
 } from 'lucide-react';
 import SelectCarPage from './SelectCarPage';
 import { useNavigate } from 'react-router-dom';
 import serviceImg from '../../assets/serviceimages/generalservice.png';
 import AutoPopup from './RightSidePopup';
 import { getAllServiceCategories } from '../../features/ServicesPage/service';
+import { postSparePartsData } from '../../features/spareparts';
 
 interface ServiceItem {
 	name: string;
@@ -39,6 +41,14 @@ interface ServicePackage {
 interface ContentSection {
 	title: string;
 	packages: ServicePackage[];
+}
+
+interface CarSelect {
+	// Define your car details interface here
+	id: string;
+	model: string;
+	year: string;
+	// Add other car properties as needed
 }
 
 interface SelectedPackageInfo {
@@ -131,7 +141,6 @@ const ServicesPage: React.FC = () => {
 			const response = await getAllServiceCategories();
 			if (response.data && response.data.data) {
 				setServiceCategories(response.data.data);
-				// Set the first active category as default
 				const firstActiveCategory = response.data.data.find(
 					(cat) => !cat.is_deleted
 				);
@@ -150,7 +159,6 @@ const ServicesPage: React.FC = () => {
 		fetchAllServiceCategory();
 	}, []);
 
-	// Map API data to our content structure
 	const mapApiToContentSections = (
 		categories: ApiServiceCategory[]
 	): { [key: string]: ContentSection } => {
@@ -159,27 +167,31 @@ const ServicesPage: React.FC = () => {
 		categories.forEach((category) => {
 			if (category.is_deleted) return;
 
-			// Filter out inactive services
 			const activeServices = category.services.filter(
 				(service) => service.is_active && !service.is_deleted
 			);
 
-			const packages: ServicePackage[] = activeServices.map((service) => ({
-				id: service._id,
-				title: service.service_name,
-				warranty: '1000 Kms or 1 Month Warranty',
-				frequency: 'As Required',
-				duration: '2 Hrs Taken',
-				image: serviceImg,
-				services: [
-					{
-						name: service.description || 'Service description not available',
-						icon: <Wrench className='w-4 h-4' />,
-					},
-				],
-				price: `₹${service.price}`,
-				discountPrice: `₹${Math.round(service.price * 0.9)}`,
-			}));
+			const packages: ServicePackage[] = activeServices.map((service) => {
+				const originalPrice = service.price;
+				const discountPrice = Math.round(originalPrice * 1.2); // 20% higher than original for strikethrough
+
+				return {
+					id: service._id,
+					title: service.service_name,
+					warranty: '1000 Kms or 1 Month Warranty',
+					frequency: 'As Required',
+					duration: '2 Hrs Taken',
+					image: serviceImg,
+					services: [
+						{
+							name: service.description || 'Service description not available',
+							icon: <Wrench className='w-4 h-4' />,
+						},
+					],
+					price: `₹${discountPrice}`, // This is the strikethrough price
+					discountPrice: `₹${originalPrice}`, // This is the actual price
+				};
+			});
 
 			contentSections[category.category_name] = {
 				title: category.category_name,
@@ -192,7 +204,6 @@ const ServicesPage: React.FC = () => {
 
 	const contentSections = mapApiToContentSections(serviceCategories);
 
-	// Create navigation items from API data (include all non-deleted categories)
 	const navigationItems = serviceCategories
 		.filter((category) => !category.is_deleted)
 		.map((category) => ({
@@ -203,7 +214,6 @@ const ServicesPage: React.FC = () => {
 				category.services.some((s) => s.is_active && !s.is_deleted),
 		}));
 
-	// Helper function to get appropriate icon for each category
 	function getCategoryIcon(categoryName: string): React.ReactNode {
 		if (categoryName.includes('AC')) return <Zap className='w-6 h-6' />;
 		if (categoryName.includes('Battery'))
@@ -228,21 +238,35 @@ const ServicesPage: React.FC = () => {
 		setSelectedPackage([]);
 	};
 
-	const handleAddToCart = (serviceId: string) => {
+	const handleAddToCart = async (serviceId: string) => {
 		const packageToAdd = selectedPackage.find((p) => p.packageId === serviceId);
 		if (packageToAdd) {
 			setCart([...cart, packageToAdd]);
-			setShowCartNotification(true);
-			setTimeout(() => setShowCartNotification(false), 3000);
-			console.log(`Adding service ${serviceId} to cart`);
-			// addToCartAPI(serviceId);
+			try {
+				const data = {
+					service: serviceId,
+					type: 'service',
+				};
+				const response = await postSparePartsData(data);
+				if (response) {
+					setShowCartNotification(true);
+					setTimeout(() => setShowCartNotification(false), 3000);
+				}
+			} catch (error) {
+				console.log(error);
+			}
 		}
 	};
 
-	// Scroll - line animation
+	const handleRemoveFromCart = (serviceId: string) => {
+		setCart(cart.filter((item) => item.packageId !== serviceId));
+		setSelectedPackage(
+			selectedPackage.filter((item) => item.packageId !== serviceId)
+		);
+	};
+
 	const serviceTitle = useScrollAnimation<HTMLHeadingElement>();
 
-	// Auto popup message
 	useEffect(() => {
 		const hasDismissed = localStorage.getItem('dismissedWelcomePopup');
 		if (!hasDismissed) {
@@ -263,26 +287,19 @@ const ServicesPage: React.FC = () => {
 	};
 
 	const [showForm, setShowForm] = useState<boolean>(false);
-
-	// Get current content based on active navigation
 	const currentContent = activeNavItem ? contentSections[activeNavItem] : null;
 
-	console.log(serviceCategories, 'service category');
-
-	console.log(currentContent, 'current');
-
-	if (isLoading) {
-		return (
-			<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-				<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-				<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-			</div>
-		);
-	}
+	// if (isLoading) {
+	// 	return (
+	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
+	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
+	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
+	// 		</div>
+	// 	);
+	// }
 
 	return (
-		<div className='min-h-screen bg-gray-50 flex flex-start '>
-			{/* Header Navigation */}
+		<div className='min-h-screen bg-gray-50 flex flex-start'>
 			{/* Vertical Left Sidebar Navigation */}
 			<div className='flex min-h-screen bg-gradient-to-br from-gray-50 to-gray-100'>
 				{/* Left Sidebar */}
@@ -326,12 +343,10 @@ const ServicesPage: React.FC = () => {
 												: 'text-gray-600 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-red-600 hover:shadow-md'
 										} ${!item.isActive ? 'opacity-70' : ''}`}
 									>
-										{/* Active indicator */}
 										{activeNavItem === item.name && (
 											<div className='absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-8 bg-red-500 rounded-r-full'></div>
 										)}
 
-										{/* Icon container */}
 										<div
 											className={`mr-4 flex-shrink-0 p-2 rounded-lg transition-all duration-300 ${
 												activeNavItem === item.name
@@ -342,12 +357,10 @@ const ServicesPage: React.FC = () => {
 											{item.icon}
 										</div>
 
-										{/* Text */}
 										<span className='text-sm font-semibold whitespace-nowrap transition-all duration-300'>
 											{item.name}
 										</span>
 
-										{/* Hover arrow indicator */}
 										<div
 											className={`ml-auto opacity-0 transform translate-x-2 transition-all duration-300 ${
 												activeNavItem === item.name
@@ -376,9 +389,9 @@ const ServicesPage: React.FC = () => {
 					</div>
 				</div>
 			</div>
+
 			{/* Main Content */}
-			<div className=' ml-72 bg-gray-50 min-h-screen'>
-				{/* Main Content */}
+			<div className='ml-72 bg-gray-50 min-h-screen'>
 				<div className='max-w-4xl mx-auto px-6 py-8'>
 					<div className='mb-8'>
 						<h1 ref={serviceTitle.elementRef}>
@@ -415,168 +428,176 @@ const ServicesPage: React.FC = () => {
 						</div>
 					) : (
 						<div className='space-y-8'>
-							{currentContent.packages.map((pkg) => (
-								<div
-									key={pkg.id}
-									className={`bg-[#FAF3EB] rounded-lg w-[600px] shadow-lg relative transition-all duration-300 hover:shadow-xl ${
-										selectedPackage.some((p) => p.packageId === pkg.id)
-											? 'ring-2 ring-red-500'
-											: ''
-									}`}
-								>
-									{pkg.isRecommended && (
-										<div className='absolute top-0 left-0 z-10 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-1 rounded-br-lg'>
-											<span className='text-sm font-semibold bg-green-600 text-white px-3 py-1 rounded-md'>
-												RECOMMENDED
-											</span>
-										</div>
-									)}
+							{currentContent.packages.map((pkg) => {
+								const isSelected = selectedPackage.some(
+									(p) => p.packageId === pkg.id
+								);
+								const isInCart = cart.some((item) => item.packageId === pkg.id);
 
-									<div className='flex flex-col md:flex-row'>
-										{/* Service Image */}
-										<div className='ml-12 mt-4 md:w-[500px] h-[250px] md:h-auto bg-gradient-to-br from-gray-100 to-gray-200 flex-shrink-0 relative'>
-											<img
-												src={pkg.image}
-												alt={pkg.title}
-												className='w-full h-full object-cover '
-												onError={(e) => {
-													e.currentTarget.src =
-														'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDIwMCAxNTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMTUwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik04NS4zMzMzIDc1SDExNC42NjdNMTAwIDYwLjMzMzNWODkuNjY2N00xMDAgMTA1QzExNi41NjkgMTA1IDEzMCA5MS41Njg1IDEzMCA3NUMxMzAgNTguNDMxNSAxMTYuNTY5IDQ1IDEwMCA0NUM4My40MzE1IDQ1IDcwIDU4LjQzMTUgNzAgNzVDNzAgOTEuNTY4NSA4My40MzE1IDEwNSAxMDAgMTA1WiIgc3Ryb2tlPSIjOUI5QkEzIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4K';
-												}}
-											/>
-										</div>
+								return (
+									<div
+										key={pkg.id}
+										className={`bg-[#FAF3EB] rounded-lg w-[600px] shadow-lg relative transition-all duration-300 hover:shadow-xl ${
+											isSelected ? 'ring-2 ring-red-500' : ''
+										}`}
+									>
+										{pkg.isRecommended && (
+											<div className='absolute top-0 left-0 z-10 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-1 rounded-br-lg'>
+												<span className='text-sm font-semibold bg-green-600 text-white px-3 py-1 rounded-md'>
+													RECOMMENDED
+												</span>
+											</div>
+										)}
 
-										{/* Service Details */}
-										<div className='flex-1 p-6'>
-											<div className='flex justify-between items-start mb-4'>
-												<div className='relative'>
-													<h2 className='text-2xl font-bold text-[#9b111e] mb-2'>
-														{pkg.title}
-													</h2>
-													<div className='absolute font-bold flex flex-row items-center w-[122px] bottom-[40px] left-[430px] px-3 py-1 rounded-full bg-red-600 text-white text-sm'>
-														<Clock className='w-4 h-4 mr-1' />
-														{pkg.duration}
-													</div>
-													<div className='flex space-x-4 text-sm'>
-														<span className='inline-flex items-center px-3 py-1 rounded-full opacity-70 text-red-600 '>
-															{pkg.warranty}
-														</span>
-														<span className='inline-flex items-center px-3 py-1 rounded-full opacity-70 text-red-600 '>
-															{pkg.frequency}
-														</span>
-													</div>
-												</div>
+										<div className='flex flex-col md:flex-row'>
+											{/* Service Image */}
+											<div className='ml-12 mt-4 md:w-[500px] h-[250px] md:h-auto bg-gradient-to-br from-gray-100 to-gray-200 flex-shrink-0 relative'>
+												<img
+													src={pkg.image}
+													alt={pkg.title}
+													className='w-full h-full object-cover'
+													onError={(e) => {
+														e.currentTarget.src =
+															'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDIwMCAxNTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMTUwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik04NS4zMzMzIDc1SDExNC42NjdNMTAwIDYwLjMzMzNWODkuNjY2N00xMDAgMTA1QzExNi41NjkgMTA1IDEzMCA5MS41Njg1IDEzMCA3NUMxMzAgNTguNDMxNSAxMTYuNTY5IDQ1IDEwMCA0NUM4My40MzE1IDQ1IDcwIDU4LjQzMTUgNzAgNzVDNzAgOTEuNTY4NSA4My40MzE1IDEwNSAxMDAgMTA1WiIgc3Ryb2tlPSIjOUI5QkEzIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4K';
+													}}
+												/>
 											</div>
 
-											{/* Services Grid */}
-											<div className='grid grid-cols-1 md:grid-cols-2 gap-3 mb-4'>
-												{pkg.services
-													.slice(
-														0,
-														expandedServices[pkg.id] ? pkg.services.length : 4
-													)
-													.map((service, index) => (
-														<div
-															key={index}
-															className='flex items-center text-sm text-gray-700 group'
-														>
-															<div className='w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3 flex-shrink-0 group-hover:bg-green-200 transition-colors'>
-																<div>{service.icon}</div>
+											{/* Service Details */}
+											<div className='flex-1 p-6'>
+												<div className='flex justify-between items-start mb-4'>
+													<div className='relative'>
+														<h2 className='text-2xl font-bold text-[#9b111e] mb-2'>
+															{pkg.title}
+														</h2>
+														<div className='absolute font-bold flex flex-row items-center w-[122px] bottom-[40px] left-[430px] px-3 py-1 rounded-full bg-red-600 text-white text-sm'>
+															<Clock className='w-4 h-4 mr-1' />
+															{pkg.duration}
+														</div>
+														<div className='flex space-x-4 text-sm'>
+															<span className='inline-flex items-center px-3 py-1 rounded-full opacity-70 text-red-600'>
+																{pkg.warranty}
+															</span>
+															<span className='inline-flex items-center px-3 py-1 rounded-full opacity-70 text-red-600'>
+																{pkg.frequency}
+															</span>
+														</div>
+													</div>
+												</div>
+
+												{/* Services Grid */}
+												<div className='grid grid-cols-1 md:grid-cols-2 gap-3 mb-4'>
+													{pkg.services
+														.slice(
+															0,
+															expandedServices[pkg.id] ? pkg.services.length : 4
+														)
+														.map((service, index) => (
+															<div
+																key={index}
+																className='flex items-center text-sm text-gray-700 group'
+															>
+																<div className='w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3 flex-shrink-0 group-hover:bg-green-200 transition-colors'>
+																	<div>{service.icon}</div>
+																</div>
+																<span className='group-hover:text-gray-900 transition-colors'>
+																	{service.name}
+																</span>
 															</div>
-															<span className='group-hover:text-gray-900 transition-colors'>
-																{service.name}
-															</span>
-														</div>
-													))}
-											</div>
-
-											{pkg.additionalCount && (
-												<div className='mb-6'>
-													<button
-														onClick={() => toggleExpandServices(pkg.id)}
-														className='text-blue-600 text-sm font-medium hover:text-blue-800 transition-colors flex items-center'
-													>
-														{expandedServices[pkg.id] ? (
-															<>
-																<ChevronUp className='w-4 h-4 mr-1' />
-																Show Less
-															</>
-														) : (
-															<>
-																<ChevronDown className='w-4 h-4' />
-																view more
-															</>
-														)}
-													</button>
+														))}
 												</div>
-											)}
 
-											<div className='flex justify-between items-center mt-6'>
-												{/* Conditional buttons */}
-												{selectedPackage.some((p) => p.packageId === pkg.id) ? (
-													<>
-														{/* Price and Discount */}
-														<div className='text-right mb-2'>
-															<span className='line-through text-gray-400 mr-2 text-sm'>
-																{pkg.price}
-															</span>
-															<span className='text-red-600 font-bold text-xl'>
-																{pkg.discountPrice}
-															</span>
-														</div>
-
-														{/* Check if it's in the cart */}
-														{cart.some((item) => item.packageId === pkg.id) ? (
-															<button
-																onClick={() => {
-																	navigate('/booking-cart');
-																}}
-																className='px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors'
-															>
-																Go to Cart
-															</button>
-														) : (
-															<button
-																onClick={() => handleAddToCart(pkg.id)}
-																className='px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-900 transition-colors'
-															>
-																Add to Cart
-															</button>
-														)}
-													</>
-												) : (
-													<button
-														onClick={() => handleSelectCar(pkg.id)}
-														className='px-4 py-2 rounded-lg font-semibold bg-white border-2 border-red-500 text-red-500 hover:bg-red-50 hover:text-red-700 transition-all duration-200 shadow-md hover:shadow-lg'
-													>
-														SELECT CAR
-													</button>
+												{pkg.additionalCount && (
+													<div className='mb-6'>
+														<button
+															onClick={() => toggleExpandServices(pkg.id)}
+															className='text-blue-600 text-sm font-medium hover:text-blue-800 transition-colors flex items-center'
+														>
+															{expandedServices[pkg.id] ? (
+																<>
+																	<ChevronUp className='w-4 h-4 mr-1' />
+																	Show Less
+																</>
+															) : (
+																<>
+																	<ChevronDown className='w-4 h-4' />
+																	view more
+																</>
+															)}
+														</button>
+													</div>
 												)}
-											</div>
-											{showForm && selectedPackageId && (
-												<div className='fixed inset-0 bg-black bg-opacity-50 flex justify-end items-center z-50 p-4'>
-													<SelectCarPage
-														onClose={() => setShowForm(false)}
-														setSelectedPackage={(carDetails) => {
-															setSelectedPackage((prev) => [
-																...prev,
-																{
-																	packageId: selectedPackageId,
-																	carDetails,
-																},
-															]);
-															setShowForm(false);
-														}}
-														packageId={selectedPackageId}
-													/>
+
+												<div className='flex justify-between items-center mt-6'>
+													{/* Price and Discount */}
+													<div className='text-right mb-2'>
+														{isSelected && (
+															<>
+																<span className='line-through text-gray-400 mr-2 text-sm'>
+																	{pkg.price}
+																</span>
+																<span className='text-red-600 font-bold text-xl'>
+																	{pkg.discountPrice}
+																</span>
+															</>
+														)}
+													</div>
+
+													{/* Buttons */}
+													{isSelected ? (
+														<div className='flex items-center space-x-2'>
+															{isInCart ? (
+																<>
+																	<button
+																		onClick={() => {
+																			navigate('/booking-cart');
+																		}}
+																		className='px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors'
+																	>
+																		Go to Cart
+																	</button>
+																	<button
+																		onClick={() => handleRemoveFromCart(pkg.id)}
+																		className='p-2 text-gray-500 hover:text-red-600 transition-colors'
+																		title='Remove from cart'
+																	>
+																		<X className='w-5 h-5' />
+																	</button>
+																</>
+															) : (
+																<>
+																	<button
+																		onClick={() => handleAddToCart(pkg.id)}
+																		className='px-4 py-2 bg-red-800 text-white rounded-md hover:bg-red-700 transition-colors'
+																	>
+																		Add to Cart
+																	</button>
+																	<button
+																		onClick={() => handleRemoveFromCart(pkg.id)}
+																		className='px-4 py-2 border border-red-600 rounded-md hover:bg-red-700 hover:text-white transition-colors text-red-600'
+																	>
+																		Cancel
+																	</button>
+																</>
+															)}
+														</div>
+													) : (
+														<button
+															onClick={() => handleSelectCar(pkg.id)}
+															className='px-4 py-2 rounded-lg font-semibold bg-white border-2 border-red-500 text-red-500 hover:bg-red-50 hover:text-red-700 transition-all duration-200 shadow-md hover:shadow-lg'
+														>
+															SELECT CAR
+														</button>
+													)}
 												</div>
-											)}
+											</div>
 										</div>
 									</div>
-								</div>
-							))}
+								);
+							})}
 						</div>
 					)}
+
 					{/* Cart Notification */}
 					{showCartNotification && (
 						<div className='fixed top-[70px] right-[10px] transform -translate-x-1/2 bg-green-600 text-white px-6 py-3 rounded-lg shadow-lg z-50'>
@@ -585,6 +606,28 @@ const ServicesPage: React.FC = () => {
 					)}
 				</div>
 			</div>
+
+			{/* Car Selection Form Modal */}
+			{showForm && selectedPackageId && (
+				<div className='fixed inset-0 bg-black bg-opacity-50 flex justify-end items-center z-50 p-4'>
+					<SelectCarPage
+						onClose={() => setShowForm(false)}
+						setSelectedPackage={(carDetails) => {
+							setSelectedPackage((prev) => [
+								...prev,
+								{
+									packageId: selectedPackageId,
+									carDetails,
+								},
+							]);
+							setShowForm(false);
+						}}
+						packageId={selectedPackageId}
+					/>
+				</div>
+			)}
+
+			{/* Welcome Popup */}
 			{showWelcomePopup && (
 				<AutoPopup
 					onClose={handleCloseWelcome}
