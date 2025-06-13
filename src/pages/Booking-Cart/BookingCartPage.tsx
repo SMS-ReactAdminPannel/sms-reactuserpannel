@@ -1,21 +1,23 @@
-import { useState, useEffect, useRef } from 'react';
-import { Wrench, Car } from 'lucide-react';
-import bgImage from '../../assets/checkout-bg_1_.png';
+import { useEffect, useState, useRef } from 'react';
+import { Plus, Minus, X, Wrench, Car } from 'lucide-react';
+import {
+	booking_cart,
+	postBookingProduct,
+} from '../../features/BookingCart/service';
 import { toast } from 'react-toastify';
-import { FONTS } from '../../constants/constant';
-import { booking_cart } from '../../features/BookingCart/service';
+import bgImage from '../../assets/checkout-bg_1_.png';
+import { postBookingService } from '../../features/Bookings/service';
 
-interface SparePart {
-	id: string;
-	name: string;
-	description: string;
-	imageUrl: string;
-	inStock: boolean;
+interface spare {
+	_id: number;
+	productName: string;
 	price: number;
-	discount: number;
-	originalPrice: number;
-	compatibility: string;
+	brand: string;
+	image: string;
+	quantity: number;
 	category: string;
+	description: string;
+	stock: number;
 }
 
 interface service {
@@ -59,6 +61,7 @@ const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 	return { elementRef, isVisible };
 };
 
+// Main Component
 export default function SparePartsCart() {
 	const [books, setBooks] = useState<spare[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
@@ -78,16 +81,20 @@ export default function SparePartsCart() {
 	const [cartId, setCartId] = useState<string>('');
 	const [serviceId, setServiceCartId] = useState<string>('');
 	const totalPartPrice = books.reduce(
-		(acc, part) => acc + part.price * part.quantity,
-		0
+	  (acc, part) => acc + part.price * part.quantity, 0
 	);
 
-	const totalServicePrice = services.reduce((acc, serv) => acc + serv.price, 0);
+	const totalServicePrice = services.reduce(
+    (acc, serv) => acc + serv.price, 0
+	);
+
+	// text-line animation
+	const cartTitle = useScrollAnimation<HTMLHeadingElement>();
 
 	const books_valid = async () => {
 		try {
 			const response = await booking_cart({});
-			console.log('Booking Cart :', response);
+			console.log('Booking Cart :', response)
 			if (response) {
 				setIsLoading(false);
 			}
@@ -105,7 +112,7 @@ export default function SparePartsCart() {
 						productName: product.productId?.productName || 'Unknown',
 						price: Number(product.price) || 0,
 						brand: product.productId?.brand || 'Generic',
-						image: bgImage,
+						image : bgImage,
 						// image: product.productId?.image || '',
 						quantity: Number(product.quantity) || 1,
 						category: product.productId?.category || '',
@@ -128,7 +135,7 @@ export default function SparePartsCart() {
 						price: Number(service.price) || 0,
 						description: service.description || '',
 						image: service.productId?.image || bgImage,
-						is_active: service.productId?.stock || true,
+						is_active:service.productId?.stock || true,
 					})
 				);
 				setServices(mappedServices);
@@ -221,77 +228,69 @@ export default function SparePartsCart() {
 	const filteredServices = services;
 
 	const SparePartCard = ({ part }: { part: spare }) => {
+
 		const [quantity, setQuantity] = useState(part.quantity || 1);
 
 		return (
 			<div className='border rounded-lg h-[190px] shadow max-w-xl mx-left p-4 mb-6 bg-white hover:shadow-md transition duration-300'>
-				<div className='flex justify-star gap-4'>
-					<div className='w-32 h-32 relative group overflow-hidden rounded border'>
-						<img
-							src={
-								part.image
-									? part.image
-									: 'https://boodmo.com/media/cache/catalog_part/images/parts/3fe3e3713e19d66a47bae04233a97cf4.webp'
-							}
-							alt={part.productName}
-							className='object-contain w-full h-full p-2 transition-transform duration-300 group-hover:scale-105'
-						/>
-						{part.discount > 0 && (
-							<span className='absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-0.5 rounded font-semibold'>
-								{part.discount}% OFF
-							</span>
-						)}
+	<div className='flex justify-star gap-4'>
+		<div className='w-32 h-32 relative group overflow-hidden rounded border'>
+			<img
+				src={
+					part.image
+						? part.image
+						: 'https://boodmo.com/media/cache/catalog_part/images/parts/3fe3e3713e19d66a47bae04233a97cf4.webp'
+				}
+				alt={part.productName}
+				className='object-contain w-full h-full p-2 transition-transform duration-300 group-hover:scale-105'
+			/>
+			{part.discount > 0 && (
+				<span className='absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-0.5 rounded font-semibold'>
+					{part.discount}% OFF
+				</span>
+			)}
+		</div>
+		
+		<div className='flex-1 flex flex-col justify-between'>
+			<div className={`relative left-[325px] text-xs px-2 w-[60px] py-0.5 rounded font-medium ${part.stock ? 'bg-green-100 text-green-700' : 'bg-red-700 text-white'}`}>
+						{part.stock ? 'In Stock' : 'Out of Stock'}
 					</div>
-
-					<div className='flex-1 flex flex-col justify-between'>
-						<div
-							className={`relative left-[325px] text-xs px-2 w-[60px] py-0.5 rounded font-medium ${
-								part.stock
-									? 'bg-green-100 text-green-700'
-									: 'bg-red-700 text-white'
-							}`}
-						>
-							{part.stock ? 'In Stock' : 'Out of Stock'}
-						</div>
-						<div>
-							<div className='flex justify-between items-start'>
-								<h3 className='text-base font-semibold text-gray-800'>
-									{part.productName}
-								</h3>
-							</div>
-							<p className='text-sm text-gray-600 mb-2'>
-								{part.description ||
-									'High quality ceramic brake pads for safe and smooth braking'}
-							</p>
-						</div>
-
-						<div className='flex gap-2 items-center'>
-							<span className='text-lg font-bold text-red-600'>
-								₹{part.price}
-							</span>
-							<span className='line-through text-sm text-gray-400 '>
-								₹{Math.round(part.price * 1.3)}
-							</span>
-						</div>
-
-						<div className='flex gap-2'>
-							<span className='px-2 font-medium'>Quantity : {quantity}</span>
-
-							<button
-								className='bg-[#9b111e] ml-[180px] hover:bg-red-700 text-white px-4 py-1.5 rounded font-semibold transition ml-48'
-								onClick={() => handleDelete(part._id)}
-							>
-								REMOVE
-							</button>
-						</div>
-						<div className='text-sm text-green-700 font-medium flex items-center gap-1'>
-							<span className='text-base'>🚚</span>
-							Delivery by{' '}
-							<span className='font-semibold ml-1'>Sat, Jun 14</span>
-						</div>
-					</div>
+			<div>
+				<div className='flex justify-between items-start'>
+					<h3 className='text-base font-semibold text-gray-800'>{part.productName}</h3>
+					
 				</div>
+				<p className='text-sm text-gray-600 mb-2'>
+					{part.description || 'High quality ceramic brake pads for safe and smooth braking'}
+				</p>
 			</div>
+
+			
+				<div className='flex gap-2 items-center'>
+					<span className='text-lg font-bold text-red-600'>₹{part.price}</span>
+					<span className='line-through text-sm text-gray-400 '>₹{Math.round(part.price * 1.3)}</span>
+				</div>
+
+				<div className='flex gap-2'>
+	
+					<span className='px-2 font-medium'>Quantity : {quantity}</span>
+					
+					<button
+					    className='bg-[#9b111e] ml-[180px] hover:bg-red-700 text-white px-4 py-1.5 rounded font-semibold transition ml-48'
+					    onClick={() => handleDelete(part._id)}
+					>
+					    REMOVE
+					</button>
+				</div>
+			<div className="text-sm text-green-700 font-medium flex items-center gap-1">
+					<span className="text-base">🚚</span>
+
+	Delivery by <span className="font-semibold ml-1">Sat, Jun 14</span>
+</div>
+		</div>
+	</div>
+</div>
+
 		);
 	};
 	const ServiceCard = ({ serv }: { serv: service }) => {
@@ -299,85 +298,71 @@ export default function SparePartsCart() {
 
 		return (
 			<div className='border rounded-lg h-[190px] shadow max-w-xl mx-left p-4 mb-6 bg-white hover:shadow-md transition duration-300'>
-				<div className='flex justify-star gap-4'>
-					<div className='w-32 h-32 relative group overflow-hidden rounded border'>
-						<img
-							src={
-								serv.image
-									? serv.image
-									: 'https://boodmo.com/media/cache/catalog_part/images/parts/3fe3e3713e19d66a47bae04233a97cf4.webp'
-							}
-							alt={serv.service_name}
-							className='object-contain w-full h-full p-2 transition-transform duration-300 group-hover:scale-105'
-						/>
-						{serv.discount > 0 && (
-							<span className='absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-0.5 rounded font-semibold'>
-								{serv.discount}% OFF
-							</span>
-						)}
-					</div>
-
-					<div className='flex-1 flex flex-col justify-between'>
-						<span
-							className={`relative left-[325px] text-xs px-2 w-[65px] py-0.5 rounded font-medium ${
-								serv.is_active
-									? 'bg-green-100 text-green-700'
-									: 'bg-red-700 text-white'
-							}`}
-						>
-							{serv.is_active ? 'Available' : 'Not Available'}
-						</span>
-						<div>
-							<div className='flex justify-between items-start'>
-								<h3 className='text-base font-semibold text-gray-800'>
-									{serv.service_name}
-								</h3>
-							</div>
-							<p className='text-sm text-gray-600 mb-6'>
-								{serv.description ||
-									'High quality ceramic brake pads for safe and smooth braking'}
-							</p>
-						</div>
-
-						<div className='flex gap-2 items-center'>
-							<span className='text-lg font-bold text-red-600'>
-								₹{serv.price}
-							</span>
-							<span className='line-through text-sm text-gray-400 '>
-								₹{Math.round(serv.price * 1.3)}
-							</span>
-						</div>
-
-						<div className='flex gap-2 '>
-							<button
-								className='bg-[#9b111e] mt-[-16px] ml-[289px]  hover:bg-red-700 text-white px-4 py-1.5 rounded font-semibold transition ml-48'
-								onClick={() => handleDelete(serv._id)}
-							>
-								REMOVE
-							</button>
-						</div>
-					</div>
+	<div className='flex justify-star gap-4'>
+		<div className='w-32 h-32 relative group overflow-hidden rounded border'>
+			<img
+				src={
+					serv.image
+						? serv.image
+						: 'https://boodmo.com/media/cache/catalog_part/images/parts/3fe3e3713e19d66a47bae04233a97cf4.webp'
+				}
+				alt={serv.service_name}
+				className='object-contain w-full h-full p-2 transition-transform duration-300 group-hover:scale-105'
+			/>
+			{serv.discount > 0 && (
+				<span className='absolute top-2 right-2 bg-red-600 text-white text-xs px-2 py-0.5 rounded font-semibold'>
+					{serv.discount}% OFF
+				</span>
+			)}
+		</div>
+		
+		<div className='flex-1 flex flex-col justify-between'>
+			<span className={`relative left-[325px] text-xs px-2 w-[65px] py-0.5 rounded font-medium ${serv.is_active ? 'bg-green-100 text-green-700' : 'bg-red-700 text-white'}`}>
+						{serv.is_active ? 'Available' : 'Not Available'}
+					</span>
+			<div>
+				<div className='flex justify-between items-start'>
+					<h3 className='text-base font-semibold text-gray-800'>{serv.service_name}</h3>
 				</div>
+				<p className='text-sm text-gray-600 mb-6'>
+					{serv.description || 'High quality ceramic brake pads for safe and smooth braking'}
+				</p>
 			</div>
+
+			
+				<div className='flex gap-2 items-center'>
+					<span className='text-lg font-bold text-red-600'>₹{serv.price}</span>
+					<span className='line-through text-sm text-gray-400 '>₹{Math.round(serv.price * 1.3)}</span>
+				</div>
+
+				<div className='flex gap-2 '>
+
+					<button
+					    className='bg-[#9b111e] mt-[-16px] ml-[289px]  hover:bg-red-700 text-white px-4 py-1.5 rounded font-semibold transition ml-48'
+					    onClick={() => handleDelete(serv._id)}
+					>
+					    REMOVE
+					</button>
+				</div>
+		</div>
+	</div>
+</div>
+
 		);
 	};
 
 	return (
 		<div
-			className='min-h-screen bg-gray-50 p-4 '
-			style={{ backgroundImage: `url("${bgImage}")` }}
+			className='min-h-screen p-6 bg-gray-100'
+			style={{ backgroundImage: `url(${bgImage})` }}
 		>
 			<div className='max-w-7xl mx-auto'>
 				{/* Header */}
-				<h1
-					ref={cartTitle.elementRef}
-					className='text-center'
-					style={{ ...FONTS.heading }}
-				>
-					<span className='inline-block pb-1 relative text-center text-red-900 mb-10'>
+				<h1 ref={cartTitle.elementRef} className='text-center'>
+					<span className='inline-block pb-1 relative text-3xl font-bold text-[#9b111e] mb-6'>
 						My Cart
 						<span
-							className={`absolute top-[52px] left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+							className={`absolute top-11 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
 								cartTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
 							}`}
 						></span>
@@ -408,7 +393,6 @@ export default function SparePartsCart() {
 							<Car className='text-xl' />
 							Service Order
 						</button>
-
 						{/* Animated indicator with smooth sliding */}
 						<div
 							className={`absolute inset-y-1 h-[calc(100%-0.5rem)] bg-[#9b111e] rounded-full shadow-md transition-all duration-300 ease-in-out ${
@@ -447,8 +431,8 @@ export default function SparePartsCart() {
 							<div>
 								{filteredServices.length > 0 ? (
 									<div className='space-y-4'>
-										{filteredServices.map((service) => (
-											<ServiceCard key={service.id} service={service} />
+										{filteredServices.map((serv) => (
+											<ServiceCard key={serv._id} serv={serv} />
 										))}
 									</div>
 								) : (
@@ -472,30 +456,31 @@ export default function SparePartsCart() {
 										<h2 className='text-lg font-semibold text-red-600'>
 											PRICE DETAILS
 										</h2>
-									</div>
+										</div>
 								</div>
 								<div className='border-t border-orange-200 pt-2 w-full'></div>
 								<h3 className='text-base font-semibold text-black-600 mb-4'>
-									Confirmed Service Orders
-								</h3>
+											Confirmed Service Orders</h3>
 
 								<div className='space-y-2 mb-4'>
-									<div className='flex justify-between text-sm'>
-										<span>price ({books.length} items)</span>
-										<span>₹{totalPartPrice}</span>
-									</div>
-									<div className='flex justify-between text-sm'>
+										<div
+											
+											className='flex justify-between text-sm'
+										>
+											<span>
+											price ({books.length} items)
+										</span>
+										<span>₹{totalPartPrice }</span>
+										</div>
+										<div className='flex justify-between text-sm'>
 										<span>Discount</span>
 										<span> - ₹ 0</span>
-									</div>
-									<div className='flex justify-between text-sm'>
+										</div>
+										<div className='flex justify-between text-sm'>
 										<span>Delivery Charges</span>
-										<span>
-											{' '}
-											<del>₹100</del>{' '}
-											<span className='text-green-600 font-bold'>Free</span>{' '}
-										</span>
-									</div>
+										<span> <del>₹100</del> <span className='text-green-600 font-bold'>Free</span> </span>
+										</div>
+									
 								</div>
 								<div className='border-t border-orange-200 pt-2 mb-4'>
 									<div className='flex justify-between font-bold text-orange-700'>
@@ -525,36 +510,35 @@ export default function SparePartsCart() {
 						)}
 
 						{/* Services Summary */}
-						{services.length > 0 && activeTab === 'ServiceBookingPage' && (
+						{services.length > 0 && activeTab === 'ServiceBookingPage' && (	
 							<div className='bg-white rounded-lg shadow-md p-4 '>
 								<div className='flex justify-between items-center mb-1'>
 									<div>
 										<h2 className='text-lg font-semibold text-red-600'>
 											PRICE DETAILS
 										</h2>
-									</div>
+										
+								</div>
 								</div>
 								<div className='border-t border-orange-200 pt-2 w-full'></div>
 								<h3 className='text-base font-semibold text-black-600 mb-4'>
-									Confirmed Service Orders
-								</h3>
+											Confirmed Service Orders</h3>
 								<div className='space-y-2 mb-4'>
 									<div className='flex justify-between text-sm'>
-										<span>price ({services.length} items)</span>
-										<span>₹{totalServicePrice}</span>
-									</div>
-									<div className='flex justify-between text-sm'>
+											<span>
+											price ({services.length} items)
+										</span>
+										<span>₹{totalServicePrice }</span>
+										</div>
+										<div className='flex justify-between text-sm'>
 										<span>Discount</span>
 										<span> - ₹ 0</span>
-									</div>
-									<div className='flex justify-between text-sm'>
+										</div>
+										<div className='flex justify-between text-sm'>
 										<span>Delivery Charges</span>
-										<span>
-											{' '}
-											<del>₹100</del>{' '}
-											<span className='text-green-600 font-bold'>Free</span>{' '}
-										</span>
-									</div>
+										<span> <del>₹100</del> <span className='text-green-600 font-bold'>Free</span> </span>
+										</div>
+										
 								</div>
 								<div className='border-t border-orange-200 pt-2 mb-4'>
 									<div className='flex justify-between font-bold text-orange-700'>

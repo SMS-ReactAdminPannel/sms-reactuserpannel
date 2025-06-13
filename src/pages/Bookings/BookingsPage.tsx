@@ -1,17 +1,49 @@
-import type React from 'react';
-import { useEffect, useRef, useState } from 'react';
+import type React from "react";
+import { useState, useRef, useEffect } from "react";
 import {
-	Search,
-	Package,
-	Wrench,
-	CheckCircle,
-	Calendar,
-	Truck,
-	Clock,
-	MapPin,
-} from 'lucide-react';
-import bgImage from '../../assets/checkout-bg_1_.png';
-import { FONTS } from '../../constants/constant';
+  Search,
+  Package,
+  Wrench,
+  CheckCircle,
+  Calendar,
+  Truck,
+  Clock,
+  MapPin,
+} from "lucide-react";
+import bgImage from "../../assets/checkout-bg_1_.png";
+
+const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
+  options = {}
+) => {
+  const [isVisible, setIsVisible] = useState(false);
+  const elementRef = useRef<T>(null);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        setIsVisible(entry.isIntersecting);
+      },
+      {
+        threshold: 0.1,
+        rootMargin: '0px 0px -100px 0px',
+        ...options,
+      }
+    );
+
+    if (elementRef.current) {
+      observer.observe(elementRef.current);
+    }
+
+    return () => {
+      if (elementRef.current) {
+        observer.unobserve(elementRef.current);
+      }
+    };
+  }, []);
+
+  return { elementRef, isVisible };
+};
+
 
 // OrderDetails Interface
 interface OrderDetails {
@@ -540,39 +572,35 @@ const OrdersPage: React.FC = () => {
 			}
 		});
 
-	const totalOrders = filteredOrders.length;
-	const completedOrders = filteredOrders.filter((order) => {
-		const orderDate = order.date ? new Date(order.date) : null;
-		return orderDate && orderDate < new Date();
-	}).length;
+  const totalOrders = filteredOrders.length;
+  const completedOrders = filteredOrders.filter((order) => {
+    const orderDate = order.date ? new Date(order.date) : null;
+    return orderDate && orderDate < new Date();
+  }).length;
 
-	return (
-		<div
-			className='min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100'
-			style={{ backgroundImage: `url("${bgImage}")` }}
-		>
-			<div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
-				{/* Header */}
-				<div className='mb-8'>
-					<h1
-						ref={orderTitle.elementRef}
-						className='text-center'
-						style={{ ...FONTS.heading }}
-					>
-						<span className='inline-block pb-1 relative text-center text-red-900 mb-10'>
-							My Orders
-							<span
-								className={`absolute top-[52px] left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
-									orderTitle.isVisible
-										? 'scale-x-100 w-full'
-										: 'scale-x-0 w-full'
-								}`}
-							></span>
-						</span>
-					</h1>
-					<p className='text-red-700 text-xl'>
-						Track and manage all your orders in one place
-					</p>
+  const offerTitle = useScrollAnimation<HTMLHeadingElement>();
+
+  return (
+    <div
+      className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100"
+      style={{ backgroundImage: `url("${bgImage}")` }}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <h1 className='text-center' ref={offerTitle.elementRef}>
+				<span className='inline-block pb-1 relative text-4xl font-bold text-[#9b111e] mb-2'>
+					My Orders
+					<span
+						className={`absolute top-12 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+							offerTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
+						}`}
+					></span>
+				</span>
+			</h1>
+          <p className="text-red-600 text-lg">
+            Track and manage all your orders in one place
+          </p>
 
 					{/* Stats */}
 					<div className='flex space-x-6 mt-4 text-[#9b111e]'>

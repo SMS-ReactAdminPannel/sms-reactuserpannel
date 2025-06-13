@@ -1,11 +1,14 @@
 import { ImageCarousel } from '../../components/home/ImageCarousel';
-// <<<<<<< HEAD
-import image1 from '../../assets/carimages/pexels-cottonbro-4489749.jpg';
-import image2 from '../../assets/carimages/pexels-artempodrez-8986070.jpg';
-import image3 from '../../assets/carimages/pexels-cottonbro-4489732.jpg';
-import image4 from '../../assets/carimages/pexels-ronaldo-galeano-2428202-4069389.jpg';
+import image1 from '../../assets/home/360_F_496483060_C9OG1wJpfmjMXcNmUBibmA9wYxxZCxnW.jpg';
+import image2 from '../../assets/home/360_F_507812981_dGZXqBsqkBpEosDjTlJgmaJAyMFra7sp.jpg';
+import image3 from '../../assets/home/hand-mechanic-holding-car-service-600nw-2340377479.webp';
+import image4 from '../../assets/home/istockphoto-1387759698-612x612.jpg';
+import serviceImg from '../../assets/CAR ANNUAL MAINTENANCE/Annual maintenance.jpg'
 // import CarImg1 from '../../assets/CarImg1.jpg';
 
+import { RxLapTimer } from "react-icons/rx";
+import { LiaCertificateSolid } from "react-icons/lia";
+import { BsTruck } from "react-icons/bs";
 import { GrWorkshop } from 'react-icons/gr';
 import { LuCarTaxiFront } from 'react-icons/lu';
 import { PiSealCheckBold } from 'react-icons/pi';
@@ -21,15 +24,15 @@ import { COLORS, FONTS } from '../../constants/constant';
 import React, { useState, useRef, useEffect } from 'react';
 import {
 	FaTools,
-	// FaSnowflake,
-	// FaBatteryThreeQuarters,
-	// FaCarAlt,
-	// FaSearch,
-	// FaLightbulb,
-	// FaCarCrash,
-	// FaCarSide,
-	// FaFileSignature,
-	// FaCircleNotch,
+	FaSnowflake,
+	FaBatteryThreeQuarters,
+	FaCarAlt,
+	FaSearch,
+	FaLightbulb,
+	FaCarCrash,
+	FaCarSide,
+	FaFileSignature,
+	FaCircleNotch,
 } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import PromoCarousel from '../../components/home/offerCard';
@@ -54,10 +57,6 @@ import { FaFacebook } from 'react-icons/fa'; //facebook
 import { FaYoutube } from 'react-icons/fa'; //youtube
 import { SiIndeed } from 'react-icons/si'; //indeed
 import { BiLogoPlayStore } from 'react-icons/bi'; //play store
-
-// API call to fetch home data
-
-import { getAllServiceCategories } from '../../features/ServicesPage/service';
 
 const imageUrls = [image1, image2, image3, image4];
 interface ServiceCardProps {
@@ -102,23 +101,75 @@ const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 };
 
 const HomePage: React.FC = () => {
+	const cardData: ServiceCardProps[] = [
+		{
+			id: 1,
+			icon: <FaTools size={42} />,
+			title: 'Periodic Services',
+			color: 'bg-white border-[#9b111e]',
+		},
+		{
+			id: 2,
+			icon: <FaSnowflake size={42} />,
+			title: 'Ac Services & Repair',
+			color: 'bg-white border-[#9b111e]',
+		},
+		{
+			id: 3,
+			icon: <FaBatteryThreeQuarters size={42} />,
+			title: 'Batteries',
+			color: 'bg-white border-[#9b111e]',
+		},
+		{
+			id: 4,
+			icon: <FaCircleNotch size={42} />,
+			title: 'Tyres and Wheel Care',
+			color: 'bg-white border-[#9b111e]',
+		},
+		{
+			id: 5,
+			icon: <FaCarAlt size={42} />,
+			title: 'Detailing Services',
+			color: 'bg-white border-[#9b111e]',
+		},
+		{
+			id: 6,
+			icon: <FaSearch size={42} />,
+			title: 'Car Inspection',
+			color: 'bg-white border-[#9b111e]',
+		},
+		{
+			id: 7,
+			icon: <FaLightbulb size={42} />,
+			title: 'Windshields & Lights',
+			color: 'bg-white border-[#9b111e]',
+		},
+		{
+			id: 8,
+			icon: <FaCarCrash size={42} />,
+			title: 'Suspension & Fitments',
+			color: 'bg-white border-[#9b111e]',
+		},
+		{
+			id: 9,
+			icon: <FaCarSide size={42} />,
+			title: 'Clutch & Body Parts',
+			color: 'bg-white border-[#9b111e]',
+		},
+	];
+
+	// Create separate hooks for each title
 	const servicesTitle = useScrollAnimation<HTMLHeadingElement>();
 	const careTitle = useScrollAnimation<HTMLHeadingElement>();
 	const discoverTitle = useScrollAnimation<HTMLHeadingElement>();
 	const contactTitle = useScrollAnimation<HTMLHeadingElement>();
 	const [isLoading, setIsLoading] = useState(true);
-	const [servicescard, setServicescard] = useState<any[]>([]);
 
-	const fetchHomePageData = async () => {
+	const fetchHomePageData = () => {
 		try {
-			setIsLoading(true);
-			const response = await getAllServiceCategories({});
-			if (response) {
-				setServicescard(response.data.data);
-				console.log('Fetched Services Data:', response.data.data); // ✅ Log fetched data
-			}
+			setIsLoading(false);
 		} catch (error) {
-			console.error('Error fetching services data:', error); // ✅ Log error
+			console.log(error);
 		} finally {
 			setIsLoading(false);
 		}
@@ -143,12 +194,13 @@ const HomePage: React.FC = () => {
 				<div className='bg-red-900 h-[25px]'></div>
 				<ImageCarousel images={imageUrls} interval={2500} />
 			</div>
+
 			<div className=''>
-				<div className='px-24 my-8 h-[75vh]'>
+				<div className='px-24 my-8 h-[85vh] bg-blue-900'>
 					<h1
 						ref={servicesTitle.elementRef}
-						className='text-2xl mb-10 text-red-900 text-center'
-						style={{ ...FONTS.heading }}
+						className='text-2xl py-10 text-white text-center'
+						style={{ ...FONTS.header, fontWeight: 700 }}
 					>
 						<span className='inline-block pb-1 relative'>
 							Available Services
@@ -162,26 +214,26 @@ const HomePage: React.FC = () => {
 						</span>
 					</h1>
 
-					<div className='grid grid-cols-5 grid-rows-2 gap-4 max-w-6xl mx-auto mb-5'>
-						{servicescard
-							//.filter(service => service.is_active)
-							.map((services) => (
-								<Link
-									to={`/services`}
-									key={services._id}
-									className={`${services.color} rounded-lg p-8 shadow-md hover:shadow-lg transition-shadow ease-in duration-300 cursor-pointer transform hover:scale-102`}
+					<div className='grid grid-cols-3 gap-4 max-w-6xl mx-auto'>
+						{cardData.map((card) => (
+							<Link
+								to={`/services`}
+								key={card.id}
+								className={`${card.color} rounded-lg p-2 shadow-md hover:shadow-lg transition-shadow ease-in duration-300 cursor-pointer transform hover:scale-102`}
+							>
+								<div className='grid grid-cols-2 gap-4'>
+								<div className='text-[#9b111e] flex justify-center'>
+									<img className='w-[100px] h-[70px] m-2' src={serviceImg} alt="" /> 
+								</div>
+								<h3
+									className='text-center mr-10 my-auto text-red-700 opacity-75'
+									style={{ ...FONTS.paragraph, fontWeight: 700 }}
 								>
-									<div className='text-[#9b111e] mb-4 flex justify-center'>
-										<FaTools size={42} /> {/* Default icon for all */}
-									</div>
-									<h3
-										className='text-center text-red-700 opacity-75'
-										style={{ ...FONTS.paragraph, fontWeight: 550 }}
-									>
-										{services.category_name}
-									</h3>
-								</Link>
-							))}
+									{card.title}
+								</h3>
+								</div>
+							</Link>
+						))}
 					</div>
 				</div>
 				<div
@@ -542,14 +594,14 @@ const HomePage: React.FC = () => {
 					</div>
 				</div>
 				{/* FOOTER START */}
-				<footer className={`h-[100vh] bg-[url(${bgImg2})] pt-3`}>
-					<div className='grid grid-cols-4 gap-4 px-24'>
+				<footer className={`h-[76vh] bg-[url(${bgImg2})] pt-2`}>
+					<div className='grid grid-cols-4 gap-4 px-24 '>
 						{/* Image Card - Full Height (No border) */}
 						<div className='col-span-1 p-4 rounded h-full border-0'>
 							<img
 								src={appimage}
 								alt='appimage'
-								className='p-2 h-[120px] w-[280px] object-cover rounded'
+								className='p-2 h-[125px] w-[280px] object-cover rounded'
 							/>
 						</div>
 
@@ -564,15 +616,33 @@ const HomePage: React.FC = () => {
 										fontSize: '24px',
 									}}
 								>
-									Yes Mechanics
+									Yes Advantages
 								</p>
-								<address
-									style={{ ...FONTS.paragraph, textAlign: 'justify' }}
-									className='my-3 text-red-900'
-								>
-									No. 1, New Bangaru Naidu Colony, K.K. Nagar (West), Chennai -
-									600078.
-								</address>
+								<ol className='pt-1 text-red-900 text-xl flex flex-col gap-2'>
+								  {/* First Item */}
+								  <li className='flex items-center py-1 text-red-900 hover:underline cursor-pointer'>
+								    <BsTruck className='text-red-900 text-xl mr-2' />
+								    <span style={{ ...FONTS.paragraph, fontWeight: 600 }}>Free Shipping & Delivery</span>
+								  </li>
+																
+								  {/* Second Item */}
+								  <Link
+								    to='/contact'
+								    className='flex items-center py-1 text-red-900 hover:underline cursor-pointer'
+								  >
+								    <LiaCertificateSolid className='text-red-900 text-xl mr-2' />
+								    <span style={{ ...FONTS.paragraph, fontWeight: 600 }}>Certified Employees</span>
+								  </Link>
+																
+								  {/* Third Item */}
+								  <Link
+								    to='/contact'
+								    className='flex items-center py-1 text-red-900 hover:underline cursor-pointer'
+								  >
+								    <RxLapTimer className='text-red-900 text-xl mr-2' />
+								    <span style={{ ...FONTS.paragraph, fontWeight: 600 }}>On Time Delivery</span>
+								  </Link>
+								</ol>
 							</div>
 
 							<div className='p-4 w-full h-full'>
@@ -589,28 +659,34 @@ const HomePage: React.FC = () => {
 								<ol className='pt-1 text-red-900 text-xl flex flex-col'>
 									<li
 										className='py-1 text-red-900 hover:underline cursor-pointer'
-										style={{ ...FONTS.paragraph }}
+										style={{ ...FONTS.paragraph, 
+											fontWeight: 600
+										 }}
 									>
 										About Us
 									</li>
 									<Link
 										to='/contact'
 										className='py-1 text-red-900 hover:underline cursor-pointer'
-										style={{ ...FONTS.paragraph }}
+										style={{ ...FONTS.paragraph,
+											fontWeight: 600
+										 }}
 									>
 										Contact Us
 									</Link>
-									<Link
+									{/* <Link
 										to='/settings'
 										className='py-1 text-red-900 hover:underline cursor-pointer'
 										style={{ ...FONTS.paragraph }}
 									>
 										Settings
-									</Link>
+									</Link> */}
 									<Link
 										to='/services'
 										className='py-1 text-red-900 hover:underline cursor-pointer'
-										style={{ ...FONTS.paragraph }}
+										style={{ ...FONTS.paragraph,
+											fontWeight: 600
+										 }}
 									>
 										Services
 									</Link>
@@ -626,36 +702,42 @@ const HomePage: React.FC = () => {
 										fontSize: '24px',
 									}}
 								>
-									Support
+									Customer Support
 								</p>
-								<ol className='pt-3 text-red-900 text-xl flex flex-col'>
+								<ol className='pt-1.5 text-red-900 text-xl flex flex-col'>
 									<Link
 										to='/enquiry'
 										className='py-1 text-red-900 hover:underline'
-										style={{ ...FONTS.paragraph }}
+										style={{ ...FONTS.paragraph,
+											fontWeight: 600
+										 }}
 									>
 										Enquiry Form
 									</Link>
 									<Link
 										to='/help-center'
 										className='py-1 text-red-900 hover:underline'
-										style={{ ...FONTS.paragraph }}
+										style={{ ...FONTS.paragraph,
+											fontWeight: 600
+										 }}
 									>
-										Help Center
+										Cancellation and Returns
 									</Link>
 									<Link
 										to='/faqs'
 										className='py-1 text-red-900 hover:underline'
-										style={{ ...FONTS.paragraph }}
+										style={{ ...FONTS.paragraph,
+											fontWeight: 600
+										 }}
 									>
-										FAQs
+										Delivery Information
 									</Link>
 								</ol>
 							</div>
 							<div className='w-[900px]'>
 								<div className='grid grid-cols-1 gap-2 px-6'>
 									<div className=''>
-										<hr className='w-full border-[2px] border-red-900' />
+										<hr className='w-full border-0.5 border-red-900' />
 
 										{/* Text on left, icons on right */}
 										<div className='flex justify-between items-center text-red-900 text-xl py-2'>
@@ -664,37 +746,37 @@ const HomePage: React.FC = () => {
 											</p>
 
 											<div className='flex items-center gap-4'>
-												<div className='bg-red-900 text-white rounded-full p-2'>
+												<div className=' text-red-900  text-3xl'>
 													<BiLogoPlayStore />
 												</div>
 											</div>
 										</div>
 									</div>
 									<div className=''>
-										<hr className='w-full border-[1px] border-red-900' />
+										<hr className='w-full border-.5 border-red-900' />
 
-										{/* Text on left, icons on right */}
+								
 										<div className=''>
-											<hr className='w-full border-[1px] border-red-900' />
+											
 
 											{/* Text on left, icons on right */}
 											<div className='flex justify-between items-center text-red-900 text-xl py-2'>
 												<p className='font-semibold text-base'>Social Media</p>
 
 												<div className='flex items-center gap-4'>
-													<div className='bg-red-900 text-white rounded-full p-2'>
+													<div className='text-red-900  text-3xl'>
 														<FaInstagramSquare />
 													</div>
-													<div className='bg-red-900 text-white rounded-full p-2'>
+													<div className='text-red-900  text-3xl'>
 														<FaXTwitter />
 													</div>
-													<div className='bg-red-900 text-white rounded-full p-2'>
+													<div className='text-red-900  text-3xl'>
 														<FaFacebook />
 													</div>
-													<div className='bg-red-900 text-white rounded-full p-2'>
+													<div className='text-red-900  text-3xl'>
 														<FaYoutube />
 													</div>
-													<div className='bg-red-900 text-white rounded-full p-2'>
+													<div className=' text-red-900  text-3xl'>
 														<SiIndeed />
 													</div>
 												</div>
@@ -703,24 +785,24 @@ const HomePage: React.FC = () => {
 									</div>
 
 									<div className=''>
-										<hr className='w-full border-[1px] border-red-900' />
+										<hr className='w-full border-0.5 border-red-900' />
 
 										{/* Text on left, icons on right */}
 										<div className=''>
-											<hr className='w-full border-[1px] border-red-900' />
+											
 
 											{/* Text on left, icons on right */}
 											<div className='flex justify-between items-center text-red-900 text-xl py-2'>
 												<p className='font-semibold text-base'>Contact Us</p>
 
 												<div className='flex items-center gap-4'>
-													<div className='bg-red-900 text-white rounded-full p-2'>
+													<div className=' text-red-900  text-2xl'>
 														<FaPhoneFlip />
 													</div>
-													<div className='bg-red-900 text-white rounded-full p-2'>
+													<div className=' text-red-900  text-3xl'>
 														<MdEmail />
 													</div>
-													<div className='bg-red-900 text-white rounded-full p-2'>
+													<div className=' text-red-900  text-3xl'>
 														<FaSquareWhatsapp />
 													</div>
 												</div>
