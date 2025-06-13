@@ -1,14 +1,15 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { getEnquiryData, postEnquiryData } from '../../features/Enquiry/service';
 
 const EnquiryForm = () => {
 	const [formData, setFormData] = useState({
-		name: '',
+		fullName: '',
 		email: '',
-		phone: '',
+		phoneNumber: '',
 		carModel: '',
-		serviceType: 'general',
-		enquiry: '',
-		preferredDate: '',
+		ServiceType: 'general',
+		yourEnquiry: '',
+		Date: '',
 	});
 
 	const [submitted, setSubmitted] = useState(false);
@@ -21,24 +22,48 @@ const EnquiryForm = () => {
 		}));
 	};
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault();
 		console.log('Form submitted:', formData);
-		// Here you would typically send data to your backend
+		try{
 		setSubmitted(true);
 		setFormData({
-			name: '',
+			fullName: '',
 			email: '',
-			phone: '',
+			phoneNumber: '',
 			carModel: '',
-			serviceType: 'general',
-			enquiry: '',
-			preferredDate: '',
+			ServiceType: '',
+			yourEnquiry: '',
+			Date: '',
 		});
+		const response = await postEnquiryData(formData)
+		console.log("post Enquiry Data : ",response )
+	}
+	catch(error){
+		console.log('Data not send : ', error);
+	}
 
 		// Reset submission status after 5 seconds
 		setTimeout(() => setSubmitted(false), 5000);
 	};
+
+	// Get Enquiry data 
+
+	const getEnquiryDatas = async () => {
+		try{
+			const data = {}
+			const response = await getEnquiryData(data);
+			console.log('Data from form submission',response);
+		}
+		catch(error){
+			console.log(error)
+		}
+	}
+
+	useEffect(() => {
+		getEnquiryDatas();
+	},[])
+
 
 	return (
 		<div className='w-2/3 mx-auto p-6 bg-white rounded-lg shadow-md'>
@@ -63,8 +88,8 @@ const EnquiryForm = () => {
 					<input
 						type='text'
 						id='name'
-						name='name'
-						value={formData.name}
+						name='fullName'
+						value={formData.fullName}
 						onChange={handleChange}
 						required
 						className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500'
@@ -99,8 +124,8 @@ const EnquiryForm = () => {
 					<input
 						type='number'
 						id='phone'
-						name='phone'
-						value={formData.phone}
+						name='phoneNumber'
+						value={formData.phoneNumber}
 						onChange={handleChange}
 						maxLength={10}
 						required
@@ -135,8 +160,8 @@ const EnquiryForm = () => {
 					</label>
 					<select
 						id='serviceType'
-						name='serviceType'
-						value={formData.serviceType}
+						name='ServiceType'
+						value={formData.ServiceType}
 						onChange={handleChange}
 						className='mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 rounded-md'
 					>
@@ -159,8 +184,8 @@ const EnquiryForm = () => {
 					<input
 						type='date'
 						id='preferredDate'
-						name='preferredDate'
-						value={formData.preferredDate}
+						name='Date'
+						value={formData.Date}
 						onChange={handleChange}
 						className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500'
 					/>
@@ -175,9 +200,9 @@ const EnquiryForm = () => {
 					</label>
 					<textarea
 						id='enquiry'
-						name='enquiry'
+						name='yourEnquiry'
 						rows={4}
-						value={formData.enquiry}
+						value={formData.yourEnquiry}
 						onChange={handleChange}
 						required
 						className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500'
