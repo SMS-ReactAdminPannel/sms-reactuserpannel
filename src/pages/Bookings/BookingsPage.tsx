@@ -1,49 +1,48 @@
-import type React from "react";
-import { useState, useRef, useEffect } from "react";
+import type React from 'react';
+import { useState, useRef, useEffect } from 'react';
 import {
-  Search,
-  Package,
-  Wrench,
-  CheckCircle,
-  Calendar,
-  Truck,
-  Clock,
-  MapPin,
-} from "lucide-react";
-import bgImage from "../../assets/checkout-bg_1_.png";
+	Search,
+	Package,
+	Wrench,
+	CheckCircle,
+	Calendar,
+	Truck,
+	Clock,
+	MapPin,
+} from 'lucide-react';
+import bgImage from '../../assets/checkout-bg_1_.png';
 
 const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
-  options = {}
+	options = {}
 ) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const elementRef = useRef<T>(null);
+	const [isVisible, setIsVisible] = useState(false);
+	const elementRef = useRef<T>(null);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        setIsVisible(entry.isIntersecting);
-      },
-      {
-        threshold: 0.1,
-        rootMargin: '0px 0px -100px 0px',
-        ...options,
-      }
-    );
+	useEffect(() => {
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				setIsVisible(entry.isIntersecting);
+			},
+			{
+				threshold: 0.1,
+				rootMargin: '0px 0px -100px 0px',
+				...options,
+			}
+		);
 
-    if (elementRef.current) {
-      observer.observe(elementRef.current);
-    }
+		if (elementRef.current) {
+			observer.observe(elementRef.current);
+		}
 
-    return () => {
-      if (elementRef.current) {
-        observer.unobserve(elementRef.current);
-      }
-    };
-  }, []);
+		return () => {
+			if (elementRef.current) {
+				observer.unobserve(elementRef.current);
+			}
+		};
+	}, []);
 
-  return { elementRef, isVisible };
+	return { elementRef, isVisible };
 };
-
 
 // OrderDetails Interface
 interface OrderDetails {
@@ -255,38 +254,6 @@ const allOrders: OrderDetails[] = [
 	},
 ];
 
-const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
-	options = {}
-) => {
-	const [isVisible, setIsVisible] = useState(false);
-	const elementRef = useRef<T>(null);
-
-	useEffect(() => {
-		const observer = new IntersectionObserver(
-			([entry]) => {
-				setIsVisible(entry.isIntersecting);
-			},
-			{
-				threshold: 0.1,
-				rootMargin: '0px 0px -50px 0px',
-				...options,
-			}
-		);
-
-		if (elementRef.current) {
-			observer.observe(elementRef.current);
-		}
-
-		return () => {
-			if (elementRef.current) {
-				observer.unobserve(elementRef.current);
-			}
-		};
-	}, []);
-
-	return { elementRef, isVisible };
-};
-
 // OrderCard Component
 interface OrderCardProps {
 	order: OrderDetails;
@@ -428,9 +395,6 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 					</div>
 
 					<div className='flex space-x-2'>
-						{/* <button className="px-4 py-2 text-sm font-medium text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors">
-              View Details
-            </button> */}
 						<button
 							onClick={() => setShowDetails(!showDetails)}
 							className='px-4 py-2 text-sm font-medium text-white bg-red-800 rounded-lg hover:bg-red-700 transition-colors'
@@ -539,7 +503,6 @@ const OrdersPage: React.FC = () => {
 	);
 	const [sortBy, setSortBy] = useState<'date' | 'price' | 'name'>('date');
 	const [showOldOrders, setShowOldOrders] = useState(false);
-	const orderTitle = useScrollAnimation<HTMLHeadingElement>();
 
 	const filteredOrders = allOrders
 		.filter((order) => {
@@ -548,7 +511,6 @@ const OrdersPage: React.FC = () => {
 				order.description.toLowerCase().includes(searchTerm.toLowerCase());
 			const matchesType = filterType === 'all' || order.type === filterType;
 
-			// Check if order is old (older than 1 year)
 			const orderDate = order.date ? new Date(order.date) : null;
 			const isOld =
 				orderDate &&
@@ -572,35 +534,37 @@ const OrdersPage: React.FC = () => {
 			}
 		});
 
-  const totalOrders = filteredOrders.length;
-  const completedOrders = filteredOrders.filter((order) => {
-    const orderDate = order.date ? new Date(order.date) : null;
-    return orderDate && orderDate < new Date();
-  }).length;
+	const totalOrders = filteredOrders.length;
+	const completedOrders = filteredOrders.filter((order) => {
+		const orderDate = order.date ? new Date(order.date) : null;
+		return orderDate && orderDate < new Date();
+	}).length;
 
-  const offerTitle = useScrollAnimation<HTMLHeadingElement>();
+	const offerTitle = useScrollAnimation<HTMLHeadingElement>();
 
-  return (
-    <div
-      className="min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100"
-      style={{ backgroundImage: `url("${bgImage}")` }}
-    >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="mb-8">
-          <h1 className='text-center' ref={offerTitle.elementRef}>
-				<span className='inline-block pb-1 relative text-4xl font-bold text-[#9b111e] mb-2'>
-					My Orders
-					<span
-						className={`absolute top-12 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
-							offerTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
-						}`}
-					></span>
-				</span>
-			</h1>
-          <p className="text-red-600 text-lg">
-            Track and manage all your orders in one place
-          </p>
+	return (
+		<div
+			className='min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100'
+			style={{ backgroundImage: `url("${bgImage}")` }}
+		>
+			<div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
+				{/* Header */}
+				<div className='mb-8'>
+					<h1 className='text-center' ref={offerTitle.elementRef}>
+						<span className='inline-block pb-1 relative text-4xl font-bold text-[#9b111e] mb-2'>
+							My Orders
+							<span
+								className={`absolute top-12 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+									offerTitle.isVisible
+										? 'scale-x-100 w-full'
+										: 'scale-x-0 w-full'
+								}`}
+							></span>
+						</span>
+					</h1>
+					<p className='text-red-600 text-lg'>
+						Track and manage all your orders in one place
+					</p>
 
 					{/* Stats */}
 					<div className='flex space-x-6 mt-4 text-[#9b111e]'>
