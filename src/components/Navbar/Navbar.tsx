@@ -11,6 +11,7 @@ import CustomDropdown from './Customdropdown';
 import TruckIcon from '../../assets/carimages/delivery-truck.png';
 import { getAllNotifications } from '../../features/Notification/services';
 import { booking_cart } from '../../features/BookingCart/service';
+import { IoCartOutline } from 'react-icons/io5';
 
 type MailItem = {
 	sender: string;
@@ -144,7 +145,7 @@ export const Navbar: React.FC = () => {
 	};
 
 	return (
-		<header className='bg-white text-white w-full fixed top-0 z-50'>
+		<header className='bg-white text-white w-full fixed top-0 z-50 border-b-2 border-red-900'>
 			{/* Top Navbar */}
 			<div className='bg-red-900 h-[2px]'></div>
 			<div className='flex items-center justify-between px-24 py-2 space-x-4'>
@@ -195,7 +196,7 @@ export const Navbar: React.FC = () => {
 						<button
 							aria-label='Notifications'
 							onClick={handleBellClick}
-							className={`relative p-2.5 rounded-full bg-red-900 focus:outline-none transform transition-transform duration-200 ease-in-out ${
+							className={`relative p-2.5 rounded-full focus:outline-none transform transition-transform duration-200 ease-in-out ${
 								isBellActive ? 'scale-90' : 'scale-100'
 							}`}
 						>
@@ -205,7 +206,7 @@ export const Navbar: React.FC = () => {
 								viewBox='0 0 24 24'
 								strokeWidth={1.8}
 								stroke='currentColor'
-								className='w-5 h-5 text-white'
+								className='w-6 h-6 text-red-900'
 							>
 								<path
 									strokeLinecap='round'
@@ -214,7 +215,7 @@ export const Navbar: React.FC = () => {
 								/>
 							</svg>
 							{unreadCount > 0 && (
-								<span className='absolute -top-1 -right-1 bg-red-500 text-white text-xs w-5 h-5 flex items-center justify-center rounded-full'>
+								<span className='absolute top-0 right-1 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full'>
 									{unreadCount}
 								</span>
 							)}
@@ -264,20 +265,7 @@ export const Navbar: React.FC = () => {
 							</div>
 						)}
 					</div>
-					{/* Profile Dropdown */}
-					{isLoggedIn ? (
-						<>
-							<ProfileMenu handleLogout={handleLogout} />
-						</>
-					) : (
-						<>
-							<img
-								src='/images/images.jpeg'
-								alt='dummy-image'
-								className='w-10 h-10 rounded-full cursor-pointer'
-							/>
-						</>
-					)}
+
 					{/* Logout Confirmation Modal */}
 					{showLogoutConfirm && (
 						<div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]'>
@@ -384,11 +372,25 @@ export const Navbar: React.FC = () => {
 							navigate('/booking-cart');
 						}}
 					>
-						<FaShoppingCart className='text-3xl cursor-pointer text-red-900' />
-						<span className='absolute w-min-5 h-min-5 -top-2 left-4 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5 cursor-pointer text-center'>
+						<IoCartOutline className='text-3xl cursor-pointer text-red-900' />
+						<span className='absolute w-4 h-4 -top-2 left-6 bg-red-500 text-white text-xs rounded-full px-1 cursor-pointer text-center'>
 							{cartCount || 0}
 						</span>
 					</div>
+					{/* Profile Dropdown */}
+					{isLoggedIn ? (
+						<>
+							<ProfileMenu handleLogout={handleLogout} />
+						</>
+					) : (
+						<>
+							<img
+								src='/images/images.jpeg'
+								alt='dummy-image'
+								className='w-10 h-10 rounded-full cursor-pointer'
+							/>
+						</>
+					)}
 				</div>
 			</div>
 
@@ -399,13 +401,13 @@ export const Navbar: React.FC = () => {
 					<NavLink
 						key={idx}
 						to={item.link}
-						style={{ ...FONTS.paragraph, fontWeight: 600, fontSize: '16px' }}
+						style={{ ...FONTS.paragraph, fontWeight: 500, fontSize: '16px' }}
 						className={({ isActive }) =>
 							`relative pb-1 text-md font-semibold transition-all duration-300 ease-in-out whitespace-nowrap
 	${
 		isActive
-			? 'text-red-900 after:content-[""] after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-full after:bg-red-900 after:transition-all after:duration-300'
-			: 'text-red-800 after:content-[""] after:absolute after:left-0 after:bottom-0 after:h-[3px] after:w-0 after:bg-red-900 after:transition-all after:duration-300 hover:after:w-full'
+			? 'text-red-900 after:content-[""] after:absolute after:left-0 after:bottom-8 after:h-[2.5px] after:w-full after:bg-red-900 after:transition-all after:duration-300'
+			: 'text-red-800 after:content-[""] after:absolute after:left-0 after:bottom-8 after:h-[2.5px] after:w-0 after:bg-red-900 after:transition-all after:duration-300 hover:after:w-full'
 	}`
 						}
 					>
@@ -415,15 +417,19 @@ export const Navbar: React.FC = () => {
 
 				<div className='flex justify-end'>
 					<button
-						className='bg-red-900 hover:bg-red-800 text-white py-2 px-4 rounded-full'
-						style={{ ...FONTS.paragraph, fontWeight: 600 }}
+						className='text-white py-1 px-8 rounded-full'
+						style={{
+							...FONTS.paragraph,
+							fontWeight: 600,
+							backgroundImage: `linear-gradient(to right, #9b111e, rgba(255,0,0,1), #9b111e)`,
+						}}
 						onClick={() => navigate('/contact-us')}
 					>
 						Enquiry
 					</button>
 				</div>
 			</div>
-			<div className=' shadow-lg'></div>
+			<div className='shadow-lg'></div>
 		</header>
 	);
 };

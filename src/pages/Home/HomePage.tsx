@@ -1,9 +1,14 @@
 import { ImageCarousel } from '../../components/home/ImageCarousel';
-import image1 from '../../assets/home/360_F_496483060_C9OG1wJpfmjMXcNmUBibmA9wYxxZCxnW.jpg';
-import image2 from '../../assets/home/360_F_507812981_dGZXqBsqkBpEosDjTlJgmaJAyMFra7sp.jpg';
-import image3 from '../../assets/home/hand-mechanic-holding-car-service-600nw-2340377479.webp';
-import image4 from '../../assets/home/istockphoto-1387759698-612x612.jpg';
+// <<<<<<< HEAD
+import image1 from '../../assets/carimages/pexels-cottonbro-4489749.jpg'
+import image2 from '../../assets/carimages/pexels-artempodrez-8986070.jpg'
+import image3 from '../../assets/carimages/pexels-cottonbro-4489732.jpg'
+import image4 from '../../assets/carimages/pexels-ronaldo-galeano-2428202-4069389.jpg'
 // import CarImg1 from '../../assets/CarImg1.jpg';
+
+
+
+
 import { GrWorkshop } from 'react-icons/gr';
 import { LuCarTaxiFront } from 'react-icons/lu';
 import { PiSealCheckBold } from 'react-icons/pi';
@@ -19,15 +24,15 @@ import { COLORS, FONTS } from '../../constants/constant';
 import React, { useState, useRef, useEffect } from 'react';
 import {
 	FaTools,
-	FaSnowflake,
-	FaBatteryThreeQuarters,
-	FaCarAlt,
-	FaSearch,
-	FaLightbulb,
-	FaCarCrash,
-	FaCarSide,
-	FaFileSignature,
-	FaCircleNotch,
+	// FaSnowflake,
+	// FaBatteryThreeQuarters,
+	// FaCarAlt,
+	// FaSearch,
+	// FaLightbulb,
+	// FaCarCrash,
+	// FaCarSide,
+	// FaFileSignature,
+	// FaCircleNotch,
 } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import PromoCarousel from '../../components/home/offerCard';
@@ -52,6 +57,10 @@ import { FaFacebook } from 'react-icons/fa'; //facebook
 import { FaYoutube } from 'react-icons/fa'; //youtube
 import { SiIndeed } from 'react-icons/si'; //indeed
 import { BiLogoPlayStore } from 'react-icons/bi'; //play store
+
+// API call to fetch home data
+
+import { getAllServiceCategories } from '../../features/ServicesPage/service';
 
 const imageUrls = [image1, image2, image3, image4];
 interface ServiceCardProps {
@@ -96,68 +105,68 @@ const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 };
 
 const HomePage: React.FC = () => {
-	const cardData: ServiceCardProps[] = [
-		{
-			id: 1,
-			icon: <FaTools size={42} />,
-			title: 'Periodic Services',
-			color: 'bg-white border-[#9b111e]',
-		},
-		{
-			id: 2,
-			icon: <FaSnowflake size={42} />,
-			title: 'Ac Services & Repair',
-			color: 'bg-white border-[#9b111e]',
-		},
-		{
-			id: 3,
-			icon: <FaBatteryThreeQuarters size={42} />,
-			title: 'Batteries',
-			color: 'bg-white border-[#9b111e]',
-		},
-		{
-			id: 4,
-			icon: <FaCircleNotch size={42} />,
-			title: 'Tyres and Wheel Care',
-			color: 'bg-white border-[#9b111e]',
-		},
-		{
-			id: 5,
-			icon: <FaCarAlt size={42} />,
-			title: 'Detailing Services',
-			color: 'bg-white border-[#9b111e]',
-		},
-		{
-			id: 6,
-			icon: <FaSearch size={42} />,
-			title: 'Car Inspection',
-			color: 'bg-white border-[#9b111e]',
-		},
-		{
-			id: 7,
-			icon: <FaLightbulb size={42} />,
-			title: 'Windshields & Lights',
-			color: 'bg-white border-[#9b111e]',
-		},
-		{
-			id: 8,
-			icon: <FaCarCrash size={42} />,
-			title: 'Suspension & Fitments',
-			color: 'bg-white border-[#9b111e]',
-		},
-		{
-			id: 9,
-			icon: <FaCarSide size={42} />,
-			title: 'Clutch & Body Parts',
-			color: 'bg-white border-[#9b111e]',
-		},
-		{
-			id: 10,
-			icon: <FaFileSignature size={42} />,
-			title: 'Insurance Claims',
-			color: 'bg-white border-[#9b111e]',
-		},
-	];
+	// const cardData: ServiceCardProps[] = [
+	// 	{
+	// 		id: 1,
+	// 		icon: <FaTools size={42} />,
+	// 		title: 'Periodic Services',
+	// 		color: 'bg-white border-[#9b111e]',
+	// 	},
+	// 	{
+	// 		id: 2,
+	// 		icon: <FaSnowflake size={42} />,
+	// 		title: 'Ac Services & Repair',
+	// 		color: 'bg-white border-[#9b111e]',
+	// 	},
+	// 	{
+	// 		id: 3,
+	// 		icon: <FaBatteryThreeQuarters size={42} />,
+	// 		title: 'Batteries',
+	// 		color: 'bg-white border-[#9b111e]',
+	// 	},
+	// 	{
+	// 		id: 4,
+	// 		icon: <FaCircleNotch size={42} />,
+	// 		title: 'Tyres and Wheel Care',
+	// 		color: 'bg-white border-[#9b111e]',
+	// 	},
+	// 	{
+	// 		id: 5,
+	// 		icon: <FaCarAlt size={42} />,
+	// 		title: 'Detailing Services',
+	// 		color: 'bg-white border-[#9b111e]',
+	// 	},
+	// 	{
+	// 		id: 6,
+	// 		icon: <FaSearch size={42} />,
+	// 		title: 'Car Inspection',
+	// 		color: 'bg-white border-[#9b111e]',
+	// 	},
+	// 	{
+	// 		id: 7,
+	// 		icon: <FaLightbulb size={42} />,
+	// 		title: 'Windshields & Lights',
+	// 		color: 'bg-white border-[#9b111e]',
+	// 	},
+	// 	{
+	// 		id: 8,
+	// 		icon: <FaCarCrash size={42} />,
+	// 		title: 'Suspension & Fitments',
+	// 		color: 'bg-white border-[#9b111e]',
+	// 	},
+	// 	{
+	// 		id: 9,
+	// 		icon: <FaCarSide size={42} />,
+	// 		title: 'Clutch & Body Parts',
+	// 		color: 'bg-white border-[#9b111e]',
+	// 	},
+	// 	{
+	// 		id: 10,
+	// 		icon: <FaFileSignature size={42} />,
+	// 		title: 'Insurance Claims',
+	// 		color: 'bg-white border-[#9b111e]',
+	// 	},
+	// ];
 
 	// Create separate hooks for each title
 	const servicesTitle = useScrollAnimation<HTMLHeadingElement>();
@@ -165,12 +174,20 @@ const HomePage: React.FC = () => {
 	const discoverTitle = useScrollAnimation<HTMLHeadingElement>();
 	const contactTitle = useScrollAnimation<HTMLHeadingElement>();
 	const [isLoading, setIsLoading] = useState(true);
+	const [servicescard, setServicescard] = useState<any[]>([]);
 
-	const fetchHomePageData = () => {
+	const fetchHomePageData = async() => {
 		try {
-			setIsLoading(false);
+			setIsLoading(true);
+			const response = await getAllServiceCategories({});
+			if (response){
+				setServicescard(response.data.data);
+				console.log("Fetched Services Data:", response.data.data); // ✅ Log fetched data
+				
+			}
+
 		} catch (error) {
-			console.log(error);
+		 console.error('Error fetching services data:', error); // ✅ Log error
 		} finally {
 			setIsLoading(false);
 		}
@@ -215,20 +232,22 @@ const HomePage: React.FC = () => {
 					</h1>
 
 					<div className='grid grid-cols-5 grid-rows-2 gap-4 max-w-6xl mx-auto mb-5'>
-						{cardData.map((card) => (
-							<Link
-								to={`/services`}
-								key={card.id}
-								className={`${card.color} rounded-lg p-8 shadow-md hover:shadow-lg transition-shadow ease-in duration-300 cursor-pointer transform hover:scale-102`}
-							>
-								<div className='text-[#9b111e] mb-4 flex justify-center'>
-									{card.icon}
-								</div>
-								<h3
+						{servicescard
+							//.filter(service => service.is_active)
+							.map((services) => (
+								<Link
+									to={`/services`}
+									key={services._id}
+									className={`${services.color} rounded-lg p-8 shadow-md hover:shadow-lg transition-shadow ease-in duration-300 cursor-pointer transform hover:scale-102`}
+								>
+									<div className='text-[#9b111e] mb-4 flex justify-center'>
+										 <FaTools size={42} /> {/* Default icon for all */}
+									</div>
+									<h3
 									className='text-center text-red-700 opacity-75'
 									style={{ ...FONTS.paragraph, fontWeight: 550 }}
 								>
-									{card.title}
+									 {services.category_name}
 								</h3>
 							</Link>
 						))}
