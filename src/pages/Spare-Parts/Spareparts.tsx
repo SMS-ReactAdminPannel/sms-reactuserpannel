@@ -202,14 +202,14 @@ const SpareParts: React.FC = () => {
 	const bundleTitle = useScrollAnimation<HTMLHeadingElement>();
 	const categoryTitle = useScrollAnimation<HTMLHeadingElement>();
 
-	if (isLoading) {
-		return (
-			<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-				<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-				<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-			</div>
-		);
-	}
+	// if (isLoading) {
+	// 	return (
+	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
+	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
+	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
+	// 		</div>
+	// 	);
+	// }
 
 	return (
 		<div className='p-12 mx-8 '>

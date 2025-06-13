@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthLayout from './AuthLayout';
-import {forgotPassword  ,verifyotp, resetPassword   } from '../../features/auth';
+import { forgotPassword, verifyotp, resetPassword } from '../../features/auth';
 
 type ResetFormData = {
 	email: string;
@@ -12,21 +12,15 @@ type ResetFormData = {
 	otp?: string;
 };
 
-// const generateOtp = () =>
-// 	Math.floor(100000 + Math.random() * 900000).toString();
-
 const ResetPassword = () => {
 	const [step, setStep] = useState<'email' | 'otp' | 'reset'>('email');
-	//const [storedOtp, setStoredOtp] = useState('');
 	const [otpDigits, setOtpDigits] = useState(Array(6).fill(''));
 	const [AuthToken, setAuthToken] = useState('');
-
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 	const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
-
+	const [isLoading, setIsLoading] = useState(false);
 	const navigate = useNavigate();
-
 	const {
 		register,
 		handleSubmit,
@@ -35,8 +29,6 @@ const ResetPassword = () => {
 		clearErrors,
 		formState: { errors },
 	} = useForm<ResetFormData>();
-
-
 
 	const handleOtpChange = (index: number, value: string) => {
 		if (!/^\d?$/.test(value)) return;
@@ -65,93 +57,95 @@ const ResetPassword = () => {
 		}
 	};
 
-	// const handleOtpVerify = () => {
-	// 	const enteredOtp = otpDigits.join('');
-	// 	if (enteredOtp === storedOtp) {
-	// 		setStep('reset');
-	// 		clearErrors('otp');
-	// 	} else {
-	// 		setError('otp', { message: 'Invalid OTP' });
-	// 	}
-	// };
+	const handleEmailSubmit = async () => {
+		const email = getValues('email');
+		if (!email) {
+			setError('email', { message: 'Please enter your email' });
+			return;
+		}
+		clearErrors('email');
 
-const handleEmailSubmit = async () => {
-  const email = getValues('email');
-  if (!email) {
-    setError('email', { message: 'Please enter your email' });
-    return;
-  }
-  clearErrors('email');
+		try {
+			setIsLoading(true);
+			const response = await forgotPassword({ email });
+			if (response) {
+				setAuthToken(response.data.data.token);
 
-  try {
-    const response = await forgotPassword({ email }); // API call
-    console.log('OTP email sent:', response);
+				setStep('otp');
+			} else {
+				setError('email', { message: response || 'Failed to send OTP' });
+			}
+			setIsLoading(false);
+		} catch (err) {
+			console.error('Send OTP error:', err);
+			setError('email', { message: 'Error sending OTP. Please try again.' });
+		} finally {
+			setIsLoading(false);
+		}
+	};
 
-    if (response) {  
-		setAuthToken(response.data.data.token); 
+	const handleOtpVerify = async () => {
+		const enteredOtp = otpDigits.join('');
 
+		try {
+			setIsLoading(true);
+			const data = { AuthToken, otp: enteredOtp };
+			const response: any = await verifyotp(JSON.stringify(data));
+			if (response) {
+				localStorage.setItem('authToken', response.data.data);
+				setStep('reset');
+				clearErrors('otp');
+			} else {
+				setError('otp', { message: response || 'Invalid OTP' });
+			}
+			setIsLoading(false);
+		} catch (err) {
+			console.error('OTP verify error:', err);
+			setError('otp', { message: 'Error verifying OTP. Please try again.' });
+		} finally {
+			setIsLoading(false);
+		}
+	};
 
+	const onSubmit = async (data: ResetFormData) => {
+		if (data.newPassword !== data.confirmPassword) {
+			setError('confirmPassword', { message: 'Passwords do not match' });
+			return;
+		}
+		try {
+			setIsLoading(true);
+			const response = await resetPassword({
+				newPassword: data.newPassword,
+				oldPassword: data.confirmPassword,
+			});
 
-      setStep('otp');
-     
-    } else {
-      setError('email', { message: response || 'Failed to send OTP' });
-    }
-  } catch (err) {
-    console.error('Send OTP error:', err);
-    setError('email', { message: 'Error sending OTP. Please try again.' });
-  }
-};
+			if (response) {
+				alert('Password reset successful! Please login.');
+				navigate('/login');
+			} else {
+				setError('newPassword', {
+					message: response.message || 'Failed to reset password',
+				});
+			}
+			setIsLoading(false);
+		} catch (err) {
+			console.error('Reset password error:', err);
+			setError('newPassword', {
+				message: 'Error resetting password. Please try again.',
+			});
+		} finally {
+			setIsLoading(false);
+		}
+	};
 
-const handleOtpVerify = async () => {
-  const enteredOtp = otpDigits.join('');
- // const email = getValues('email');
-
-  try {
-	const data = {AuthToken, otp: enteredOtp }
-    const response:any = await verifyotp(JSON.stringify(data)); // Your API call
-    console.log('OTP verified:', response.data.data);
-
-    if (response) {
-		localStorage.setItem('authToken', response.data.data);
-      setStep('reset');
-      clearErrors('otp');
-    } else {
-      setError('otp', { message: response || 'Invalid OTP' });
-    }
-  } catch (err) {
-    console.error('OTP verify error:', err);
-    setError('otp', { message: 'Error verifying OTP. Please try again.' });
-  }
-};
-
-const onSubmit = async (data: ResetFormData) => {
-  if (data.newPassword !== data.confirmPassword) {
-    setError('confirmPassword', { message: 'Passwords do not match' });
-    return;
-  }
-  try {
-    const response = await resetPassword({
-		newPassword: data.newPassword,
-        oldPassword:data.confirmPassword,
-		
-
-       
-    });
-    console.log('Password reset:', response);
-
-    if (response) {
-      alert('Password reset successful! Please login.');
-      navigate('/login');
-    } else {
-      setError('newPassword', { message: response.message || 'Failed to reset password' });
-    }
-  } catch (err) {
-    console.error('Reset password error:', err);
-    setError('newPassword', { message: 'Error resetting password. Please try again.' });
-  }
-};
-
+	// if (isLoading) {
+	// 	return (
+	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
+	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
+	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
+	// 		</div>
+	// 	);
+	// }
 
 	return (
 		<AuthLayout

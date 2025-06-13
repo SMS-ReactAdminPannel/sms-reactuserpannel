@@ -38,7 +38,7 @@ export const Navbar: React.FC = () => {
 	const [cartCount, setCartCount] = useState(0);
 
 	const filteredMails = mails
-		.filter((mail) => mail.recipient_type === 'user')
+		.filter((mail) => mail.recipient_type === 'user' && !mail.is_read)
 		.slice(0, 4);
 
 	const unReadMails = mails.filter(
@@ -66,6 +66,8 @@ export const Navbar: React.FC = () => {
 			if (response) {
 				setCartCount(
 					response.data.data[0].services.length +
+						response.data.data[1].services.length +
+						response.data.data[0].products.length +
 						response.data.data[1].products.length
 				);
 			}
@@ -383,7 +385,7 @@ export const Navbar: React.FC = () => {
 						}}
 					>
 						<FaShoppingCart className='text-3xl cursor-pointer text-red-900' />
-						<span className='absolute w-min-5 h-min-5 -top-2 left-4 bg-red-500 text-white text-xs rounded-full px-1 py-0.5 cursor-pointer'>
+						<span className='absolute w-min-5 h-min-5 -top-2 left-4 bg-red-500 text-white text-xs rounded-full px-1.5 py-0.5 cursor-pointer text-center'>
 							{cartCount || 0}
 						</span>
 					</div>

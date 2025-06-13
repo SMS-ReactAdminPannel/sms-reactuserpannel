@@ -57,6 +57,7 @@ export const API_END_POINTS = {
 
 	notification: {
 		getAll: '/api/notifications/',
+		update: '/api/notifications/:uuid',
 	},
 
 	bookings: {
