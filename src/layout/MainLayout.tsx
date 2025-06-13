@@ -8,7 +8,7 @@ const MainLayout = () => {
 			{/* Main content */}
 			<div className=''>
 				<Navbar />
-				<main className='flex-1 overflow-auto scrollbar-hide pt-[130px] overflow-x-hidden'>
+				<main className='flex-1 overflow-auto scrollbar-hide pt-[90px] overflow-x-hidden'>
 					<div className='' style={{ backgroundColor: COLORS.bgColor }}>
 						<Outlet />
 					</div>
