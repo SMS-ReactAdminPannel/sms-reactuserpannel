@@ -197,8 +197,8 @@ export const Navbar: React.FC = () => {
 							onClick={handleBellClick}
 							className={`relative p-2.5 rounded-full bg-red-900 focus:outline-none transform transition-transform duration-200 ease-in-out ${
 								isBellActive ? 'scale-90' : 'scale-100'
-							}`}
-						>
+							}`}>
+								
 							<svg
 								xmlns='http://www.w3.org/2000/svg'
 								fill='none'
