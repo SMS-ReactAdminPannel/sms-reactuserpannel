@@ -283,91 +283,23 @@ export default function SparePartsCart() {
       setParts((prev) => prev.filter((p) => p.id !== id));
     }
   };
-	const [books, setBooks] = useState<spare[]>([]);
-	const [isLoading, setIsLoading] = useState(true);
-	const [activeTab, setActiveTab] = useState<'service' | 'ServiceBookingPage'>(
-		'service'
-	);
 
-	const [services, setServices] = useState<service[]>([]);
-	const [confirmedPartOrders, setConfirmedPartOrders] = useState<
-		{ part: spare; quantity: number }[]
-	>([]);
-	const [confirmedServiceOrders, setConfirmedServiceOrders] = useState<
-		{ serv: service; quantity: number }[]
-	>([]);
-	const [showSummary, setShowSummary] = useState(false);
-	const [showsSummary, setShowsSummary] = useState(false);
-	const [cartId, setCartId] = useState<string>('');
-	const [serviceId, setServiceCartId] = useState<string>('');
-	const totalPartPrice = confirmedPartOrders.reduce(
-		(acc, cur) => acc + cur.part.price * cur.quantity,
-		0
-	);
-	const totalServicePrice = confirmedServiceOrders.reduce(
-		(acc, cur) => acc + cur.serv.price * cur.quantity,
-		0
-	);
+  const handleConfirmService = (id: string, quantity: number) => {
+    const serv = services.find((s) => s.id === id);
+    if (serv) {
+      setConfirmedServiceOrders((prev) => [...prev, { serv, quantity }]);
+      setServices((prev) => prev.filter((s) => s.id !== id));
+    }
+  };
 
-	// text-line animation
-	const cartTitle = useScrollAnimation<HTMLHeadingElement>();
-
-	const books_valid = async () => {
-		try {
-			const response = await booking_cart({});
-			if (response) {
-				setIsLoading(false);
-			}
-			const cartData = response?.data?.data;
-
-			if (!Array.isArray(cartData)) return;
-			const spareEntry = cartData.find((item) => item.type === 'spare');
-			const cartId = spareEntry._id;
-			setCartId(cartId);
-
-			if (spareEntry?.products) {
-				const spares = spareEntry.products.map(
-					(product: any): spare => ({
-						_id: product._id || 0,
-						productName: product.productId?.productName || 'Unknown',
-						price: Number(product.price) || 0,
-						brand: product.productId?.brand || 'Generic',
-						image: product.productId?.image || '',
-						quantity: Number(product.quantity) || 1,
-						category: product.productId?.category || '',
-						description: product.productId?.description || '',
-						stock: Number(product.productId?.stock) || 0,
-					})
-				);
-				setBooks(spares);
-			}
-
-			const serviceEntry = cartData.find((item) => item.type === 'service');
-			const serviceId = serviceEntry._id;
-			setServiceCartId(serviceId);
-
-			if (serviceEntry?.services) {
-				const mappedServices = serviceEntry.services.map(
-					(service: any): service => ({
-						_id: service._id || '0',
-						service_name: service.service_name || 'Unknown',
-						price: Number(service.price) || 0,
-						description: service.description || '',
-					})
-				);
-				setServices(mappedServices);
-			}
-		} catch (error) {
-			console.error('Error fetching books/services', error);
-		} finally {
-			setIsLoading(false);
-		}
-	};
-
-	useEffect(() => {
-		books_valid();
-		setActiveTab('ServiceBookingPage');
-	}, []);
+  const totalPartPrice = confirmedPartOrders.reduce(
+    (acc, { part, quantity }) => acc + part.price * quantity,
+    0
+  );
+  const totalServicePrice = confirmedServiceOrders.reduce(
+    (acc, { serv, quantity }) => acc + serv.price * quantity,
+    0
+  );
 
 	// if (isLoading) {
 	// 	return (
@@ -378,74 +310,16 @@ export default function SparePartsCart() {
 	// 	);
 	// }
 
-	// handle Place Order function
-	const placeOrder = async () => {
-		try {
-			const payload = {
-				cartId: cartId,
-			};
+  // const handleCategoryChange = (category: string, checked: boolean) => {
+  //   if (checked) {
+  //     setSelectedCategories((prev) => [...prev, category])
+  //   } else {
+  //     setSelectedCategories((prev) => prev.filter((c) => c !== category))
+  //   }
+  // }
 
-			const response = await postBookingProduct(payload);
-			if (response) {
-				toast.success('Order placed successfully!', { autoClose: 2000 });
-				setConfirmedPartOrders([]);
-			}
-		} catch (error) {
-			console.error('Order placement error:', {
-				error: error.message,
-				response: error.response?.data,
-			});
-			toast.error(error.response?.data?.message || 'Failed to place order');
-		} finally {
-			setIsLoading(false);
-		}
-	};
-
-	// Service Order post
-	const placeServiceOrder = async () => {
-		try {
-			const payload = {
-				cartId: serviceId,
-			};
-			const response = await postBookingService(payload);
-			if (response) {
-				toast.success('Order placed successfully!', { autoClose: 2000 });
-				setConfirmedPartOrders([]);
-			}
-		} catch (error) {
-			console.error('Order placement error:', error);
-			toast.error(error.response?.data?.message || 'Failed to place order');
-		} finally {
-			setIsLoading(false);
-		}
-	};
-
-	const handleConfirmPart = (product_id: number, quantity: number) => {
-		const part = books.find((p) => p._id === product_id);
-		if (part) {
-			setConfirmedPartOrders((prev) => [...prev, { part, quantity }]);
-			setShowSummary(true);
-		}
-	};
-
-	const handleConfirmService = (serviceId: number, quantity: number) => {
-		const serv = services.find((s) => s._id === serviceId);
-		if (serv) {
-			setConfirmedServiceOrders((prev) => [...prev, { serv, quantity }]);
-			setShowsSummary(true);
-		}
-	};
-
-	const handleDelete = (id: number) => {
-		setBooks((prev) => prev.filter((p) => p._id !== id));
-		setServices((prev) => prev.filter((s) => s._id !== id));
-	};
-
-	const filteredParts = books;
-	const filteredServices = services;
-
-	const SparePartCard = ({ part }: { part: spare }) => {
-		const [quantity, setQuantity] = useState(part.quantity || 1);
+  const SparePartCard = ({ part }: { part: SparePart }) => {
+    const [quantity, setQuantity] = useState(1);
 
     return (
       <div className=" rounded-lg shadow-md p-4 mb-4  border border-gray-200 hover:shadow-lg transition-shadow duration-300  bg-white">
