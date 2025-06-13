@@ -29,41 +29,37 @@ import DummyImage from '../../assets/CAR BRAKES/Car brakes.jpg';
 
 // Custom hook for Scroll Animation
 
-		const useScrollAnimation = <T extends HTMLElement = HTMLElement>(options = {}) => {
-		  const [isVisible, setIsVisible] = useState(false);
-		  const elementRef = useRef<T>(null);
+const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
+	options = {}
+) => {
+	const [isVisible, setIsVisible] = useState(false);
+	const elementRef = useRef<T>(null);
 
-		 
-
-		
-		  useEffect(() => {
-			const observer = new IntersectionObserver(
-			  ([entry]) => {
+	useEffect(() => {
+		const observer = new IntersectionObserver(
+			([entry]) => {
 				setIsVisible(entry.isIntersecting);
-			  },
-			  {
+			},
+			{
 				threshold: 0.1,
 				rootMargin: '0px 0px -50px 0px',
-				...options
-			  }
-			);
-		
-			if (elementRef.current) {
-			  observer.observe(elementRef.current);
+				...options,
 			}
-		
-			return () => {
-			  if (elementRef.current) {
+		);
+
+		if (elementRef.current) {
+			observer.observe(elementRef.current);
+		}
+
+		return () => {
+			if (elementRef.current) {
 				observer.unobserve(elementRef.current);
-			  }
-			};
-		  }, []);
-	  
-		  return { elementRef, isVisible };
+			}
 		};
+	}, []);
 
-
-
+	return { elementRef, isVisible };
+};
 
 // const services: ServiceItem[] = [
 // 	{ title: 'Batteries', image: Batterys, label: 'Offer' },
@@ -84,43 +80,42 @@ import DummyImage from '../../assets/CAR BRAKES/Car brakes.jpg';
 // ];
 
 const CustomServicesGrid: React.FC = () => {
-
-	  const [spareParts, setSpareParts] = useState<any[]>([]);
+	const [spareParts, setSpareParts] = useState<any[]>([]);
 
 	const spareTitle = useScrollAnimation<HTMLHeadingElement>();
-	
-	useEffect(() => {
-  const fetchSpareParts:any= async () => {
-    try {
-      const response = await getHomeData({});
-      if (response) {
-        setSpareParts(response.data.data);
-		console.log(response.data.data); 
-      }
-    } catch (error) {
-      console.error('Error fetching spare parts data:', error); // ✅ Log error
-      throw new Error('Error fetching spare parts data'); // ❌ Move this after logging or remove if not needed
-    }
-  };
 
-  fetchSpareParts();
-}, []);
+	useEffect(() => {
+		const fetchSpareParts: any = async () => {
+			try {
+				const response = await getHomeData({});
+				if (response) {
+					setSpareParts(response.data.data);
+					console.log(response.data.data);
+				}
+			} catch (error) {
+				console.error('Error fetching spare parts data:', error); // ✅ Log error
+				throw new Error('Error fetching spare parts data'); // ❌ Move this after logging or remove if not needed
+			}
+		};
+
+		fetchSpareParts();
+	}, []);
 
 	return (
 		<div className='py-10'>
-			<h1 
-			  ref={spareTitle.elementRef}
-			  className="text-2xl mb-10 text-red-900 text-center" 
-			  style={{ ...FONTS.header, fontWeight: 700 }}
+			<h1
+				ref={spareTitle.elementRef}
+				className='text-2xl mb-10 text-red-900 text-center'
+				style={{ ...FONTS.heading }}
 			>
-			  <span className="inline-block pb-1 relative">
-				Available Spare Parts
-				<span 
-				  className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
-					spareTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
-				  }`}
-				></span>
-			  </span>
+				<span className='inline-block pb-1 relative'>
+					Available Spare Parts
+					<span
+						className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+							spareTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
+						}`}
+					></span>
+				</span>
 			</h1>
 			<div className='grid grid-cols-5 gap-10'>
 				{spareParts.map((item) => (
@@ -130,8 +125,7 @@ const CustomServicesGrid: React.FC = () => {
 					>
 						<div className='w-full h-[125px] bg-white flex items-center justify-center overflow-hidden rounded'>
 							<img
-							src={ DummyImage}
-
+								src={DummyImage}
 								alt={item.productName}
 								className='w-full h-full object-cover'
 							/>

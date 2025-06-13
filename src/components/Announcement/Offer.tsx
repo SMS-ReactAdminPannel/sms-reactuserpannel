@@ -1,6 +1,7 @@
 import React from 'react';
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
+import { FONTS } from '../../constants/constant';
 
 type ServiceOffer = {
 	title: string;
@@ -80,11 +81,15 @@ const Offer: React.FC = () => {
 
 	return (
 		<div className='p-6 bg-gradient-to-br from-blue-50 to-blue-100 min-h-screen'>
-			<h1 ref={offerTitle.elementRef} className='text-center  '>
-				<span className='inline-block pb-1 relative text-3xl md:text-3xl font-bold text-center text-red-900 mb-10'>
+			<h1
+				ref={offerTitle.elementRef}
+				className='text-center'
+				style={{ ...FONTS.heading }}
+			>
+				<span className='inline-block pb-1 relative text-center text-red-900 mb-10'>
 					Yes Mechanic Special Offers
 					<span
-						className={`absolute top-[42px] left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+						className={`absolute top-[52px] left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
 							offerTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
 						}`}
 					></span>
@@ -103,7 +108,7 @@ const Offer: React.FC = () => {
 						transition={{ delay: index * 0.15, duration: 0.5 }}
 						className='relative rounded-xl shadow-lg p-4 bg-white/70 backdrop-blur-md border border-white/30'
 					>
-						<span className='absolute top-2 right-2 bg-red-800 text-white text-xs font-semibold px-2 py-1 rounded-md shadow-sm'>
+						<span className='absolute top-4 right-4 bg-red-700 text-white text-xs font-lg px-2 py-1 rounded-md shadow-sm'>
 							{offer.badge}
 						</span>
 
@@ -119,7 +124,7 @@ const Offer: React.FC = () => {
 						<p className='text-sm text-gray-500 line-through'>
 							₹{offer.originalPrice}
 						</p>
-						<p className='text-green-600 font-bold text-base'>
+						<p className='text-green-600 font-semibold text-base'>
 							₹{offer.offerPrice}{' '}
 							<span className='text-sm text-gray-600'>
 								({offer.discount}% OFF)

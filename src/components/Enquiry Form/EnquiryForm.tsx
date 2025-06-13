@@ -1,5 +1,41 @@
-import { useEffect, useState } from 'react';
-import { getEnquiryData, postEnquiryData } from '../../features/Enquiry/service';
+import { useEffect, useRef, useState } from 'react';
+import {
+	getEnquiryData,
+	postEnquiryData,
+} from '../../features/Enquiry/service';
+import { FONTS } from '../../constants/constant';
+
+const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
+	options = {}
+) => {
+	const [isVisible, setIsVisible] = useState(false);
+	const elementRef = useRef<T>(null);
+
+	useEffect(() => {
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				setIsVisible(entry.isIntersecting);
+			},
+			{
+				threshold: 0.1,
+				rootMargin: '0px 0px -50px 0px',
+				...options,
+			}
+		);
+
+		if (elementRef.current) {
+			observer.observe(elementRef.current);
+		}
+
+		return () => {
+			if (elementRef.current) {
+				observer.unobserve(elementRef.current);
+			}
+		};
+	}, []);
+
+	return { elementRef, isVisible };
+};
 
 const EnquiryForm = () => {
 	const [formData, setFormData] = useState({
@@ -13,6 +49,7 @@ const EnquiryForm = () => {
 	});
 
 	const [submitted, setSubmitted] = useState(false);
+	const enquiryTitle = useScrollAnimation<HTMLHeadingElement>();
 
 	const handleChange = (e) => {
 		const { name, value } = e.target;
@@ -25,51 +62,57 @@ const EnquiryForm = () => {
 	const handleSubmit = async (e) => {
 		e.preventDefault();
 		console.log('Form submitted:', formData);
-		try{
-		setSubmitted(true);
-		setFormData({
-			fullName: '',
-			email: '',
-			phoneNumber: '',
-			carModel: '',
-			ServiceType: '',
-			yourEnquiry: '',
-			Date: '',
-		});
-		const response = await postEnquiryData(formData)
-		console.log("post Enquiry Data : ",response )
-	}
-	catch(error){
-		console.log('Data not send : ', error);
-	}
+		try {
+			setSubmitted(true);
+			setFormData({
+				fullName: '',
+				email: '',
+				phoneNumber: '',
+				carModel: '',
+				ServiceType: '',
+				yourEnquiry: '',
+				Date: '',
+			});
+			const response = await postEnquiryData(formData);
+			console.log('post Enquiry Data : ', response);
+		} catch (error) {
+			console.log('Data not send : ', error);
+		}
 
 		// Reset submission status after 5 seconds
 		setTimeout(() => setSubmitted(false), 5000);
 	};
 
-	// Get Enquiry data 
-
 	const getEnquiryDatas = async () => {
-		try{
-			const data = {}
+		try {
+			const data = {};
 			const response = await getEnquiryData(data);
-			console.log('Data from form submission',response);
+			console.log('Data from form submission', response);
+		} catch (error) {
+			console.log(error);
 		}
-		catch(error){
-			console.log(error)
-		}
-	}
+	};
 
 	useEffect(() => {
 		getEnquiryDatas();
-	},[])
-
+	}, []);
 
 	return (
 		<div className='w-2/3 mx-auto p-6 bg-white rounded-lg shadow-md'>
-			<h2 className='text-2xl font-bold text-red-900 mb-6 text-center'>
-				Service Enquiry Form
-			</h2>
+			<h1
+				ref={enquiryTitle.elementRef}
+				className='text-center'
+				style={{ ...FONTS.heading }}
+			>
+				<span className='inline-block pb-1 relative text-center text-red-900 mb-10'>
+					Enquiry Form
+					<span
+						className={`absolute top-[52px] left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+							enquiryTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
+						}`}
+					></span>
+				</span>
+			</h1>
 
 			{submitted && (
 				<div className='mb-4 p-4 bg-green-100 text-green-700 rounded'>

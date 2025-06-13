@@ -1,9 +1,8 @@
-import { useState, useMemo, useEffect } from 'react';
-import { X, Plus, Minus, Wrench, Car } from 'lucide-react';
-import serviceImg from '../../assets/serviceimages/generalservice.png';
+import { useState, useEffect, useRef } from 'react';
+import { Wrench, Car } from 'lucide-react';
 import bgImage from '../../assets/checkout-bg_1_.png';
 import { toast } from 'react-toastify';
-import { COLORS, FONTS } from '../../constants/constant';
+import { FONTS } from '../../constants/constant';
 import { booking_cart } from '../../features/BookingCart/service';
 
 interface SparePart {
@@ -28,74 +27,37 @@ interface service {
 	is_active: boolean;
 }
 
-const initialParts: SparePart[] = [
-	{
-		id: '1',
-		name: 'Brake Pad Set',
-		description: 'High-quality ceramic brake pads for safe and smooth braking.',
-		imageUrl:
-			'https://boodmo.com/media/cache/catalog_part/images/parts/3fe3e3713e19d66a47bae04233a97cf4.webp',
-		inStock: true,
-		price: 1899,
-		discount: 20,
-		originalPrice: 2399,
-		compatibility: 'Maruti Swift, Baleno',
-		category: 'Brakes',
-	},
-	{
-		id: '2',
-		name: 'Air Filter Element',
-		description:
-			'Durable air filter ensuring clean air intake and better mileage.',
-		imageUrl:
-			'https://boodmo.com/media/cache/catalog_part/images/parts/3fe3e3713e19d66a47bae04233a97cf4.webp',
-		inStock: true,
-		price: 499,
-		discount: 10,
-		originalPrice: 549,
-		compatibility: 'Hyundai i20, Creta',
-		category: 'Filters',
-	},
-	{
-		id: '3',
-		name: 'Engine Oil 5W-30 (3L)',
-		description: 'Premium synthetic oil for high-performance engines.',
-		imageUrl:
-			'https://boodmo.com/media/cache/catalog_part/images/parts/9fd50e122693b3b0e4ae4ee3724ca1b2.webp',
-		inStock: false,
-		price: 1299,
-		discount: 15,
-		originalPrice: 1529,
-		compatibility: 'Honda City, Amaze',
-		category: 'Oils',
-	},
-	{
-		id: '4',
-		name: 'Headlight Assembly',
-		description: 'Complete headlamp assembly with long-lasting brightness.',
-		imageUrl:
-			'https://boodmo.com/media/cache/catalog_part/images/parts/a808aff9788f47721e361dbf0d10bba8.webp',
-		inStock: true,
-		price: 3499,
-		discount: 25,
-		originalPrice: 4699,
-		compatibility: 'Tata Nexon, Harrier',
-		category: 'Lights',
-	},
-	{
-		id: '5',
-		name: 'Wiper Blade Set',
-		description: 'All-weather wiper blades with streak-free performance.',
-		imageUrl:
-			'https://boodmo.com/media/cache/catalog_part/images/parts/7371bac93f3021909d987178c1b3ffdc.webp',
-		inStock: true,
-		price: 799,
-		discount: 12,
-		originalPrice: 899,
-		compatibility: 'Toyota Innova, Fortuner',
-		category: 'Accessories',
-	},
-];
+const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
+	options = {}
+) => {
+	const [isVisible, setIsVisible] = useState(false);
+	const elementRef = useRef<T>(null);
+
+	useEffect(() => {
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				setIsVisible(entry.isIntersecting);
+			},
+			{
+				threshold: 0.1,
+				rootMargin: '0px 0px -50px 0px',
+				...options,
+			}
+		);
+
+		if (elementRef.current) {
+			observer.observe(elementRef.current);
+		}
+
+		return () => {
+			if (elementRef.current) {
+				observer.unobserve(elementRef.current);
+			}
+		};
+	}, []);
+
+	return { elementRef, isVisible };
+};
 
 export default function SparePartsCart() {
 	const [books, setBooks] = useState<spare[]>([]);
@@ -103,7 +65,7 @@ export default function SparePartsCart() {
 	const [activeTab, setActiveTab] = useState<'service' | 'ServiceBookingPage'>(
 		'service'
 	);
-
+	const cartTitle = useScrollAnimation<HTMLHeadingElement>();
 	const [services, setServices] = useState<service[]>([]);
 	const [confirmedPartOrders, setConfirmedPartOrders] = useState<
 		{ part: spare; quantity: number }[]
@@ -407,7 +369,20 @@ export default function SparePartsCart() {
 		>
 			<div className='max-w-7xl mx-auto'>
 				{/* Header */}
-				<h1 className='text-3xl font-bold text-[#9b111e] mb-6'>My Cart</h1>
+				<h1
+					ref={cartTitle.elementRef}
+					className='text-center'
+					style={{ ...FONTS.heading }}
+				>
+					<span className='inline-block pb-1 relative text-center text-red-900 mb-10'>
+						My Cart
+						<span
+							className={`absolute top-[52px] left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+								cartTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
+							}`}
+						></span>
+					</span>
+				</h1>
 
 				{/* Tabs */}
 				<div className='mb-6 ml-[65px]'>

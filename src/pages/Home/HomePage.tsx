@@ -1,13 +1,10 @@
 import { ImageCarousel } from '../../components/home/ImageCarousel';
 // <<<<<<< HEAD
-import image1 from '../../assets/carimages/pexels-cottonbro-4489749.jpg'
-import image2 from '../../assets/carimages/pexels-artempodrez-8986070.jpg'
-import image3 from '../../assets/carimages/pexels-cottonbro-4489732.jpg'
-import image4 from '../../assets/carimages/pexels-ronaldo-galeano-2428202-4069389.jpg'
+import image1 from '../../assets/carimages/pexels-cottonbro-4489749.jpg';
+import image2 from '../../assets/carimages/pexels-artempodrez-8986070.jpg';
+import image3 from '../../assets/carimages/pexels-cottonbro-4489732.jpg';
+import image4 from '../../assets/carimages/pexels-ronaldo-galeano-2428202-4069389.jpg';
 // import CarImg1 from '../../assets/CarImg1.jpg';
-
-
-
 
 import { GrWorkshop } from 'react-icons/gr';
 import { LuCarTaxiFront } from 'react-icons/lu';
@@ -105,70 +102,6 @@ const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 };
 
 const HomePage: React.FC = () => {
-	// const cardData: ServiceCardProps[] = [
-	// 	{
-	// 		id: 1,
-	// 		icon: <FaTools size={42} />,
-	// 		title: 'Periodic Services',
-	// 		color: 'bg-white border-[#9b111e]',
-	// 	},
-	// 	{
-	// 		id: 2,
-	// 		icon: <FaSnowflake size={42} />,
-	// 		title: 'Ac Services & Repair',
-	// 		color: 'bg-white border-[#9b111e]',
-	// 	},
-	// 	{
-	// 		id: 3,
-	// 		icon: <FaBatteryThreeQuarters size={42} />,
-	// 		title: 'Batteries',
-	// 		color: 'bg-white border-[#9b111e]',
-	// 	},
-	// 	{
-	// 		id: 4,
-	// 		icon: <FaCircleNotch size={42} />,
-	// 		title: 'Tyres and Wheel Care',
-	// 		color: 'bg-white border-[#9b111e]',
-	// 	},
-	// 	{
-	// 		id: 5,
-	// 		icon: <FaCarAlt size={42} />,
-	// 		title: 'Detailing Services',
-	// 		color: 'bg-white border-[#9b111e]',
-	// 	},
-	// 	{
-	// 		id: 6,
-	// 		icon: <FaSearch size={42} />,
-	// 		title: 'Car Inspection',
-	// 		color: 'bg-white border-[#9b111e]',
-	// 	},
-	// 	{
-	// 		id: 7,
-	// 		icon: <FaLightbulb size={42} />,
-	// 		title: 'Windshields & Lights',
-	// 		color: 'bg-white border-[#9b111e]',
-	// 	},
-	// 	{
-	// 		id: 8,
-	// 		icon: <FaCarCrash size={42} />,
-	// 		title: 'Suspension & Fitments',
-	// 		color: 'bg-white border-[#9b111e]',
-	// 	},
-	// 	{
-	// 		id: 9,
-	// 		icon: <FaCarSide size={42} />,
-	// 		title: 'Clutch & Body Parts',
-	// 		color: 'bg-white border-[#9b111e]',
-	// 	},
-	// 	{
-	// 		id: 10,
-	// 		icon: <FaFileSignature size={42} />,
-	// 		title: 'Insurance Claims',
-	// 		color: 'bg-white border-[#9b111e]',
-	// 	},
-	// ];
-
-	// Create separate hooks for each title
 	const servicesTitle = useScrollAnimation<HTMLHeadingElement>();
 	const careTitle = useScrollAnimation<HTMLHeadingElement>();
 	const discoverTitle = useScrollAnimation<HTMLHeadingElement>();
@@ -176,18 +109,16 @@ const HomePage: React.FC = () => {
 	const [isLoading, setIsLoading] = useState(true);
 	const [servicescard, setServicescard] = useState<any[]>([]);
 
-	const fetchHomePageData = async() => {
+	const fetchHomePageData = async () => {
 		try {
 			setIsLoading(true);
 			const response = await getAllServiceCategories({});
-			if (response){
+			if (response) {
 				setServicescard(response.data.data);
-				console.log("Fetched Services Data:", response.data.data); // ✅ Log fetched data
-				
+				console.log('Fetched Services Data:', response.data.data); // ✅ Log fetched data
 			}
-
 		} catch (error) {
-		 console.error('Error fetching services data:', error); // ✅ Log error
+			console.error('Error fetching services data:', error); // ✅ Log error
 		} finally {
 			setIsLoading(false);
 		}
@@ -197,19 +128,19 @@ const HomePage: React.FC = () => {
 		fetchHomePageData();
 	}, []);
 
-	if (isLoading) {
-		return (
-			<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-				<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-				<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-			</div>
-		);
-	}
+	// if (isLoading) {
+	// 	return (
+	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
+	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
+	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
+	// 		</div>
+	// 	);
+	// }
 
 	return (
 		<>
 			<div className='h-[80vh]'>
-				<div className='bg-red-900 h-[45px]'></div>
+				<div className='bg-red-900 h-[25px]'></div>
 				<ImageCarousel images={imageUrls} interval={2500} />
 			</div>
 			<div className=''>
@@ -217,7 +148,7 @@ const HomePage: React.FC = () => {
 					<h1
 						ref={servicesTitle.elementRef}
 						className='text-2xl mb-10 text-red-900 text-center'
-						style={{ ...FONTS.header, fontWeight: 700 }}
+						style={{ ...FONTS.heading }}
 					>
 						<span className='inline-block pb-1 relative'>
 							Available Services
@@ -241,16 +172,16 @@ const HomePage: React.FC = () => {
 									className={`${services.color} rounded-lg p-8 shadow-md hover:shadow-lg transition-shadow ease-in duration-300 cursor-pointer transform hover:scale-102`}
 								>
 									<div className='text-[#9b111e] mb-4 flex justify-center'>
-										 <FaTools size={42} /> {/* Default icon for all */}
+										<FaTools size={42} /> {/* Default icon for all */}
 									</div>
 									<h3
-									className='text-center text-red-700 opacity-75'
-									style={{ ...FONTS.paragraph, fontWeight: 550 }}
-								>
-									 {services.category_name}
-								</h3>
-							</Link>
-						))}
+										className='text-center text-red-700 opacity-75'
+										style={{ ...FONTS.paragraph, fontWeight: 550 }}
+									>
+										{services.category_name}
+									</h3>
+								</Link>
+							))}
 					</div>
 				</div>
 				<div
@@ -269,7 +200,7 @@ const HomePage: React.FC = () => {
 							<h1
 								ref={careTitle.elementRef}
 								className='text-2xl mb-10 text-red-900 text-center'
-								style={{ ...FONTS.header, fontWeight: 700 }}
+								style={{ ...FONTS.heading }}
 							>
 								<span className='inline-block pb-1 relative'>
 									Care Advantages
@@ -323,7 +254,7 @@ const HomePage: React.FC = () => {
 							<h1
 								ref={discoverTitle.elementRef}
 								className='text-2xl mb-10 text-red-900 text-center'
-								style={{ ...FONTS.header, fontWeight: 700 }}
+								style={{ ...FONTS.heading }}
 							>
 								<span className='inline-block pb-1 relative'>
 									Discover Our Services
@@ -359,7 +290,6 @@ const HomePage: React.FC = () => {
 										className='py-2'
 										style={{
 											...FONTS.paragraph,
-											fontSize: '16px',
 											textAlign: 'justify',
 										}}
 									>
@@ -371,7 +301,7 @@ const HomePage: React.FC = () => {
 										to an automobile repair
 									</h2>
 									<button
-										className='bg-red-900 text-white py-2 px-2 mt-3 rounded-full'
+										className='bg-red-900 text-white py-2 px-3 mt-3 rounded-full hover:bg-red-800'
 										style={{ ...FONTS.paragraph, fontWeight: 500 }}
 									>
 										Book Service
@@ -411,7 +341,7 @@ const HomePage: React.FC = () => {
 										much better and safer approach to repair shop procedures:
 									</h2>
 									<button
-										className='bg-red-900 text-white py-2 px-2 mt-3 rounded-full'
+										className='bg-red-900 text-white py-2 px-3 mt-3 rounded-full hover:bg-red-800'
 										style={{ ...FONTS.paragraph, fontWeight: 500 }}
 									>
 										Book Service
@@ -460,7 +390,7 @@ const HomePage: React.FC = () => {
 										deeper understanding of your scheduling and hiring needs.
 									</h2>
 									<button
-										className='bg-red-900 text-white py-2 px-2 mt-3 rounded-full'
+										className='bg-red-900 text-white py-2 px-3 mt-3 rounded-full hover:bg-red-800'
 										style={{ ...FONTS.paragraph, fontWeight: 500 }}
 									>
 										Book Service
@@ -475,7 +405,7 @@ const HomePage: React.FC = () => {
 						<h1
 							ref={contactTitle.elementRef}
 							className='text-2xl mb-10 text-red-900 text-center'
-							style={{ ...FONTS.header, fontWeight: 700 }}
+							style={{ ...FONTS.heading }}
 						>
 							<span className='inline-block pb-4 relative'>
 								Customised Care For All Your Needs
