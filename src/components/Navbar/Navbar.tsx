@@ -2,9 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../pages/auth/AuthContext';
 import { COLORS, FONTS } from '../../constants/constant';
-import Logo from '../../assets/LOGO.jpg';
+import Logo from '../../assets/LOGO.png';
 import { FiSearch } from 'react-icons/fi';
-import { FaShoppingCart } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import ProfileMenu from '../home/ProfileMenu';
 import CustomDropdown from './Customdropdown';
@@ -152,7 +151,11 @@ export const Navbar: React.FC = () => {
 				{/* Logo & Location */}
 				<div className='flex items-center space-x-4'>
 					<Link to='/' className='text-2xl font-bold text-white'>
-						<img src={Logo} alt='yes mechanic logo' className='w-32 h-16' />
+						<img
+							src={Logo}
+							alt='yes mechanic logo'
+							className='w-[185px] h-[28px]'
+						/>
 					</Link>
 				</div>
 
@@ -160,7 +163,7 @@ export const Navbar: React.FC = () => {
 					<img src={TruckIcon} style={{ width: '30px' }} />
 					<label
 						className='text-red-900 cursor-pointer'
-						style={{ ...FONTS.paragraph, fontWeight: 600 }}
+						style={{ ...FONTS.sub_paragraph1, fontWeight: 600 }}
 					>
 						QUICK DELIVERY
 					</label>

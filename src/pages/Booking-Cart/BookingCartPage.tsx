@@ -7,6 +7,7 @@ import {
 import { toast } from 'react-toastify';
 import bgImage from '../../assets/checkout-bg_1_.png';
 import { postBookingService } from '../../features/Bookings/service';
+import { FONTS } from '../../constants/constant';
 
 interface spare {
 	_id: number;
@@ -371,11 +372,15 @@ export default function SparePartsCart() {
 		>
 			<div className='max-w-7xl mx-auto'>
 				{/* Header */}
-				<h1 ref={cartTitle.elementRef} className='text-center'>
-					<span className='inline-block pb-1 relative text-3xl font-bold text-[#9b111e] mb-6'>
+				<h1
+					ref={cartTitle.elementRef}
+					className='text-center'
+					style={{ ...FONTS.heading }}
+				>
+					<span className='inline-block pb-1 relative text-[#9b111e] mb-6'>
 						My Cart
 						<span
-							className={`absolute top-11 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+							className={`absolute top-14 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
 								cartTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
 							}`}
 						></span>
@@ -460,7 +465,7 @@ export default function SparePartsCart() {
 					</div>
 
 					{/* Summary Sidebar */}
-					<div className=' fixed w-[500px] ml-[80px] left-1/2 '>
+					<div className=' fixed w-[520px] ml-[50px] left-1/2'>
 						{/* Parts Summary */}
 						{books.length > 0 && activeTab === 'service' && (
 							<div className='bg-white rounded-lg shadow-md p-4 mb-6  '>
@@ -494,7 +499,7 @@ export default function SparePartsCart() {
 										</span>
 									</div>
 								</div>
-								<div className='border-t border-orange-200 pt-2 mb-4'>
+								<div className='border-t border-orange-200 pt-2 mb-2'>
 									<div className='flex justify-between font-bold text-orange-700'>
 										<span>Total</span>
 										<span>₹{totalPartPrice}</span>
@@ -503,7 +508,7 @@ export default function SparePartsCart() {
 								<div className='flex justify-center'>
 									<button
 										type='submit'
-										className='flex justify-center gap-2 items-center mx-auto shadow-xl text-lg text-white bg-[#9b111e] backdrop-blur-md lg:font-semibold isolation-auto border-gray-50 relative z-10 px-6 py-2 overflow-hidden border-2 rounded-full group'
+										className='flex justify-center gap-2 items-center mx-auto shadow-xl text-lg text-white bg-[#9b111e] backdrop-blur-md lg:font-semibold isolation-auto relative z-10 px-6 py-2 overflow-hidden border-2 rounded-full group hover:bg-red-700'
 										onClick={async () => {
 											try {
 												if (books.length > 0) {

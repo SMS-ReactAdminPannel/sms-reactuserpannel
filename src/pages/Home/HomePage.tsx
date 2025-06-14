@@ -42,7 +42,7 @@ import CustomServicesCarousel from '../../components/home/customServiceCarousel'
 import Roadsideassistant from '../../assets/CAR ROADSIDE/Roadside assistant.jpg';
 import Prebooking from '../../assets/CAR PREBOOKING/Prebooking.jpg';
 import Annualmaintenance from '../../assets/CAR ANNUAL MAINTENANCE/Annual maintenance.jpg';
-import appimage from '../../assets/LOGO.jpg';
+import appimage from '../../assets/LOGO.png';
 import bgImg from '../../assets/home/aesthetic-background-with-patterned-glass-texture.jpg';
 import bgImg2 from '../../assets/home/studio-background-concept-abstract-empty-light-gradient-purple-studio-room-background-product.jpg';
 import bgImg3 from '../../assets/checkout-bg_1_.png';
@@ -195,16 +195,16 @@ const HomePage: React.FC = () => {
 			</div>
 
 			<div className=''>
-				<div className='px-24 h-[90vh] bg-[#0B192C]'>
+				<div className='px-24 h-[90vh] bg-red-100'>
 					<h1
 						ref={servicesTitle.elementRef}
-						className='text-2xl py-10 text-white text-center'
+						className='text-2xl py-10 text-red-900 text-center'
 						style={{ ...FONTS.heading }}
 					>
 						<span className='inline-block pb-1 relative'>
 							Available Services
 							<span
-								className={`absolute top-9 left-1/2 h-[1px] bg-white transform -translate-x-1/2 origin-center transition-all duration-700 ${
+								className={`absolute top-9 left-1/2 h-[1px] bg-red-900 transform -translate-x-1/2 origin-center transition-all duration-700 ${
 									servicesTitle.isVisible
 										? 'scale-x-100 w-full'
 										: 'scale-x-0 w-full'
@@ -597,14 +597,14 @@ const HomePage: React.FC = () => {
 					</div>
 				</div>
 				{/* FOOTER START */}
-				<footer className={`h-[76vh] bg-[url(${bgImg2})] pt-2`}>
+				<footer className={`h-[81vh] bg-[url(${bgImg2})] pt-2`}>
 					<div className='grid grid-cols-4 gap-4 px-10'>
 						{/* Image Card - Full Height (No border) */}
 						<div className='col-span-1 p-4 rounded h-full border-0'>
 							<img
 								src={appimage}
 								alt='appimage'
-								className='p-2 h-[125px] w-[280px] object-cover rounded'
+								className='p-2 h-[64px] w-[260px] rounded'
 							/>
 						</div>
 
@@ -727,7 +727,7 @@ const HomePage: React.FC = () => {
 
 											<div className='flex items-center gap-4'>
 												<div className=' text-red-900  text-3xl'>
-													<BiLogoPlayStore />
+													<BiLogoPlayStore size={16} />
 												</div>
 											</div>
 										</div>
@@ -742,19 +742,19 @@ const HomePage: React.FC = () => {
 
 												<div className='flex items-center gap-4'>
 													<div className='text-red-900  text-3xl'>
-														<FaInstagramSquare />
+														<FaInstagramSquare size={16} />
 													</div>
 													<div className='text-red-900  text-3xl'>
-														<FaXTwitter />
+														<FaXTwitter size={16} />
 													</div>
 													<div className='text-red-900  text-3xl'>
-														<FaFacebook />
+														<FaFacebook size={16} />
 													</div>
 													<div className='text-red-900  text-3xl'>
-														<FaYoutube />
+														<FaYoutube size={16} />
 													</div>
 													<div className=' text-red-900  text-3xl'>
-														<SiIndeed />
+														<SiIndeed size={16} />
 													</div>
 												</div>
 											</div>
@@ -772,13 +772,13 @@ const HomePage: React.FC = () => {
 
 												<div className='flex items-center gap-4'>
 													<div className=' text-red-900  text-2xl'>
-														<FaPhoneAlt />
+														<FaPhoneAlt size={16} />
 													</div>
 													<div className=' text-red-900  text-3xl'>
-														<MdEmail />
+														<MdEmail size={16} />
 													</div>
 													<div className=' text-red-900  text-3xl'>
-														<FaSquareWhatsapp />
+														<FaSquareWhatsapp size={16} />
 													</div>
 												</div>
 											</div>
