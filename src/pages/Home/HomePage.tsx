@@ -235,7 +235,7 @@ const HomePage: React.FC = () => {
 
 	return (
 		<>
-			<div className='h-[60vh]'>
+			<div className='h-[80vh]'>
 				<div className='bg-red-900 h-[25px]'></div>
 				<ImageCarousel images={imageUrls} interval={2500} />
 			</div>
