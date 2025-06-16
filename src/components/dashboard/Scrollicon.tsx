@@ -1,4 +1,5 @@
-import React, { useRef } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useRef } from 'react';
 import { SlArrowLeft } from "react-icons/sl";
 import { SlArrowRight } from "react-icons/sl";
 
@@ -15,7 +16,7 @@ import pairtyre from '../../assets/TYRE/PAIRTYRES.jpg';
 import tyres from '../../assets/TYRE/TYRES.webp';
 
 const CombinedScrollCard = () => {
-    const scrollRef = useRef(null);
+    const scrollRef: any = useRef(null);
 
     const scrollLeft = () => {
         scrollRef.current?.scrollBy({ left: -300, behavior: 'smooth' });
@@ -48,7 +49,7 @@ const CombinedScrollCard = () => {
                 className="absolute left-2 top-[150px] -translate-y-1/2 z-10 bg-black text-white border rounded-full p-2 shadow hover:bg-gray-400"
             >
                 {/* &#8592; */}
-                <SlArrowLeft/>
+                <SlArrowLeft />
             </button>
 
             {/* Scrollable Images */}

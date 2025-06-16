@@ -1,4 +1,5 @@
-import React, { useRef } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useRef } from 'react';
 
 
 //LIGHT
@@ -18,7 +19,7 @@ import pairtyre from '../../assets/TYRE/PAIRTYRES.jpg'
 import tyres from '../../assets/TYRE/TYRES.webp'
 
 const ImageScrollGallery = () => {
-    const scrollRef = useRef(null);
+    const scrollRef: any = useRef(null);
 
     const scrollLeft = () => {
         scrollRef.current?.scrollBy({ left: -200, behavior: 'smooth' });
@@ -49,10 +50,10 @@ const ImageScrollGallery = () => {
                 <img src={headlight} className="w-[200px] h-[120px] rounded object-cover" alt="Image 4" />
                 <img src={interiorlight} className="w-[200px] h-[120px] rounded object-cover" alt="Image 5" />
                 <img src={leftsidemirror} className="w-[200px] h-[120px] rounded object-cover" alt="Image 1" />
-                <img src={ rightsidemirror} className="w-[200px] h-[120px] rounded object-cover" alt="Image 1" />
-                <img src={rearmirror } className="w-[200px] h-[120px] rounded object-cover" alt="Image 1" />
-                <img src={backsidetyre } className="w-[200px] h-[120px] rounded object-cover" alt="Image 1" />
-                <img src={pairtyre } className="w-[200px] h-[120px] rounded object-cover" alt="Image 1" />
+                <img src={rightsidemirror} className="w-[200px] h-[120px] rounded object-cover" alt="Image 1" />
+                <img src={rearmirror} className="w-[200px] h-[120px] rounded object-cover" alt="Image 1" />
+                <img src={backsidetyre} className="w-[200px] h-[120px] rounded object-cover" alt="Image 1" />
+                <img src={pairtyre} className="w-[200px] h-[120px] rounded object-cover" alt="Image 1" />
                 <img src={tyres} className="w-[200px] h-[120px] rounded object-cover" alt="Image 1" />
             </div>
 

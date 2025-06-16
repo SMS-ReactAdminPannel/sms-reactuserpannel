@@ -1,4 +1,4 @@
-import { ReactNode } from 'react';
+import { type ReactNode } from 'react';
 import LoginImage from '../../../src/assets/login-pg-img/login-video.mp4'; // adjust the path as needed
 
 interface AuthLayoutProps {

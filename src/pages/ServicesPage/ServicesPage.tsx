@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState, useRef } from 'react';
 import {
 	Clock,
@@ -108,9 +109,11 @@ const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 
 		return () => {
 			if (elementRef.current) {
+				// eslint-disable-next-line react-hooks/exhaustive-deps
 				observer.unobserve(elementRef.current);
 			}
 		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return { elementRef, isVisible };
@@ -136,10 +139,10 @@ const ServicesPage: React.FC = () => {
 	const [isLoading, setIsLoading] = useState(true);
 	const navigate = useNavigate();
 	const serviceTitle = useScrollAnimation<HTMLHeadingElement>();
-	 const [selectedCategory, setSelectedCategory] = useState<{
-    id: string;
-    name: string;
-  } | null>(null);
+	const [selectedCategory, setSelectedCategory] = useState<{
+		id: string;
+		name: string;
+	} | null>(null);
 
 
 	const fetchAllServiceCategory = async () => {
@@ -147,23 +150,23 @@ const ServicesPage: React.FC = () => {
 			setIsLoading(true);
 			const response: any = await getAllServiceCategories();
 			if (response.data && response.data.data) {
-				 // Filter to only show the selected category if one is selected
-        const categories = selectedCategory
-          ? response.data.data.filter(
-              (cat: any) => cat._id === selectedCategory.id
-            )
-          : response.data.data;
-          
-        setServiceCategories(categories);
+				// Filter to only show the selected category if one is selected
+				const categories = selectedCategory
+					? response.data.data.filter(
+						(cat: any) => cat._id === selectedCategory.id
+					)
+					: response.data.data;
+
+				setServiceCategories(categories);
 				const firstActiveCategory = response.data.data.find(
 					(cat: any) => !cat.is_deleted
 				);
 				if (firstActiveCategory) {
 					setActiveNavItem(
-            selectedCategory 
-              ? selectedCategory.name 
-              : firstActiveCategory.category_name
-          );
+						selectedCategory
+							? selectedCategory.name
+							: firstActiveCategory.category_name
+					);
 				}
 			}
 		} catch (error) {
@@ -175,6 +178,8 @@ const ServicesPage: React.FC = () => {
 
 	useEffect(() => {
 		fetchAllServiceCategory();
+		setSelectedCategory(null)
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const storedCategory: any = localStorage.getItem('selectedCategory');
@@ -317,14 +322,14 @@ const ServicesPage: React.FC = () => {
 	const [showForm, setShowForm] = useState<boolean>(false);
 	const currentContent = activeNavItem ? contentSections[activeNavItem] : null;
 
-	// if (isLoading) {
-	// 	return (
-	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-	// 		</div>
-	// 	);
-	// }
+	if (isLoading) {
+		return (
+			<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
+				<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
+				<p className='text-red-500 text-lg font-semibold'>Loading...</p>
+			</div>
+		);
+	}
 
 	return (
 		<div className='min-h-screen bg-gray-50 flex flex-start'>
@@ -365,22 +370,20 @@ const ServicesPage: React.FC = () => {
 									<div
 										key={index}
 										onClick={() => handleNavClick(item.name)}
-										className={`group relative flex items-center px-4 py-4 rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-[1.02] ${
-											activeNavItem === item.name
-												? 'bg-gradient-to-r from-red-50 to-red-100 text-red-700 shadow-lg shadow-red-100/50 border border-red-200'
-												: 'text-gray-600 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-red-600 hover:shadow-md'
-										} ${!item.isActive ? 'opacity-70' : ''}`}
+										className={`group relative flex items-center px-4 py-4 rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-[1.02] ${activeNavItem === item.name
+											? 'bg-gradient-to-r from-red-50 to-red-100 text-red-700 shadow-lg shadow-red-100/50 border border-red-200'
+											: 'text-gray-600 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-red-600 hover:shadow-md'
+											} ${!item.isActive ? 'opacity-70' : ''}`}
 									>
 										{activeNavItem === item.name && (
 											<div className='absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-8 bg-red-500 rounded-r-full'></div>
 										)}
 
 										<div
-											className={`mr-4 flex-shrink-0 p-2 rounded-lg transition-all duration-300 ${
-												activeNavItem === item.name
-													? 'bg-red-200/50 text-red-600'
-													: 'bg-gray-100 text-gray-500 group-hover:bg-red-100 group-hover:text-red-500'
-											}`}
+											className={`mr-4 flex-shrink-0 p-2 rounded-lg transition-all duration-300 ${activeNavItem === item.name
+												? 'bg-red-200/50 text-red-600'
+												: 'bg-gray-100 text-gray-500 group-hover:bg-red-100 group-hover:text-red-500'
+												}`}
 										>
 											{item.icon}
 										</div>
@@ -390,11 +393,10 @@ const ServicesPage: React.FC = () => {
 										</span>
 
 										<div
-											className={`ml-auto opacity-0 transform translate-x-2 transition-all duration-300 ${
-												activeNavItem === item.name
-													? 'opacity-100 translate-x-0'
-													: 'group-hover:opacity-100 group-hover:translate-x-0'
-											}`}
+											className={`ml-auto opacity-0 transform translate-x-2 transition-all duration-300 ${activeNavItem === item.name
+												? 'opacity-100 translate-x-0'
+												: 'group-hover:opacity-100 group-hover:translate-x-0'
+												}`}
 										>
 											<svg
 												className='w-4 h-4'
@@ -422,15 +424,14 @@ const ServicesPage: React.FC = () => {
 			<div className='ml-72 bg-gray-50 min-h-screen'>
 				<div className='max-w-4xl mx-auto px-6 py-8'>
 					<div className='mb-8'>
-						<h1 ref={serviceTitle.elementRef} style={{...FONTS.sub_heading}}>
+						<h1 ref={serviceTitle.elementRef} style={{ ...FONTS.sub_heading }}>
 							<span className='inline-block pb-1 relative text-[#9b111e] mb-2'>
 								{currentContent?.title || 'Services'}
 								<span
-									className={`absolute top-11 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
-										serviceTitle.isVisible
-											? 'scale-x-100 w-full'
-											: 'scale-x-0 w-full'
-									}`}
+									className={`absolute top-11 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${serviceTitle.isVisible
+										? 'scale-x-100 w-full'
+										: 'scale-x-0 w-full'
+										}`}
 								></span>
 							</span>
 						</h1>
@@ -465,9 +466,8 @@ const ServicesPage: React.FC = () => {
 								return (
 									<div
 										key={pkg.id}
-										className={`bg-[#FAF3EB] rounded-lg w-[600px] shadow-lg relative transition-all duration-300 hover:shadow-xl ${
-											isSelected ? 'ring-2 ring-red-500' : ''
-										}`}
+										className={`bg-[#FAF3EB] rounded-lg w-[600px] shadow-lg relative transition-all duration-300 hover:shadow-xl ${isSelected ? 'ring-2 ring-red-500' : ''
+											}`}
 									>
 										{pkg.isRecommended && (
 											<div className='absolute top-0 left-0 z-10 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-1 rounded-br-lg'>
@@ -644,12 +644,13 @@ const ServicesPage: React.FC = () => {
 					<SelectCarPage
 						onClose={() => setShowForm(false)}
 						setSelectedPackage={(carDetails) => {
+							const data: any = {
+								packageId: selectedPackageId,
+								carDetails,
+							};
 							setSelectedPackage((prev) => [
 								...prev,
-								{
-									packageId: selectedPackageId,
-									carDetails,
-								},
+								data
 							]);
 							setShowForm(false);
 						}}

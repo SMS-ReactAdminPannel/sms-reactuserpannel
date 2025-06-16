@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useRef, useState } from 'react';
 import {
 	getEnquiryData,
@@ -51,7 +52,7 @@ const EnquiryForm = () => {
 	const [submitted, setSubmitted] = useState(false);
 	const enquiryTitle = useScrollAnimation<HTMLHeadingElement>();
 
-	const handleChange = (e) => {
+	const handleChange = (e: any) => {
 		const { name, value } = e.target;
 		setFormData((prev) => ({
 			...prev,
@@ -59,7 +60,7 @@ const EnquiryForm = () => {
 		}));
 	};
 
-	const handleSubmit = async (e) => {
+	const handleSubmit = async (e: any) => {
 		e.preventDefault();
 		console.log('Form submitted:', formData);
 		try {
@@ -107,9 +108,8 @@ const EnquiryForm = () => {
 				<span className='inline-block pb-1 relative text-center text-red-900 mb-10'>
 					Enquiry Form
 					<span
-						className={`absolute top-[52px] left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
-							enquiryTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
-						}`}
+						className={`absolute top-[52px] left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${enquiryTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
+							}`}
 					></span>
 				</span>
 			</h1>

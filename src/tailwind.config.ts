@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-require-imports */
 /** @type {import('tailwindcss').Config} */
 export default {
   content: [
@@ -11,26 +12,16 @@ export default {
       screens: {
         custom900: "900px", // 👈 This must exist
       },
-    },
-  },
-  plugins: [
-    require('tailwind-scrollbar-hide'),
-    require('tailwind-scrollbar')
-  ],
-
- module.exports = {
-  theme: {
-    extend: {
       animation: {
         slideInRight: 'slideInRight 0.5s ease-out forwards',
       },
       keyframes: {
         slideInRight: {
-          'from': { 
+          'from': {
             transform: 'translateX(100%)',
             opacity: '0',
           },
-          'to': { 
+          'to': {
             transform: 'translateX(0)',
             opacity: '1',
           },
@@ -38,7 +29,8 @@ export default {
       },
     },
   },
-}
-  
+  plugins: [
+    require('tailwind-scrollbar-hide'),
+    require('tailwind-scrollbar')
+  ]
 };
-// tailwind.config.js

@@ -1,15 +1,16 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
 import {
 	getUserProfile,
 	updateUserProfile,
 } from '../../features/Profile/service';
 
-interface UserInfo {
-	name: string;
-	email: string;
-	number: string;
-	address: string;
-}
+// interface UserInfo {
+// 	name: string;
+// 	email: string;
+// 	number: string;
+// 	address: string;
+// }
 
 interface Car {
 	model: string;
@@ -26,12 +27,12 @@ const ProfilePage: React.FC = () => {
 	const [isCarTab, setIsCarTab] = useState(false);
 	const [editMode, setEditMode] = useState(false);
 	const [showHistory, setShowHistory] = useState<number | null>(null);
-	const [profileData, setProfileData] = useState({});
+	const [profileData, setProfileData] = useState<any>({});
 	const [isLoading, setIsLoading] = useState(true);
 
 	const fetchUserProfile = async () => {
 		try {
-			const response = await getUserProfile({});
+			const response: any = await getUserProfile({});
 			if (response) {
 				setProfileData(response?.data?.data);
 				setIsLoading(false);
@@ -66,7 +67,7 @@ const ProfilePage: React.FC = () => {
 
 	const handleUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
-		setProfileData((prev) => ({ ...prev, [name]: value }));
+		setProfileData((prev: any) => ({ ...prev, [name]: value }));
 	};
 
 	const handleCarChange = (
@@ -116,9 +117,8 @@ const ProfilePage: React.FC = () => {
 			<div className='relative w-full max-w-4xl h-[600px] bg-white rounded-3xl shadow-2xl overflow-hidden'>
 				{/* Car Details Panel */}
 				<div
-					className={`absolute inset-0 w-full h-full transition-all duration-500 ease-in-out ${
-						isCarTab ? 'opacity-100 z-20' : 'opacity-0 z-10'
-					}`}
+					className={`absolute inset-0 w-full h-full transition-all duration-500 ease-in-out ${isCarTab ? 'opacity-100 z-20' : 'opacity-0 z-10'
+						}`}
 				>
 					<div className='flex h-full w-full'>
 						{/* Red Section - Left */}
@@ -214,7 +214,7 @@ const ProfilePage: React.FC = () => {
 														Service History
 													</h4>
 													{serviceHistory[index] &&
-													serviceHistory[index].length > 0 ? (
+														serviceHistory[index].length > 0 ? (
 														<div className='space-y-2'>
 															{serviceHistory[index].map(
 																(history, historyIndex) => (
@@ -264,9 +264,8 @@ const ProfilePage: React.FC = () => {
 
 				{/* User Profile Panel */}
 				<div
-					className={`absolute inset-0 w-full h-full transition-all duration-500 ease-in-out ${
-						isCarTab ? 'opacity-0 z-10' : 'opacity-100 z-20'
-					}`}
+					className={`absolute inset-0 w-full h-full transition-all duration-500 ease-in-out ${isCarTab ? 'opacity-0 z-10' : 'opacity-100 z-20'
+						}`}
 				>
 					<div className='flex h-full w-full'>
 						{/* User Profile Section - Left */}
@@ -368,8 +367,8 @@ const ProfilePage: React.FC = () => {
 												<span className='text-gray-600'>
 													{profileData?.contact_info?.address1
 														? profileData?.contact_info?.address1 +
-														  ' ' +
-														  profileData?.contact_info?.address2
+														' ' +
+														profileData?.contact_info?.address2
 														: 'N/A'}
 												</span>
 											</p>

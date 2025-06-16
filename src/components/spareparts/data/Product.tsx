@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // import spareImg1 from '../../../assets/CarPart2.jfif'
 // import diskrim from '../../../assets/CarPart1.jfif'  
 import { getSparePartsData } from '../../../features/spareparts';
@@ -24,7 +25,7 @@ export const useSparePartsDataset = () => {
     const fetchSpareParts = async () => {
         try {
             setError(null);
-            const response = await getSparePartsData({});
+            const response: any = await getSparePartsData({});
             if (response?.data?.data) {
                 if (Array.isArray(response.data.data)) {
                     const validatedParts = response.data.data.map((part: any) => ({
@@ -39,7 +40,7 @@ export const useSparePartsDataset = () => {
                     }));
 
                     setParts(validatedParts);
-        
+
                 } else {
                     throw new Error('API response data is not an array');
                 }
@@ -60,7 +61,7 @@ export const useSparePartsDataset = () => {
     return { parts, error };
 
 }
-   
+
 // Removed getCategoryData because useSparePartsDataset does not provide categoryData
 
 

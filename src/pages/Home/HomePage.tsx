@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ImageCarousel } from '../../components/home/ImageCarousel';
 import image1 from '../../assets/home/360_F_496483060_C9OG1wJpfmjMXcNmUBibmA9wYxxZCxnW.jpg';
 import image2 from '../../assets/home/360_F_507812981_dGZXqBsqkBpEosDjTlJgmaJAyMFra7sp.jpg';
@@ -23,15 +24,6 @@ import MustCare from '../../components/bookings/BookingsPage';
 import { COLORS, FONTS } from '../../constants/constant';
 import React, { useState, useRef, useEffect } from 'react';
 import {
-	FaTools,
-	FaSnowflake,
-	FaBatteryThreeQuarters,
-	FaCarAlt,
-	FaSearch,
-	FaLightbulb,
-	FaCarCrash,
-	FaCarSide,
-	FaCircleNotch,
 	FaPhoneAlt,
 } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
@@ -58,17 +50,16 @@ import { SiIndeed } from 'react-icons/si'; //indeed
 import { BiLogoPlayStore } from 'react-icons/bi'; //play store
 import {
 	getAllServiceCategories,
-	getServiceCategoryById,
 } from '../../features/ServicesPage/service';
 import { useNavigate } from 'react-router-dom';
 
 const imageUrls = [image1, image2, image3, image4];
-interface ServiceCardProps {
-	id: number;
-	icon: React.ReactNode;
-	title: string;
-	color: string;
-}
+// interface ServiceCardProps {
+// 	id: number;
+// 	icon: React.ReactNode;
+// 	title: string;
+// 	color: string;
+// }
 
 // Custom hook for Scroll Animation
 
@@ -96,9 +87,11 @@ const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 
 		return () => {
 			if (elementRef.current) {
+				// eslint-disable-next-line react-hooks/exhaustive-deps
 				observer.unobserve(elementRef.current);
 			}
 		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return { elementRef, isVisible };
@@ -183,7 +176,7 @@ const HomePage: React.FC = () => {
 	};
 	const fetchServiceData = async () => {
 		try {
-			const response = await getAllServiceCategories();
+			const response: any = await getAllServiceCategories();
 			if (response) {
 				setServiceData(response.data.data);
 				//console.log(response.data.data);
@@ -231,14 +224,14 @@ const HomePage: React.FC = () => {
 		navigate('/services');
 	};
 
-	// if (isLoading) {
-	// 	return (
-	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-	// 			<div className='animate-spin rounded-full h-12 w-12 border-2 border-red-500'></div>
-	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-	// 		</div>
-	// 	);
-	// }
+	if (isLoading) {
+		return (
+			<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
+				<div className='animate-spin rounded-full h-12 w-12 border-2 border-red-500'></div>
+				<p className='text-red-500 text-lg font-semibold'>Loading...</p>
+			</div>
+		);
+	}
 
 	return (
 		<>
@@ -257,11 +250,10 @@ const HomePage: React.FC = () => {
 						<span className='inline-block pb-1 relative'>
 							Available Services
 							<span
-								className={`absolute top-9 left-1/2 h-[1px] bg-red-900 transform -translate-x-1/2 origin-center transition-all duration-700 ${
-									servicesTitle.isVisible
-										? 'scale-x-100 w-full'
-										: 'scale-x-0 w-full'
-								}`}
+								className={`absolute top-9 left-1/2 h-[1px] bg-red-900 transform -translate-x-1/2 origin-center transition-all duration-700 ${servicesTitle.isVisible
+									? 'scale-x-100 w-full'
+									: 'scale-x-0 w-full'
+									}`}
 							></span>
 						</span>
 					</h1>
@@ -316,11 +308,10 @@ const HomePage: React.FC = () => {
 								<span className='inline-block pb-1 relative'>
 									Care Advantages
 									<span
-										className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
-											careTitle.isVisible
-												? 'scale-x-100 w-full'
-												: 'scale-x-0 w-full'
-										}`}
+										className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${careTitle.isVisible
+											? 'scale-x-100 w-full'
+											: 'scale-x-0 w-full'
+											}`}
 									></span>
 								</span>
 							</h1>
@@ -370,11 +361,10 @@ const HomePage: React.FC = () => {
 								<span className='inline-block pb-1 relative'>
 									Discover Our Services
 									<span
-										className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
-											discoverTitle.isVisible
-												? 'scale-x-100 w-full'
-												: 'scale-x-0 w-full'
-										}`}
+										className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${discoverTitle.isVisible
+											? 'scale-x-100 w-full'
+											: 'scale-x-0 w-full'
+											}`}
 									></span>
 								</span>
 							</h1>
@@ -524,11 +514,10 @@ const HomePage: React.FC = () => {
 							<span className='inline-block pb-4 relative'>
 								Customised Care For All Your Needs
 								<span
-									className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
-										contactTitle.isVisible
-											? 'scale-x-100 w-full'
-											: 'scale-x-0 w-full'
-									}`}
+									className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${contactTitle.isVisible
+										? 'scale-x-100 w-full'
+										: 'scale-x-0 w-full'
+										}`}
 								></span>
 							</span>
 						</h1>

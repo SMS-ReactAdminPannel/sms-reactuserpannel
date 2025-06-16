@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect, useRef } from 'react';
 import { ShoppingCart } from 'lucide-react';
 import { Search, X } from 'lucide-react';
@@ -8,7 +9,7 @@ import {
 } from '../../features/spareparts';
 import spareimg from '../../assets/CAR DIFFERENTIAL/Car differential.jpg';
 import { FONTS } from '../../constants/constant';
-import { SiTicktick } from 'react-icons/si';
+// import { SiTicktick } from 'react-icons/si';
 import { Link } from 'react-router-dom';
 import spareImg from '../../assets/CarPart1.jfif'
 
@@ -50,9 +51,11 @@ const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 
 		return () => {
 			if (elementRef.current) {
+				// eslint-disable-next-line react-hooks/exhaustive-deps
 				observer.unobserve(elementRef.current);
 			}
 		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return { elementRef, isVisible };
@@ -79,13 +82,13 @@ const SpareParts: React.FC = () => {
 	// const {CategoryData} = useSparePartsDataset;
 
 
-	const [error, setError] = useState<string | null>(null);
+	// const [error, setError] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 
 	const fetchSpareParts = async () => {
 		try {
-			setError(null);
-			const response = await getSparePartsData({});
+			// setError(null);
+			const response: any = await getSparePartsData({});
 			console.log(response)
 			if (response && response.data && response.data.data) {
 				if (Array.isArray(response.data.data)) {
@@ -118,9 +121,9 @@ const SpareParts: React.FC = () => {
 			}
 		} catch (error) {
 			console.error('Error fetching spare parts:', error);
-			setError(
-				error instanceof Error ? error.message : 'Failed to fetch spare parts'
-			);
+			// setError(
+			// 	error instanceof Error ? error.message : 'Failed to fetch spare parts'
+			// );
 			setParts([]);
 			setCategories([]);
 		} finally {
@@ -150,6 +153,7 @@ const SpareParts: React.FC = () => {
 
 	useEffect(() => {
 		fetchSpareParts();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const handleTouchStart = (e: React.TouchEvent): void => {
@@ -208,16 +212,16 @@ const SpareParts: React.FC = () => {
 	const offerTitle = useScrollAnimation<HTMLHeadingElement>();
 	const productTitle = useScrollAnimation<HTMLHeadingElement>();
 	const bundleTitle = useScrollAnimation<HTMLHeadingElement>();
-	const categoryTitle = useScrollAnimation<HTMLHeadingElement>();
+	// const categoryTitle = useScrollAnimation<HTMLHeadingElement>();
 
-	// if (isLoading) {
-	// 	return (
-	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-	// 		</div>
-	// 	);
-	// }
+	if (isLoading) {
+		return (
+			<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
+				<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
+				<p className='text-red-500 text-lg font-semibold'>Loading...</p>
+			</div>
+		);
+	}
 
 	return (
 		<div className='p-12 mx-8'>
@@ -228,9 +232,8 @@ const SpareParts: React.FC = () => {
 				>
 					Spare Parts
 					<span
-						className={`absolute top-14 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
-							offerTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
-						}`}
+						className={`absolute top-14 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${offerTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
+							}`}
 					></span>
 				</span>
 			</h1>
@@ -293,9 +296,8 @@ const SpareParts: React.FC = () => {
 				>
 					Products
 					<span
-						className={`absolute top-12 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
-							productTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
-						}`}
+						className={`absolute top-12 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${productTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
+							}`}
 					></span>
 				</span>
 			</h1>
@@ -350,9 +352,8 @@ const SpareParts: React.FC = () => {
 											₹{part.price.toLocaleString()}
 										</div>
 										<div
-											className={`mt-2 text-xs font-semibold ${
-												part.stock ? 'text-green-600' : 'text-red-600'
-											}`}
+											className={`mt-2 text-xs font-semibold ${part.stock ? 'text-green-600' : 'text-red-600'
+												}`}
 										>
 											{part.stock ? 'In Stock' : 'Out of Stock'}
 										</div>
@@ -412,11 +413,10 @@ const SpareParts: React.FC = () => {
 						>
 							Our Bundles
 							<span
-								className={`absolute top-11 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
-									bundleTitle.isVisible
-										? 'scale-x-100 w-full'
-										: 'scale-x-0 w-full'
-								}`}
+								className={`absolute top-11 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${bundleTitle.isVisible
+									? 'scale-x-100 w-full'
+									: 'scale-x-0 w-full'
+									}`}
 							></span>
 						</span>
 					</h1>
@@ -506,11 +506,10 @@ const SpareParts: React.FC = () => {
 							<button
 								key={index}
 								onClick={() => setCurrentIndex(index)}
-								className={`w-3 h-3 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 ${
-									index === currentIndex
-										? 'bg-[#9b111e]'
-										: 'bg-gray-400 hover:bg-gray-500'
-								}`}
+								className={`w-3 h-3 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 ${index === currentIndex
+									? 'bg-[#9b111e]'
+									: 'bg-gray-400 hover:bg-gray-500'
+									}`}
 								aria-label={`Go to slide ${index + 1}`}
 							/>
 						))}
@@ -551,35 +550,35 @@ const SpareParts: React.FC = () => {
 				</div>
 			</div>
 
-			      <div className="max-w-full px-4 md:px-6 lg:px-8">
-        <h1 className="text-2xl font-bold text-[#9b111e] mb-8 text-center md:text-left">
-          BY CATEGORIES
-        </h1>
+			<div className="max-w-full px-4 md:px-6 lg:px-8">
+				<h1 className="text-2xl font-bold text-[#9b111e] mb-8 text-center md:text-left">
+					BY CATEGORIES
+				</h1>
 
-        <div className=" grid grid-cols-4 gap-6">
-      {categories.map(({ id, title, image, items }) => (
-        <div key={id} className="flex flex-col gap-4 p-6 border rounded-xl shadow-md">
-          <div className="flex justify-between items-center">
-            <h2 className="text-md font-bold uppercase text-[#9b111e]">{title}</h2>
-            <img src={spareImg} alt={title} className="w-16 h-16 object-contain" />
-          </div>
-          <ul className="space-y-1 text-sm">
-            {items.slice(0, 3).map((item,index) => (
-              <li key={index} className="hover:underline cursor-pointer">
-                {item}
-              </li>
-            ))}
-          </ul>
-          <Link 
-            to={`/spare-parts/category/${id}`}
-            className="text-sm font-semibold relative bottom-[1px] text-red-700 cursor-pointer hover:underline mt-1"
-          >
-            ALL CATEGORIES →
-          </Link>
-        </div>
-      ))}
-    </div>
-      </div>
+				<div className=" grid grid-cols-4 gap-6">
+					{categories.map(({ id, title, items }) => (
+						<div key={id} className="flex flex-col gap-4 p-6 border rounded-xl shadow-md">
+							<div className="flex justify-between items-center">
+								<h2 className="text-md font-bold uppercase text-[#9b111e]">{title}</h2>
+								<img src={spareImg} alt={title} className="w-16 h-16 object-contain" />
+							</div>
+							<ul className="space-y-1 text-sm">
+								{items.slice(0, 3).map((item, index) => (
+									<li key={index} className="hover:underline cursor-pointer">
+										{item}
+									</li>
+								))}
+							</ul>
+							<Link
+								to={`/spare-parts/category/${id}`}
+								className="text-sm font-semibold relative bottom-[1px] text-red-700 cursor-pointer hover:underline mt-1"
+							>
+								ALL CATEGORIES →
+							</Link>
+						</div>
+					))}
+				</div>
+			</div>
 
 
 			{/* Edit Product Modal */}

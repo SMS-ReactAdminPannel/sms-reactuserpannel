@@ -1,10 +1,10 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import type { ReactNode } from 'react';
-import { loginUser } from '../../features/auth';
+// import { loginUser } from '../../features/auth';
 
 type AuthContextType = {
 	isAuthenticated: boolean;
-	login: () => void;
+	login: (data: string) => void;
 	logout: () => void;
 };
 
@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		setIsAuthenticated(!!token);
 	}, []);
 
-	const login = async (data:string) => {
+	const login = (data: string) => {
 		try {
 			localStorage.setItem('authToken', data);
 			setIsAuthenticated(true);

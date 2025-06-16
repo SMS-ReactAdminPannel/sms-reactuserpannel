@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type React from 'react';
 import { useState, useEffect, useRef, useMemo } from 'react';
 import {
@@ -69,9 +70,11 @@ const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 		}
 		return () => {
 			if (elementRef.current) {
+				// eslint-disable-next-line react-hooks/exhaustive-deps
 				observer.unobserve(elementRef.current);
 			}
 		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return { elementRef, isVisible };
@@ -89,8 +92,8 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 
 	// Determine if it's a service or product order
 	const isService = order.type === 'service';
-	const items = isService ? order.services : order.products;
-	const firstItem = items?.[0];
+	// const items = isService ? order.services : order.products;
+	// const firstItem = items?.[0];
 
 	// Get name and description based on order type
 	const getName = () => {
@@ -108,133 +111,139 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 	};
 
 	const getPrice = () => {
-		return isService
-			? order.services?.reduce((sum, service) => sum + (service.price || 0), 0)
-			: order.products?.reduce(
-					(sum, product) => sum + parseInt(product.price) * product.quantity,
-					0
-			  );
+		if (isService) {
+			return order.services?.reduce(
+				(sum, service) => sum + (service?.price ?? 0),
+				0
+			) ?? 0;
+		} else {
+			return order.products?.reduce(
+				(sum, product) => sum + (parseInt(product?.price ?? '0') * (product?.quantity ?? 0)),
+				0
+			) ?? 0;
+		}
 	};
+
 
 
 	return (
 		<div className='opacity-90 rounded-2xl shadow-lg border max-w-6xl mx-auto border-red-800 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:border-red-700'>
-  <div className='flex flex-col'>
+			<div className='flex flex-col'>
 
-    {/* Top Section */}
-    <div className='flex flex-row'>
-      {/* Image Section */}
-      <div className='md:w-48 h-40 relative overflow-hidden rounded-lg shadow-md'>
-        <div className='w-full h-full bg-gray-100 flex items-center justify-center'>
-          <img
-            src={isService ? serviceImg : spareImg}
-            alt='order'
-            className='w-full h-full object-cover'
-          />
-        </div>
+				{/* Top Section */}
+				<div className='flex flex-row'>
+					{/* Image Section */}
+					<div className='md:w-48 h-40 relative overflow-hidden rounded-lg shadow-md'>
+						<div className='w-full h-full bg-gray-100 flex items-center justify-center'>
+							<img
+								src={isService ? serviceImg : spareImg}
+								alt='order'
+								className='w-full h-full object-cover'
+							/>
+						</div>
 
-        {/* Type Badge */}
-        <div className='absolute top-3 left-3 z-10'>
-          <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${isService ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'}`}>
-            {isService ? <><Wrench className='w-3 h-3 mr-1' />Service</> : <><Package className='w-3 h-3 mr-1' />Product</>}
-          </span>
-        </div>
-      </div>
+						{/* Type Badge */}
+						<div className='absolute top-3 left-3 z-10'>
+							<span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${isService ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'}`}>
+								{isService ? <><Wrench className='w-3 h-3 mr-1' />Service</> : <><Package className='w-3 h-3 mr-1' />Product</>}
+							</span>
+						</div>
+					</div>
 
-      {/* Content Section */}
-      <div className='flex-1 p-6'>
-        <div className='flex flex-col h-full justify-between'>
-          <div className='flex justify-between'>
-            {/* Name and Description */}
-            <div>
-              <h3 className='text-xl font-bold text-red-900 mb-1'>{getName()}</h3>
-              <p className='text-red-700 text-sm leading-relaxed'>{getDescription()}</p>
-              <div className='flex items-center text-sm text-red-700 mt-2'>
-                <Calendar className='w-4 h-4 text-red-800 mr-2' />
-                <span>{orderDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-              </div>
-            </div>
+					{/* Content Section */}
+					<div className='flex-1 p-6'>
+						<div className='flex flex-col h-full justify-between'>
+							<div className='flex justify-between'>
+								{/* Name and Description */}
+								<div>
+									<h3 className='text-xl font-bold text-red-900 mb-1'>{getName()}</h3>
+									<p className='text-red-700 text-sm leading-relaxed'>{getDescription()}</p>
+									<div className='flex items-center text-sm text-red-700 mt-2'>
+										<Calendar className='w-4 h-4 text-red-800 mr-2' />
+										<span>{orderDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+									</div>
+								</div>
 
-            {/* Price + Old Order */}
-            <div className='text-right'>
-              <div className='text-2xl font-bold text-gray-900'>₹{getPrice().toLocaleString()}</div>
-              {isOld && (
-                <span className='text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full mt-1 inline-block'>
-                  Old Order
-                </span>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
+								{/* Price + Old Order */}
+								<div className='text-right'>
+									<div className='text-2xl font-bold text-gray-900'>₹{getPrice().toLocaleString()}</div>
+									{isOld && (
+										<span className='text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full mt-1 inline-block'>
+											Old Order
+										</span>
+									)}
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 
-    {/* Actions Section */}
-    <div className='flex flex-col p-4 pt-2 gap-2'>
-      <div className='flex items-center justify-between'>
-        <div className='flex items-center space-x-4'>
-          {isCompleted ? (
-            <div className='flex items-center text-green-600 text-sm font-medium'>
-              <CheckCircle className='w-4 h-4 mr-1' />
-              Completed
-            </div>
-          ) : (
-            <div className='flex items-center text-orange-600 text-sm font-medium'>
-              <Clock className='w-4 h-4 mr-1' />
-              {order.status || 'Pending'}
-            </div>
-          )}
-        </div>
+				{/* Actions Section */}
+				<div className='flex flex-col p-4 pt-2 gap-2'>
+					<div className='flex items-center justify-between'>
+						<div className='flex items-center space-x-4'>
+							{isCompleted ? (
+								<div className='flex items-center text-green-600 text-sm font-medium'>
+									<CheckCircle className='w-4 h-4 mr-1' />
+									Completed
+								</div>
+							) : (
+								<div className='flex items-center text-orange-600 text-sm font-medium'>
+									<Clock className='w-4 h-4 mr-1' />
+									{order.status || 'Pending'}
+								</div>
+							)}
+						</div>
 
-        <button
-          onClick={() => setShowDetails(!showDetails)}
-          className='px-4 py-2 text-sm font-medium text-gray-700 bg-gray-300 rounded-lg hover:bg-gray-200 transition-colors'
-        >
-          {showDetails ? 'Hide Details' : 'View Details'}
-        </button>
-      </div>
+						<button
+							onClick={() => setShowDetails(!showDetails)}
+							className='px-4 py-2 text-sm font-medium text-gray-700 bg-gray-300 rounded-lg hover:bg-gray-200 transition-colors'
+						>
+							{showDetails ? 'Hide Details' : 'View Details'}
+						</button>
+					</div>
 
-      {/* Details Card */}
-      {showDetails && (
-        <div className='bg-[#FAF3EB] rounded-xl shadow p-6 border border-red-200 mt-4'>
-          <div className='flex  md:flex-row justify-between gap-6'>
+					{/* Details Card */}
+					{showDetails && (
+						<div className='bg-[#FAF3EB] rounded-xl shadow p-6 border border-red-200 mt-4'>
+							<div className='flex  md:flex-row justify-between gap-6'>
 
-            {/* Price Summary */}
-            <div className='md:w-1/2 space-y-2 ml-10'>
-              <h4 className='text-lg font-bold text-red-900 mb-2'>Price Summary</h4>
-              <p className='text-sm text-red-600'><span >Product</span><span className='pl-5'>:</span> {getName()}</p>
-              <p className='text-sm text-red-600'><span>Base Price</span><span className='pl-1'>:</span> ₹  {getPrice().toLocaleString()}</p>
-              <p className='text-sm text-red-600'><span>Tax (5%)</span><span className='pl-3'>:</span> ₹  {(getPrice() * 0.05).toFixed(2)}</p>
-              	<div className='border-t border-orange-200 pt-2 mb-2'>
-			  <p className='text-sm text-red-900 font-bold'><strong>Total<span className='pl-8'>:</span></strong> ₹  {(getPrice() * 1.05).toFixed(2)}</p>
-			  </div>
-            </div>
+								{/* Price Summary */}
+								<div className='md:w-1/2 space-y-2 ml-10'>
+									<h4 className='text-lg font-bold text-red-900 mb-2'>Price Summary</h4>
+									<p className='text-sm text-red-600'><span >Product</span><span className='pl-5'>:</span> {getName()}</p>
+									<p className='text-sm text-red-600'><span>Base Price</span><span className='pl-1'>:</span> ₹  {getPrice().toLocaleString()}</p>
+									<p className='text-sm text-red-600'><span>Tax (5%)</span><span className='pl-3'>:</span> ₹  {(getPrice() * 0.05).toFixed(2)}</p>
+									<div className='border-t border-orange-200 pt-2 mb-2'>
+										<p className='text-sm text-red-900 font-bold'><strong>Total<span className='pl-8'>:</span></strong> ₹  {(getPrice() * 1.05).toFixed(2)}</p>
+									</div>
+								</div>
 
-            {/* Order Info */}
-<div className='md:w-1/2 space-y-2 mr-30 border border-red-500 rounded-lg p-4'>
-  <h4 className='text-lg font-bold text-red-900 mb-2'>Order Info</h4>
-  <p className='text-sm text-red-600'><span>Status<span className='pl-11'>:</span></span> {order.status || "Pending"}</p>
-  <p className='text-sm text-red-600'><span>Order Type<span className='pl-3'>:</span></span> {isService ? "Service" : "Product"}</p>
-  <p className='text-sm text-red-600'>
-    <span>Placed On<span className='pl-5'>:</span></span>{" "}
-    {orderDate.toLocaleDateString("en-US", {
-      year: "numeric",
-      month: "long",
-      day: "numeric",
-    })}
-  </p>
-</div>
-
-
-          </div>
-        </div>
-      )}
+								{/* Order Info */}
+								<div className='md:w-1/2 space-y-2 mr-30 border border-red-500 rounded-lg p-4'>
+									<h4 className='text-lg font-bold text-red-900 mb-2'>Order Info</h4>
+									<p className='text-sm text-red-600'><span>Status<span className='pl-11'>:</span></span> {order.status || "Pending"}</p>
+									<p className='text-sm text-red-600'><span>Order Type<span className='pl-3'>:</span></span> {isService ? "Service" : "Product"}</p>
+									<p className='text-sm text-red-600'>
+										<span>Placed On<span className='pl-5'>:</span></span>{" "}
+										{orderDate.toLocaleDateString("en-US", {
+											year: "numeric",
+											month: "long",
+											day: "numeric",
+										})}
+									</p>
+								</div>
 
 
+							</div>
+						</div>
+					)}
 
-    </div>
-  </div>
-</div>
+
+
+				</div>
+			</div>
+		</div>
 
 	);
 };
@@ -323,14 +332,14 @@ const OrdersPage: React.FC = () => {
 		(order) => order.status === 'completed' || order.status === 'delivered'
 	).length;
 
-	// if (isLoading) {
-	// 	return (
-	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-	// 		</div>
-	// 	);
-	// }
+	if (isLoading) {
+		return (
+			<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
+				<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
+				<p className='text-red-500 text-lg font-semibold'>Loading...</p>
+			</div>
+		);
+	}
 
 	return (
 		<div
@@ -348,11 +357,10 @@ const OrdersPage: React.FC = () => {
 						<span className='inline-block pb-1 relative text-red-900 mb-2'>
 							My Orders
 							<span
-								className={`absolute top-14 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
-									orderTitle.isVisible
-										? 'scale-x-100 w-full'
-										: 'scale-x-0 w-full'
-								}`}
+								className={`absolute top-14 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${orderTitle.isVisible
+									? 'scale-x-100 w-full'
+									: 'scale-x-0 w-full'
+									}`}
 							></span>
 						</span>
 					</h1>
@@ -404,32 +412,29 @@ const OrdersPage: React.FC = () => {
 							<div className='flex bg-gray-100 rounded-xl p-1'>
 								<button
 									onClick={() => setFilterType('all')}
-									className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-										filterType === 'all'
-											? 'bg-red-900 text-white shadow-sm'
-											: 'text-gray-600 hover:text-gray-900'
-									}`}
+									className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${filterType === 'all'
+										? 'bg-red-900 text-white shadow-sm'
+										: 'text-gray-600 hover:text-gray-900'
+										}`}
 								>
 									All Orders
 								</button>
 								<button
 									onClick={() => setFilterType('spare')}
-									className={`px-4 py-2 rounded-lg  text-sm font-medium transition-all flex items-center ${
-										filterType === 'spare'
-											? 'bg-red-900 text-white  shadow-sm'
-											: 'text-gray-600 hover:text-gray-900'
-									}`}
+									className={`px-4 py-2 rounded-lg  text-sm font-medium transition-all flex items-center ${filterType === 'spare'
+										? 'bg-red-900 text-white  shadow-sm'
+										: 'text-gray-600 hover:text-gray-900'
+										}`}
 								>
 									<Package className='w-4 h-4 mr-1' />
 									Spare Parts
 								</button>
 								<button
 									onClick={() => setFilterType('service')}
-									className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${
-										filterType === 'service'
-											? 'bg-red-900 text-white  shadow-sm'
-											: 'text-gray-600 hover:text-gray-900'
-									}`}
+									className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${filterType === 'service'
+										? 'bg-red-900 text-white  shadow-sm'
+										: 'text-gray-600 hover:text-gray-900'
+										}`}
 								>
 									<Wrench className='w-4 h-4 mr-1' />
 									Services
