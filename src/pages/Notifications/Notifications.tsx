@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
@@ -16,6 +17,7 @@ type MailItem = {
 	unread: boolean;
 	recipient_type: string;
 	created_at: string;
+	is_read: boolean;
 };
 
 export default function GmailStyleInbox() {
@@ -31,18 +33,18 @@ export default function GmailStyleInbox() {
 			filter === 'all'
 				? true
 				: filter === 'unread'
-				? !mail.is_read
-				: mail.is_read
+					? !mail.is_read
+					: mail.is_read
 		);
 
 	const fetchAllNotifications = async () => {
 		try {
-			const response = await getAllNotifications({});
+			const response: any = await getAllNotifications({});
 			const data: MailItem[] = response?.data?.data || [];
 			const sortedData = data.sort(
 				(b, a) =>
 					new Date(b?.created_at).getTime() -
-					new Date(a?.created_date).getTime()
+					new Date(a?.created_at).getTime()
 			);
 			setMails(sortedData);
 			setIsLoading(false);
@@ -102,11 +104,10 @@ export default function GmailStyleInbox() {
 									setFilter(f as 'all' | 'unread' | 'read');
 									setSelectedMail(null);
 								}}
-								className={`block w-full text-left px-4 py-2 rounded-lg transition-all duration-200 ${
-									filter === f
-										? 'bg-[#9b111e] text-white'
-										: 'bg-transparent text-gray-700 hover:bg-gray-100'
-								}`}
+								className={`block w-full text-left px-4 py-2 rounded-lg transition-all duration-200 ${filter === f
+									? 'bg-[#9b111e] text-white'
+									: 'bg-transparent text-gray-700 hover:bg-gray-100'
+									}`}
 							>
 								{f.charAt(0).toUpperCase() + f.slice(1)}
 							</button>
@@ -121,11 +122,10 @@ export default function GmailStyleInbox() {
 							<div
 								key={index}
 								onClick={() => handleUpdateNotification(mail)}
-								className={`cursor-pointer flex gap-4 p-4  rounded-xl hover:bg-blue-50 transition duration-150 ${
-									mail.unread
-										? 'bg-gray-100 font-semibold'
-										: 'border border-gray-200'
-								}`}
+								className={`cursor-pointer flex gap-4 p-4  rounded-xl hover:bg-blue-50 transition duration-150 ${mail.unread
+									? 'bg-gray-100 font-semibold'
+									: 'border border-gray-200'
+									}`}
 							>
 								<div className='p-[1px] rounded-full bg-gradient-to-r from-red-600 to-red-800 inline-block'>
 									<img

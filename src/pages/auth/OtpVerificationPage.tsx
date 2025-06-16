@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useNavigate, Link } from 'react-router-dom';
 
 import AuthLayout from './AuthLayout';
@@ -62,7 +63,7 @@ const OtpVerificationPage = () => {
 
 		try {
 			clearErrors('otp');
-			const response = await verifyotp({
+			const response: any = await verifyotp({
 				otp: enteredOtp,
 				AuthToken: otpData?.token,
 			});
@@ -89,14 +90,14 @@ const OtpVerificationPage = () => {
 		}
 	};
 
-	// if (isLoading) {
-	// 	return (
-	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-	// 		</div>
-	// 	);
-	// }
+	if (isLoading) {
+		return (
+			<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
+				<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
+				<p className='text-red-500 text-lg font-semibold'>Loading...</p>
+			</div>
+		);
+	}
 
 	return (
 		<AuthLayout title='Verify OTP'>
@@ -114,7 +115,7 @@ const OtpVerificationPage = () => {
 								value={digit}
 								onChange={(e) => handleOtpChange(idx, e.target.value)}
 								onKeyDown={(e) => handleOtpKeyDown(e, idx)}
-								ref={(el) => (otpRefs.current[idx] = el)}
+								// ref={(el) => (otpRefs.current[idx] = el)}
 								className='w-10 h-12 text-center text-lg rounded-lg border border-[#d77c7c] bg-white/80 text-[#7c0c0c] focus:ring-2 focus:ring-[#9b111e]'
 							/>
 						))}

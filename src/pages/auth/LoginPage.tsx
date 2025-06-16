@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
@@ -31,13 +32,13 @@ const LoginPage = () => {
 
 		try {
 			setIsLoading(true);
-			const response = await loginUser(data);
+			const response: any = await loginUser(data);
 			if (response) {
 				login(response.data.data);
 				setIsLoading(false);
 				navigate('/');
 			} else {
-				setError(response?.message || 'Login failed. Please try again.');
+				setError(response?.data?.message || 'Login failed. Please try again.');
 			}
 		} catch (error) {
 			console.error('Login error:', error);
@@ -47,14 +48,14 @@ const LoginPage = () => {
 		}
 	};
 
-	// if (isLoading) {
-	// 	return (
-	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-	// 		</div>
-	// 	);
-	// }
+	if (isLoading) {
+		return (
+			<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
+				<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
+				<p className='text-red-500 text-lg font-semibold'>Loading...</p>
+			</div>
+		);
+	}
 
 	return (
 		<AuthLayout title='User Login'>
@@ -78,9 +79,8 @@ const LoginPage = () => {
 								message: 'Invalid email format',
 							},
 						})}
-						className={`w-full px-4 py-3 border text-gray-800 placeholder:text-[#9f3f3f] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9b111e] bg-white text-sm transition ${
-							errors.email ? 'border-red-500' : 'border-[#d77c7c]'
-						}`}
+						className={`w-full px-4 py-3 border text-gray-800 placeholder:text-[#9f3f3f] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9b111e] bg-white text-sm transition ${errors.email ? 'border-red-500' : 'border-[#d77c7c]'
+							}`}
 					/>
 					{errors.email && (
 						<span
@@ -112,9 +112,8 @@ const LoginPage = () => {
 										'Password must contain uppercase, lowercase, number, and special character',
 								},
 							})}
-							className={`w-full px-4 py-3 border text-gray-800 placeholder:text-[#9f3f3f] rounded-lg pr-10 focus:outline-none focus:ring-2 focus:ring-[#9b111e] bg-white text-sm ${
-								errors.password ? 'border-red-500' : 'border-[#d77c7c]'
-							}`}
+							className={`w-full px-4 py-3 border text-gray-800 placeholder:text-[#9f3f3f] rounded-lg pr-10 focus:outline-none focus:ring-2 focus:ring-[#9b111e] bg-white text-sm ${errors.password ? 'border-red-500' : 'border-[#d77c7c]'
+								}`}
 						/>
 						<span
 							className='absolute top-3 right-3 text-gray-600 cursor-pointer'

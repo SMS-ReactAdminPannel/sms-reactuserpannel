@@ -10,7 +10,6 @@ export const TabsList = ({ children }: { children: React.ReactNode }) => {
 
 export const TabsTrigger = ({
   children,
-  value,
   isActive,
   onClick,
   className = "",
@@ -24,9 +23,8 @@ export const TabsTrigger = ({
   return (
     <button
       onClick={onClick}
-      className={`px-4 py-2 font-medium ${
-        isActive ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-600"
-      } ${className}`}
+      className={`px-4 py-2 font-medium ${isActive ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-600"
+        } ${className}`}
     >
       {children}
     </button>

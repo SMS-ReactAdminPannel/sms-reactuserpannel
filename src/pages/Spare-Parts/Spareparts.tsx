@@ -1,11 +1,18 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect, useRef } from 'react';
 import { ShoppingCart } from 'lucide-react';
 import { Search, X } from 'lucide-react';
+
 import {
 	getSparePartsData,
 	postSparePartsData,
 } from '../../features/spareparts';
 import spareimg from '../../assets/CAR DIFFERENTIAL/Car differential.jpg';
+import { FONTS } from '../../constants/constant';
+// import { SiTicktick } from 'react-icons/si';
+import { Link } from 'react-router-dom';
+import spareImg from '../../assets/CarPart1.jfif'
+
 
 interface SparePart {
 	id: string;
@@ -44,9 +51,11 @@ const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 
 		return () => {
 			if (elementRef.current) {
+				// eslint-disable-next-line react-hooks/exhaustive-deps
 				observer.unobserve(elementRef.current);
 			}
 		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return { elementRef, isVisible };
@@ -68,17 +77,19 @@ const SpareParts: React.FC = () => {
 		}[]
 	>([]);
 
-	const [showAllProducts, setShowAllProducts] = useState(false); //product page cards
+	const [showAllProducts, setShowAllProducts] = useState(false);
 
-	// Add loading and error states
+	// const {CategoryData} = useSparePartsDataset;
 
-	const [error, setError] = useState<string | null>(null);
+
+	// const [error, setError] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 
 	const fetchSpareParts = async () => {
 		try {
-			setError(null);
-			const response = await getSparePartsData({});
+			// setError(null);
+			const response: any = await getSparePartsData({});
+			console.log(response)
 			if (response && response.data && response.data.data) {
 				if (Array.isArray(response.data.data)) {
 					const validatedParts = response.data.data.map((part: any) => {
@@ -110,9 +121,9 @@ const SpareParts: React.FC = () => {
 			}
 		} catch (error) {
 			console.error('Error fetching spare parts:', error);
-			setError(
-				error instanceof Error ? error.message : 'Failed to fetch spare parts'
-			);
+			// setError(
+			// 	error instanceof Error ? error.message : 'Failed to fetch spare parts'
+			// );
 			setParts([]);
 			setCategories([]);
 		} finally {
@@ -142,6 +153,7 @@ const SpareParts: React.FC = () => {
 
 	useEffect(() => {
 		fetchSpareParts();
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const handleTouchStart = (e: React.TouchEvent): void => {
@@ -200,26 +212,28 @@ const SpareParts: React.FC = () => {
 	const offerTitle = useScrollAnimation<HTMLHeadingElement>();
 	const productTitle = useScrollAnimation<HTMLHeadingElement>();
 	const bundleTitle = useScrollAnimation<HTMLHeadingElement>();
-	const categoryTitle = useScrollAnimation<HTMLHeadingElement>();
+	// const categoryTitle = useScrollAnimation<HTMLHeadingElement>();
 
-	// if (isLoading) {
-	// 	return (
-	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-	// 		</div>
-	// 	);
-	// }
+	if (isLoading) {
+		return (
+			<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
+				<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
+				<p className='text-red-500 text-lg font-semibold'>Loading...</p>
+			</div>
+		);
+	}
 
 	return (
-		<div className='p-12 mx-8 '>
+		<div className='p-12 mx-8'>
 			<h1 className='text-center' ref={offerTitle.elementRef}>
-				<span className='inline-block pb-1 relative text-4xl font-bold text-[#9b111e] mb-2'>
-					My Orders
+				<span
+					className='inline-block pb-1 relative text-[#9b111e] mb-2'
+					style={{ ...FONTS.heading }}
+				>
+					Spare Parts
 					<span
-						className={`absolute top-12 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
-							offerTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
-						}`}
+						className={`absolute top-14 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${offerTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
+							}`}
 					></span>
 				</span>
 			</h1>
@@ -252,7 +266,10 @@ const SpareParts: React.FC = () => {
 			<div className='mb-8 w-full bg-gray-100 rounded-xl shadow p-4 md:p-6 flex flex-row lg:flex-row items-center gap-6 hover:shadow-lg transition-shadow duration-300 h-[280px]'>
 				{/* Content - Left Side */}
 				<div className='flex-1 order-none lg:order-none'>
-					<h2 className='text-2xl md:text-3xl font-bold text-[#9b111e] mb-3 md:mb-4'>
+					<h2
+						className='text-[#9b111e] mb-3 md:mb-4'
+						style={{ ...FONTS.sub_heading }}
+					>
 						Welcome to Auto Spare Hub
 					</h2>
 					<p className='text-gray-700 mb-3 text-sm md:text-base'>
@@ -273,12 +290,14 @@ const SpareParts: React.FC = () => {
 			</div>
 
 			<h1 className='text-center' ref={productTitle.elementRef}>
-				<span className='inline-block pb-1 relative text-4xl font-bold text-[#9b111e] mb-10'>
+				<span
+					className='inline-block pb-1 relative text-[#9b111e] mb-10'
+					style={{ ...FONTS.heading }}
+				>
 					Products
 					<span
-						className={`absolute top-11 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
-							productTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
-						}`}
+						className={`absolute top-12 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${productTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
+							}`}
 					></span>
 				</span>
 			</h1>
@@ -323,7 +342,7 @@ const SpareParts: React.FC = () => {
 										/>
 									</div>
 									<div className='p-6 px-6 relative'>
-										<div className='text-xl font-bold line-clamp-2 mb-1'>
+										<div className='text-xl font-semibold line-clamp-2 mb-1'>
 											{part.spareparts_name}
 										</div>
 										<div className='text-md text-gray-600 mb-1'>
@@ -333,9 +352,8 @@ const SpareParts: React.FC = () => {
 											₹{part.price.toLocaleString()}
 										</div>
 										<div
-											className={`mt-2 text-xs font-semibold ${
-												part.stock ? 'text-green-600' : 'text-red-600'
-											}`}
+											className={`mt-2 text-xs font-semibold ${part.stock ? 'text-green-600' : 'text-red-600'
+												}`}
 										>
 											{part.stock ? 'In Stock' : 'Out of Stock'}
 										</div>
@@ -389,14 +407,16 @@ const SpareParts: React.FC = () => {
 			{parts.length > 0 && (
 				<div className='bg-gray-100 mt-16 transition-shadow p-8'>
 					<h1 className='text-center' ref={bundleTitle.elementRef}>
-						<span className='inline-block pb-1 relative text-4xl font-bold text-[#9b111e] mb-2'>
+						<span
+							className='inline-block pb-1 relative text-[#9b111e] mb-2'
+							style={{ ...FONTS.heading }}
+						>
 							Our Bundles
 							<span
-								className={`absolute top-11 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
-									bundleTitle.isVisible
-										? 'scale-x-100 w-full'
-										: 'scale-x-0 w-full'
-								}`}
+								className={`absolute top-11 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${bundleTitle.isVisible
+									? 'scale-x-100 w-full'
+									: 'scale-x-0 w-full'
+									}`}
 							></span>
 						</span>
 					</h1>
@@ -414,7 +434,7 @@ const SpareParts: React.FC = () => {
 							{[...parts.slice(-3), ...parts, ...parts.slice(0, 3)].map(
 								(part, index) => (
 									<div
-										key={`${part.id}-${index}`} // Unique key for cloned items
+										key={`${part.id}-${index}`}
 										className='min-w-[300px] flex-shrink-0 mr-5'
 									>
 										<div className='bg-gradient-to-br rounded-lg p-6 text-center text-white h-64 flex flex-col justify-center items-center shadow-2xl transition-transform duration-300 hover:-translate-y-2 cursor-pointer relative overflow-hidden'>
@@ -437,7 +457,7 @@ const SpareParts: React.FC = () => {
 														}}
 													/>
 												</div>
-												<div className='text-xl font-bold mb-2'>
+												<div className='text-xl font-semibold mb-2'>
 													{part.spareparts_name}
 												</div>
 											</div>
@@ -486,11 +506,10 @@ const SpareParts: React.FC = () => {
 							<button
 								key={index}
 								onClick={() => setCurrentIndex(index)}
-								className={`w-3 h-3 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 ${
-									index === currentIndex
-										? 'bg-[#9b111e]'
-										: 'bg-gray-400 hover:bg-gray-500'
-								}`}
+								className={`w-3 h-3 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 ${index === currentIndex
+									? 'bg-[#9b111e]'
+									: 'bg-gray-400 hover:bg-gray-500'
+									}`}
 								aria-label={`Go to slide ${index + 1}`}
 							/>
 						))}
@@ -501,10 +520,10 @@ const SpareParts: React.FC = () => {
 			{/* Bottom Full Width Section */}
 			<div className='w-full py-12 px-6 flex flex-col-2 lg:flex-row items-center gap-8'>
 				<div className='flex-1 max-w-2xl lg:order-1'>
-					<h2 className='text-4xl font-bold text-[#9b111e] mb-6'>
+					<h2 className='text-[#9b111e] mb-6' style={{ ...FONTS.sub_heading }}>
 						Professional Auto Service & Support
 					</h2>
-					<p className='text-gray-700 mb-6 text-lg leading-relaxed'>
+					<p className='text-gray-700 mb-6 text-sm leading-relaxed'>
 						Need help installing your spare parts? Our certified technicians
 						provide expert installation services and comprehensive support. We
 						ensure your vehicle gets the best care with genuine parts and
@@ -531,54 +550,36 @@ const SpareParts: React.FC = () => {
 				</div>
 			</div>
 
-			<div className='max-w-full px-4 md:px-6 lg:px-8 bg-[#fae9eb] py-6'>
-				<h1 className='text-center' ref={categoryTitle.elementRef}>
-					<span className='inline-block pb-1 relative text-4xl font-bold text-[#9b111e] mb-10'>
-						By Categories
-						<span
-							className={`absolute top-12 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
-								categoryTitle.isVisible
-									? 'scale-x-100 w-full'
-									: 'scale-x-0 w-full'
-							}`}
-						></span>
-					</span>
+			<div className="max-w-full px-4 md:px-6 lg:px-8">
+				<h1 className="text-2xl font-bold text-[#9b111e] mb-8 text-center md:text-left">
+					BY CATEGORIES
 				</h1>
 
-				<div className='grid grid-cols-4 sm:grid-cols-2 mdplus:grid-cols-2 lg:grid-cols-4 gap-6 '>
-					{categories.map(({ id, title, image, items }) => (
-						<div
-							key={id}
-							className='flex flex-col gap-4 p-6 border rounded-xl shadow-md bg-[#efe7d0]'
-						>
-							<div className='flex justify-between items-center'>
-								<h2 className='text-md font-bold text-[#9b111e] '>{title}</h2>
-								<img
-									src={image}
-									alt={title}
-									className='w-30 h-20 object-contain ml-2 rounded-md shadow-sm '
-									onError={(e) => {
-										(e.target as HTMLImageElement).src = spareimg;
-									}}
-								/>
+				<div className=" grid grid-cols-4 gap-6">
+					{categories.map(({ id, title, items }) => (
+						<div key={id} className="flex flex-col gap-4 p-6 border rounded-xl shadow-md">
+							<div className="flex justify-between items-center">
+								<h2 className="text-md font-bold uppercase text-[#9b111e]">{title}</h2>
+								<img src={spareImg} alt={title} className="w-16 h-16 object-contain" />
 							</div>
-							<ul className='space-y-1 text-sm'>
-								{items.slice(0, 5).map((item, idx) => (
-									<li
-										key={`${id}-${idx}`}
-										className='hover:underline cursor-pointer'
-									>
+							<ul className="space-y-1 text-sm">
+								{items.slice(0, 3).map((item, index) => (
+									<li key={index} className="hover:underline cursor-pointer">
 										{item}
 									</li>
 								))}
 							</ul>
-							<span className='text-sm font-semibold text-red-700 cursor-pointer hover:underline mt-2'>
+							<Link
+								to={`/spare-parts/category/${id}`}
+								className="text-sm font-semibold relative bottom-[1px] text-red-700 cursor-pointer hover:underline mt-1"
+							>
 								ALL CATEGORIES →
-							</span>
+							</Link>
 						</div>
 					))}
 				</div>
 			</div>
+
 
 			{/* Edit Product Modal */}
 			{selectedPart && (

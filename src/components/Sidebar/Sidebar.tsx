@@ -10,8 +10,8 @@ import {
 	FiSettings,
 	FiAlertTriangle,
 } from 'react-icons/fi';
-import Logo from '../../assets/LOGO.jpg';
-import { RiMenu2Line, RiMenu3Line } from 'react-icons/ri';
+// import Logo from '../../assets/LOGO.jpg';
+// import { RiMenu2Line, RiMenu3Line } from 'react-icons/ri';
 import { Megaphone } from 'lucide-react';
 
 const COLOR = {
@@ -22,7 +22,6 @@ const COLOR = {
 
 export const Sidebar = ({
 	isOpen,
-	setIsOpen,
 }: {
 	isOpen: boolean;
 	setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
@@ -125,9 +124,8 @@ export const Sidebar = ({
 				</nav>
 			</div>
 			<div
-				className={`transition-all duration-300 ${
-					isOpen ? 'ml-48' : 'ml-16'
-				} flex-1`}
+				className={`transition-all duration-300 ${isOpen ? 'ml-48' : 'ml-16'
+					} flex-1`}
 			></div>
 		</div>
 	);
@@ -151,8 +149,8 @@ const SidebarLink = ({
 	const backgroundColor = isActive
 		? COLOR.primary
 		: isHovered
-		? COLOR.bgColor
-		: 'transparent';
+			? COLOR.bgColor
+			: 'transparent';
 
 	const textColor = isActive ? COLOR.bgColor : COLOR.primary;
 

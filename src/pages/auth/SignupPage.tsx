@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
@@ -28,7 +29,7 @@ const SignupPage = () => {
 	const onSubmit = async (data: SignupFormData) => {
 		const { email, phone, password } = data;
 		try {
-			const response = await signUp({ email, phone, password });
+			const response: any = await signUp({ email, phone, password });
 			if (response) {
 				localStorage.setItem(
 					'otpData',
@@ -49,14 +50,14 @@ const SignupPage = () => {
 
 	const password = watch('password');
 
-	// if (isLoading) {
-	// 	return (
-	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-	// 		</div>
-	// 	);
-	// }
+	if (isLoading) {
+		return (
+			<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
+				<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
+				<p className='text-red-500 text-lg font-semibold'>Loading...</p>
+			</div>
+		);
+	}
 
 	return (
 		<AuthLayout title='Sign Up'>
@@ -76,9 +77,8 @@ const SignupPage = () => {
 								message: 'Enter a valid 10-digit Indian phone number',
 							},
 						})}
-						className={`w-full px-4 py-3 border text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9b111e] bg-white text-sm ${
-							errors.phone ? 'border-red-500' : 'border-[#d77c7c]'
-						}`}
+						className={`w-full px-4 py-3 border text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9b111e] bg-white text-sm ${errors.phone ? 'border-red-500' : 'border-[#d77c7c]'
+							}`}
 					/>
 					{errors.phone && (
 						<span className='text-xs text-red-600'>{errors.phone.message}</span>
@@ -100,9 +100,8 @@ const SignupPage = () => {
 								message: 'Invalid email format',
 							},
 						})}
-						className={`w-full px-4 py-3 border text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9b111e] bg-white text-sm ${
-							errors.email ? 'border-red-500' : 'border-[#d77c7c]'
-						}`}
+						className={`w-full px-4 py-3 border text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9b111e] bg-white text-sm ${errors.email ? 'border-red-500' : 'border-[#d77c7c]'
+							}`}
 					/>
 					{errors.email && (
 						<span className='text-xs text-red-600'>{errors.email.message}</span>
@@ -128,9 +127,8 @@ const SignupPage = () => {
 										'Must include uppercase, lowercase, number, special char',
 								},
 							})}
-							className={`w-full px-4 py-3 pr-10 border text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9b111e] bg-white text-sm ${
-								errors.password ? 'border-red-500' : 'border-[#d77c7c]'
-							}`}
+							className={`w-full px-4 py-3 pr-10 border text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9b111e] bg-white text-sm ${errors.password ? 'border-red-500' : 'border-[#d77c7c]'
+								}`}
 						/>
 						<span
 							className='absolute top-3 right-3 cursor-pointer'
@@ -164,9 +162,8 @@ const SignupPage = () => {
 								validate: (value) =>
 									value === password || 'Passwords do not match',
 							})}
-							className={`w-full px-4 py-3 pr-10 border text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9b111e] bg-white text-sm ${
-								errors.confirmPassword ? 'border-red-500' : 'border-[#d77c7c]'
-							}`}
+							className={`w-full px-4 py-3 pr-10 border text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9b111e] bg-white text-sm ${errors.confirmPassword ? 'border-red-500' : 'border-[#d77c7c]'
+								}`}
 						/>
 						<span
 							className='absolute top-3 right-3 cursor-pointer'

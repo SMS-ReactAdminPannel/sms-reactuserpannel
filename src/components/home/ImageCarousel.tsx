@@ -30,7 +30,7 @@ export const ImageCarousel: React.FC<CarouselProps> = ({
 	return (
 		<div className='relative w-full mx-auto overflow-hidden shadow-lg'>
 			{/* Image container */}
-			<div className='w-full h-[410px] md:h-96'>
+			<div className='w-full h-[445px] md:h-96'>
 				<img
 					src={images[current]}
 					alt={`Slide ${current}`}

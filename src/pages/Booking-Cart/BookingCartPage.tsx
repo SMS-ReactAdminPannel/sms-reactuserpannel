@@ -1,25 +1,30 @@
-import { useState, useMemo, useEffect } from 'react';
-import { X, Plus, Minus, Wrench, Car } from 'lucide-react';
-import serviceImg from '../../assets/serviceimages/generalservice.png';
-import bgImage from '../../assets/checkout-bg_1_.png';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useEffect, useState, useRef } from 'react';
+import { Wrench, Car } from 'lucide-react';
+import {
+	booking_cart,
+	postBookingProduct,
+} from '../../features/BookingCart/service';
 import { toast } from 'react-toastify';
-import { COLORS, FONTS } from '../../constants/constant';
-import { booking_cart } from '../../features/BookingCart/service';
+import bgImage from '../../assets/checkout-bg_1_.png';
+import { postBookingService } from '../../features/Bookings/service';
+import { FONTS } from '../../constants/constant';
 
-interface SparePart {
-	id: string;
-	name: string;
-	description: string;
-	imageUrl: string;
-	inStock: boolean;
-	price: number;
+interface spare {
 	discount: number;
-	originalPrice: number;
-	compatibility: string;
+	_id: number;
+	productName: string;
+	price: number;
+	brand: string;
+	image: string;
+	quantity: number;
 	category: string;
+	description: string;
+	stock: number;
 }
 
 interface service {
+	discount: number;
 	_id: number;
 	service_name: string;
 	price: number;
@@ -28,91 +33,57 @@ interface service {
 	is_active: boolean;
 }
 
-const initialParts: SparePart[] = [
-	{
-		id: '1',
-		name: 'Brake Pad Set',
-		description: 'High-quality ceramic brake pads for safe and smooth braking.',
-		imageUrl:
-			'https://boodmo.com/media/cache/catalog_part/images/parts/3fe3e3713e19d66a47bae04233a97cf4.webp',
-		inStock: true,
-		price: 1899,
-		discount: 20,
-		originalPrice: 2399,
-		compatibility: 'Maruti Swift, Baleno',
-		category: 'Brakes',
-	},
-	{
-		id: '2',
-		name: 'Air Filter Element',
-		description:
-			'Durable air filter ensuring clean air intake and better mileage.',
-		imageUrl:
-			'https://boodmo.com/media/cache/catalog_part/images/parts/3fe3e3713e19d66a47bae04233a97cf4.webp',
-		inStock: true,
-		price: 499,
-		discount: 10,
-		originalPrice: 549,
-		compatibility: 'Hyundai i20, Creta',
-		category: 'Filters',
-	},
-	{
-		id: '3',
-		name: 'Engine Oil 5W-30 (3L)',
-		description: 'Premium synthetic oil for high-performance engines.',
-		imageUrl:
-			'https://boodmo.com/media/cache/catalog_part/images/parts/9fd50e122693b3b0e4ae4ee3724ca1b2.webp',
-		inStock: false,
-		price: 1299,
-		discount: 15,
-		originalPrice: 1529,
-		compatibility: 'Honda City, Amaze',
-		category: 'Oils',
-	},
-	{
-		id: '4',
-		name: 'Headlight Assembly',
-		description: 'Complete headlamp assembly with long-lasting brightness.',
-		imageUrl:
-			'https://boodmo.com/media/cache/catalog_part/images/parts/a808aff9788f47721e361dbf0d10bba8.webp',
-		inStock: true,
-		price: 3499,
-		discount: 25,
-		originalPrice: 4699,
-		compatibility: 'Tata Nexon, Harrier',
-		category: 'Lights',
-	},
-	{
-		id: '5',
-		name: 'Wiper Blade Set',
-		description: 'All-weather wiper blades with streak-free performance.',
-		imageUrl:
-			'https://boodmo.com/media/cache/catalog_part/images/parts/7371bac93f3021909d987178c1b3ffdc.webp',
-		inStock: true,
-		price: 799,
-		discount: 12,
-		originalPrice: 899,
-		compatibility: 'Toyota Innova, Fortuner',
-		category: 'Accessories',
-	},
-];
+const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
+	options = {}
+) => {
+	const [isVisible, setIsVisible] = useState(false);
+	const elementRef = useRef<T>(null);
 
+	useEffect(() => {
+		const observer = new IntersectionObserver(
+			([entry]) => {
+				setIsVisible(entry.isIntersecting);
+			},
+			{
+				threshold: 0.1,
+				rootMargin: '0px 0px -50px 0px',
+				...options,
+			}
+		);
+
+		if (elementRef.current) {
+			observer.observe(elementRef.current);
+		}
+
+		return () => {
+			if (elementRef.current) {
+				// eslint-disable-next-line react-hooks/exhaustive-deps
+				observer.unobserve(elementRef.current);
+			}
+		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, []);
+
+	return { elementRef, isVisible };
+};
+
+// Main Component
 export default function SparePartsCart() {
 	const [books, setBooks] = useState<spare[]>([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const [activeTab, setActiveTab] = useState<'service' | 'ServiceBookingPage'>(
 		'service'
 	);
-
+	const cartTitle = useScrollAnimation<HTMLHeadingElement>();
 	const [services, setServices] = useState<service[]>([]);
-	const [confirmedPartOrders, setConfirmedPartOrders] = useState<
-		{ part: spare; quantity: number }[]
-	>([]);
-	const [confirmedServiceOrders, setConfirmedServiceOrders] = useState<
-		{ serv: service; quantity: number }[]
-	>([]);
-	const [showSummary, setShowSummary] = useState(false);
-	const [showsSummary, setShowsSummary] = useState(false);
+	// const [confirmedPartOrders, setConfirmedPartOrders] = useState<
+	// 	{ part: spare; quantity: number }[]
+	// >([]);
+	// const [confirmedServiceOrders, setConfirmedServiceOrders] = useState<
+	// 	{ serv: service; quantity: number }[]
+	// >([]);
+	// const [showSummary, setShowSummary] = useState(false);
+	// const [showsSummary, setShowsSummary] = useState(false);
 	const [cartId, setCartId] = useState<string>('');
 	const [serviceId, setServiceCartId] = useState<string>('');
 	const totalPartPrice = books.reduce(
@@ -124,8 +95,7 @@ export default function SparePartsCart() {
 
 	const books_valid = async () => {
 		try {
-			const response = await booking_cart({});
-			console.log('Booking Cart :', response);
+			const response: any = await booking_cart({});
 			if (response) {
 				setIsLoading(false);
 			}
@@ -149,6 +119,7 @@ export default function SparePartsCart() {
 						category: product.productId?.category || '',
 						description: product.productId?.description || '',
 						stock: Number(product.productId?.stock) || 0,
+						discount: 0
 					})
 				);
 				setBooks(spares);
@@ -167,6 +138,7 @@ export default function SparePartsCart() {
 						description: service.description || '',
 						image: service.productId?.image || bgImage,
 						is_active: service.productId?.stock || true,
+						discount: 0
 					})
 				);
 				setServices(mappedServices);
@@ -183,14 +155,14 @@ export default function SparePartsCart() {
 		setActiveTab('ServiceBookingPage');
 	}, []);
 
-	// if (isLoading) {
-	// 	return (
-	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-	// 		</div>
-	// 	);
-	// }
+	if (isLoading) {
+		return (
+			<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
+				<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
+				<p className='text-red-500 text-lg font-semibold'>Loading...</p>
+			</div>
+		);
+	}
 
 	// handle Place Order function
 	const placeOrder = async () => {
@@ -202,9 +174,9 @@ export default function SparePartsCart() {
 			const response = await postBookingProduct(payload);
 			if (response) {
 				toast.success('Order placed successfully!', { autoClose: 2000 });
-				setConfirmedPartOrders([]);
+				// setConfirmedPartOrders([]);
 			}
-		} catch (error) {
+		} catch (error: any) {
 			console.error('Order placement error:', {
 				error: error.message,
 				response: error.response?.data,
@@ -224,9 +196,9 @@ export default function SparePartsCart() {
 			const response = await postBookingService(payload);
 			if (response) {
 				toast.success('Order placed successfully!', { autoClose: 2000 });
-				setConfirmedPartOrders([]);
+				// setConfirmedPartOrders([]);
 			}
-		} catch (error) {
+		} catch (error: any) {
 			console.error('Order placement error:', error);
 			toast.error(error.response?.data?.message || 'Failed to place order');
 		} finally {
@@ -234,21 +206,21 @@ export default function SparePartsCart() {
 		}
 	};
 
-	const handleConfirmPart = (product_id: number, quantity: number) => {
-		const part = books.find((p) => p._id === product_id);
-		if (part) {
-			setConfirmedPartOrders((prev) => [...prev, { part, quantity }]);
-			setShowSummary(true);
-		}
-	};
+	// const handleConfirmPart = (product_id: number, quantity: number) => {
+	// 	const part = books.find((p) => p._id === product_id);
+	// 	if (part) {
+	// 		setConfirmedPartOrders((prev) => [...prev, { part, quantity }]);
+	// 		setShowSummary(true);
+	// 	}
+	// };
 
-	const handleConfirmService = (serviceId: number, quantity: number) => {
-		const serv = services.find((s) => s._id === serviceId);
-		if (serv) {
-			setConfirmedServiceOrders((prev) => [...prev, { serv, quantity }]);
-			setShowsSummary(true);
-		}
-	};
+	// const handleConfirmService = (serviceId: number, quantity: number) => {
+	// 	const serv = services.find((s) => s._id === serviceId);
+	// 	if (serv) {
+	// 		setConfirmedServiceOrders((prev) => [...prev, { serv, quantity }]);
+	// 		setShowsSummary(true);
+	// 	}
+	// };
 
 	const handleDelete = (id: number) => {
 		setBooks((prev) => prev.filter((p) => p._id !== id));
@@ -259,7 +231,7 @@ export default function SparePartsCart() {
 	const filteredServices = services;
 
 	const SparePartCard = ({ part }: { part: spare }) => {
-		const [quantity, setQuantity] = useState(part.quantity || 1);
+		const quantity: number = part.quantity || 1
 
 		return (
 			<div className='border rounded-lg h-[190px] shadow max-w-xl mx-left p-4 mb-6 bg-white hover:shadow-md transition duration-300'>
@@ -283,11 +255,10 @@ export default function SparePartsCart() {
 
 					<div className='flex-1 flex flex-col justify-between'>
 						<div
-							className={`relative left-[325px] text-xs px-2 w-[60px] py-0.5 rounded font-medium ${
-								part.stock
-									? 'bg-green-100 text-green-700'
-									: 'bg-red-700 text-white'
-							}`}
+							className={`relative left-[325px] text-xs px-2 w-[60px] py-0.5 rounded font-medium ${part.stock
+								? 'bg-green-100 text-green-700'
+								: 'bg-red-700 text-white'
+								}`}
 						>
 							{part.stock ? 'In Stock' : 'Out of Stock'}
 						</div>
@@ -333,7 +304,7 @@ export default function SparePartsCart() {
 		);
 	};
 	const ServiceCard = ({ serv }: { serv: service }) => {
-		const [quantity, setQuantity] = useState(1);
+		// const [quantity, setQuantity] = useState(1);
 
 		return (
 			<div className='border rounded-lg h-[190px] shadow max-w-xl mx-left p-4 mb-6 bg-white hover:shadow-md transition duration-300'>
@@ -357,11 +328,10 @@ export default function SparePartsCart() {
 
 					<div className='flex-1 flex flex-col justify-between'>
 						<span
-							className={`relative left-[325px] text-xs px-2 w-[65px] py-0.5 rounded font-medium ${
-								serv.is_active
-									? 'bg-green-100 text-green-700'
-									: 'bg-red-700 text-white'
-							}`}
+							className={`relative left-[325px] text-xs px-2 w-[65px] py-0.5 rounded font-medium ${serv.is_active
+								? 'bg-green-100 text-green-700'
+								: 'bg-red-700 text-white'
+								}`}
 						>
 							{serv.is_active ? 'Available' : 'Not Available'}
 						</span>
@@ -402,21 +372,32 @@ export default function SparePartsCart() {
 
 	return (
 		<div
-			className='min-h-screen bg-gray-50 p-4 '
-			style={{ backgroundImage: `url("${bgImage}")` }}
+			className='min-h-screen p-6 bg-gray-100'
+			style={{ backgroundImage: `url(${bgImage})` }}
 		>
 			<div className='max-w-7xl mx-auto'>
 				{/* Header */}
-				<h1 className='text-3xl font-bold text-[#9b111e] mb-6'>My Cart</h1>
+				<h1
+					ref={cartTitle.elementRef}
+					className='text-center'
+					style={{ ...FONTS.heading }}
+				>
+					<span className='inline-block pb-1 relative text-[#9b111e] mb-6'>
+						My Cart
+						<span
+							className={`absolute top-14 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${cartTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
+								}`}
+						></span>
+					</span>
+				</h1>
 
 				{/* Tabs */}
 				<div className='mb-6 ml-[65px]'>
 					<div className='relative inline-flex p-1 bg-[#FAF3EB] rounded-full border border-gray-300'>
 						<button
 							onClick={() => setActiveTab('service')}
-							className={`px-6 py-3 rounded-full flex items-center gap-2 z-10 transition-colors duration-300 ${
-								activeTab === 'service' ? 'text-white' : 'text-black '
-							}`}
+							className={`px-6 py-3 rounded-full flex items-center gap-2 z-10 transition-colors duration-300 ${activeTab === 'service' ? 'text-white' : 'text-black '
+								}`}
 						>
 							<Wrench className='text-lg' />
 							SparePart Orders
@@ -424,23 +405,20 @@ export default function SparePartsCart() {
 
 						<button
 							onClick={() => setActiveTab('ServiceBookingPage')}
-							className={`px-6 py-3 rounded-full flex items-center gap-2 z-10 transition-colors duration-300 ${
-								activeTab === 'ServiceBookingPage'
-									? 'text-white'
-									: 'text-black '
-							}`}
+							className={`px-6 py-3 rounded-full flex items-center gap-2 z-10 transition-colors duration-300 ${activeTab === 'ServiceBookingPage'
+								? 'text-white'
+								: 'text-black '
+								}`}
 						>
 							<Car className='text-xl' />
 							Service Order
 						</button>
-
 						{/* Animated indicator with smooth sliding */}
 						<div
-							className={`absolute inset-y-1 h-[calc(100%-0.5rem)] bg-[#9b111e] rounded-full shadow-md transition-all duration-300 ease-in-out ${
-								activeTab === 'service'
-									? 'left-1 w-[calc(50%-0.25rem)]'
-									: 'left-[calc(50%+0.25rem)] w-[calc(50%-0.25rem)]'
-							}`}
+							className={`absolute inset-y-1 h-[calc(100%-0.5rem)] bg-[#9b111e] rounded-full shadow-md transition-all duration-300 ease-in-out ${activeTab === 'service'
+								? 'left-1 w-[calc(50%-0.25rem)]'
+								: 'left-[calc(50%+0.25rem)] w-[calc(50%-0.25rem)]'
+								}`}
 						/>
 					</div>
 				</div>
@@ -472,8 +450,8 @@ export default function SparePartsCart() {
 							<div>
 								{filteredServices.length > 0 ? (
 									<div className='space-y-4'>
-										{filteredServices.map((service) => (
-											<ServiceCard key={service.id} service={service} />
+										{filteredServices.map((serv) => (
+											<ServiceCard key={serv._id} serv={serv} />
 										))}
 									</div>
 								) : (
@@ -488,7 +466,7 @@ export default function SparePartsCart() {
 					</div>
 
 					{/* Summary Sidebar */}
-					<div className=' fixed w-[500px] ml-[80px] left-1/2 '>
+					<div className=' fixed w-[520px] ml-[50px] left-1/2'>
 						{/* Parts Summary */}
 						{books.length > 0 && activeTab === 'service' && (
 							<div className='bg-white rounded-lg shadow-md p-4 mb-6  '>
@@ -522,7 +500,7 @@ export default function SparePartsCart() {
 										</span>
 									</div>
 								</div>
-								<div className='border-t border-orange-200 pt-2 mb-4'>
+								<div className='border-t border-orange-200 pt-2 mb-2'>
 									<div className='flex justify-between font-bold text-orange-700'>
 										<span>Total</span>
 										<span>₹{totalPartPrice}</span>
@@ -531,7 +509,7 @@ export default function SparePartsCart() {
 								<div className='flex justify-center'>
 									<button
 										type='submit'
-										className='flex justify-center gap-2 items-center mx-auto shadow-xl text-lg text-white bg-[#9b111e] backdrop-blur-md lg:font-semibold isolation-auto border-gray-50 relative z-10 px-6 py-2 overflow-hidden border-2 rounded-full group'
+										className='flex justify-center gap-2 items-center mx-auto shadow-xl text-lg text-white bg-[#9b111e] backdrop-blur-md lg:font-semibold isolation-auto relative z-10 px-6 py-2 overflow-hidden border-2 rounded-full group hover:bg-red-700'
 										onClick={async () => {
 											try {
 												if (books.length > 0) {
@@ -590,7 +568,7 @@ export default function SparePartsCart() {
 								<div className='flex justify-center'>
 									<button
 										type='submit'
-										className='flex justify-center gap-2 items-center mx-auto shadow-xl text-lg text-white bg-[#9b111e] backdrop-blur-md lg:font-semibold isolation-auto border-gray-50 relative z-10 px-6 py-2 overflow-hidden border-2 rounded-full group'
+										className='flex justify-center gap-2 items-center mx-auto shadow-xl text-lg text-white bg-[#9b111e] backdrop-blur-md lg:font-semibold isolation-auto border-gray-50 relative z-10 px-6 py-2 overflow-hidden border-2 rounded-full group -mt-2'
 										onClick={async () => {
 											try {
 												await placeServiceOrder();

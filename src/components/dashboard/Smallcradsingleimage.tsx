@@ -1,4 +1,5 @@
-import React, { useRef } from 'react';
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { useRef } from 'react';
 import { SlArrowLeft } from "react-icons/sl";
 import { SlArrowRight } from "react-icons/sl";
 
@@ -15,7 +16,7 @@ import pairtyre from '../../assets/TYRE/PAIRTYRES.jpg';
 import tyres from '../../assets/TYRE/TYRES.webp';
 
 const SingleImageCard = () => {
-    const scrollRef = useRef(null);
+    const scrollRef: any = useRef(null);
 
     const scrollLeft = () => {
         scrollRef.current?.scrollBy({ left: -220, behavior: 'smooth' });

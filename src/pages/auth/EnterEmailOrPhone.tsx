@@ -8,12 +8,12 @@ type FormData = {
 	emailOrPhone: string;
 };
 
-const generateOtp = () =>
-	Math.floor(100000 + Math.random() * 900000).toString();
+// const generateOtp = () =>
+// 	Math.floor(100000 + Math.random() * 900000).toString();
 
 const EnterEmailOrPhone = () => {
 	const navigate = useNavigate();
-	const [storedOtp, setStoredOtp] = useState<string | null>(null);
+	// const [storedOtp, setStoredOtp] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(false);
 
 	const {
@@ -36,8 +36,8 @@ const EnterEmailOrPhone = () => {
 				return;
 			}
 			clearErrors('emailOrPhone');
-			const otp = generateOtp();
-			setStoredOtp(otp);
+			// const otp = generateOtp();
+			// setStoredOtp(otp);
 			navigate('/verify-otp');
 		} catch (error) {
 			console.log(error);
@@ -50,14 +50,14 @@ const EnterEmailOrPhone = () => {
 		handleEmailSubmit();
 	};
 
-	// if (isLoading) {
-	// 	return (
-	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-	// 		</div>
-	// 	);
-	// }
+	if (isLoading) {
+		return (
+			<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
+				<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
+				<p className='text-red-500 text-lg font-semibold'>Loading...</p>
+			</div>
+		);
+	}
 
 	return (
 		<AuthLayout title='Enter Email or Phone'>
@@ -76,9 +76,8 @@ const EnterEmailOrPhone = () => {
 								message: 'Enter a valid email or phone number',
 							},
 						})}
-						className={`w-full px-4 py-3 border text-gray-800 placeholder:text-[#9f3f3f] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9b111e] bg-white text-sm ${
-							errors.emailOrPhone ? 'border-red-500' : 'border-[#d77c7c]'
-						}`}
+						className={`w-full px-4 py-3 border text-gray-800 placeholder:text-[#9f3f3f] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9b111e] bg-white text-sm ${errors.emailOrPhone ? 'border-red-500' : 'border-[#d77c7c]'
+							}`}
 					/>
 					{errors.emailOrPhone && (
 						<span

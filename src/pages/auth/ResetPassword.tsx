@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
@@ -67,7 +68,7 @@ const ResetPassword = () => {
 
 		try {
 			setIsLoading(true);
-			const response = await forgotPassword({ email });
+			const response: any = await forgotPassword({ email });
 			if (response) {
 				setAuthToken(response.data.data.token);
 
@@ -114,7 +115,7 @@ const ResetPassword = () => {
 		}
 		try {
 			setIsLoading(true);
-			const response = await resetPassword({
+			const response: any = await resetPassword({
 				newPassword: data.newPassword,
 				oldPassword: data.confirmPassword,
 			});
@@ -138,14 +139,14 @@ const ResetPassword = () => {
 		}
 	};
 
-	// if (isLoading) {
-	// 	return (
-	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-	// 		</div>
-	// 	);
-	// }
+	if (isLoading) {
+		return (
+			<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
+				<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
+				<p className='text-red-500 text-lg font-semibold'>Loading...</p>
+			</div>
+		);
+	}
 
 	return (
 		<AuthLayout
@@ -153,8 +154,8 @@ const ResetPassword = () => {
 				step === 'email'
 					? 'Verify Email'
 					: step === 'otp'
-					? 'Enter OTP'
-					: 'Reset Password'
+						? 'Enter OTP'
+						: 'Reset Password'
 			}
 		>
 			<form onSubmit={handleSubmit(onSubmit)} className='space-y-6'>
@@ -168,9 +169,8 @@ const ResetPassword = () => {
 							type='email'
 							placeholder='Enter your email address'
 							{...register('email', { required: 'Email is required' })}
-							className={`w-full mb-5 px-4 py-3 border text-[#7c0c0c] rounded-lg bg-white/70 placeholder:text-[#9f3f3f] focus:ring-2 focus:ring-[#9b111e] text-sm ${
-								errors.email ? 'border-red-500' : 'border-[#d77c7c]'
-							}`}
+							className={`w-full mb-5 px-4 py-3 border text-[#7c0c0c] rounded-lg bg-white/70 placeholder:text-[#9f3f3f] focus:ring-2 focus:ring-[#9b111e] text-sm ${errors.email ? 'border-red-500' : 'border-[#d77c7c]'
+								}`}
 						/>
 						{errors.email && (
 							<span className='text-xs text-red-500'>
@@ -243,9 +243,8 @@ const ResetPassword = () => {
 												'Include uppercase, lowercase, number & special char',
 										},
 									})}
-									className={`w-full px-4 py-3 border text-[#7c0c0c] placeholder:text-[#9f3f3f] rounded-lg bg-white/70 pr-10 text-sm ${
-										errors.newPassword ? 'border-red-500' : 'border-[#d77c7c]'
-									}`}
+									className={`w-full px-4 py-3 border text-[#7c0c0c] placeholder:text-[#9f3f3f] rounded-lg bg-white/70 pr-10 text-sm ${errors.newPassword ? 'border-red-500' : 'border-[#d77c7c]'
+										}`}
 								/>
 								<span
 									className='absolute top-3 right-3 cursor-pointer'
@@ -277,11 +276,10 @@ const ResetPassword = () => {
 									{...register('confirmPassword', {
 										required: 'Please confirm your password',
 									})}
-									className={`w-full px-4 py-3 border text-[#7c0c0c] placeholder:text-[#9f3f3f] rounded-lg bg-white/70 pr-10 text-sm ${
-										errors.confirmPassword
-											? 'border-red-500'
-											: 'border-[#d77c7c]'
-									}`}
+									className={`w-full px-4 py-3 border text-[#7c0c0c] placeholder:text-[#9f3f3f] rounded-lg bg-white/70 pr-10 text-sm ${errors.confirmPassword
+										? 'border-red-500'
+										: 'border-[#d77c7c]'
+										}`}
 								/>
 								<span
 									className='absolute top-3 right-3 cursor-pointer'
