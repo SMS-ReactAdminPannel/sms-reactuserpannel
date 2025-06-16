@@ -136,18 +136,34 @@ const ServicesPage: React.FC = () => {
 	const [isLoading, setIsLoading] = useState(true);
 	const navigate = useNavigate();
 	const serviceTitle = useScrollAnimation<HTMLHeadingElement>();
+	 const [selectedCategory, setSelectedCategory] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+
 
 	const fetchAllServiceCategory = async () => {
 		try {
 			setIsLoading(true);
 			const response: any = await getAllServiceCategories();
 			if (response.data && response.data.data) {
-				setServiceCategories(response.data.data);
+				 // Filter to only show the selected category if one is selected
+        const categories = selectedCategory
+          ? response.data.data.filter(
+              (cat: any) => cat._id === selectedCategory.id
+            )
+          : response.data.data;
+          
+        setServiceCategories(categories);
 				const firstActiveCategory = response.data.data.find(
 					(cat: any) => !cat.is_deleted
 				);
 				if (firstActiveCategory) {
-					setActiveNavItem(firstActiveCategory.category_name);
+					setActiveNavItem(
+            selectedCategory 
+              ? selectedCategory.name 
+              : firstActiveCategory.category_name
+          );
 				}
 			}
 		} catch (error) {
@@ -160,6 +176,15 @@ const ServicesPage: React.FC = () => {
 	useEffect(() => {
 		fetchAllServiceCategory();
 	}, []);
+
+	const storedCategory: any = localStorage.getItem('selectedCategory');
+	//console.log(storedCategory, 'storedCategory');	
+	useEffect(() => {
+		if (storedCategory) {
+			setActiveNavItem(storedCategory?.name);
+			localStorage.removeItem('selectedCategory');
+		}
+	}, [storedCategory]);
 
 	const mapApiToContentSections = (
 		categories: ApiServiceCategory[]
@@ -236,9 +261,12 @@ const ServicesPage: React.FC = () => {
 	};
 
 	const handleNavClick = (navItem: string) => {
+		//console.log(navItem, 'navItem');
 		setActiveNavItem(navItem);
 		setSelectedPackage([]);
 	};
+
+	// console.log(activeNavItem, 'activeNavItem');
 
 	const handleAddToCart = async (serviceId: string) => {
 		const packageToAdd = selectedPackage.find((p) => p.packageId === serviceId);

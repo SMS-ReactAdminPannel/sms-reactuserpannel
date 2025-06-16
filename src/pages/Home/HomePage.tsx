@@ -56,6 +56,8 @@ import { FaFacebook } from 'react-icons/fa'; //facebook
 import { FaYoutube } from 'react-icons/fa'; //youtube
 import { SiIndeed } from 'react-icons/si'; //indeed
 import { BiLogoPlayStore } from 'react-icons/bi'; //play store
+import { getAllServiceCategories, getServiceCategoryById } from '../../features/ServicesPage/service';
+import { useNavigate } from 'react-router-dom';
 
 const imageUrls = [image1, image2, image3, image4];
 interface ServiceCardProps {
@@ -100,62 +102,63 @@ const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 };
 
 const HomePage: React.FC = () => {
-	const cardData: ServiceCardProps[] = [
-		{
-			id: 1,
-			icon: <FaTools size={42} />,
-			title: 'Periodic Services',
-			color: 'bg-white border-[#9b111e]',
-		},
-		{
-			id: 2,
-			icon: <FaSnowflake size={42} />,
-			title: 'Ac Services & Repair',
-			color: 'bg-white border-[#9b111e]',
-		},
-		{
-			id: 3,
-			icon: <FaBatteryThreeQuarters size={42} />,
-			title: 'Batteries',
-			color: 'bg-white border-[#9b111e]',
-		},
-		{
-			id: 4,
-			icon: <FaCircleNotch size={42} />,
-			title: 'Tyres and Wheel Care',
-			color: 'bg-white border-[#9b111e]',
-		},
-		{
-			id: 5,
-			icon: <FaCarAlt size={42} />,
-			title: 'Detailing Services',
-			color: 'bg-white border-[#9b111e]',
-		},
-		{
-			id: 6,
-			icon: <FaSearch size={42} />,
-			title: 'Car Inspection',
-			color: 'bg-white border-[#9b111e]',
-		},
-		{
-			id: 7,
-			icon: <FaLightbulb size={42} />,
-			title: 'Windshields & Lights',
-			color: 'bg-white border-[#9b111e]',
-		},
-		{
-			id: 8,
-			icon: <FaCarCrash size={42} />,
-			title: 'Suspension & Fitments',
-			color: 'bg-white border-[#9b111e]',
-		},
-		{
-			id: 9,
-			icon: <FaCarSide size={42} />,
-			title: 'Clutch & Body Parts',
-			color: 'bg-white border-[#9b111e]',
-		},
-	];
+	 const navigate = useNavigate();
+	// const cardData: ServiceCardProps[] = [
+	// 	{
+	// 		id: 1,
+	// 		icon: <FaTools size={42} />,
+	// 		title: 'Periodic Services',
+	// 		color: 'bg-white border-[#9b111e]',
+	// 	},
+	// 	{
+	// 		id: 2,
+	// 		icon: <FaSnowflake size={42} />,
+	// 		title: 'Ac Services & Repair',
+	// 		color: 'bg-white border-[#9b111e]',
+	// 	},
+	// 	{
+	// 		id: 3,
+	// 		icon: <FaBatteryThreeQuarters size={42} />,
+	// 		title: 'Batteries',
+	// 		color: 'bg-white border-[#9b111e]',
+	// 	},
+	// 	{
+	// 		id: 4,
+	// 		icon: <FaCircleNotch size={42} />,
+	// 		title: 'Tyres and Wheel Care',
+	// 		color: 'bg-white border-[#9b111e]',
+	// 	},
+	// 	{
+	// 		id: 5,
+	// 		icon: <FaCarAlt size={42} />,
+	// 		title: 'Detailing Services',
+	// 		color: 'bg-white border-[#9b111e]',
+	// 	},
+	// 	{
+	// 		id: 6,
+	// 		icon: <FaSearch size={42} />,
+	// 		title: 'Car Inspection',
+	// 		color: 'bg-white border-[#9b111e]',
+	// 	},
+	// 	{
+	// 		id: 7,
+	// 		icon: <FaLightbulb size={42} />,
+	// 		title: 'Windshields & Lights',
+	// 		color: 'bg-white border-[#9b111e]',
+	// 	},
+	// 	{
+	// 		id: 8,
+	// 		icon: <FaCarCrash size={42} />,
+	// 		title: 'Suspension & Fitments',
+	// 		color: 'bg-white border-[#9b111e]',
+	// 	},
+	// 	{
+	// 		id: 9,
+	// 		icon: <FaCarSide size={42} />,
+	// 		title: 'Clutch & Body Parts',
+	// 		color: 'bg-white border-[#9b111e]',
+	// 	},
+	// ];
 
 	// Create separate hooks for each title
 	const servicesTitle = useScrollAnimation<HTMLHeadingElement>();
@@ -163,6 +166,8 @@ const HomePage: React.FC = () => {
 	const discoverTitle = useScrollAnimation<HTMLHeadingElement>();
 	const contactTitle = useScrollAnimation<HTMLHeadingElement>();
 	const [isLoading, setIsLoading] = useState(true);
+	const [serviceData, setServiceData] = useState<any[]>([]);
+	//const [selectedService, setSelectedService] = useState<any>(null);
 
 	const fetchHomePageData = () => {
 		try {
@@ -173,10 +178,57 @@ const HomePage: React.FC = () => {
 			setIsLoading(false);
 		}
 	};
+	const fetchServiceData = async () => {
+		try{
+			const response = await getAllServiceCategories();
+			if (response) {
+				setServiceData(response.data.data);
+				//console.log(response.data.data);
+			}
+		} catch (error) {
+			console.error('Error fetching service data:', error);
+		}
+	}
+
+// 	fetch all specific service details
+// 	const fetchAllServiceDetails = async () => {{
+// 		try{
+// 			setIsLoading(true);
+// 			const response = await getServiceCategoryById();
+// 			if (response) {
+// 				setSelectedService(response.data.data);
+// 				console.log(response.data.data);
+// 				navigate(`/services/${id}`);
+// 			}
+// 		} catch (error) {
+// 			console.error('Error fetching service data:', error);
+// 		} finally {
+// 			setIsLoading(false);
+// 		}
+// 	};
+// }
+
+
+
+
 
 	useEffect(() => {
 		fetchHomePageData();
+		fetchServiceData();
 	}, []);
+
+const handleServiceClick = (categoryId: string, categoryName: string) => {
+  // Store the category info in localStorage or pass via state
+  localStorage.setItem('selectedCategory', JSON.stringify({
+    id: categoryId,
+    name: categoryName
+
+  }));
+  // console.log('Selected Category:', categoryId, categoryName);
+
+  // Navigate to services page
+  navigate('/services');
+};
 
 	// if (isLoading) {
 	// 	return (
@@ -214,25 +266,26 @@ const HomePage: React.FC = () => {
 					</h1>
 
 					<div className='grid grid-cols-3 gap-6 max-w-6xl mx-auto'>
-						{cardData.map((card) => (
-							<Link
-								to={`/services`}
-								key={card.id}
-								className={`${card.color} rounded-lg p-2 shadow-md hover:shadow-lg transition-shadow ease-in duration-300 border-b-2 cursor-pointer transform hover:scale-102`}
+						{serviceData.map((service) => (
+							<Link    
+							       to="/services"
+                                 key={service.id}
+                                 onClick={() => handleServiceClick(service.id, service.category_name)}
+								className={`${service.color} rounded-lg p-2 shadow-md hover:shadow-lg transition-shadow ease-in duration-300 border-b-2 cursor-pointer transform hover:scale-102`}
 							>
 								<div className='flex mx-4 gap-3'>
 									<div className='text-[#9b111e] flex justify-center'>
 										<img
 											className='w-[100px] h-[70px] m-2 rounded'
 											src={serviceImg}
-											alt=''
+											    alt={service.category_name}
 										/>
 									</div>
 									<h3
 										className='text-center my-auto text-red-700'
 										style={{ ...FONTS.paragraph, fontWeight: 500 }}
 									>
-										{card.title}
+										{service.category_name}
 									</h3>
 								</div>
 							</Link>
@@ -242,9 +295,9 @@ const HomePage: React.FC = () => {
 				<div
 					className={`h-[90vh] bg-[url(${bgImg})] flex justify-center items-center`}
 				>
-					<div className='mx-24'>
+					{/* <div className='mx-24'>
 						<PromoCarousel />
-					</div>
+					</div> */}
 				</div>
 				<div className='mx-24'>
 					<CustomServicesCarousel />
@@ -358,6 +411,7 @@ const HomePage: React.FC = () => {
 									<button
 										className='bg-red-900 text-white py-2 px-3 mt-3 rounded-full hover:bg-red-800'
 										style={{ ...FONTS.paragraph, fontWeight: 500 }}
+										onClick={()=> navigate('/services')}
 									>
 										Book Service
 									</button>
@@ -398,6 +452,7 @@ const HomePage: React.FC = () => {
 									<button
 										className='bg-red-900 text-white py-2 px-3 mt-3 rounded-full hover:bg-red-800'
 										style={{ ...FONTS.paragraph, fontWeight: 500 }}
+										onClick={()=> navigate('/services')}
 									>
 										Book Service
 									</button>
@@ -447,6 +502,7 @@ const HomePage: React.FC = () => {
 									<button
 										className='bg-red-900 text-white py-2 px-3 mt-3 rounded-full hover:bg-red-800'
 										style={{ ...FONTS.paragraph, fontWeight: 500 }}
+										onClick={()=> navigate('/services')}
 									>
 										Book Service
 									</button>
@@ -667,7 +723,7 @@ const HomePage: React.FC = () => {
 										About Us
 									</li>
 									<Link
-										to='/contact'
+										to='/contact-us'
 										className='py-1 text-red-900 hover:underline cursor-pointer'
 										style={{ ...FONTS.paragraph }}
 									>
@@ -677,6 +733,7 @@ const HomePage: React.FC = () => {
 										to='/services'
 										className='py-1 text-red-900 hover:underline cursor-pointer'
 										style={{ ...FONTS.paragraph }}
+
 									>
 										Services
 									</Link>
@@ -694,7 +751,7 @@ const HomePage: React.FC = () => {
 								</p>
 								<ol className='pt-3 text-red-900 text-xl flex flex-col'>
 									<Link
-										to='/enquiry'
+										to='/contact-us'
 										className='py-1 text-red-900 hover:underline'
 										style={{ ...FONTS.paragraph }}
 									>
