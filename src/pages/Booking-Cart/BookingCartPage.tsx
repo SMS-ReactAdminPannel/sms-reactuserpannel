@@ -283,11 +283,10 @@ export default function SparePartsCart() {
 
 					<div className='flex-1 flex flex-col justify-between'>
 						<div
-							className={`relative left-[325px] text-xs px-2 w-[60px] py-0.5 rounded font-medium ${
-								part.stock
+							className={`relative left-[325px] text-xs px-2 w-[60px] py-0.5 rounded font-medium ${part.stock
 									? 'bg-green-100 text-green-700'
 									: 'bg-red-700 text-white'
-							}`}
+								}`}
 						>
 							{part.stock ? 'In Stock' : 'Out of Stock'}
 						</div>
@@ -357,11 +356,10 @@ export default function SparePartsCart() {
 
 					<div className='flex-1 flex flex-col justify-between'>
 						<span
-							className={`relative left-[325px] text-xs px-2 w-[65px] py-0.5 rounded font-medium ${
-								serv.is_active
+							className={`relative left-[325px] text-xs px-2 w-[65px] py-0.5 rounded font-medium ${serv.is_active
 									? 'bg-green-100 text-green-700'
 									: 'bg-red-700 text-white'
-							}`}
+								}`}
 						>
 							{serv.is_active ? 'Available' : 'Not Available'}
 						</span>
@@ -414,9 +412,8 @@ export default function SparePartsCart() {
 					<div className='relative inline-flex p-1 bg-[#FAF3EB] rounded-full border border-gray-300'>
 						<button
 							onClick={() => setActiveTab('service')}
-							className={`px-6 py-3 rounded-full flex items-center gap-2 z-10 transition-colors duration-300 ${
-								activeTab === 'service' ? 'text-white' : 'text-black '
-							}`}
+							className={`px-6 py-3 rounded-full flex items-center gap-2 z-10 transition-colors duration-300 ${activeTab === 'service' ? 'text-white' : 'text-black '
+								}`}
 						>
 							<Wrench className='text-lg' />
 							SparePart Orders
@@ -424,11 +421,10 @@ export default function SparePartsCart() {
 
 						<button
 							onClick={() => setActiveTab('ServiceBookingPage')}
-							className={`px-6 py-3 rounded-full flex items-center gap-2 z-10 transition-colors duration-300 ${
-								activeTab === 'ServiceBookingPage'
+							className={`px-6 py-3 rounded-full flex items-center gap-2 z-10 transition-colors duration-300 ${activeTab === 'ServiceBookingPage'
 									? 'text-white'
 									: 'text-black '
-							}`}
+								}`}
 						>
 							<Car className='text-xl' />
 							Service Order
@@ -436,11 +432,10 @@ export default function SparePartsCart() {
 
 						{/* Animated indicator with smooth sliding */}
 						<div
-							className={`absolute inset-y-1 h-[calc(100%-0.5rem)] bg-[#9b111e] rounded-full shadow-md transition-all duration-300 ease-in-out ${
-								activeTab === 'service'
+							className={`absolute inset-y-1 h-[calc(100%-0.5rem)] bg-[#9b111e] rounded-full shadow-md transition-all duration-300 ease-in-out ${activeTab === 'service'
 									? 'left-1 w-[calc(50%-0.25rem)]'
 									: 'left-[calc(50%+0.25rem)] w-[calc(50%-0.25rem)]'
-							}`}
+								}`}
 						/>
 					</div>
 				</div>
