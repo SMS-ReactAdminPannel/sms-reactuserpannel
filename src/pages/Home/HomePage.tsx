@@ -56,7 +56,10 @@ import { FaFacebook } from 'react-icons/fa'; //facebook
 import { FaYoutube } from 'react-icons/fa'; //youtube
 import { SiIndeed } from 'react-icons/si'; //indeed
 import { BiLogoPlayStore } from 'react-icons/bi'; //play store
-import { getAllServiceCategories, getServiceCategoryById } from '../../features/ServicesPage/service';
+import {
+	getAllServiceCategories,
+	getServiceCategoryById,
+} from '../../features/ServicesPage/service';
 import { useNavigate } from 'react-router-dom';
 
 const imageUrls = [image1, image2, image3, image4];
@@ -102,7 +105,7 @@ const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 };
 
 const HomePage: React.FC = () => {
-	 const navigate = useNavigate();
+	const navigate = useNavigate();
 	// const cardData: ServiceCardProps[] = [
 	// 	{
 	// 		id: 1,
@@ -179,7 +182,7 @@ const HomePage: React.FC = () => {
 		}
 	};
 	const fetchServiceData = async () => {
-		try{
+		try {
 			const response = await getAllServiceCategories();
 			if (response) {
 				setServiceData(response.data.data);
@@ -188,47 +191,45 @@ const HomePage: React.FC = () => {
 		} catch (error) {
 			console.error('Error fetching service data:', error);
 		}
-	}
+	};
 
-// 	fetch all specific service details
-// 	const fetchAllServiceDetails = async () => {{
-// 		try{
-// 			setIsLoading(true);
-// 			const response = await getServiceCategoryById();
-// 			if (response) {
-// 				setSelectedService(response.data.data);
-// 				console.log(response.data.data);
-// 				navigate(`/services/${id}`);
-// 			}
-// 		} catch (error) {
-// 			console.error('Error fetching service data:', error);
-// 		} finally {
-// 			setIsLoading(false);
-// 		}
-// 	};
-// }
-
-
-
-
+	// 	fetch all specific service details
+	// 	const fetchAllServiceDetails = async () => {{
+	// 		try{
+	// 			setIsLoading(true);
+	// 			const response = await getServiceCategoryById();
+	// 			if (response) {
+	// 				setSelectedService(response.data.data);
+	// 				console.log(response.data.data);
+	// 				navigate(`/services/${id}`);
+	// 			}
+	// 		} catch (error) {
+	// 			console.error('Error fetching service data:', error);
+	// 		} finally {
+	// 			setIsLoading(false);
+	// 		}
+	// 	};
+	// }
 
 	useEffect(() => {
 		fetchHomePageData();
 		fetchServiceData();
 	}, []);
 
-const handleServiceClick = (categoryId: string, categoryName: string) => {
-  // Store the category info in localStorage or pass via state
-  localStorage.setItem('selectedCategory', JSON.stringify({
-    id: categoryId,
-    name: categoryName
+	const handleServiceClick = (categoryId: string, categoryName: string) => {
+		// Store the category info in localStorage or pass via state
+		localStorage.setItem(
+			'selectedCategory',
+			JSON.stringify({
+				id: categoryId,
+				name: categoryName,
+			})
+		);
+		// console.log('Selected Category:', categoryId, categoryName);
 
-  }));
-  // console.log('Selected Category:', categoryId, categoryName);
-
-  // Navigate to services page
-  navigate('/services');
-};
+		// Navigate to services page
+		navigate('/services');
+	};
 
 	// if (isLoading) {
 	// 	return (
@@ -267,18 +268,20 @@ const handleServiceClick = (categoryId: string, categoryName: string) => {
 
 					<div className='grid grid-cols-3 gap-6 max-w-6xl mx-auto'>
 						{serviceData.map((service) => (
-							<Link    
-							       to="/services"
-                                 key={service.id}
-                                 onClick={() => handleServiceClick(service.id, service.category_name)}
-								className={`${service.color} rounded-lg p-2 shadow-md hover:shadow-lg transition-shadow ease-in duration-300 border-b-2 cursor-pointer transform hover:scale-102`}
+							<Link
+								to='/services'
+								key={service.id}
+								onClick={() =>
+									handleServiceClick(service.id, service.category_name)
+								}
+								className={`bg-[#FAF3EB] rounded-lg p-2 shadow-md hover:shadow-lg transition-shadow ease-in duration-300 border-b-2 cursor-pointer transform hover:scale-102 border-red-900`}
 							>
 								<div className='flex mx-4 gap-3'>
 									<div className='text-[#9b111e] flex justify-center'>
 										<img
 											className='w-[100px] h-[70px] m-2 rounded'
 											src={serviceImg}
-											    alt={service.category_name}
+											alt={service.category_name}
 										/>
 									</div>
 									<h3
@@ -295,9 +298,9 @@ const handleServiceClick = (categoryId: string, categoryName: string) => {
 				<div
 					className={`h-[90vh] bg-[url(${bgImg})] flex justify-center items-center`}
 				>
-					{/* <div className='mx-24'>
+					<div className='mx-24'>
 						<PromoCarousel />
-					</div> */}
+					</div>
 				</div>
 				<div className='mx-24'>
 					<CustomServicesCarousel />
@@ -411,7 +414,7 @@ const handleServiceClick = (categoryId: string, categoryName: string) => {
 									<button
 										className='bg-red-900 text-white py-2 px-3 mt-3 rounded-full hover:bg-red-800'
 										style={{ ...FONTS.paragraph, fontWeight: 500 }}
-										onClick={()=> navigate('/services')}
+										onClick={() => navigate('/services')}
 									>
 										Book Service
 									</button>
@@ -452,7 +455,7 @@ const handleServiceClick = (categoryId: string, categoryName: string) => {
 									<button
 										className='bg-red-900 text-white py-2 px-3 mt-3 rounded-full hover:bg-red-800'
 										style={{ ...FONTS.paragraph, fontWeight: 500 }}
-										onClick={()=> navigate('/services')}
+										onClick={() => navigate('/services')}
 									>
 										Book Service
 									</button>
@@ -502,7 +505,7 @@ const handleServiceClick = (categoryId: string, categoryName: string) => {
 									<button
 										className='bg-red-900 text-white py-2 px-3 mt-3 rounded-full hover:bg-red-800'
 										style={{ ...FONTS.paragraph, fontWeight: 500 }}
-										onClick={()=> navigate('/services')}
+										onClick={() => navigate('/services')}
 									>
 										Book Service
 									</button>
@@ -660,7 +663,7 @@ const handleServiceClick = (categoryId: string, categoryName: string) => {
 							<img
 								src={appimage}
 								alt='appimage'
-								className='p-2 h-[64px] w-[260px] rounded'
+								className='p-2 h-[56px] w-[260px] rounded'
 							/>
 						</div>
 
@@ -733,7 +736,6 @@ const handleServiceClick = (categoryId: string, categoryName: string) => {
 										to='/services'
 										className='py-1 text-red-900 hover:underline cursor-pointer'
 										style={{ ...FONTS.paragraph }}
-
 									>
 										Services
 									</Link>

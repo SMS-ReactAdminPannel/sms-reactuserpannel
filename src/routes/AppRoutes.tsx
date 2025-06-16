@@ -55,8 +55,14 @@ const AppRoutes = () => {
 				<Route path='faqs' element={<FaqPage />} />
 				<Route path='contact-us' element={<ContactPage />} />
 				<Route path='*' element={<Navigate to='/' />} />
-				<Route path="spare-parts/category/:categoryId" element={<CategoryPage />} />
-       			<Route path="spare-parts/product/:productId" element={<ProductPage />} />
+				<Route
+					path='spare-parts/category/:categoryId'
+					element={<CategoryPage />}
+				/>
+				<Route
+					path='spare-parts/product/:productId'
+					element={<ProductPage />}
+				/>
 			</Route>
 		</Routes>
 	);
