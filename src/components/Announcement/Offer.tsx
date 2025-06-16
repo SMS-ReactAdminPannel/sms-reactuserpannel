@@ -2,6 +2,7 @@ import React from 'react';
 import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FONTS } from '../../constants/constant';
+import { Link } from 'react-router-dom';
 
 type ServiceOffer = {
 	title: string;
@@ -130,6 +131,7 @@ const Offer: React.FC = () => {
 								({offer.discount}% OFF)
 							</span>
 						</p>
+                        <Link to={`/services`}>
 
 						<motion.button
 							whileTap={{ scale: 0.96 }}
@@ -138,6 +140,7 @@ const Offer: React.FC = () => {
 						>
 							Book Now
 						</motion.button>
+						</Link>
 					</motion.div>
 				))}
 			</div>

@@ -450,13 +450,14 @@ const OrdersPage: React.FC = () => {
 							</select>
 
 							{/* Reset Button */}
+
 							<button
 								onClick={() => {
 									setSearchTerm('');
 									setFilterType('all');
 									setSortBy('date');
 								}}
-								className='ml-[400px] px-4 py-1 text-gray-500 bg-red-600 text-white rounded-xl hover:text-white hover:bg-red-700 transition-all duration-200 shadow-sm hover:shadow-md font-medium text-sm'
+								className='ml-[400px] px-4 py-1 text-white-500 bg-red-600 text-white rounded-xl hover:text-white hover:bg-red-700 transition-all duration-200 shadow-sm hover:shadow-md font-medium text-sm'
 							>
 								Reset Filters
 							</button>

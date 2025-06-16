@@ -14,12 +14,23 @@ const AutoPopup: React.FC<AutoPopupProps> = ({
 }) => {
 	const [isVisible, setIsVisible] = useState(false);
 	const [isClosing, setIsClosing] = useState(false);
+    const [showMessage,setShowMessage]=useState(false);
+
+	
 
 	useEffect(() => {
 		// Trigger entrance animation
 		const timer = setTimeout(() => setIsVisible(true), 100);
-		return () => clearTimeout(timer);
+		return () => clearTimeout(timer);                               
 	}, []);
+
+
+const handleBookClick = () => {
+    setShowMessage(true);
+    setTimeout(() => setShowMessage(false), 3000); 
+  };
+
+  
 
 	const handleClose = () => {
 		setIsClosing(true);
@@ -28,8 +39,17 @@ const AutoPopup: React.FC<AutoPopupProps> = ({
 
 	return (
 		<>
+		{/* not selected car pop up msg */}
+
 			<div className='fixed top-36 right-3 pointer-events-auto'>
+							 {showMessage && (
+                           <div className="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg shadow-md text-sm">
+                            Select the car first then booking services!
+                           </div> 
+						)}
+
 				{/* Popup Container */}
+
 				<div
 					className={`w-[320px] h-[420px] transition-all duration-500 ease-out transform ${
 						isVisible && !isClosing
@@ -37,6 +57,7 @@ const AutoPopup: React.FC<AutoPopupProps> = ({
 							: 'translate-x-full translate-y-4 opacity-0 scale-95'
 					}`}
 				>
+
 					{/* Main Popup Card */}
 					<div className='relative bg-gradient-to-br from-red-50 via-white to-red-100 rounded-2xl shadow-2xl border border-white/50 overflow-hidden h-full'>
 						{/* Animated Background Elements */}
@@ -47,6 +68,8 @@ const AutoPopup: React.FC<AutoPopupProps> = ({
 								style={{ animationDuration: '3s' }}
 							/>
 						</div>
+
+
 
 						{/* Floating Icons */}
 						<div className='absolute top-4 left-4'>
@@ -62,6 +85,7 @@ const AutoPopup: React.FC<AutoPopupProps> = ({
 								<Wrench className='w-4 h-4' style={{ color: '#9b111e' }} />
 							</div>
 						</div>
+
 
 						{/* Content */}
 						<div className='relative z-10 p-6 h-full flex flex-col'>
@@ -105,12 +129,14 @@ const AutoPopup: React.FC<AutoPopupProps> = ({
 									</ul>
 								</div>
 
+
 								{/* Call-to-action with hover effects */}
 								<div className='flex space-x-3 mt-auto'>
 									<button
+									onClick={handleBookClick} 
 										className='group flex-1 bg-gradient-to-r from-red-600 to-red-800 text-white px-4 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 hover:from-red-700 hover:to-red-900'
 										style={{
-											backgroundImage: `linear-gradient(to right, #dc2626, #9b111e)`,
+											backgroundImage:`linear-gradient(to right, #dc2626, #9b111e)`,
 										}}
 									>
 										<span className='flex items-center justify-center space-x-2'>
@@ -123,7 +149,9 @@ const AutoPopup: React.FC<AutoPopupProps> = ({
 									<button className='px-4 py-3 rounded-xl border-2 border-red-200 text-red-600 font-semibold hover:border-red-300 hover:text-red-700 hover:bg-red-50 transition-all duration-300 transform hover:-translate-y-0.5'>
 										Later
 									</button>
+						
 								</div>
+								{/* <BookServiceButton/> */}
 							</div>
 
 							{/* Progress indicator */}
