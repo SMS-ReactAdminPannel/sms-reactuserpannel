@@ -1,38 +1,35 @@
 import { ImageCarousel } from '../../components/home/ImageCarousel';
-// <<<<<<< HEAD
-import image1 from '../../assets/carimages/pexels-cottonbro-4489749.jpg'
-import image2 from '../../assets/carimages/pexels-artempodrez-8986070.jpg'
-import image3 from '../../assets/carimages/pexels-cottonbro-4489732.jpg'
-import image4 from '../../assets/carimages/pexels-ronaldo-galeano-2428202-4069389.jpg'
+import image1 from '../../assets/home/360_F_496483060_C9OG1wJpfmjMXcNmUBibmA9wYxxZCxnW.jpg';
+import image2 from '../../assets/home/360_F_507812981_dGZXqBsqkBpEosDjTlJgmaJAyMFra7sp.jpg';
+import image3 from '../../assets/home/hand-mechanic-holding-car-service-600nw-2340377479.webp';
+import image4 from '../../assets/home/istockphoto-1387759698-612x612.jpg';
 // import CarImg1 from '../../assets/CarImg1.jpg';
-
-
-
-
 import { GrWorkshop } from 'react-icons/gr';
 import { LuCarTaxiFront } from 'react-icons/lu';
 import { PiSealCheckBold } from 'react-icons/pi';
 import { LuHandshake } from 'react-icons/lu';
 import { RiShieldStarFill } from 'react-icons/ri';
-import { MdDateRange } from 'react-icons/md';
+import { MdDateRange, MdOutlineTireRepair } from 'react-icons/md';
 import { MdHomeFilled } from 'react-icons/md';
 import { FaLocationDot } from 'react-icons/fa6';
 import { TbCertificate } from 'react-icons/tb';
 import { RiCustomerService2Fill } from 'react-icons/ri';
 import MustCare from '../../components/bookings/BookingsPage';
 import { COLORS, FONTS } from '../../constants/constant';
+import { TfiLayoutLineSolid } from 'react-icons/tfi';
 import React, { useState, useRef, useEffect } from 'react';
 import {
 	FaTools,
-	// FaSnowflake,
-	// FaBatteryThreeQuarters,
-	// FaCarAlt,
-	// FaSearch,
-	// FaLightbulb,
-	// FaCarCrash,
-	// FaCarSide,
-	// FaFileSignature,
-	// FaCircleNotch,
+	FaSnowflake,
+	FaBatteryThreeQuarters,
+	FaTruckMonster,
+	FaCarAlt,
+	FaSearch,
+	FaLightbulb,
+	FaCarCrash,
+	FaCarSide,
+	FaFileSignature,
+	FaCircleNotch,
 } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import PromoCarousel from '../../components/home/offerCard';
@@ -58,10 +55,6 @@ import { FaYoutube } from 'react-icons/fa'; //youtube
 import { SiIndeed } from 'react-icons/si'; //indeed
 import { BiLogoPlayStore } from 'react-icons/bi'; //play store
 
-// API call to fetch home data
-
-import { getAllServiceCategories } from '../../features/ServicesPage/service';
-
 const imageUrls = [image1, image2, image3, image4];
 interface ServiceCardProps {
 	id: number;
@@ -70,141 +63,110 @@ interface ServiceCardProps {
 	color: string;
 }
 
-// Custom hook for Scroll Animation
+	// Custom hook for Scroll Animation
 
-const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
-	options = {}
-) => {
-	const [isVisible, setIsVisible] = useState(false);
-	const elementRef = useRef<T>(null);
-
-	useEffect(() => {
-		const observer = new IntersectionObserver(
-			([entry]) => {
+		const useScrollAnimation = <T extends HTMLElement = HTMLElement>(options = {}) => {
+		  const [isVisible, setIsVisible] = useState(false);
+		  const elementRef = useRef<T>(null);
+		
+		  useEffect(() => {
+			const observer = new IntersectionObserver(
+			  ([entry]) => {
 				setIsVisible(entry.isIntersecting);
-			},
-			{
+			  },
+			  {
 				threshold: 0.1,
 				rootMargin: '0px 0px -50px 0px',
-				...options,
-			}
-		);
-
-		if (elementRef.current) {
-			observer.observe(elementRef.current);
-		}
-
-		return () => {
+				...options
+			  }
+			);
+		
 			if (elementRef.current) {
+			  observer.observe(elementRef.current);
+			}
+		
+			return () => {
+			  if (elementRef.current) {
 				observer.unobserve(elementRef.current);
-			}
+			  }
+			};
+		  }, []);
+	  
+		  return { elementRef, isVisible };
 		};
-	}, []);
 
-	return { elementRef, isVisible };
-};
 
-const HomePage: React.FC = () => {
-	// const cardData: ServiceCardProps[] = [
-	// 	{
-	// 		id: 1,
-	// 		icon: <FaTools size={42} />,
-	// 		title: 'Periodic Services',
-	// 		color: 'bg-white border-[#9b111e]',
-	// 	},
-	// 	{
-	// 		id: 2,
-	// 		icon: <FaSnowflake size={42} />,
-	// 		title: 'Ac Services & Repair',
-	// 		color: 'bg-white border-[#9b111e]',
-	// 	},
-	// 	{
-	// 		id: 3,
-	// 		icon: <FaBatteryThreeQuarters size={42} />,
-	// 		title: 'Batteries',
-	// 		color: 'bg-white border-[#9b111e]',
-	// 	},
-	// 	{
-	// 		id: 4,
-	// 		icon: <FaCircleNotch size={42} />,
-	// 		title: 'Tyres and Wheel Care',
-	// 		color: 'bg-white border-[#9b111e]',
-	// 	},
-	// 	{
-	// 		id: 5,
-	// 		icon: <FaCarAlt size={42} />,
-	// 		title: 'Detailing Services',
-	// 		color: 'bg-white border-[#9b111e]',
-	// 	},
-	// 	{
-	// 		id: 6,
-	// 		icon: <FaSearch size={42} />,
-	// 		title: 'Car Inspection',
-	// 		color: 'bg-white border-[#9b111e]',
-	// 	},
-	// 	{
-	// 		id: 7,
-	// 		icon: <FaLightbulb size={42} />,
-	// 		title: 'Windshields & Lights',
-	// 		color: 'bg-white border-[#9b111e]',
-	// 	},
-	// 	{
-	// 		id: 8,
-	// 		icon: <FaCarCrash size={42} />,
-	// 		title: 'Suspension & Fitments',
-	// 		color: 'bg-white border-[#9b111e]',
-	// 	},
-	// 	{
-	// 		id: 9,
-	// 		icon: <FaCarSide size={42} />,
-	// 		title: 'Clutch & Body Parts',
-	// 		color: 'bg-white border-[#9b111e]',
-	// 	},
-	// 	{
-	// 		id: 10,
-	// 		icon: <FaFileSignature size={42} />,
-	// 		title: 'Insurance Claims',
-	// 		color: 'bg-white border-[#9b111e]',
-	// 	},
-	// ];
 
-	// Create separate hooks for each title
-	const servicesTitle = useScrollAnimation<HTMLHeadingElement>();
-	const careTitle = useScrollAnimation<HTMLHeadingElement>();
-	const discoverTitle = useScrollAnimation<HTMLHeadingElement>();
-	const contactTitle = useScrollAnimation<HTMLHeadingElement>();
-	const [isLoading, setIsLoading] = useState(true);
-	const [servicescard, setServicescard] = useState<any[]>([]);
+		const HomePage: React.FC = () => {
 
-	const fetchHomePageData = async() => {
-		try {
-			setIsLoading(true);
-			const response = await getAllServiceCategories({});
-			if (response){
-				setServicescard(response.data.data);
-				console.log("Fetched Services Data:", response.data.data); // ✅ Log fetched data
-				
-			}
+			const cardData: ServiceCardProps[] = [
+				{
+			id: 1,
+			icon: <FaTools size={42} />,
+			title: 'Periodic Services',
+			color: 'bg-white border-[#9b111e]',
+		},
+		{
+			id: 2,
+			icon: <FaSnowflake size={42} />,
+			title: 'Ac Services & Repair',
+			color: 'bg-white border-[#9b111e]',
+		},
+		{
+			id: 3,
+			icon: <FaBatteryThreeQuarters size={42} />,
+			title: 'Batteries',
+			color: 'bg-white border-[#9b111e]',
+		},
+		{
+			id: 4,
+			icon: <FaCircleNotch size={42} />,
+			title: 'Tyres and Wheel Care',
+			color: 'bg-white border-[#9b111e]',
+		},
+		{
+			id: 5,
+			icon: <FaCarAlt size={42} />,
+			title: 'Detailing Services',
+			color: 'bg-white border-[#9b111e]',
+		},
+		{
+			id: 6,
+			icon: <FaSearch size={42} />,
+			title: 'Car Inspection',
+			color: 'bg-white border-[#9b111e]',
+		},
+		{
+			id: 7,
+			icon: <FaLightbulb size={42} />,
+			title: 'Windshields & Lights',
+			color: 'bg-white border-[#9b111e]',
+		},
+		{
+			id: 8,
+			icon: <FaCarCrash size={42} />,
+			title: 'Suspension & Fitments',
+			color: 'bg-white border-[#9b111e]',
+		},
+		{
+			id: 9,
+			icon: <FaCarSide size={42} />,
+			title: 'Clutch & Body Parts',
+			color: 'bg-white border-[#9b111e]',
+		},
+		{
+			id: 10,
+			icon: <FaFileSignature size={42} />,
+			title: 'Insurance Claims',
+			color: 'bg-white border-[#9b111e]',
+		},
+	];
 
-		} catch (error) {
-		 console.error('Error fetching services data:', error); // ✅ Log error
-		} finally {
-			setIsLoading(false);
-		}
-	};
-
-	useEffect(() => {
-		fetchHomePageData();
-	}, []);
-
-	if (isLoading) {
-		return (
-			<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-				<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-				<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-			</div>
-		);
-	}
+			// Create separate hooks for each title
+		const servicesTitle = useScrollAnimation<HTMLHeadingElement>();
+		const careTitle = useScrollAnimation<HTMLHeadingElement>();
+		const discoverTitle = useScrollAnimation<HTMLHeadingElement>();
+		const contactTitle = useScrollAnimation<HTMLHeadingElement>();
 
 	return (
 		<>
@@ -214,40 +176,37 @@ const HomePage: React.FC = () => {
 			</div>
 			<div className=''>
 				<div className='px-24 my-8 h-[75vh]'>
-					<h1
-						ref={servicesTitle.elementRef}
-						className='text-2xl mb-10 text-red-900 text-center'
-						style={{ ...FONTS.header, fontWeight: 700 }}
-					>
-						<span className='inline-block pb-1 relative'>
-							Available Services
-							<span
-								className={`absolute top-9 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
-									servicesTitle.isVisible
-										? 'scale-x-100 w-full'
-										: 'scale-x-0 w-full'
-								}`}
-							></span>
-						</span>
-					</h1>
-
+					
+				<h1 
+    		      ref={servicesTitle.elementRef}
+    		      className="text-2xl mb-10 text-red-900 text-center" 
+    		      style={{ ...FONTS.header, fontWeight: 700 }}
+    		    >
+    		      <span className="inline-block pb-1 relative">
+    		        Available Services
+    		        <span 
+    		          className={`absolute top-9 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+    		            servicesTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
+    		          }`}
+    		        ></span>
+    		      </span>
+    		    </h1>
+					
 					<div className='grid grid-cols-5 grid-rows-2 gap-4 max-w-6xl mx-auto mb-5'>
-						{servicescard
-							//.filter(service => service.is_active)
-							.map((services) => (
-								<Link
-									to={`/services`}
-									key={services._id}
-									className={`${services.color} rounded-lg p-8 shadow-md hover:shadow-lg transition-shadow ease-in duration-300 cursor-pointer transform hover:scale-102`}
-								>
-									<div className='text-[#9b111e] mb-4 flex justify-center'>
-										 <FaTools size={42} /> {/* Default icon for all */}
-									</div>
-									<h3
+						{cardData.map((card) => (
+							<Link
+								to={`/services`}
+								key={card.id}
+								className={`${card.color} rounded-lg p-8 shadow-md hover:shadow-lg transition-shadow ease-in duration-300 cursor-pointer transform hover:scale-102`}
+							>
+								<div className='text-[#9b111e] mb-4 flex justify-center'>
+									{card.icon}
+								</div>
+								<h3
 									className='text-center text-red-700 opacity-75'
 									style={{ ...FONTS.paragraph, fontWeight: 550 }}
 								>
-									 {services.category_name}
+									{card.title}
 								</h3>
 							</Link>
 						))}
@@ -266,23 +225,21 @@ const HomePage: React.FC = () => {
 				<div className='mt-4'>
 					<div className={`bg-[url(${bgImg2})] h-[95vh]`}>
 						<div className='px-24 py-10'>
-							<h1
-								ref={careTitle.elementRef}
-								className='text-2xl mb-10 text-red-900 text-center'
-								style={{ ...FONTS.header, fontWeight: 700 }}
-							>
-								<span className='inline-block pb-1 relative'>
-									Care Advantages
-									<span
-										className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
-											careTitle.isVisible
-												? 'scale-x-100 w-full'
-												: 'scale-x-0 w-full'
-										}`}
-									></span>
-								</span>
-							</h1>
-							<div className='flex space-x-6 items-center justify-center'>
+									<h1 
+       								   ref={careTitle.elementRef}
+       								   className="text-2xl mb-10 text-red-900 text-center" 
+       								   style={{ ...FONTS.header, fontWeight: 700 }}
+       								 >
+       								   <span className="inline-block pb-1 relative">
+       								     Care Advantages
+       								     <span 
+       								       className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+       								         careTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
+       								       }`}
+       								     ></span>
+       								   </span>
+       								 </h1>
+										<div className='flex space-x-6 items-center justify-center'>
 								<div className='border-r border-gray-600 pr-6 text-center'>
 									<div className='ml-20'>
 										<MdHomeFilled size={28} color={COLORS.primary} />
@@ -320,22 +277,20 @@ const HomePage: React.FC = () => {
 
 					<div className='px-24 pb-8'>
 						<div className='py-12'>
-							<h1
-								ref={discoverTitle.elementRef}
-								className='text-2xl mb-10 text-red-900 text-center'
-								style={{ ...FONTS.header, fontWeight: 700 }}
-							>
-								<span className='inline-block pb-1 relative'>
-									Discover Our Services
-									<span
-										className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
-											discoverTitle.isVisible
-												? 'scale-x-100 w-full'
-												: 'scale-x-0 w-full'
-										}`}
-									></span>
-								</span>
-							</h1>
+							<h1 
+    		   				   ref={discoverTitle.elementRef}
+    		   				   className="text-2xl mb-10 text-red-900 text-center" 
+    		   				   style={{ ...FONTS.header, fontWeight: 700 }}
+    		   				 >
+    		   				   <span className="inline-block pb-1 relative">
+    		   				     Discover Our Services
+    		   				     <span 
+    		   				       className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+    		   				         discoverTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
+    		   				       }`}
+    		   				     ></span>
+    		   				   </span>
+    		   				 </h1>
 							<div className='flex mt-5 justify-around gap-10'>
 								<div>
 									<img
@@ -471,24 +426,23 @@ const HomePage: React.FC = () => {
 					</div>
 				</div>
 				<div className={`bg-[url(${bgImg3})] h-[85vh] mt-5`}>
-					<div className='px-24 pt-8'>
-						<h1
-							ref={contactTitle.elementRef}
-							className='text-2xl mb-10 text-red-900 text-center'
-							style={{ ...FONTS.header, fontWeight: 700 }}
-						>
-							<span className='inline-block pb-4 relative'>
-								Customised Care For All Your Needs
-								<span
-									className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
-										contactTitle.isVisible
-											? 'scale-x-100 w-full'
-											: 'scale-x-0 w-full'
-									}`}
-								></span>
-							</span>
-						</h1>
-
+					<div className='px-24 pt-2'>
+						<h1 
+    		   				   ref={contactTitle.elementRef}
+    		   				   className="text-2xl mb-10 text-red-900 text-center" 
+    		   				   style={{ ...FONTS.header, fontWeight: 700 }}
+    		   				 >
+    		   				   <span className="inline-block pb-1 relative">
+    		   				     Customised Care For All Your Needs
+    		   				     <span 
+    		   				       className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+    		   				         contactTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
+    		   				       }`}
+    		   				     ></span>
+    		   				   </span>
+    		   				 </h1>
+							
+						
 						<div className='flex justify-center gap-6 mt-4 mb-10 flex-wrap'>
 							<div className='flex flex-col items-center text-center bg-[#fdefe9] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
 								<GrWorkshop size={32} color={COLORS.primary} />
@@ -723,7 +677,7 @@ const HomePage: React.FC = () => {
 								</ol>
 							</div>
 							<div className='w-[900px]'>
-								<div className='grid grid-cols-1 gap-2 px-6'>
+								<div className='grid grid-cols-1 gap-3 p-4'>
 									<div className=''>
 										<hr className='w-full border-[2px] border-red-900' />
 
