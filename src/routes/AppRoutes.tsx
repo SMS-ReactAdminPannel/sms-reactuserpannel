@@ -20,6 +20,8 @@ import ResetPassword from '../pages/auth/ResetPassword';
 import { HomePageIntro } from '../pages/HomeIntro/HomePageIntro';
 import { useAuth } from '../pages/auth/AuthContext';
 import ContactPage from '../pages/ContactPage/ContactPage';
+import CategoryPage from '../components/spareparts/CategoryPage';
+import ProductPage from '../components/spareparts/ProductPage';
 
 const AppRoutes = () => {
 	const { isAuthenticated } = useAuth();
@@ -53,6 +55,8 @@ const AppRoutes = () => {
 				<Route path='faqs' element={<FaqPage />} />
 				<Route path='contact-us' element={<ContactPage />} />
 				<Route path='*' element={<Navigate to='/' />} />
+				<Route path="spare-parts/category/:categoryId" element={<CategoryPage />} />
+       			<Route path="spare-parts/product/:productId" element={<ProductPage />} />
 			</Route>
 		</Routes>
 	);
