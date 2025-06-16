@@ -32,11 +32,11 @@ const CustomDropdown: React.FC = () => {
 		<div ref={dropdownRef} className='relative inline-block w-40'>
 			<button
 				onClick={toggleDropdown}
-				className='w-full flex justify-between items-center px-4 py-2 text-red-900 font-semibold bg-white  rounded shadow cursor-pointer'
+				className='w-full flex justify-between items-center px-4 py-2 text-red-900 font-semibold bg-white rounded shadow cursor-pointer'
 			>
 				<span>{selectedCity}</span>
 				<svg
-					className='w-4 h-4 ml-2 text-red-700'
+					className='w-4 h-4 ml-2 text-red-900'
 					fill='none'
 					stroke='currentColor'
 					viewBox='0 0 24 24'
@@ -51,12 +51,12 @@ const CustomDropdown: React.FC = () => {
 			</button>
 
 			{isOpen && (
-				<div className='absolute z-10 mt-1 w-full rounded shadow-lg'>
+				<div className='absolute z-10 mt-1 w-full rounded shadow-lg border-1 border-red-200'>
 					{cities.map((city) => (
 						<div
 							key={city}
 							onClick={() => selectCity(city)}
-							className='px-4 py-2 text-white font-semibold bg-red-900 hover:bg-red-100 hover:text-red-900 cursor-pointer'
+							className='px-4 py-2 text-red-900 font-semibold bg-[#fdefe9] hover:bg-red-900 hover:text-[#fdefe9] cursor-pointer'
 						>
 							{city}
 						</div>
