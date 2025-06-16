@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ShoppingCart } from 'lucide-react';
 import { Search, X } from 'lucide-react';
+
 import {
 	getSparePartsData,
 	postSparePartsData,
@@ -8,6 +9,9 @@ import {
 import spareimg from '../../assets/CAR DIFFERENTIAL/Car differential.jpg';
 import { FONTS } from '../../constants/constant';
 import { SiTicktick } from 'react-icons/si';
+import { Link } from 'react-router-dom';
+import spareImg from '../../assets/CarPart1.jfif'
+
 
 interface SparePart {
 	id: string;
@@ -72,6 +76,9 @@ const SpareParts: React.FC = () => {
 
 	const [showAllProducts, setShowAllProducts] = useState(false);
 
+	// const {CategoryData} = useSparePartsDataset;
+
+
 	const [error, setError] = useState<string | null>(null);
 	const [isLoading, setIsLoading] = useState(true);
 
@@ -79,6 +86,7 @@ const SpareParts: React.FC = () => {
 		try {
 			setError(null);
 			const response = await getSparePartsData({});
+			console.log(response)
 			if (response && response.data && response.data.data) {
 				if (Array.isArray(response.data.data)) {
 					const validatedParts = response.data.data.map((part: any) => {
@@ -543,59 +551,36 @@ const SpareParts: React.FC = () => {
 				</div>
 			</div>
 
-			<div className='max-w-full px-4 md:px-6 lg:px-8 bg-[#fae9eb] py-6'>
-				<h1 className='text-center' ref={categoryTitle.elementRef}>
-					<span
-						className='inline-block pb-1 relative text-[#9b111e] mb-10'
-						style={{ ...FONTS.heading }}
-					>
-						By Categories
-						<span
-							className={`absolute top-14 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
-								categoryTitle.isVisible
-									? 'scale-x-100 w-full'
-									: 'scale-x-0 w-full'
-							}`}
-						></span>
-					</span>
-				</h1>
+			      <div className="max-w-full px-4 md:px-6 lg:px-8">
+        <h1 className="text-2xl font-bold text-[#9b111e] mb-8 text-center md:text-left">
+          BY CATEGORIES
+        </h1>
 
-				<div className='grid grid-cols-4 sm:grid-cols-2 mdplus:grid-cols-2 lg:grid-cols-4 gap-6 '>
-					{categories.map(({ id, title, image, items }) => (
-						<div
-							key={id}
-							className='relative flex flex-col gap-4 p-6 border rounded-xl shadow-md bg-[#efe7d0] h-[230px]'
-						>
-							<div className='flex justify-between items-center'>
-								<h2 className='text-md font-semibold text-[#9b111e]'>
-									{title}
-								</h2>
-								<img
-									src={image}
-									alt={title}
-									className='w-30 h-20 object-contain ml-2 rounded-md shadow-sm '
-									onError={(e) => {
-										(e.target as HTMLImageElement).src = spareimg;
-									}}
-								/>
-							</div>
-							<ul className='space-y-1 text-sm'>
-								{items.slice(0, 5).map((item, idx) => (
-									<li
-										key={`${id}-${idx}`}
-										className='hover:underline cursor-pointer'
-									>
-										<p>✓ {item}</p>
-									</li>
-								))}
-							</ul>
-							<span className='text-md font-semibold text-red-700 cursor-pointer hover:underline mt-2 absolute bottom-3'>
-								ALL CATEGORIES →
-							</span>
-						</div>
-					))}
-				</div>
-			</div>
+        <div className=" grid grid-cols-4 gap-6">
+      {categories.map(({ id, title, image, items }) => (
+        <div key={id} className="flex flex-col gap-4 p-6 border rounded-xl shadow-md">
+          <div className="flex justify-between items-center">
+            <h2 className="text-md font-bold uppercase text-[#9b111e]">{title}</h2>
+            <img src={spareImg} alt={title} className="w-16 h-16 object-contain" />
+          </div>
+          <ul className="space-y-1 text-sm">
+            {items.slice(0, 3).map((item,index) => (
+              <li key={index} className="hover:underline cursor-pointer">
+                {item}
+              </li>
+            ))}
+          </ul>
+          <Link 
+            to={`/spare-parts/category/${id}`}
+            className="text-sm font-semibold relative bottom-[1px] text-red-700 cursor-pointer hover:underline mt-1"
+          >
+            ALL CATEGORIES →
+          </Link>
+        </div>
+      ))}
+    </div>
+      </div>
+
 
 			{/* Edit Product Modal */}
 			{selectedPart && (
