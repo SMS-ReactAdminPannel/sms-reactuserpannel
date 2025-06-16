@@ -1,5 +1,6 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState, useRef } from 'react';
-import { Plus, Minus, X, Wrench, Car } from 'lucide-react';
+import { Wrench, Car } from 'lucide-react';
 import {
 	booking_cart,
 	postBookingProduct,
@@ -10,6 +11,7 @@ import { postBookingService } from '../../features/Bookings/service';
 import { FONTS } from '../../constants/constant';
 
 interface spare {
+	discount: number;
 	_id: number;
 	productName: string;
 	price: number;
@@ -22,6 +24,7 @@ interface spare {
 }
 
 interface service {
+	discount: number;
 	_id: number;
 	service_name: string;
 	price: number;
@@ -54,9 +57,11 @@ const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 
 		return () => {
 			if (elementRef.current) {
+				// eslint-disable-next-line react-hooks/exhaustive-deps
 				observer.unobserve(elementRef.current);
 			}
 		};
+		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return { elementRef, isVisible };
@@ -71,14 +76,14 @@ export default function SparePartsCart() {
 	);
 	const cartTitle = useScrollAnimation<HTMLHeadingElement>();
 	const [services, setServices] = useState<service[]>([]);
-	const [confirmedPartOrders, setConfirmedPartOrders] = useState<
-		{ part: spare; quantity: number }[]
-	>([]);
-	const [confirmedServiceOrders, setConfirmedServiceOrders] = useState<
-		{ serv: service; quantity: number }[]
-	>([]);
-	const [showSummary, setShowSummary] = useState(false);
-	const [showsSummary, setShowsSummary] = useState(false);
+	// const [confirmedPartOrders, setConfirmedPartOrders] = useState<
+	// 	{ part: spare; quantity: number }[]
+	// >([]);
+	// const [confirmedServiceOrders, setConfirmedServiceOrders] = useState<
+	// 	{ serv: service; quantity: number }[]
+	// >([]);
+	// const [showSummary, setShowSummary] = useState(false);
+	// const [showsSummary, setShowsSummary] = useState(false);
 	const [cartId, setCartId] = useState<string>('');
 	const [serviceId, setServiceCartId] = useState<string>('');
 	const totalPartPrice = books.reduce(
@@ -114,6 +119,7 @@ export default function SparePartsCart() {
 						category: product.productId?.category || '',
 						description: product.productId?.description || '',
 						stock: Number(product.productId?.stock) || 0,
+						discount: 0
 					})
 				);
 				setBooks(spares);
@@ -132,6 +138,7 @@ export default function SparePartsCart() {
 						description: service.description || '',
 						image: service.productId?.image || bgImage,
 						is_active: service.productId?.stock || true,
+						discount: 0
 					})
 				);
 				setServices(mappedServices);
@@ -148,14 +155,14 @@ export default function SparePartsCart() {
 		setActiveTab('ServiceBookingPage');
 	}, []);
 
-	// if (isLoading) {
-	// 	return (
-	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-	// 		</div>
-	// 	);
-	// }
+	if (isLoading) {
+		return (
+			<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
+				<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
+				<p className='text-red-500 text-lg font-semibold'>Loading...</p>
+			</div>
+		);
+	}
 
 	// handle Place Order function
 	const placeOrder = async () => {
@@ -167,7 +174,7 @@ export default function SparePartsCart() {
 			const response = await postBookingProduct(payload);
 			if (response) {
 				toast.success('Order placed successfully!', { autoClose: 2000 });
-				setConfirmedPartOrders([]);
+				// setConfirmedPartOrders([]);
 			}
 		} catch (error: any) {
 			console.error('Order placement error:', {
@@ -189,7 +196,7 @@ export default function SparePartsCart() {
 			const response = await postBookingService(payload);
 			if (response) {
 				toast.success('Order placed successfully!', { autoClose: 2000 });
-				setConfirmedPartOrders([]);
+				// setConfirmedPartOrders([]);
 			}
 		} catch (error: any) {
 			console.error('Order placement error:', error);
@@ -224,7 +231,7 @@ export default function SparePartsCart() {
 	const filteredServices = services;
 
 	const SparePartCard = ({ part }: { part: spare }) => {
-		const [quantity, setQuantity] = useState(part.quantity || 1);
+		const quantity: number = part.quantity || 1
 
 		return (
 			<div className='border rounded-lg h-[190px] shadow max-w-xl mx-left p-4 mb-6 bg-white hover:shadow-md transition duration-300'>
@@ -249,8 +256,8 @@ export default function SparePartsCart() {
 					<div className='flex-1 flex flex-col justify-between'>
 						<div
 							className={`relative left-[325px] text-xs px-2 w-[60px] py-0.5 rounded font-medium ${part.stock
-									? 'bg-green-100 text-green-700'
-									: 'bg-red-700 text-white'
+								? 'bg-green-100 text-green-700'
+								: 'bg-red-700 text-white'
 								}`}
 						>
 							{part.stock ? 'In Stock' : 'Out of Stock'}
@@ -322,8 +329,8 @@ export default function SparePartsCart() {
 					<div className='flex-1 flex flex-col justify-between'>
 						<span
 							className={`relative left-[325px] text-xs px-2 w-[65px] py-0.5 rounded font-medium ${serv.is_active
-									? 'bg-green-100 text-green-700'
-									: 'bg-red-700 text-white'
+								? 'bg-green-100 text-green-700'
+								: 'bg-red-700 text-white'
 								}`}
 						>
 							{serv.is_active ? 'Available' : 'Not Available'}
@@ -378,9 +385,8 @@ export default function SparePartsCart() {
 					<span className='inline-block pb-1 relative text-[#9b111e] mb-6'>
 						My Cart
 						<span
-							className={`absolute top-14 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
-								cartTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
-							}`}
+							className={`absolute top-14 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${cartTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
+								}`}
 						></span>
 					</span>
 				</h1>
@@ -400,8 +406,8 @@ export default function SparePartsCart() {
 						<button
 							onClick={() => setActiveTab('ServiceBookingPage')}
 							className={`px-6 py-3 rounded-full flex items-center gap-2 z-10 transition-colors duration-300 ${activeTab === 'ServiceBookingPage'
-									? 'text-white'
-									: 'text-black '
+								? 'text-white'
+								: 'text-black '
 								}`}
 						>
 							<Car className='text-xl' />
@@ -410,8 +416,8 @@ export default function SparePartsCart() {
 						{/* Animated indicator with smooth sliding */}
 						<div
 							className={`absolute inset-y-1 h-[calc(100%-0.5rem)] bg-[#9b111e] rounded-full shadow-md transition-all duration-300 ease-in-out ${activeTab === 'service'
-									? 'left-1 w-[calc(50%-0.25rem)]'
-									: 'left-[calc(50%+0.25rem)] w-[calc(50%-0.25rem)]'
+								? 'left-1 w-[calc(50%-0.25rem)]'
+								: 'left-[calc(50%+0.25rem)] w-[calc(50%-0.25rem)]'
 								}`}
 						/>
 					</div>
