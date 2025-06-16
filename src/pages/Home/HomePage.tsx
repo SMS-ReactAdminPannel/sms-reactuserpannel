@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ImageCarousel } from '../../components/home/ImageCarousel';
 import image1 from '../../assets/home/360_F_496483060_C9OG1wJpfmjMXcNmUBibmA9wYxxZCxnW.jpg';
 import image2 from '../../assets/home/360_F_507812981_dGZXqBsqkBpEosDjTlJgmaJAyMFra7sp.jpg';
@@ -24,6 +23,7 @@ import MustCare from '../../components/bookings/BookingsPage';
 import { COLORS, FONTS } from '../../constants/constant';
 import React, { useState, useRef, useEffect } from 'react';
 import {
+	
 	FaPhoneAlt,
 } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
@@ -50,19 +50,25 @@ import { SiIndeed } from 'react-icons/si'; //indeed
 import { BiLogoPlayStore } from 'react-icons/bi'; //play store
 import {
 	getAllServiceCategories,
+	
 } from '../../features/ServicesPage/service';
 import { useNavigate } from 'react-router-dom';
 
 const imageUrls = [image1, image2, image3, image4];
-// interface ServiceCardProps {
-// 	id: number;
-// 	icon: React.ReactNode;
-// 	title: string;
-// 	color: string;
-// }
+
+// Type definitions
+interface ServiceCategory {
+	id: string;
+	category_name: string;
+}
+
+interface ApiResponse {
+	data: {
+		data: ServiceCategory[];
+	};
+}
 
 // Custom hook for Scroll Animation
-
 const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 	options = {}
 ) => {
@@ -87,11 +93,9 @@ const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 
 		return () => {
 			if (elementRef.current) {
-				// eslint-disable-next-line react-hooks/exhaustive-deps
 				observer.unobserve(elementRef.current);
 			}
 		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return { elementRef, isVisible };
@@ -99,70 +103,14 @@ const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 
 const HomePage: React.FC = () => {
 	const navigate = useNavigate();
-	// const cardData: ServiceCardProps[] = [
-	// 	{
-	// 		id: 1,
-	// 		icon: <FaTools size={42} />,
-	// 		title: 'Periodic Services',
-	// 		color: 'bg-white border-[#9b111e]',
-	// 	},
-	// 	{
-	// 		id: 2,
-	// 		icon: <FaSnowflake size={42} />,
-	// 		title: 'Ac Services & Repair',
-	// 		color: 'bg-white border-[#9b111e]',
-	// 	},
-	// 	{
-	// 		id: 3,
-	// 		icon: <FaBatteryThreeQuarters size={42} />,
-	// 		title: 'Batteries',
-	// 		color: 'bg-white border-[#9b111e]',
-	// 	},
-	// 	{
-	// 		id: 4,
-	// 		icon: <FaCircleNotch size={42} />,
-	// 		title: 'Tyres and Wheel Care',
-	// 		color: 'bg-white border-[#9b111e]',
-	// 	},
-	// 	{
-	// 		id: 5,
-	// 		icon: <FaCarAlt size={42} />,
-	// 		title: 'Detailing Services',
-	// 		color: 'bg-white border-[#9b111e]',
-	// 	},
-	// 	{
-	// 		id: 6,
-	// 		icon: <FaSearch size={42} />,
-	// 		title: 'Car Inspection',
-	// 		color: 'bg-white border-[#9b111e]',
-	// 	},
-	// 	{
-	// 		id: 7,
-	// 		icon: <FaLightbulb size={42} />,
-	// 		title: 'Windshields & Lights',
-	// 		color: 'bg-white border-[#9b111e]',
-	// 	},
-	// 	{
-	// 		id: 8,
-	// 		icon: <FaCarCrash size={42} />,
-	// 		title: 'Suspension & Fitments',
-	// 		color: 'bg-white border-[#9b111e]',
-	// 	},
-	// 	{
-	// 		id: 9,
-	// 		icon: <FaCarSide size={42} />,
-	// 		title: 'Clutch & Body Parts',
-	// 		color: 'bg-white border-[#9b111e]',
-	// 	},
-	// ];
 
 	// Create separate hooks for each title
 	const servicesTitle = useScrollAnimation<HTMLHeadingElement>();
 	const careTitle = useScrollAnimation<HTMLHeadingElement>();
 	const discoverTitle = useScrollAnimation<HTMLHeadingElement>();
 	const contactTitle = useScrollAnimation<HTMLHeadingElement>();
-	const [isLoading, setIsLoading] = useState(true);
-	const [serviceData, setServiceData] = useState<any[]>([]);
+	const [, setIsLoading] = useState(true);
+	const [serviceData, setServiceData] = useState<ServiceCategory[]>([]);
 	//const [selectedService, setSelectedService] = useState<any>(null);
 
 	const fetchHomePageData = () => {
@@ -174,10 +122,11 @@ const HomePage: React.FC = () => {
 			setIsLoading(false);
 		}
 	};
+	
 	const fetchServiceData = async () => {
 		try {
-			const response: any = await getAllServiceCategories();
-			if (response) {
+			const response = await getAllServiceCategories() as ApiResponse;
+			if (response && response.data && response.data.data) {
 				setServiceData(response.data.data);
 				//console.log(response.data.data);
 			}
@@ -224,36 +173,37 @@ const HomePage: React.FC = () => {
 		navigate('/services');
 	};
 
-	if (isLoading) {
-		return (
-			<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-				<div className='animate-spin rounded-full h-12 w-12 border-2 border-red-500'></div>
-				<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-			</div>
-		);
-	}
+	// if (isLoading) {
+	// 	return (
+	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
+	// 			<div className='animate-spin rounded-full h-12 w-12 border-2 border-red-500'></div>
+	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
+	// 		</div>
+	// 	);
+	// }
 
 	return (
 		<>
-			<div className='h-[60vh]'>
+			<div className='h-[80vh]'>
 				<div className='bg-red-900 h-[25px]'></div>
 				<ImageCarousel images={imageUrls} interval={2500} />
 			</div>
 
 			<div className=''>
-				<div className='px-24 h-[90vh] bg-red-100 '>
+				<div className='px-24 h-[90vh] bg-red-100'>
 					<h1
 						ref={servicesTitle.elementRef}
 						className='text-2xl py-10 text-red-900 text-center'
 						style={{ ...FONTS.heading }}
 					>
-						<span className='inline-block pb-1 pt-10 relative'>
+						<span className='inline-block pb-1 relative'>
 							Available Services
 							<span
-								className={`absolute top-9 left-1/2 h-[1px] bg-red-900 transform -translate-x-1/2 origin-center transition-all duration-700 ${servicesTitle.isVisible
-									? 'scale-x-100 w-full'
-									: 'scale-x-0 w-full'
-									}`}
+								className={`absolute top-9 left-1/2 h-[1px] bg-red-900 transform -translate-x-1/2 origin-center transition-all duration-700 ${
+									servicesTitle.isVisible
+										? 'scale-x-100 w-full'
+										: 'scale-x-0 w-full'
+								}`}
 							></span>
 						</span>
 					</h1>
@@ -308,10 +258,11 @@ const HomePage: React.FC = () => {
 								<span className='inline-block pb-1 relative'>
 									Care Advantages
 									<span
-										className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${careTitle.isVisible
-											? 'scale-x-100 w-full'
-											: 'scale-x-0 w-full'
-											}`}
+										className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+											careTitle.isVisible
+												? 'scale-x-100 w-full'
+												: 'scale-x-0 w-full'
+										}`}
 									></span>
 								</span>
 							</h1>
@@ -361,10 +312,11 @@ const HomePage: React.FC = () => {
 								<span className='inline-block pb-1 relative'>
 									Discover Our Services
 									<span
-										className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${discoverTitle.isVisible
-											? 'scale-x-100 w-full'
-											: 'scale-x-0 w-full'
-											}`}
+										className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+											discoverTitle.isVisible
+												? 'scale-x-100 w-full'
+												: 'scale-x-0 w-full'
+										}`}
 									></span>
 								</span>
 							</h1>
@@ -514,10 +466,11 @@ const HomePage: React.FC = () => {
 							<span className='inline-block pb-4 relative'>
 								Customised Care For All Your Needs
 								<span
-									className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${contactTitle.isVisible
-										? 'scale-x-100 w-full'
-										: 'scale-x-0 w-full'
-										}`}
+									className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+										contactTitle.isVisible
+											? 'scale-x-100 w-full'
+											: 'scale-x-0 w-full'
+									}`}
 								></span>
 							</span>
 						</h1>
@@ -817,15 +770,14 @@ const HomePage: React.FC = () => {
 											{/* Text on left, icons on right */}
 											<div className='flex justify-between items-center text-red-900 text-xl py-2'>
 												<p className='font-lg text-base'>Contact Us</p>
-
 												<div className='flex items-center gap-4'>
-													<div className=' text-red-900  text-2xl'>
+													<div className='text-red-900 text-3xl'>
 														<FaPhoneAlt size={16} />
 													</div>
-													<div className=' text-red-900  text-3xl'>
+													<div className='text-red-900 text-3xl'>
 														<MdEmail size={16} />
 													</div>
-													<div className=' text-red-900  text-3xl'>
+													<div className='text-red-900 text-3xl'>
 														<FaSquareWhatsapp size={16} />
 													</div>
 												</div>
@@ -836,17 +788,30 @@ const HomePage: React.FC = () => {
 							</div>
 						</div>
 					</div>
-					<div className='py-2 mt-6'>
-						<div className='h-[1px] bg-red-900 mb-4'></div>
-						<p
-							style={{
-								...FONTS.paragraph,
-								textAlign: 'center',
-								color: COLORS.primary,
-							}}
-						>
-							&copy; 2025 Yes Mechanics. All Rights reserved
-						</p>
+
+					{/* Footer Bottom */}
+					<div className='px-10 py-4 border-t border-red-900 mt-8'>
+						<div className='flex justify-between items-center text-red-900'>
+							<p style={{ ...FONTS.paragraph, fontSize: '14px' }}>
+								© 2024 YM Services. All rights reserved.
+							</p>
+							<div className='flex gap-4'>
+								<Link 
+									to='/privacy-policy' 
+									className='hover:underline'
+									style={{ ...FONTS.paragraph, fontSize: '14px' }}
+								>
+									Privacy Policy
+								</Link>
+								<Link 
+									to='/terms-conditions' 
+									className='hover:underline'
+									style={{ ...FONTS.paragraph, fontSize: '14px' }}
+								>
+									Terms & Conditions
+								</Link>
+							</div>
+						</div>
 					</div>
 				</footer>
 				{/* FOOTER END */}

@@ -3,6 +3,7 @@ import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { FONTS } from '../../constants/constant';
 import { useAuth } from './AuthContext';
 import AuthLayout from './AuthLayout';
@@ -35,14 +36,19 @@ const LoginPage = () => {
 			const response: any = await loginUser(data);
 			if (response) {
 				login(response.data.data);
+				toast.success('Login successful! Welcome back.', { autoClose: 2000 });
 				setIsLoading(false);
 				navigate('/');
 			} else {
-				setError(response?.data?.message || 'Login failed. Please try again.');
+				const errorMessage = response?.data?.message || 'Login failed. Please try again.';
+				setError(errorMessage);
+				toast.error(errorMessage, { autoClose: 3000 });
 			}
 		} catch (error) {
 			console.error('Login error:', error);
-			setError('An error occurred during login. Please try again.');
+			const errorMessage = 'An error occurred during login. Please try again.';
+			setError(errorMessage);
+			toast.error(errorMessage, { autoClose: 3000 });
 		} finally {
 			setIsLoading(false);
 		}
@@ -139,9 +145,19 @@ const LoginPage = () => {
 				{/* Submit Button */}
 				<button
 					type='submit'
-					className='w-full py-3 text-white font-semibold rounded-full shadow-md hover:shadow-xl transition-all duration-300 hover:brightness-110 text-sm bg-gradient-to-r from-[#9b111e] to-[#d23c3c]'
+					disabled={isLoading}
+					className={`w-full py-3 text-white font-semibold rounded-full shadow-md hover:shadow-xl transition-all duration-300 hover:brightness-110 text-sm bg-gradient-to-r from-[#9b111e] to-[#d23c3c] ${
+						isLoading ? 'opacity-70 cursor-not-allowed' : ''
+					}`}
 				>
-					Login
+					{isLoading ? (
+						<div className='flex items-center justify-center gap-2'>
+							<div className='animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white'></div>
+							<span>Logging in...</span>
+						</div>
+					) : (
+						'Login'
+					)}
 				</button>
 
 				{/* Links */}
