@@ -6,7 +6,6 @@ import {
   Wrench,
   CheckCircle,
   Calendar,
-  Truck,
   Clock,
   MapPin,
 } from "lucide-react";
