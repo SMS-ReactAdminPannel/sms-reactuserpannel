@@ -39,7 +39,7 @@ const AlternatingCardList: React.FC = () => {
         <div
           key={booking.id}
           className={`flex items-center gap-4 bg-white rounded-lg shadow-md overflow-hidden p-4 `}
-        >
+        >  
           <img
             src={booking.imageUrl}
             alt={booking.title}

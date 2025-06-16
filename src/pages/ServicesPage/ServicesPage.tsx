@@ -18,6 +18,7 @@ import serviceImg from '../../assets/serviceimages/generalservice.png';
 import AutoPopup from './RightSidePopup';
 import { getAllServiceCategories } from '../../features/ServicesPage/service';
 import { postSparePartsData } from '../../features/spareparts';
+import { FONTS } from '../../constants/constant';
 
 interface ServiceItem {
 	name: string;
@@ -134,18 +135,35 @@ const ServicesPage: React.FC = () => {
 	>([]);
 	const [isLoading, setIsLoading] = useState(true);
 	const navigate = useNavigate();
+	const serviceTitle = useScrollAnimation<HTMLHeadingElement>();
+	 const [selectedCategory, setSelectedCategory] = useState<{
+    id: string;
+    name: string;
+  } | null>(null);
+
 
 	const fetchAllServiceCategory = async () => {
 		try {
 			setIsLoading(true);
-			const response = await getAllServiceCategories();
+			const response: any = await getAllServiceCategories();
 			if (response.data && response.data.data) {
-				setServiceCategories(response.data.data);
+				 // Filter to only show the selected category if one is selected
+        const categories = selectedCategory
+          ? response.data.data.filter(
+              (cat: any) => cat._id === selectedCategory.id
+            )
+          : response.data.data;
+          
+        setServiceCategories(categories);
 				const firstActiveCategory = response.data.data.find(
-					(cat) => !cat.is_deleted
+					(cat: any) => !cat.is_deleted
 				);
 				if (firstActiveCategory) {
-					setActiveNavItem(firstActiveCategory.category_name);
+					setActiveNavItem(
+            selectedCategory 
+              ? selectedCategory.name 
+              : firstActiveCategory.category_name
+          );
 				}
 			}
 		} catch (error) {
@@ -158,6 +176,15 @@ const ServicesPage: React.FC = () => {
 	useEffect(() => {
 		fetchAllServiceCategory();
 	}, []);
+
+	const storedCategory: any = localStorage.getItem('selectedCategory');
+	//console.log(storedCategory, 'storedCategory');	
+	useEffect(() => {
+		if (storedCategory) {
+			setActiveNavItem(storedCategory?.name);
+			localStorage.removeItem('selectedCategory');
+		}
+	}, [storedCategory]);
 
 	const mapApiToContentSections = (
 		categories: ApiServiceCategory[]
@@ -173,7 +200,7 @@ const ServicesPage: React.FC = () => {
 
 			const packages: ServicePackage[] = activeServices.map((service) => {
 				const originalPrice = service.price;
-				const discountPrice = Math.round(originalPrice * 1.2); // 20% higher than original for strikethrough
+				const discountPrice = Math.round(originalPrice * 1.2);
 
 				return {
 					id: service._id,
@@ -188,8 +215,8 @@ const ServicesPage: React.FC = () => {
 							icon: <Wrench className='w-4 h-4' />,
 						},
 					],
-					price: `₹${discountPrice}`, // This is the strikethrough price
-					discountPrice: `₹${originalPrice}`, // This is the actual price
+					price: `₹${discountPrice}`,
+					discountPrice: `₹${originalPrice}`,
 				};
 			});
 
@@ -234,9 +261,12 @@ const ServicesPage: React.FC = () => {
 	};
 
 	const handleNavClick = (navItem: string) => {
+		//console.log(navItem, 'navItem');
 		setActiveNavItem(navItem);
 		setSelectedPackage([]);
 	};
+
+	// console.log(activeNavItem, 'activeNavItem');
 
 	const handleAddToCart = async (serviceId: string) => {
 		const packageToAdd = selectedPackage.find((p) => p.packageId === serviceId);
@@ -264,8 +294,6 @@ const ServicesPage: React.FC = () => {
 			selectedPackage.filter((item) => item.packageId !== serviceId)
 		);
 	};
-
-	const serviceTitle = useScrollAnimation<HTMLHeadingElement>();
 
 	useEffect(() => {
 		const hasDismissed = localStorage.getItem('dismissedWelcomePopup');
@@ -394,8 +422,8 @@ const ServicesPage: React.FC = () => {
 			<div className='ml-72 bg-gray-50 min-h-screen'>
 				<div className='max-w-4xl mx-auto px-6 py-8'>
 					<div className='mb-8'>
-						<h1 ref={serviceTitle.elementRef}>
-							<span className='inline-block pb-1 relative text-3xl font-bold text-[#9b111e] mb-2'>
+						<h1 ref={serviceTitle.elementRef} style={{...FONTS.sub_heading}}>
+							<span className='inline-block pb-1 relative text-[#9b111e] mb-2'>
 								{currentContent?.title || 'Services'}
 								<span
 									className={`absolute top-11 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
@@ -467,7 +495,10 @@ const ServicesPage: React.FC = () => {
 											<div className='flex-1 p-6'>
 												<div className='flex justify-between items-start mb-4'>
 													<div className='relative'>
-														<h2 className='text-2xl font-bold text-[#9b111e] mb-2'>
+														<h2
+															className='text-[#9b111e] mb-2'
+															style={{ ...FONTS.sub_heading2 }}
+														>
 															{pkg.title}
 														</h2>
 														<div className='absolute font-bold flex flex-row items-center w-[122px] bottom-[40px] left-[430px] px-3 py-1 rounded-full bg-red-600 text-white text-sm'>

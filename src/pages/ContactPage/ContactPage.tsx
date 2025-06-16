@@ -1,10 +1,11 @@
 import EnquiryForm from '../../components/Enquiry Form/EnquiryForm';
+import { FONTS } from '../../constants/constant';
 
 const ContactPage = () => {
 	return (
 		<div className='py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 to-blue-100 min-h-screen'>
 			<div className='text-center mb-8'>
-				<h1 className='text-3xl font-bold text-red-900 sm:text-4xl'>
+				<h1 className='text-red-900 sm:text-4xl' style={{ ...FONTS.heading }}>
 					Have Questions About Our Services?
 				</h1>
 				<p className='mt-3 max-w-2xl mx-auto text-lg text-red-500 sm:mt-4'>

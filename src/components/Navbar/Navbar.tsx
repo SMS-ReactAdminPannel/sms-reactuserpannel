@@ -2,9 +2,8 @@ import React, { useState, useRef, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../pages/auth/AuthContext';
 import { COLORS, FONTS } from '../../constants/constant';
-import Logo from '../../assets/LOGO.jpg';
+import Logo from '../../assets/LOGO.png';
 import { FiSearch } from 'react-icons/fi';
-import { FaShoppingCart } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import ProfileMenu from '../home/ProfileMenu';
 import CustomDropdown from './Customdropdown';
@@ -152,7 +151,11 @@ export const Navbar: React.FC = () => {
 				{/* Logo & Location */}
 				<div className='flex items-center space-x-4'>
 					<Link to='/' className='text-2xl font-bold text-white'>
-						<img src={Logo} alt='yes mechanic logo' className='w-32 h-16' />
+						<img
+							src={Logo}
+							alt='yes mechanic logo'
+							className='w-[185px] h-[28px]'
+						/>
 					</Link>
 				</div>
 
@@ -160,7 +163,7 @@ export const Navbar: React.FC = () => {
 					<img src={TruckIcon} style={{ width: '30px' }} />
 					<label
 						className='text-red-900 cursor-pointer'
-						style={{ ...FONTS.paragraph, fontWeight: 600 }}
+						style={{ ...FONTS.sub_paragraph1, fontWeight: 600 }}
 					>
 						QUICK DELIVERY
 					</label>
@@ -367,13 +370,13 @@ export const Navbar: React.FC = () => {
 						</div>
 					)}
 					<div
-						className='relative flex items-center'
+						className='relative flex items-center -left-2'
 						onClick={() => {
 							navigate('/booking-cart');
 						}}
 					>
 						<IoCartOutline className='text-3xl cursor-pointer text-red-900' />
-						<span className='absolute w-4 h-4 -top-2 left-6 bg-red-500 text-white text-xs rounded-full px-1 cursor-pointer text-center'>
+						<span className='absolute w-auto h-auto -top-2 left-6 bg-red-500 text-white text-xs rounded-full px-1 cursor-pointer text-center'>
 							{cartCount || 0}
 						</span>
 					</div>
@@ -401,13 +404,13 @@ export const Navbar: React.FC = () => {
 					<NavLink
 						key={idx}
 						to={item.link}
-						style={{ ...FONTS.paragraph, fontWeight: 500, fontSize: '16px' }}
+						style={{ ...FONTS.paragraph, fontWeight: 500, fontSize: '18px' }}
 						className={({ isActive }) =>
 							`relative pb-1 text-md font-semibold transition-all duration-300 ease-in-out whitespace-nowrap
 	${
 		isActive
-			? 'text-red-900 after:content-[""] after:absolute after:left-0 after:bottom-8 after:h-[2.5px] after:w-full after:bg-red-900 after:transition-all after:duration-300'
-			: 'text-red-800 after:content-[""] after:absolute after:left-0 after:bottom-8 after:h-[2.5px] after:w-0 after:bg-red-900 after:transition-all after:duration-300 hover:after:w-full'
+			? 'text-red-900 after:content-[""] after:absolute after:left-0 after:bottom-9 after:h-[2.5px] after:w-full after:bg-red-900 after:transition-all after:duration-300'
+			: 'text-red-800 after:content-[""] after:absolute after:left-0 after:bottom-9 after:h-[2.5px] after:w-0 after:bg-red-900 after:transition-all after:duration-300 hover:after:w-full'
 	}`
 						}
 					>

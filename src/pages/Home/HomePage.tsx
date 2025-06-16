@@ -1,14 +1,14 @@
 import { ImageCarousel } from '../../components/home/ImageCarousel';
-// <<<<<<< HEAD
-import image1 from '../../assets/carimages/pexels-cottonbro-4489749.jpg'
-import image2 from '../../assets/carimages/pexels-artempodrez-8986070.jpg'
-import image3 from '../../assets/carimages/pexels-cottonbro-4489732.jpg'
-import image4 from '../../assets/carimages/pexels-ronaldo-galeano-2428202-4069389.jpg'
+import image1 from '../../assets/home/360_F_496483060_C9OG1wJpfmjMXcNmUBibmA9wYxxZCxnW.jpg';
+import image2 from '../../assets/home/360_F_507812981_dGZXqBsqkBpEosDjTlJgmaJAyMFra7sp.jpg';
+import image3 from '../../assets/home/hand-mechanic-holding-car-service-600nw-2340377479.webp';
+import image4 from '../../assets/home/istockphoto-1387759698-612x612.jpg';
+import serviceImg from '../../assets/CAR ANNUAL MAINTENANCE/Annual maintenance.jpg';
 // import CarImg1 from '../../assets/CarImg1.jpg';
 
-
-
-
+import { RxLapTimer } from 'react-icons/rx';
+import { LiaCertificateSolid } from 'react-icons/lia';
+import { BsTruck } from 'react-icons/bs';
 import { GrWorkshop } from 'react-icons/gr';
 import { LuCarTaxiFront } from 'react-icons/lu';
 import { PiSealCheckBold } from 'react-icons/pi';
@@ -24,15 +24,15 @@ import { COLORS, FONTS } from '../../constants/constant';
 import React, { useState, useRef, useEffect } from 'react';
 import {
 	FaTools,
-	// FaSnowflake,
-	// FaBatteryThreeQuarters,
-	// FaCarAlt,
-	// FaSearch,
-	// FaLightbulb,
-	// FaCarCrash,
-	// FaCarSide,
-	// FaFileSignature,
-	// FaCircleNotch,
+	FaSnowflake,
+	FaBatteryThreeQuarters,
+	FaCarAlt,
+	FaSearch,
+	FaLightbulb,
+	FaCarCrash,
+	FaCarSide,
+	FaCircleNotch,
+	FaPhoneAlt,
 } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import PromoCarousel from '../../components/home/offerCard';
@@ -42,13 +42,12 @@ import CustomServicesCarousel from '../../components/home/customServiceCarousel'
 import Roadsideassistant from '../../assets/CAR ROADSIDE/Roadside assistant.jpg';
 import Prebooking from '../../assets/CAR PREBOOKING/Prebooking.jpg';
 import Annualmaintenance from '../../assets/CAR ANNUAL MAINTENANCE/Annual maintenance.jpg';
-import appimage from '../../assets/LOGO.jpg';
+import appimage from '../../assets/LOGO.png';
 import bgImg from '../../assets/home/aesthetic-background-with-patterned-glass-texture.jpg';
 import bgImg2 from '../../assets/home/studio-background-concept-abstract-empty-light-gradient-purple-studio-room-background-product.jpg';
 import bgImg3 from '../../assets/checkout-bg_1_.png';
 
 // icon for footer
-import { FaPhoneFlip } from 'react-icons/fa6'; // phone
 import { MdEmail } from 'react-icons/md'; // mail
 import { FaSquareWhatsapp } from 'react-icons/fa6'; //whatsapp
 import { FaInstagramSquare } from 'react-icons/fa'; //telegram
@@ -57,10 +56,11 @@ import { FaFacebook } from 'react-icons/fa'; //facebook
 import { FaYoutube } from 'react-icons/fa'; //youtube
 import { SiIndeed } from 'react-icons/si'; //indeed
 import { BiLogoPlayStore } from 'react-icons/bi'; //play store
-
-// API call to fetch home data
-
-import { getAllServiceCategories } from '../../features/ServicesPage/service';
+import {
+	getAllServiceCategories,
+	getServiceCategoryById,
+} from '../../features/ServicesPage/service';
+import { useNavigate } from 'react-router-dom';
 
 const imageUrls = [image1, image2, image3, image4];
 interface ServiceCardProps {
@@ -105,6 +105,7 @@ const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 };
 
 const HomePage: React.FC = () => {
+	const navigate = useNavigate();
 	// const cardData: ServiceCardProps[] = [
 	// 	{
 	// 		id: 1,
@@ -160,12 +161,6 @@ const HomePage: React.FC = () => {
 	// 		title: 'Clutch & Body Parts',
 	// 		color: 'bg-white border-[#9b111e]',
 	// 	},
-	// 	{
-	// 		id: 10,
-	// 		icon: <FaFileSignature size={42} />,
-	// 		title: 'Insurance Claims',
-	// 		color: 'bg-white border-[#9b111e]',
-	// 	},
 	// ];
 
 	// Create separate hooks for each title
@@ -174,55 +169,95 @@ const HomePage: React.FC = () => {
 	const discoverTitle = useScrollAnimation<HTMLHeadingElement>();
 	const contactTitle = useScrollAnimation<HTMLHeadingElement>();
 	const [isLoading, setIsLoading] = useState(true);
-	const [servicescard, setServicescard] = useState<any[]>([]);
+	const [serviceData, setServiceData] = useState<any[]>([]);
+	//const [selectedService, setSelectedService] = useState<any>(null);
 
-	const fetchHomePageData = async() => {
+	const fetchHomePageData = () => {
 		try {
-			setIsLoading(true);
-			const response = await getAllServiceCategories({});
-			if (response){
-				setServicescard(response.data.data);
-				console.log("Fetched Services Data:", response.data.data); // ✅ Log fetched data
-				
-			}
-
+			setIsLoading(false);
 		} catch (error) {
-		 console.error('Error fetching services data:', error); // ✅ Log error
+			console.log(error);
 		} finally {
 			setIsLoading(false);
 		}
 	};
+	const fetchServiceData = async () => {
+		try {
+			const response = await getAllServiceCategories();
+			if (response) {
+				setServiceData(response.data.data);
+				//console.log(response.data.data);
+			}
+		} catch (error) {
+			console.error('Error fetching service data:', error);
+		}
+	};
+
+	// 	fetch all specific service details
+	// 	const fetchAllServiceDetails = async () => {{
+	// 		try{
+	// 			setIsLoading(true);
+	// 			const response = await getServiceCategoryById();
+	// 			if (response) {
+	// 				setSelectedService(response.data.data);
+	// 				console.log(response.data.data);
+	// 				navigate(`/services/${id}`);
+	// 			}
+	// 		} catch (error) {
+	// 			console.error('Error fetching service data:', error);
+	// 		} finally {
+	// 			setIsLoading(false);
+	// 		}
+	// 	};
+	// }
 
 	useEffect(() => {
 		fetchHomePageData();
+		fetchServiceData();
 	}, []);
 
-	if (isLoading) {
-		return (
-			<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-				<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-				<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-			</div>
+	const handleServiceClick = (categoryId: string, categoryName: string) => {
+		// Store the category info in localStorage or pass via state
+		localStorage.setItem(
+			'selectedCategory',
+			JSON.stringify({
+				id: categoryId,
+				name: categoryName,
+			})
 		);
-	}
+		// console.log('Selected Category:', categoryId, categoryName);
+
+		// Navigate to services page
+		navigate('/services');
+	};
+
+	// if (isLoading) {
+	// 	return (
+	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
+	// 			<div className='animate-spin rounded-full h-12 w-12 border-2 border-red-500'></div>
+	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
+	// 		</div>
+	// 	);
+	// }
 
 	return (
 		<>
 			<div className='h-[80vh]'>
-				<div className='bg-red-900 h-[45px]'></div>
+				<div className='bg-red-900 h-[25px]'></div>
 				<ImageCarousel images={imageUrls} interval={2500} />
 			</div>
+
 			<div className=''>
-				<div className='px-24 my-8 h-[75vh]'>
+				<div className='px-24 h-[90vh] bg-red-100'>
 					<h1
 						ref={servicesTitle.elementRef}
-						className='text-2xl mb-10 text-red-900 text-center'
-						style={{ ...FONTS.header, fontWeight: 700 }}
+						className='text-2xl py-10 text-red-900 text-center'
+						style={{ ...FONTS.heading }}
 					>
 						<span className='inline-block pb-1 relative'>
 							Available Services
 							<span
-								className={`absolute top-9 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+								className={`absolute top-9 left-1/2 h-[1px] bg-red-900 transform -translate-x-1/2 origin-center transition-all duration-700 ${
 									servicesTitle.isVisible
 										? 'scale-x-100 w-full'
 										: 'scale-x-0 w-full'
@@ -231,24 +266,31 @@ const HomePage: React.FC = () => {
 						</span>
 					</h1>
 
-					<div className='grid grid-cols-5 grid-rows-2 gap-4 max-w-6xl mx-auto mb-5'>
-						{servicescard
-							//.filter(service => service.is_active)
-							.map((services) => (
-								<Link
-									to={`/services`}
-									key={services._id}
-									className={`${services.color} rounded-lg p-8 shadow-md hover:shadow-lg transition-shadow ease-in duration-300 cursor-pointer transform hover:scale-102`}
-								>
-									<div className='text-[#9b111e] mb-4 flex justify-center'>
-										 <FaTools size={42} /> {/* Default icon for all */}
+					<div className='grid grid-cols-3 gap-6 max-w-6xl mx-auto'>
+						{serviceData.map((service) => (
+							<Link
+								to='/services'
+								key={service.id}
+								onClick={() =>
+									handleServiceClick(service.id, service.category_name)
+								}
+								className={`bg-[#FAF3EB] rounded-lg p-2 shadow-md hover:shadow-lg transition-shadow ease-in duration-300 border-b-2 cursor-pointer transform hover:scale-102 border-red-900`}
+							>
+								<div className='flex mx-4 gap-3'>
+									<div className='text-[#9b111e] flex justify-center'>
+										<img
+											className='w-[100px] h-[70px] m-2 rounded'
+											src={serviceImg}
+											alt={service.category_name}
+										/>
 									</div>
 									<h3
-									className='text-center text-red-700 opacity-75'
-									style={{ ...FONTS.paragraph, fontWeight: 550 }}
-								>
-									 {services.category_name}
-								</h3>
+										className='text-center my-auto text-red-700'
+										style={{ ...FONTS.paragraph, fontWeight: 500 }}
+									>
+										{service.category_name}
+									</h3>
+								</div>
 							</Link>
 						))}
 					</div>
@@ -269,7 +311,7 @@ const HomePage: React.FC = () => {
 							<h1
 								ref={careTitle.elementRef}
 								className='text-2xl mb-10 text-red-900 text-center'
-								style={{ ...FONTS.header, fontWeight: 700 }}
+								style={{ ...FONTS.heading }}
 							>
 								<span className='inline-block pb-1 relative'>
 									Care Advantages
@@ -323,7 +365,7 @@ const HomePage: React.FC = () => {
 							<h1
 								ref={discoverTitle.elementRef}
 								className='text-2xl mb-10 text-red-900 text-center'
-								style={{ ...FONTS.header, fontWeight: 700 }}
+								style={{ ...FONTS.heading }}
 							>
 								<span className='inline-block pb-1 relative'>
 									Discover Our Services
@@ -359,7 +401,6 @@ const HomePage: React.FC = () => {
 										className='py-2'
 										style={{
 											...FONTS.paragraph,
-											fontSize: '16px',
 											textAlign: 'justify',
 										}}
 									>
@@ -371,8 +412,9 @@ const HomePage: React.FC = () => {
 										to an automobile repair
 									</h2>
 									<button
-										className='bg-red-900 text-white py-2 px-2 mt-3 rounded-full'
+										className='bg-red-900 text-white py-2 px-3 mt-3 rounded-full hover:bg-red-800'
 										style={{ ...FONTS.paragraph, fontWeight: 500 }}
+										onClick={() => navigate('/services')}
 									>
 										Book Service
 									</button>
@@ -411,8 +453,9 @@ const HomePage: React.FC = () => {
 										much better and safer approach to repair shop procedures:
 									</h2>
 									<button
-										className='bg-red-900 text-white py-2 px-2 mt-3 rounded-full'
+										className='bg-red-900 text-white py-2 px-3 mt-3 rounded-full hover:bg-red-800'
 										style={{ ...FONTS.paragraph, fontWeight: 500 }}
+										onClick={() => navigate('/services')}
 									>
 										Book Service
 									</button>
@@ -460,8 +503,9 @@ const HomePage: React.FC = () => {
 										deeper understanding of your scheduling and hiring needs.
 									</h2>
 									<button
-										className='bg-red-900 text-white py-2 px-2 mt-3 rounded-full'
+										className='bg-red-900 text-white py-2 px-3 mt-3 rounded-full hover:bg-red-800'
 										style={{ ...FONTS.paragraph, fontWeight: 500 }}
+										onClick={() => navigate('/services')}
 									>
 										Book Service
 									</button>
@@ -475,7 +519,7 @@ const HomePage: React.FC = () => {
 						<h1
 							ref={contactTitle.elementRef}
 							className='text-2xl mb-10 text-red-900 text-center'
-							style={{ ...FONTS.header, fontWeight: 700 }}
+							style={{ ...FONTS.heading }}
 						>
 							<span className='inline-block pb-4 relative'>
 								Customised Care For All Your Needs
@@ -489,8 +533,8 @@ const HomePage: React.FC = () => {
 							</span>
 						</h1>
 
-						<div className='flex justify-center gap-6 mt-4 mb-10 flex-wrap'>
-							<div className='flex flex-col items-center text-center bg-[#fdefe9] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
+						<div className='flex justify-center gap-10 mt-4 mb-10 flex-wrap'>
+							<div className='flex flex-col items-center text-center bg-[#fdefe9] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103 border-2 border-red-900'>
 								<GrWorkshop size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
@@ -505,7 +549,7 @@ const HomePage: React.FC = () => {
 									Open All 7 Days
 								</p>
 							</div>
-							<div className='flex flex-col items-center text-center bg-[#fdefe9] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
+							<div className='flex flex-col items-center text-center bg-[#fdefe9] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103 border-2 border-red-900'>
 								<LuCarTaxiFront size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
@@ -519,7 +563,7 @@ const HomePage: React.FC = () => {
 									<br />& Drop Facility
 								</p>
 							</div>
-							<div className='flex flex-col items-center text-center bg-[#fdefe9] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
+							<div className='flex flex-col items-center text-center bg-[#fdefe9] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103 border-2 border-red-900'>
 								<GrWorkshop size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
@@ -534,7 +578,7 @@ const HomePage: React.FC = () => {
 									Open All 7 Days
 								</p>
 							</div>
-							<div className='flex flex-col items-center text-center bg-[#fdefe9] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
+							<div className='flex flex-col items-center text-center bg-[#fdefe9] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103 border-2 border-red-900'>
 								<PiSealCheckBold size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
@@ -548,7 +592,7 @@ const HomePage: React.FC = () => {
 									<br />& Oil
 								</p>
 							</div>
-							<div className='flex flex-col items-center text-center bg-[#fdefe9] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
+							<div className='flex flex-col items-center text-center bg-[#fdefe9] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103 border-2 border-red-900'>
 								<LuHandshake size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
@@ -563,7 +607,7 @@ const HomePage: React.FC = () => {
 									Plan Coverage
 								</p>
 							</div>
-							<div className='flex flex-col items-center text-center bg-[#fdefe9] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
+							<div className='flex flex-col items-center text-center bg-[#fdefe9] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103 border-2 border-red-900'>
 								<RiShieldStarFill size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
@@ -578,7 +622,7 @@ const HomePage: React.FC = () => {
 									Warranty
 								</p>
 							</div>
-							<div className='flex flex-col items-center text-center bg-[#fdefe9] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
+							<div className='flex flex-col items-center text-center bg-[#fdefe9] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103 border-2 border-red-900'>
 								<GrWorkshop size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
@@ -593,7 +637,7 @@ const HomePage: React.FC = () => {
 									Open All 7 Days
 								</p>
 							</div>
-							<div className='flex flex-col items-center text-center bg-[#fdefe9] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103'>
+							<div className='flex flex-col items-center text-center bg-[#fdefe9] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103 border-2 border-red-900'>
 								<MdDateRange size={32} color={COLORS.primary} />
 								<p
 									className='mt-3'
@@ -612,14 +656,14 @@ const HomePage: React.FC = () => {
 					</div>
 				</div>
 				{/* FOOTER START */}
-				<footer className={`h-[100vh] bg-[url(${bgImg2})] pt-3`}>
-					<div className='grid grid-cols-4 gap-4 px-24'>
+				<footer className={`h-[81vh] bg-[url(${bgImg2})] pt-2`}>
+					<div className='grid grid-cols-4 gap-4 px-10'>
 						{/* Image Card - Full Height (No border) */}
 						<div className='col-span-1 p-4 rounded h-full border-0'>
 							<img
 								src={appimage}
 								alt='appimage'
-								className='p-2 h-[120px] w-[280px] object-cover rounded'
+								className='p-2 h-[56px] w-[260px] rounded'
 							/>
 						</div>
 
@@ -629,34 +673,52 @@ const HomePage: React.FC = () => {
 								<p
 									className='text-red-900 text-2xl'
 									style={{
-										...FONTS.paragraph,
-										fontWeight: 600,
-										fontSize: '24px',
+										...FONTS.sub_heading1,
 									}}
 								>
-									Yes Mechanics
+									Yes Advantages
 								</p>
-								<address
-									style={{ ...FONTS.paragraph, textAlign: 'justify' }}
-									className='my-3 text-red-900'
-								>
-									No. 1, New Bangaru Naidu Colony, K.K. Nagar (West), Chennai -
-									600078.
-								</address>
+								<ol className='pt-3 text-red-900 text-xl flex flex-col gap-2'>
+									{/* First Item */}
+									<li className='flex items-center py-1 text-red-900 hover:underline cursor-pointer'>
+										<BsTruck className='text-red-900 text-xl mr-2' />
+										<span style={{ ...FONTS.paragraph }}>
+											Free Shipping & Delivery
+										</span>
+									</li>
+
+									{/* Second Item */}
+									<Link
+										to='/contact'
+										className='flex items-center py-1 text-red-900 hover:underline cursor-pointer'
+									>
+										<LiaCertificateSolid className='text-red-900 text-xl mr-2' />
+										<span style={{ ...FONTS.paragraph }}>
+											Certified Employees
+										</span>
+									</Link>
+
+									{/* Third Item */}
+									<Link
+										to='/contact'
+										className='flex items-center py-1 text-red-900 hover:underline cursor-pointer'
+									>
+										<RxLapTimer className='text-red-900 text-xl mr-2' />
+										<span style={{ ...FONTS.paragraph }}>On Time Delivery</span>
+									</Link>
+								</ol>
 							</div>
 
 							<div className='p-4 w-full h-full'>
 								<p
 									className='text-red-900 font-bold text-3xl'
 									style={{
-										...FONTS.paragraph,
-										fontWeight: 600,
-										fontSize: '24px',
+										...FONTS.sub_heading1,
 									}}
 								>
 									About YM
 								</p>
-								<ol className='pt-1 text-red-900 text-xl flex flex-col'>
+								<ol className='pt-3 text-red-900 text-xl flex flex-col'>
 									<li
 										className='py-1 text-red-900 hover:underline cursor-pointer'
 										style={{ ...FONTS.paragraph }}
@@ -664,18 +726,11 @@ const HomePage: React.FC = () => {
 										About Us
 									</li>
 									<Link
-										to='/contact'
+										to='/contact-us'
 										className='py-1 text-red-900 hover:underline cursor-pointer'
 										style={{ ...FONTS.paragraph }}
 									>
 										Contact Us
-									</Link>
-									<Link
-										to='/settings'
-										className='py-1 text-red-900 hover:underline cursor-pointer'
-										style={{ ...FONTS.paragraph }}
-									>
-										Settings
 									</Link>
 									<Link
 										to='/services'
@@ -691,16 +746,14 @@ const HomePage: React.FC = () => {
 								<p
 									className='text-red-900 font-bold text-3xl'
 									style={{
-										...FONTS.paragraph,
-										fontWeight: 600,
-										fontSize: '24px',
+										...FONTS.sub_heading1,
 									}}
 								>
-									Support
+									Customer Support
 								</p>
 								<ol className='pt-3 text-red-900 text-xl flex flex-col'>
 									<Link
-										to='/enquiry'
+										to='/contact-us'
 										className='py-1 text-red-900 hover:underline'
 										style={{ ...FONTS.paragraph }}
 									>
@@ -711,61 +764,56 @@ const HomePage: React.FC = () => {
 										className='py-1 text-red-900 hover:underline'
 										style={{ ...FONTS.paragraph }}
 									>
-										Help Center
+										Cancellation and Returns
 									</Link>
 									<Link
 										to='/faqs'
 										className='py-1 text-red-900 hover:underline'
 										style={{ ...FONTS.paragraph }}
 									>
-										FAQs
+										Delivery Information
 									</Link>
 								</ol>
 							</div>
 							<div className='w-[900px]'>
 								<div className='grid grid-cols-1 gap-2 px-6'>
 									<div className=''>
-										<hr className='w-full border-[2px] border-red-900' />
+										<hr className='w-full border-0.5 border-red-900' />
 
 										{/* Text on left, icons on right */}
 										<div className='flex justify-between items-center text-red-900 text-xl py-2'>
-											<p className='font-semibold text-base'>
-												Download our App
-											</p>
+											<p className='font-lg text-base'>Download our App</p>
 
 											<div className='flex items-center gap-4'>
-												<div className='bg-red-900 text-white rounded-full p-2'>
-													<BiLogoPlayStore />
+												<div className=' text-red-900  text-3xl'>
+													<BiLogoPlayStore size={16} />
 												</div>
 											</div>
 										</div>
 									</div>
 									<div className=''>
-										<hr className='w-full border-[1px] border-red-900' />
+										<hr className='w-full border-.5 border-red-900' />
 
-										{/* Text on left, icons on right */}
 										<div className=''>
-											<hr className='w-full border-[1px] border-red-900' />
-
 											{/* Text on left, icons on right */}
 											<div className='flex justify-between items-center text-red-900 text-xl py-2'>
-												<p className='font-semibold text-base'>Social Media</p>
+												<p className='font-lg text-base'>Social Media</p>
 
 												<div className='flex items-center gap-4'>
-													<div className='bg-red-900 text-white rounded-full p-2'>
-														<FaInstagramSquare />
+													<div className='text-red-900  text-3xl'>
+														<FaInstagramSquare size={16} />
 													</div>
-													<div className='bg-red-900 text-white rounded-full p-2'>
-														<FaXTwitter />
+													<div className='text-red-900  text-3xl'>
+														<FaXTwitter size={16} />
 													</div>
-													<div className='bg-red-900 text-white rounded-full p-2'>
-														<FaFacebook />
+													<div className='text-red-900  text-3xl'>
+														<FaFacebook size={16} />
 													</div>
-													<div className='bg-red-900 text-white rounded-full p-2'>
-														<FaYoutube />
+													<div className='text-red-900  text-3xl'>
+														<FaYoutube size={16} />
 													</div>
-													<div className='bg-red-900 text-white rounded-full p-2'>
-														<SiIndeed />
+													<div className=' text-red-900  text-3xl'>
+														<SiIndeed size={16} />
 													</div>
 												</div>
 											</div>
@@ -773,25 +821,23 @@ const HomePage: React.FC = () => {
 									</div>
 
 									<div className=''>
-										<hr className='w-full border-[1px] border-red-900' />
+										<hr className='w-full border-0.5 border-red-900' />
 
 										{/* Text on left, icons on right */}
 										<div className=''>
-											<hr className='w-full border-[1px] border-red-900' />
-
 											{/* Text on left, icons on right */}
 											<div className='flex justify-between items-center text-red-900 text-xl py-2'>
-												<p className='font-semibold text-base'>Contact Us</p>
+												<p className='font-lg text-base'>Contact Us</p>
 
 												<div className='flex items-center gap-4'>
-													<div className='bg-red-900 text-white rounded-full p-2'>
-														<FaPhoneFlip />
+													<div className=' text-red-900  text-2xl'>
+														<FaPhoneAlt size={16} />
 													</div>
-													<div className='bg-red-900 text-white rounded-full p-2'>
-														<MdEmail />
+													<div className=' text-red-900  text-3xl'>
+														<MdEmail size={16} />
 													</div>
-													<div className='bg-red-900 text-white rounded-full p-2'>
-														<FaSquareWhatsapp />
+													<div className=' text-red-900  text-3xl'>
+														<FaSquareWhatsapp size={16} />
 													</div>
 												</div>
 											</div>
