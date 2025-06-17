@@ -384,10 +384,10 @@ export default function SparePartsCart() {
 				>
 					<span className='inline-block pb-1 relative text-[#9b111e] mb-6'>
 						My Cart
-						<span
+						{/* <span
 							className={`absolute top-14 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${cartTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
 								}`}
-						></span>
+						></span> */}
 					</span>
 				</h1>
 

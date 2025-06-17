@@ -198,13 +198,13 @@ const HomePage: React.FC = () => {
 					>
 						<span className='inline-block pb-1 relative'>
 							Available Services
-							<span
+							{/* <span
 								className={`absolute top-9 left-1/2 h-[1px] bg-red-900 transform -translate-x-1/2 origin-center transition-all duration-700 ${
 									servicesTitle.isVisible
 										? 'scale-x-100 w-full'
 										: 'scale-x-0 w-full'
 								}`}
-							></span>
+							></span> */}
 						</span>
 					</h1>
 
@@ -257,13 +257,13 @@ const HomePage: React.FC = () => {
 							>
 								<span className='inline-block pb-1 relative'>
 									Care Advantages
-									<span
+									{/* <span
 										className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
 											careTitle.isVisible
 												? 'scale-x-100 w-full'
 												: 'scale-x-0 w-full'
 										}`}
-									></span>
+									></span> */}
 								</span>
 							</h1>
 							<div className='flex space-x-6 items-center justify-center'>
@@ -311,13 +311,13 @@ const HomePage: React.FC = () => {
 							>
 								<span className='inline-block pb-1 relative'>
 									Discover Our Services
-									<span
+									{/* <span
 										className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
 											discoverTitle.isVisible
 												? 'scale-x-100 w-full'
 												: 'scale-x-0 w-full'
 										}`}
-									></span>
+									></span> */}
 								</span>
 							</h1>
 							<div className='flex mt-5 justify-around gap-10'>
@@ -465,13 +465,13 @@ const HomePage: React.FC = () => {
 						>
 							<span className='inline-block pb-4 relative'>
 								Customised Care For All Your Needs
-								<span
+								{/* <span
 									className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
 										contactTitle.isVisible
 											? 'scale-x-100 w-full'
 											: 'scale-x-0 w-full'
 									}`}
-								></span>
+								></span> */}
 							</span>
 						</h1>
 

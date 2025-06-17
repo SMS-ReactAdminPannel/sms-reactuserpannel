@@ -231,10 +231,10 @@ const SpareParts: React.FC = () => {
 					style={{ ...FONTS.heading }}
 				>
 					Spare Parts
-					<span
+					{/* <span
 						className={`absolute top-14 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${offerTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
 							}`}
-					></span>
+					></span> */}
 				</span>
 			</h1>
 
@@ -295,10 +295,10 @@ const SpareParts: React.FC = () => {
 					style={{ ...FONTS.heading }}
 				>
 					Products
-					<span
+					{/* <span
 						className={`absolute top-12 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${productTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
 							}`}
-					></span>
+					></span> */}
 				</span>
 			</h1>
 
@@ -551,8 +551,8 @@ const SpareParts: React.FC = () => {
 			</div>
 
 			<div className="max-w-full px-4 md:px-6 lg:px-8">
-				<h1 className="text-2xl font-bold text-[#9b111e] mb-8 text-center md:text-left">
-					BY CATEGORIES
+				<h1 className=" text-[#9b111e] mb-8 text-center md:text-left" style={{ ...FONTS.heading }}>
+					By Categories
 				</h1>
 
 				<div className=" grid grid-cols-4 gap-6">

@@ -65,11 +65,11 @@ const CustomServicesGrid: React.FC = () => {
 			>
 				<span className='inline-block pb-1 relative'>
 					Available Spare Parts
-					<span
+					{/* <span
 						className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
 							spareTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
 						}`}
-					></span>
+					></span> */}
 				</span>
 			</h1>
 			<div className='grid grid-cols-5 gap-10'>
