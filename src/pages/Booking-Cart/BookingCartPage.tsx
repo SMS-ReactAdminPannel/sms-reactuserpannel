@@ -234,7 +234,7 @@ export default function SparePartsCart() {
 		const quantity: number = part.quantity || 1
 
 		return (
-			<div className='border rounded-lg h-[190px] shadow max-w-xl mx-left p-4 mb-6 bg-white hover:shadow-md transition duration-300'>
+			<div className='border rounded-lg h-[190px] shadow max-w-xl mx-left p-2 mb-6 bg-white hover:shadow-md transition duration-300'>
 				<div className='flex justify-star gap-4'>
 					<div className='w-32 h-32 relative group overflow-hidden rounded border'>
 						<img
@@ -255,7 +255,7 @@ export default function SparePartsCart() {
 
 					<div className='flex-1 flex flex-col justify-between'>
 						<div
-							className={`relative left-[325px] text-xs px-2 w-[60px] py-0.5 rounded font-medium ${part.stock
+							className={`relative left-[305px] text-xs text-center px-2 w-[90px] py-0.5 rounded font-medium ${part.stock
 								? 'bg-green-100 text-green-700'
 								: 'bg-red-700 text-white'
 								}`}
@@ -307,7 +307,7 @@ export default function SparePartsCart() {
 		// const [quantity, setQuantity] = useState(1);
 
 		return (
-			<div className='border rounded-lg h-[190px] shadow max-w-xl mx-left p-4 mb-6 bg-white hover:shadow-md transition duration-300'>
+			<div className='border rounded-lg h-[190px] shadow  mx-left p-4 mb-6 bg-white hover:shadow-md transition duration-300'>
 				<div className='flex justify-star gap-4'>
 					<div className='w-32 h-32 relative group overflow-hidden rounded border'>
 						<img

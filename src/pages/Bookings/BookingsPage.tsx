@@ -9,6 +9,7 @@ import {
 	Calendar,
 	// Truck,
 	Clock,
+	Search,
 } from 'lucide-react';
 import bgImage from '../../assets/checkout-bg_1_.png';
 import { getBookingAll } from '../../features/Bookings/service';
@@ -395,14 +396,14 @@ const OrdersPage: React.FC = () => {
 				<div className='bg-[#FAF3EB] rounded-2xl shadow-sm mx-auto border border-gray-100 p-6 mb-8'>
 					<div className='flex flex-col  gap-4 items-start lg:items-center justify-between'>
 						{/* Search */}
-						<div className='flex-1 '>
-							{/* <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5' /> */}
+						<div className='flex-1  relative'>
+							<Search className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5' />
 							<input
 								type='text'
 								value={searchTerm}
 								placeholder='Search orders...'
 								onChange={(e) => setSearchTerm(e.target.value)}
-								className='lg:w-[330px] md:w-full sm:w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all'
+								className='w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all'
 							/>
 						</div>
 

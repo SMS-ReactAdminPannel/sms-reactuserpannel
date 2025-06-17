@@ -477,9 +477,9 @@ const ServicesPage: React.FC = () => {
 											</div>
 										)}
 
-										<div className='flex flex-col md:flex-row items-start md:items-center'>
+										<div className='flex flex-col items-start w-full rounded-t-lg overflow-hidden'>
 											{/* Service Image */}
-											<div className='ml-12 mt-4 md:w-[500px] sm:w-[200px] h-[250px] md:h-auto bg-gradient-to-br from-gray-100 to-gray-200 flex-shrink-0 relative'>
+											<div className='w-full h-[280px] overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 flex-shrink-0 relative'>
 												<img
 													src={pkg.image}
 													alt={pkg.title}
@@ -517,7 +517,7 @@ const ServicesPage: React.FC = () => {
 												</div>
 
 												{/* Services Grid */}
-												<div className='grid grid-cols-1 md:grid-cols-2 gap-3 mb-4'>
+												<div className='grid grid-cols-1 gap-3 mb-4'>
 													{pkg.services
 														.slice(
 															0,
