@@ -402,7 +402,7 @@ const OrdersPage: React.FC = () => {
 								value={searchTerm}
 								placeholder='Search orders...'
 								onChange={(e) => setSearchTerm(e.target.value)}
-								className='w-[482px] pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all'
+								className='w-72 pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all'
 							/>
 						</div>
 
