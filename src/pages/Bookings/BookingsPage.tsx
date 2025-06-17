@@ -254,7 +254,7 @@ const OrdersPage: React.FC = () => {
 	const [filterType, setFilterType] = useState<'all' | 'spare' | 'service'>(
 		'all'
 	);
-	const [sortBy, setSortBy] = useState<'date' | 'price' | 'name'>('date');
+	const [sortBy] = useState<'date' | 'price' | 'name'>('date');
 	const [orders, setOrders] = useState<OrderDetails[]>([]);
 	const orderTitle = useScrollAnimation<HTMLHeadingElement>();
 	// const [isLoading, setIsLoading] = useState(false);
@@ -393,83 +393,84 @@ const OrdersPage: React.FC = () => {
 				</div>
 
 				{/* Filters and Search */}
-				<div className='bg-[#FAF3EB] rounded-2xl shadow-sm mx-auto border border-gray-100 p-6 mb-8'>
-					<div className='flex flex-col  gap-4 items-start lg:items-center justify-between'>
-						{/* Search */}
-						<div className='flex-1  relative'>
-							<Search className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5' />
-							<input
-								type='text'
-								value={searchTerm}
-								placeholder='Search orders...'
-								onChange={(e) => setSearchTerm(e.target.value)}
-								className='w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all'
-							/>
-						</div>
+<div className='bg-[#FAF3EB] rounded-2xl shadow-sm mx-7 border border-gray-100 p-6 mb-8 '>
 
-						{/* Filters */}
-						<div className='flex flex-wrap gap-3'>
-							{/* Filter Buttons */}
-							<div className='flex bg-gray-100 rounded-xl p-1'>
-								<button
-									onClick={() => setFilterType('all')}
-									className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${filterType === 'all'
-										? 'bg-red-900 text-white shadow-sm'
-										: 'text-gray-600 hover:text-gray-900'
-										}`}
-								>
-									All Orders
-								</button>
-								<button
-									onClick={() => setFilterType('spare')}
-									className={`px-4 py-2 rounded-lg  text-sm font-medium transition-all flex items-center ${filterType === 'spare'
-										? 'bg-red-900 text-white  shadow-sm'
-										: 'text-gray-600 hover:text-gray-900'
-										}`}
-								>
-									<Package className='w-4 h-4 mr-1' />
-									Spare Parts
-								</button>
-								<button
-									onClick={() => setFilterType('service')}
-									className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${filterType === 'service'
-										? 'bg-red-900 text-white  shadow-sm'
-										: 'text-gray-600 hover:text-gray-900'
-										}`}
-								>
-									<Wrench className='w-4 h-4 mr-1' />
-									Services
-								</button>
-							</div>
+  {/* First Row: Search */}
+  <div className='mb-6'>
+    <div className='relative w-full'>
+      <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5' />
+      <input
+        type='text'
+        value={searchTerm}
+        placeholder='Search orders...'
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className='w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all'
+      />
+    </div>
+  </div>
 
-							{/* Sort Dropdown */}
-							<select
-								value={sortBy}
-								onChange={(e) =>
-									setSortBy(e.target.value as 'date' | 'price' | 'name')
-								}
-								className='px-4 py-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent text-smpx-6 py-2 bg-gradient-to-r from-red-600 to-red-700 text-gray-600 rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-200 shadow-sm hover:shadow-md font-medium text-sm'
-							>
-								<option value='date'>Sort by Date</option>
-								<option value='price'>Sort by Price</option>
-								<option value='name'>Sort by Name</option>
-							</select>
+  {/* Second Row: Filters + Sort + Reset */}
+  <div className='flex flex-col  gap-4'>
 
-							{/* Reset Button */}
+    {/* Filter Buttons */}
+    <div className='flex flex-wrap gap-2 bg-gray-100 rounded-xl p-1'>
+      <button
+        onClick={() => setFilterType('all')}
+        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${filterType === 'all'
+          ? 'bg-red-900 text-white shadow-sm'
+          : 'text-gray-600 hover:text-gray-900'
+          }`}
+      >
+        All Orders
+      </button>
+      <button
+        onClick={() => setFilterType('spare')}
+        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${filterType === 'spare'
+          ? 'bg-red-900 text-white shadow-sm'
+          : 'text-gray-600 hover:text-gray-900'
+          }`}
+      >
+        <Package className='w-4 h-4 mr-1' />
+        Spare Parts
+      </button>
+      <button
+        onClick={() => setFilterType('service')}
+        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${filterType === 'service'
+          ? 'bg-red-900 text-white shadow-sm'
+          : 'text-gray-600 hover:text-gray-900'
+          }`}
+      >
+        <Wrench className='w-4 h-4 mr-1' />
+        Services
+      </button>
+    </div>
 
-							<button
-								onClick={() => {
-									setSearchTerm('');
-									setFilterType('all');
-									setSortBy('date');
-								}}
-								className='lg:ml-[400px] md:ml-0 sm:ml-0 px-4 py-1 text-white-500 bg-red-600 text-white rounded-xl hover:text-white hover:bg-red-700 transition-all duration-200 shadow-sm hover:shadow-md font-medium text-sm'
-							>
-								Reset Filters
-							</button>
-						</div>
-					</div>
-				</div>
+    {/* Sort Dropdown */}
+    {/* <select
+      value={sortBy}
+      onChange={(e) => setSortBy(e.target.value as 'date' | 'price' | 'name')}
+      className='px-4 py-2 w-full md:w-auto rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 transition-all duration-200 shadow-sm hover:shadow-md font-medium text-sm'
+    >
+      <option value='date'>Sort by Date</option>
+      <option value='price'>Sort by Price</option>
+      <option value='name'>Sort by Name</option>
+    </select> */}
+
+    {/* Reset Button */}
+    {/* <button
+      onClick={() => {
+        setSearchTerm('');
+        setFilterType('all');
+        setSortBy('date');
+      }}
+      className='px-4 py-2 mx-auto bg-red-600 text-white rounded-xl hover:bg-red-700 transition-all duration-200 shadow-sm hover:shadow-md font-medium text-sm'
+    >
+      Reset Filters
+    </button> */}
+
+  </div>
+</div>
+
 
 				{/* Orders List */}
 				<div className='space-y-6'>

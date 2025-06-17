@@ -551,7 +551,7 @@ const SpareParts: React.FC = () => {
 			</div>
 
 			<div className="max-w-full px-4 md:px-6 lg:px-8">
-				<h1 className=" text-[#9b111e] mb-8 text-center md:text-left" style={{ ...FONTS.heading }}>
+				<h1 className=" text-[#9b111e] mb-8 text-center" style={{ ...FONTS.heading }}>
 					By Categories
 				</h1>
 
