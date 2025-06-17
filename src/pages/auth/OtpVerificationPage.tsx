@@ -24,7 +24,7 @@ const OtpVerificationPage = () => {
 	const navigate = useNavigate();
 	const otpDataRaw = localStorage.getItem('otpData');
 	const otpData = otpDataRaw ? JSON.parse(otpDataRaw) : null;
-	const [isLoading, setIsLoading] = useState(false);
+	// const [isLoading, setIsLoading] = useState(false);
 
 	const handleOtpChange = (index: number, value: string) => {
 		if (!/^\d?$/.test(value)) return;
@@ -55,7 +55,7 @@ const OtpVerificationPage = () => {
 
 	const handleOtpVerify = async () => {
 		const enteredOtp = otpDigits.join('');
-		setIsLoading(true);
+		// setIsLoading(true);
 		if (enteredOtp.length !== 6) {
 			setError('otp', { message: 'Please enter a valid 6-digit OTP' });
 			return;
@@ -78,7 +78,7 @@ const OtpVerificationPage = () => {
 						response?.message || 'OTP verification failed. Please try again.',
 				});
 			}
-			setIsLoading(false);
+			// setIsLoading(false);
 		} catch (error: any) {
 			setError('otp', {
 				message:
@@ -86,18 +86,18 @@ const OtpVerificationPage = () => {
 					'An error occurred during verification.',
 			});
 		} finally {
-			setIsLoading(false);
+			// setIsLoading(false);
 		}
 	};
 
-	if (isLoading) {
-		return (
-			<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-				<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-				<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-			</div>
-		);
-	}
+	// if (isLoading) {
+	// 	return (
+	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
+	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
+	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
+	// 		</div>
+	// 	);
+	// }
 
 	return (
 		<AuthLayout title='Verify OTP'>

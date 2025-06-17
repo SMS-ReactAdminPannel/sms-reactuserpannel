@@ -136,7 +136,7 @@ const ServicesPage: React.FC = () => {
 	const [serviceCategories, setServiceCategories] = useState<
 		ApiServiceCategory[]
 	>([]);
-	const [isLoading, setIsLoading] = useState(true);
+	// const [isLoading, setIsLoading] = useState(true);
 	const navigate = useNavigate();
 	const serviceTitle = useScrollAnimation<HTMLHeadingElement>();
 	const [selectedCategory, setSelectedCategory] = useState<{
@@ -147,7 +147,7 @@ const ServicesPage: React.FC = () => {
 
 	const fetchAllServiceCategory = async () => {
 		try {
-			setIsLoading(true);
+			// setIsLoading(true);
 			const response: any = await getAllServiceCategories();
 			if (response.data && response.data.data) {
 				// Filter to only show the selected category if one is selected
@@ -172,7 +172,7 @@ const ServicesPage: React.FC = () => {
 		} catch (error) {
 			console.error('Error fetching service categories:', error);
 		} finally {
-			setIsLoading(false);
+			// setIsLoading(false);
 		}
 	};
 
@@ -322,14 +322,14 @@ const ServicesPage: React.FC = () => {
 	const [showForm, setShowForm] = useState<boolean>(false);
 	const currentContent = activeNavItem ? contentSections[activeNavItem] : null;
 
-	if (isLoading) {
-		return (
-			<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-				<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-				<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-			</div>
-		);
-	}
+	// if (isLoading) {
+	// 	return (
+	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
+	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
+	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
+	// 		</div>
+	// 	);
+	// }
 
 	return (
 		<div className='min-h-screen bg-gray-50 flex flex-start'>

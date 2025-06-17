@@ -83,7 +83,7 @@ const SpareParts: React.FC = () => {
 
 
 	// const [error, setError] = useState<string | null>(null);
-	const [isLoading, setIsLoading] = useState(true);
+	// const [isLoading, setIsLoading] = useState(true);
 
 	const fetchSpareParts = async () => {
 		try {
@@ -112,7 +112,7 @@ const SpareParts: React.FC = () => {
 					setParts(validatedParts);
 					const categoriesData = transformToCategories(validatedParts);
 					setCategories(categoriesData);
-					setIsLoading(false);
+					// setIsLoading(false);
 				} else {
 					throw new Error('API response data is not an array');
 				}
@@ -127,7 +127,7 @@ const SpareParts: React.FC = () => {
 			setParts([]);
 			setCategories([]);
 		} finally {
-			setIsLoading(false);
+			// setIsLoading(false);
 		}
 	};
 
@@ -214,14 +214,14 @@ const SpareParts: React.FC = () => {
 	const bundleTitle = useScrollAnimation<HTMLHeadingElement>();
 	// const categoryTitle = useScrollAnimation<HTMLHeadingElement>();
 
-	if (isLoading) {
-		return (
-			<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-				<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-				<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-			</div>
-		);
-	}
+	// if (isLoading) {
+	// 	return (
+	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
+	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
+	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
+	// 		</div>
+	// 	);
+	// }
 
 	return (
 		<div className='p-12 mx-8'>

@@ -28,19 +28,19 @@ const ProfilePage: React.FC = () => {
 	const [editMode, setEditMode] = useState(false);
 	const [showHistory, setShowHistory] = useState<number | null>(null);
 	const [profileData, setProfileData] = useState<any>({});
-	const [isLoading, setIsLoading] = useState(true);
+	// const [isLoading, setIsLoading] = useState(true);
 
 	const fetchUserProfile = async () => {
 		try {
 			const response: any = await getUserProfile({});
 			if (response) {
 				setProfileData(response?.data?.data);
-				setIsLoading(false);
+				// setIsLoading(false);
 			}
 		} catch (error) {
 			console.error('Error fetching user profile:', error);
 		} finally {
-			setIsLoading(false);
+			// setIsLoading(false);
 		}
 	};
 
@@ -103,14 +103,14 @@ const ProfilePage: React.FC = () => {
 		}
 	};
 
-	if (isLoading) {
-		return (
-			<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-				<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-				<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-			</div>
-		);
-	}
+	// if (isLoading) {
+	// 	return (
+	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
+	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
+	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
+	// 		</div>
+	// 	);
+	// }
 
 	return (
 		<div className='h-screen w-screen flex items-center justify-center p-8 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden'>

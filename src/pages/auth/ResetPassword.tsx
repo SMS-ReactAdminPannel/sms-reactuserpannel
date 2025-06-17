@@ -20,7 +20,7 @@ const ResetPassword = () => {
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 	const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
-	const [isLoading, setIsLoading] = useState(false);
+	// const [isLoading, setIsLoading] = useState(false);
 	const navigate = useNavigate();
 	const {
 		register,
@@ -67,7 +67,7 @@ const ResetPassword = () => {
 		clearErrors('email');
 
 		try {
-			setIsLoading(true);
+			// setIsLoading(true);
 			const response: any = await forgotPassword({ email });
 			if (response) {
 				setAuthToken(response.data.data.token);
@@ -76,12 +76,12 @@ const ResetPassword = () => {
 			} else {
 				setError('email', { message: response || 'Failed to send OTP' });
 			}
-			setIsLoading(false);
+			// setIsLoading(false);
 		} catch (err) {
 			console.error('Send OTP error:', err);
 			setError('email', { message: 'Error sending OTP. Please try again.' });
 		} finally {
-			setIsLoading(false);
+			// setIsLoading(false);
 		}
 	};
 
@@ -89,7 +89,7 @@ const ResetPassword = () => {
 		const enteredOtp = otpDigits.join('');
 
 		try {
-			setIsLoading(true);
+			// setIsLoading(true);
 			const data = { AuthToken, otp: enteredOtp };
 			const response: any = await verifyotp(JSON.stringify(data));
 			if (response) {
@@ -99,12 +99,12 @@ const ResetPassword = () => {
 			} else {
 				setError('otp', { message: response || 'Invalid OTP' });
 			}
-			setIsLoading(false);
+			// setIsLoading(false);
 		} catch (err) {
 			console.error('OTP verify error:', err);
 			setError('otp', { message: 'Error verifying OTP. Please try again.' });
 		} finally {
-			setIsLoading(false);
+			// setIsLoading(false);
 		}
 	};
 
@@ -114,7 +114,7 @@ const ResetPassword = () => {
 			return;
 		}
 		try {
-			setIsLoading(true);
+			// setIsLoading(true);
 			const response: any = await resetPassword({
 				newPassword: data.newPassword,
 				oldPassword: data.confirmPassword,
@@ -128,25 +128,25 @@ const ResetPassword = () => {
 					message: response.message || 'Failed to reset password',
 				});
 			}
-			setIsLoading(false);
+			// setIsLoading(false);
 		} catch (err) {
 			console.error('Reset password error:', err);
 			setError('newPassword', {
 				message: 'Error resetting password. Please try again.',
 			});
 		} finally {
-			setIsLoading(false);
+			// setIsLoading(false);
 		}
 	};
 
-	if (isLoading) {
-		return (
-			<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-				<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-				<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-			</div>
-		);
-	}
+	// if (isLoading) {
+	// 	return (
+	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
+	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
+	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
+	// 		</div>
+	// 	);
+	// }
 
 	return (
 		<AuthLayout
