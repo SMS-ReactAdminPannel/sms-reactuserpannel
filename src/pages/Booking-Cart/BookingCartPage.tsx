@@ -70,7 +70,7 @@ const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 // Main Component
 export default function SparePartsCart() {
 	const [books, setBooks] = useState<spare[]>([]);
-	const [isLoading, setIsLoading] = useState(true);
+	// const [isLoading, setIsLoading] = useState(true);
 	const [activeTab, setActiveTab] = useState<'service' | 'ServiceBookingPage'>(
 		'service'
 	);
@@ -97,7 +97,7 @@ export default function SparePartsCart() {
 		try {
 			const response: any = await booking_cart({});
 			if (response) {
-				setIsLoading(false);
+				// setIsLoading(false);
 			}
 			const cartData = response?.data?.data;
 
@@ -146,7 +146,7 @@ export default function SparePartsCart() {
 		} catch (error) {
 			console.error('Error fetching books/services', error);
 		} finally {
-			setIsLoading(false);
+			// setIsLoading(false);
 		}
 	};
 
@@ -155,14 +155,14 @@ export default function SparePartsCart() {
 		setActiveTab('ServiceBookingPage');
 	}, []);
 
-	if (isLoading) {
-		return (
-			<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-				<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-				<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-			</div>
-		);
-	}
+	// if (isLoading) {
+	// 	return (
+	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
+	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
+	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
+	// 		</div>
+	// 	);
+	// }
 
 	// handle Place Order function
 	const placeOrder = async () => {
@@ -183,7 +183,7 @@ export default function SparePartsCart() {
 			});
 			toast.error(error.response?.data?.message || 'Failed to place order');
 		} finally {
-			setIsLoading(false);
+			// setIsLoading(false);
 		}
 	};
 
@@ -202,7 +202,7 @@ export default function SparePartsCart() {
 			console.error('Order placement error:', error);
 			toast.error(error.response?.data?.message || 'Failed to place order');
 		} finally {
-			setIsLoading(false);
+			// setIsLoading(false);
 		}
 	};
 
@@ -234,7 +234,7 @@ export default function SparePartsCart() {
 		const quantity: number = part.quantity || 1
 
 		return (
-			<div className='border rounded-lg h-[190px] shadow max-w-xl mx-left p-4 mb-6 bg-white hover:shadow-md transition duration-300'>
+			<div className='border rounded-lg h-[190px] shadow max-w-xl mx-left p-2 mb-6 bg-white hover:shadow-md transition duration-300'>
 				<div className='flex justify-star gap-4'>
 					<div className='w-32 h-32 relative group overflow-hidden rounded border'>
 						<img
@@ -255,7 +255,7 @@ export default function SparePartsCart() {
 
 					<div className='flex-1 flex flex-col justify-between'>
 						<div
-							className={`relative left-[325px] text-xs px-2 w-[60px] py-0.5 rounded font-medium ${part.stock
+							className={`relative left-[305px] text-xs text-center px-2 w-[90px] py-0.5 rounded font-medium ${part.stock
 								? 'bg-green-100 text-green-700'
 								: 'bg-red-700 text-white'
 								}`}
@@ -307,7 +307,7 @@ export default function SparePartsCart() {
 		// const [quantity, setQuantity] = useState(1);
 
 		return (
-			<div className='border rounded-lg h-[190px] shadow max-w-xl mx-left p-4 mb-6 bg-white hover:shadow-md transition duration-300'>
+			<div className='border rounded-lg h-[190px] shadow  mx-left p-4 mb-6 bg-white hover:shadow-md transition duration-300'>
 				<div className='flex justify-star gap-4'>
 					<div className='w-32 h-32 relative group overflow-hidden rounded border'>
 						<img
@@ -384,10 +384,10 @@ export default function SparePartsCart() {
 				>
 					<span className='inline-block pb-1 relative text-[#9b111e] mb-6'>
 						My Cart
-						<span
+						{/* <span
 							className={`absolute top-14 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${cartTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
 								}`}
-						></span>
+						></span> */}
 					</span>
 				</h1>
 

@@ -136,7 +136,7 @@ const ServicesPage: React.FC = () => {
 	const [serviceCategories, setServiceCategories] = useState<
 		ApiServiceCategory[]
 	>([]);
-	const [isLoading, setIsLoading] = useState(true);
+	// const [isLoading, setIsLoading] = useState(true);
 	const navigate = useNavigate();
 	const serviceTitle = useScrollAnimation<HTMLHeadingElement>();
 	const [selectedCategory, setSelectedCategory] = useState<{
@@ -147,7 +147,7 @@ const ServicesPage: React.FC = () => {
 
 	const fetchAllServiceCategory = async () => {
 		try {
-			setIsLoading(true);
+			// setIsLoading(true);
 			const response: any = await getAllServiceCategories();
 			if (response.data && response.data.data) {
 				// Filter to only show the selected category if one is selected
@@ -172,7 +172,7 @@ const ServicesPage: React.FC = () => {
 		} catch (error) {
 			console.error('Error fetching service categories:', error);
 		} finally {
-			setIsLoading(false);
+			// setIsLoading(false);
 		}
 	};
 
@@ -322,14 +322,14 @@ const ServicesPage: React.FC = () => {
 	const [showForm, setShowForm] = useState<boolean>(false);
 	const currentContent = activeNavItem ? contentSections[activeNavItem] : null;
 
-	if (isLoading) {
-		return (
-			<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-				<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-				<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-			</div>
-		);
-	}
+	// if (isLoading) {
+	// 	return (
+	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
+	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
+	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
+	// 		</div>
+	// 	);
+	// }
 
 	return (
 		<div className='min-h-screen bg-gray-50 flex flex-start'>
@@ -421,18 +421,18 @@ const ServicesPage: React.FC = () => {
 			</div>
 
 			{/* Main Content */}
-			<div className='ml-72 bg-gray-50 min-h-screen'>
-				<div className='max-w-4xl mx-auto px-6 py-8'>
+			<div className='ml-72 bg-gray-50'>
+				<div className='mx-auto px-6 py-8'>
 					<div className='mb-8'>
 						<h1 ref={serviceTitle.elementRef} style={{ ...FONTS.sub_heading }}>
 							<span className='inline-block pb-1 relative text-[#9b111e] mb-2'>
 								{currentContent?.title || 'Services'}
-								<span
+								{/* <span
 									className={`absolute top-11 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${serviceTitle.isVisible
 										? 'scale-x-100 w-full'
 										: 'scale-x-0 w-full'
 										}`}
-								></span>
+								></span> */}
 							</span>
 						</h1>
 
@@ -466,7 +466,7 @@ const ServicesPage: React.FC = () => {
 								return (
 									<div
 										key={pkg.id}
-										className={`bg-[#FAF3EB] rounded-lg w-[600px] shadow-lg relative transition-all duration-300 hover:shadow-xl ${isSelected ? 'ring-2 ring-red-500' : ''
+										className={`bg-[#FAF3EB] rounded-lg lg:w-[600px] md:w-[400px] shadow-lg relative transition-all duration-300 hover:shadow-xl ${isSelected ? 'ring-2 ring-red-500' : ''
 											}`}
 									>
 										{pkg.isRecommended && (
@@ -477,9 +477,9 @@ const ServicesPage: React.FC = () => {
 											</div>
 										)}
 
-										<div className='flex flex-col md:flex-row'>
+										<div className='flex flex-col items-start w-full rounded-t-lg overflow-hidden'>
 											{/* Service Image */}
-											<div className='ml-12 mt-4 md:w-[500px] h-[250px] md:h-auto bg-gradient-to-br from-gray-100 to-gray-200 flex-shrink-0 relative'>
+											<div className='w-full h-[280px] overflow-hidden bg-gradient-to-br from-gray-100 to-gray-200 flex-shrink-0 relative'>
 												<img
 													src={pkg.image}
 													alt={pkg.title}
@@ -517,7 +517,7 @@ const ServicesPage: React.FC = () => {
 												</div>
 
 												{/* Services Grid */}
-												<div className='grid grid-cols-1 md:grid-cols-2 gap-3 mb-4'>
+												<div className='grid grid-cols-1 gap-3 mb-4'>
 													{pkg.services
 														.slice(
 															0,

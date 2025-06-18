@@ -2,7 +2,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate, Link } from 'react-router-dom';
 import AuthLayout from './AuthLayout';
 import { FONTS } from '../../constants/constant';
-import { useState } from 'react';
+// import { useState } from 'react';
 
 type FormData = {
 	emailOrPhone: string;
@@ -14,7 +14,7 @@ type FormData = {
 const EnterEmailOrPhone = () => {
 	const navigate = useNavigate();
 	// const [storedOtp, setStoredOtp] = useState<string | null>(null);
-	const [isLoading, setIsLoading] = useState(false);
+	// const [isLoading, setIsLoading] = useState(false);
 
 	const {
 		register,
@@ -27,7 +27,7 @@ const EnterEmailOrPhone = () => {
 
 	const handleEmailSubmit = () => {
 		try {
-			setIsLoading(true);
+			// setIsLoading(true);
 			const emailOrPhone = getValues('emailOrPhone');
 			if (!emailOrPhone) {
 				setError('emailOrPhone', {
@@ -42,7 +42,7 @@ const EnterEmailOrPhone = () => {
 		} catch (error) {
 			console.log(error);
 		} finally {
-			setIsLoading(false);
+			// setIsLoading(false);
 		}
 	};
 
@@ -50,14 +50,14 @@ const EnterEmailOrPhone = () => {
 		handleEmailSubmit();
 	};
 
-	if (isLoading) {
-		return (
-			<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-				<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-				<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-			</div>
-		);
-	}
+	// if (isLoading) {
+	// 	return (
+	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
+	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
+	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
+	// 		</div>
+	// 	);
+	// }
 
 	return (
 		<AuthLayout title='Enter Email or Phone'>

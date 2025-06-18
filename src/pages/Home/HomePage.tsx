@@ -109,17 +109,17 @@ const HomePage: React.FC = () => {
 	const careTitle = useScrollAnimation<HTMLHeadingElement>();
 	const discoverTitle = useScrollAnimation<HTMLHeadingElement>();
 	const contactTitle = useScrollAnimation<HTMLHeadingElement>();
-	const [, setIsLoading] = useState(true);
+	// const [, setIsLoading] = useState(true);
 	const [serviceData, setServiceData] = useState<ServiceCategory[]>([]);
 	//const [selectedService, setSelectedService] = useState<any>(null);
 
 	const fetchHomePageData = () => {
 		try {
-			setIsLoading(false);
+			// setIsLoading(false);
 		} catch (error) {
 			console.log(error);
 		} finally {
-			setIsLoading(false);
+			// setIsLoading(false);
 		}
 	};
 	
@@ -184,27 +184,27 @@ const HomePage: React.FC = () => {
 
 	return (
 		<>
-			<div className='h-[80vh]'>
+			<div className='h-auto'>
 				<div className='bg-red-900 h-[25px]'></div>
 				<ImageCarousel images={imageUrls} interval={2500} />
 			</div>
 
 			<div className=''>
-				<div className='px-24 h-[90vh] bg-red-100'>
+				<div className='px-24 h-auto bg-red-100 py-24'>
 					<h1
 						ref={servicesTitle.elementRef}
-						className='text-2xl py-10 text-red-900 text-center'
+						className='text-2xl pb-16 text-red-900 text-center -mt-6'
 						style={{ ...FONTS.heading }}
 					>
 						<span className='inline-block pb-1 relative'>
 							Available Services
-							<span
+							{/* <span
 								className={`absolute top-9 left-1/2 h-[1px] bg-red-900 transform -translate-x-1/2 origin-center transition-all duration-700 ${
 									servicesTitle.isVisible
 										? 'scale-x-100 w-full'
 										: 'scale-x-0 w-full'
 								}`}
-							></span>
+							></span> */}
 						</span>
 					</h1>
 
@@ -257,13 +257,13 @@ const HomePage: React.FC = () => {
 							>
 								<span className='inline-block pb-1 relative'>
 									Care Advantages
-									<span
+									{/* <span
 										className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
 											careTitle.isVisible
 												? 'scale-x-100 w-full'
 												: 'scale-x-0 w-full'
 										}`}
-									></span>
+									></span> */}
 								</span>
 							</h1>
 							<div className='flex space-x-6 items-center justify-center'>
@@ -311,13 +311,13 @@ const HomePage: React.FC = () => {
 							>
 								<span className='inline-block pb-1 relative'>
 									Discover Our Services
-									<span
+									{/* <span
 										className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
 											discoverTitle.isVisible
 												? 'scale-x-100 w-full'
 												: 'scale-x-0 w-full'
 										}`}
-									></span>
+									></span> */}
 								</span>
 							</h1>
 							<div className='flex mt-5 justify-around gap-10'>
@@ -465,13 +465,13 @@ const HomePage: React.FC = () => {
 						>
 							<span className='inline-block pb-4 relative'>
 								Customised Care For All Your Needs
-								<span
+								{/* <span
 									className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
 										contactTitle.isVisible
 											? 'scale-x-100 w-full'
 											: 'scale-x-0 w-full'
 									}`}
-								></span>
+								></span> */}
 							</span>
 						</h1>
 
@@ -598,14 +598,14 @@ const HomePage: React.FC = () => {
 					</div>
 				</div>
 				{/* FOOTER START */}
-				<footer className={`h-[81vh] bg-[url(${bgImg2})] pt-2`}>
-					<div className='grid grid-cols-4 gap-4 px-10'>
+				<footer className={`h-auto bg-[url(${bgImg2})] pt-2 pl-28`}>
+					<div className='grid grid-cols-4 gap-6 px-20'>
 						{/* Image Card - Full Height (No border) */}
-						<div className='col-span-1 p-4 rounded h-full border-0'>
+						<div className='col-span-1 p-4 rounded h-full border-0 -ml-28'>
 							<img
 								src={appimage}
 								alt='appimage'
-								className='p-2 h-[56px] w-[260px] rounded'
+								className='p-2  h-[60px] w-[260px] rounded'
 							/>
 						</div>
 
@@ -789,8 +789,9 @@ const HomePage: React.FC = () => {
 						</div>
 					</div>
 
+				</footer>
 					{/* Footer Bottom */}
-					<div className='px-10 py-4 border-t border-red-900 mt-8'>
+					<div className='px-24 py-4 border-t border-red-900 bg-red-100'>
 						<div className='flex justify-between items-center text-red-900'>
 							<p style={{ ...FONTS.paragraph, fontSize: '14px' }}>
 								© 2024 YM Services. All rights reserved.
@@ -813,7 +814,6 @@ const HomePage: React.FC = () => {
 							</div>
 						</div>
 					</div>
-				</footer>
 				{/* FOOTER END */}
 			</div>
 		</>

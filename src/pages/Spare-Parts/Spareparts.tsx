@@ -83,7 +83,7 @@ const SpareParts: React.FC = () => {
 
 
 	// const [error, setError] = useState<string | null>(null);
-	const [isLoading, setIsLoading] = useState(true);
+	// const [isLoading, setIsLoading] = useState(true);
 
 	const fetchSpareParts = async () => {
 		try {
@@ -112,7 +112,7 @@ const SpareParts: React.FC = () => {
 					setParts(validatedParts);
 					const categoriesData = transformToCategories(validatedParts);
 					setCategories(categoriesData);
-					setIsLoading(false);
+					// setIsLoading(false);
 				} else {
 					throw new Error('API response data is not an array');
 				}
@@ -127,7 +127,7 @@ const SpareParts: React.FC = () => {
 			setParts([]);
 			setCategories([]);
 		} finally {
-			setIsLoading(false);
+			// setIsLoading(false);
 		}
 	};
 
@@ -214,14 +214,14 @@ const SpareParts: React.FC = () => {
 	const bundleTitle = useScrollAnimation<HTMLHeadingElement>();
 	// const categoryTitle = useScrollAnimation<HTMLHeadingElement>();
 
-	if (isLoading) {
-		return (
-			<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-				<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-				<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-			</div>
-		);
-	}
+	// if (isLoading) {
+	// 	return (
+	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
+	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
+	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
+	// 		</div>
+	// 	);
+	// }
 
 	return (
 		<div className='p-12 mx-8'>
@@ -231,10 +231,10 @@ const SpareParts: React.FC = () => {
 					style={{ ...FONTS.heading }}
 				>
 					Spare Parts
-					<span
+					{/* <span
 						className={`absolute top-14 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${offerTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
 							}`}
-					></span>
+					></span> */}
 				</span>
 			</h1>
 
@@ -295,10 +295,10 @@ const SpareParts: React.FC = () => {
 					style={{ ...FONTS.heading }}
 				>
 					Products
-					<span
+					{/* <span
 						className={`absolute top-12 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${productTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
 							}`}
-					></span>
+					></span> */}
 				</span>
 			</h1>
 
@@ -551,8 +551,8 @@ const SpareParts: React.FC = () => {
 			</div>
 
 			<div className="max-w-full px-4 md:px-6 lg:px-8">
-				<h1 className="text-2xl font-bold text-[#9b111e] mb-8 text-center md:text-left">
-					BY CATEGORIES
+				<h1 className=" text-[#9b111e] mb-8 text-center" style={{ ...FONTS.heading }}>
+					By Categories
 				</h1>
 
 				<div className=" grid grid-cols-4 gap-6">

@@ -2,13 +2,14 @@
 import type React from 'react';
 import { useState, useEffect, useRef, useMemo } from 'react';
 import {
-	Search,
+	// Search,
 	Package,
 	Wrench,
 	CheckCircle,
 	Calendar,
 	// Truck,
 	Clock,
+	Search,
 } from 'lucide-react';
 import bgImage from '../../assets/checkout-bg_1_.png';
 import { getBookingAll } from '../../features/Bookings/service';
@@ -253,10 +254,10 @@ const OrdersPage: React.FC = () => {
 	const [filterType, setFilterType] = useState<'all' | 'spare' | 'service'>(
 		'all'
 	);
-	const [sortBy, setSortBy] = useState<'date' | 'price' | 'name'>('date');
+	const [sortBy] = useState<'date' | 'price' | 'name'>('date');
 	const [orders, setOrders] = useState<OrderDetails[]>([]);
 	const orderTitle = useScrollAnimation<HTMLHeadingElement>();
-	const [isLoading, setIsLoading] = useState(true);
+	// const [isLoading, setIsLoading] = useState(false);
 
 	useEffect(() => {
 		const fetchOrders = async () => {
@@ -291,12 +292,12 @@ const OrdersPage: React.FC = () => {
 					];
 
 					setOrders(transformedOrders);
-					setIsLoading(false);
+					// setIsLoading(false);
 				}
 			} catch (err) {
 				console.error('Error fetching orders:', err);
 			} finally {
-				setIsLoading(false);
+				// setIsLoading(false);
 			}
 		};
 
@@ -332,14 +333,14 @@ const OrdersPage: React.FC = () => {
 		(order) => order.status === 'completed' || order.status === 'delivered'
 	).length;
 
-	if (isLoading) {
-		return (
-			<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-				<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-				<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-			</div>
-		);
-	}
+	// if (isLoading) {
+	// 	return (
+	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
+	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
+	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
+	// 		</div>
+	// 	);
+	// }
 
 	return (
 		<div
@@ -356,12 +357,12 @@ const OrdersPage: React.FC = () => {
 					>
 						<span className='inline-block pb-1 relative text-red-900 mb-2'>
 							My Orders
-							<span
+							{/* <span
 								className={`absolute top-14 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${orderTitle.isVisible
 									? 'scale-x-100 w-full'
 									: 'scale-x-0 w-full'
 									}`}
-							></span>
+							></span> */}
 						</span>
 					</h1>
 					<p className='text-red-600 text-lg max-w-6xl mx-auto'>
@@ -392,83 +393,84 @@ const OrdersPage: React.FC = () => {
 				</div>
 
 				{/* Filters and Search */}
-				<div className='bg-[#FAF3EB] rounded-2xl shadow-sm max-w-6xl mx-auto border border-gray-100 p-6 mb-8'>
-					<div className='flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between'>
-						{/* Search */}
-						<div className='relative flex-1 max-w-md'>
-							<Search className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5' />
-							<input
-								type='text'
-								value={searchTerm}
-								placeholder='Search orders...'
-								onChange={(e) => setSearchTerm(e.target.value)}
-								className='w-[482px] pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all'
-							/>
-						</div>
+<div className='bg-[#FAF3EB] rounded-2xl shadow-sm mx-7 border border-gray-100 p-6 mb-8 '>
 
-						{/* Filters */}
-						<div className='flex flex-wrap gap-3'>
-							{/* Filter Buttons */}
-							<div className='flex bg-gray-100 rounded-xl p-1'>
-								<button
-									onClick={() => setFilterType('all')}
-									className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${filterType === 'all'
-										? 'bg-red-900 text-white shadow-sm'
-										: 'text-gray-600 hover:text-gray-900'
-										}`}
-								>
-									All Orders
-								</button>
-								<button
-									onClick={() => setFilterType('spare')}
-									className={`px-4 py-2 rounded-lg  text-sm font-medium transition-all flex items-center ${filterType === 'spare'
-										? 'bg-red-900 text-white  shadow-sm'
-										: 'text-gray-600 hover:text-gray-900'
-										}`}
-								>
-									<Package className='w-4 h-4 mr-1' />
-									Spare Parts
-								</button>
-								<button
-									onClick={() => setFilterType('service')}
-									className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${filterType === 'service'
-										? 'bg-red-900 text-white  shadow-sm'
-										: 'text-gray-600 hover:text-gray-900'
-										}`}
-								>
-									<Wrench className='w-4 h-4 mr-1' />
-									Services
-								</button>
-							</div>
+  {/* First Row: Search */}
+  <div className='mb-6'>
+    <div className='relative w-full'>
+      <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5' />
+      <input
+        type='text'
+        value={searchTerm}
+        placeholder='Search orders...'
+        onChange={(e) => setSearchTerm(e.target.value)}
+        className='w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all'
+      />
+    </div>
+  </div>
 
-							{/* Sort Dropdown */}
-							<select
-								value={sortBy}
-								onChange={(e) =>
-									setSortBy(e.target.value as 'date' | 'price' | 'name')
-								}
-								className='px-4 py-2 rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent text-smpx-6 py-2 bg-gradient-to-r from-red-600 to-red-700 text-gray-600 rounded-xl hover:from-red-700 hover:to-red-800 transition-all duration-200 shadow-sm hover:shadow-md font-medium text-sm'
-							>
-								<option value='date'>Sort by Date</option>
-								<option value='price'>Sort by Price</option>
-								<option value='name'>Sort by Name</option>
-							</select>
+  {/* Second Row: Filters + Sort + Reset */}
+  <div className='flex flex-col  gap-4'>
 
-							{/* Reset Button */}
+    {/* Filter Buttons */}
+    <div className='flex flex-wrap gap-2 bg-gray-100 rounded-xl p-1'>
+      <button
+        onClick={() => setFilterType('all')}
+        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${filterType === 'all'
+          ? 'bg-red-900 text-white shadow-sm'
+          : 'text-gray-600 hover:text-gray-900'
+          }`}
+      >
+        All Orders
+      </button>
+      <button
+        onClick={() => setFilterType('spare')}
+        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${filterType === 'spare'
+          ? 'bg-red-900 text-white shadow-sm'
+          : 'text-gray-600 hover:text-gray-900'
+          }`}
+      >
+        <Package className='w-4 h-4 mr-1' />
+        Spare Parts
+      </button>
+      <button
+        onClick={() => setFilterType('service')}
+        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${filterType === 'service'
+          ? 'bg-red-900 text-white shadow-sm'
+          : 'text-gray-600 hover:text-gray-900'
+          }`}
+      >
+        <Wrench className='w-4 h-4 mr-1' />
+        Services
+      </button>
+    </div>
 
-							<button
-								onClick={() => {
-									setSearchTerm('');
-									setFilterType('all');
-									setSortBy('date');
-								}}
-								className='ml-[400px] px-4 py-1 text-white-500 bg-red-600 text-white rounded-xl hover:text-white hover:bg-red-700 transition-all duration-200 shadow-sm hover:shadow-md font-medium text-sm'
-							>
-								Reset Filters
-							</button>
-						</div>
-					</div>
-				</div>
+    {/* Sort Dropdown */}
+    {/* <select
+      value={sortBy}
+      onChange={(e) => setSortBy(e.target.value as 'date' | 'price' | 'name')}
+      className='px-4 py-2 w-full md:w-auto rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 transition-all duration-200 shadow-sm hover:shadow-md font-medium text-sm'
+    >
+      <option value='date'>Sort by Date</option>
+      <option value='price'>Sort by Price</option>
+      <option value='name'>Sort by Name</option>
+    </select> */}
+
+    {/* Reset Button */}
+    {/* <button
+      onClick={() => {
+        setSearchTerm('');
+        setFilterType('all');
+        setSortBy('date');
+      }}
+      className='px-4 py-2 mx-auto bg-red-600 text-white rounded-xl hover:bg-red-700 transition-all duration-200 shadow-sm hover:shadow-md font-medium text-sm'
+    >
+      Reset Filters
+    </button> */}
+
+  </div>
+</div>
+
 
 				{/* Orders List */}
 				<div className='space-y-6'>

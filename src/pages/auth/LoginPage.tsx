@@ -18,7 +18,7 @@ type FormData = {
 const LoginPage = () => {
 	const [showPassword, setShowPassword] = useState(false);
 	const [error, setError] = useState<string | null>(null);
-	const [isLoading, setIsLoading] = useState(false);
+	const isLoading = false
 	const { login } = useAuth();
 	const navigate = useNavigate();
 
@@ -37,12 +37,12 @@ const LoginPage = () => {
 		setError(null);
 
 		try {
-			setIsLoading(true);
+			// setIsLoading(true);
 			const response: any = await loginUser(data);
 			if (response) {
 				login(response.data.data);
 				toast.success('Login successful! Welcome back.', { autoClose: 2000 });
-				setIsLoading(false);
+				// setIsLoading(false);
 				navigate('/');
 			} else {
 				const errorMessage = response?.data?.message || 'Login failed. Please try again.';
@@ -55,18 +55,18 @@ const LoginPage = () => {
 			setError(errorMessage);
 			toast.error(errorMessage, { autoClose: 3000 });
 		} finally {
-			setIsLoading(false);
+			// setIsLoading(false);
 		}
 	};
 
-	if (isLoading) {
-		return (
-			<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-				<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-				<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-			</div>
-		);
-	}
+	// if (isLoading) {
+	// 	return (
+	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
+	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
+	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
+	// 		</div>
+	// 	);
+	// }
 
 	return (
 		<AuthLayout title='User Login'>
