@@ -26,7 +26,12 @@ const LoginPage = () => {
 		register,
 		handleSubmit,
 		formState: { errors },
-	} = useForm<FormData>();
+	} = useForm<FormData>({
+		defaultValues: {
+			email: "customer@gmail.com",
+			password: "Customer@123"
+		}
+	});
 
 	const onSubmit = async (data: FormData) => {
 		setError(null);
@@ -146,9 +151,8 @@ const LoginPage = () => {
 				<button
 					type='submit'
 					disabled={isLoading}
-					className={`w-full py-3 text-white font-semibold rounded-full shadow-md hover:shadow-xl transition-all duration-300 hover:brightness-110 text-sm bg-gradient-to-r from-[#9b111e] to-[#d23c3c] ${
-						isLoading ? 'opacity-70 cursor-not-allowed' : ''
-					}`}
+					className={`w-full py-3 text-white font-semibold rounded-full shadow-md hover:shadow-xl transition-all duration-300 hover:brightness-110 text-sm bg-gradient-to-r from-[#9b111e] to-[#d23c3c] ${isLoading ? 'opacity-70 cursor-not-allowed' : ''
+						}`}
 				>
 					{isLoading ? (
 						<div className='flex items-center justify-center gap-2'>
