@@ -63,7 +63,6 @@ const EnquiryForm = () => {
 
 	const handleSubmit = async (e: any) => {
 		e.preventDefault();
-		console.log('Form submitted:', formData);
 		try {
 			setSubmitted(true);
 			setFormData({
@@ -76,7 +75,7 @@ const EnquiryForm = () => {
 				Date: '',
 			});
 			const response = await postEnquiryData(formData);
-			console.log('post Enquiry Data : ', response);
+			if(response){}
 		} catch (error) {
 			console.log('Data not send : ', error);
 		}
@@ -89,7 +88,7 @@ const EnquiryForm = () => {
 		try {
 			const data = {};
 			const response = await getEnquiryData(data);
-			console.log('Data from form submission', response);
+			if(response){}
 		} catch (error) {
 			console.log(error);
 		}

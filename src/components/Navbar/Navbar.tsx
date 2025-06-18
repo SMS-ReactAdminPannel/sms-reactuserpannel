@@ -33,7 +33,8 @@ export const Navbar: React.FC = () => {
 	const [showLogoutSuccess, setShowLogoutSuccess] = useState(false);
 	const [showNotifications, setShowNotifications] = useState(false);
 	// const [isLoggedIn, setIsLoggedIn] = useState(true);
-	const isLoggedIn = true
+	const { isAuthenticated } = useAuth();
+	const isLoggedIn = isAuthenticated;
 	const { logout } = useAuth();
 	const navigate = useNavigate();
 	const dropdownRef = useRef<HTMLDivElement | null>(null);
@@ -71,9 +72,9 @@ export const Navbar: React.FC = () => {
 			if (response) {
 				setCartCount(
 					response.data.data[0].services.length +
-					response.data.data[1].services.length +
-					response.data.data[0].products.length +
-					response.data.data[1].products.length
+						response.data.data[1].services.length +
+						response.data.data[0].products.length +
+						response.data.data[1].products.length
 				);
 			}
 		} catch (error) {
@@ -204,8 +205,9 @@ export const Navbar: React.FC = () => {
 						<button
 							aria-label='Notifications'
 							onClick={handleBellClick}
-							className={`relative p-2.5 rounded-full focus:outline-none transform transition-transform duration-200 ease-in-out ${isBellActive ? 'scale-90' : 'scale-100'
-								}`}
+							className={`relative p-2.5 rounded-full focus:outline-none transform transition-transform duration-200 ease-in-out ${
+								isBellActive ? 'scale-90' : 'scale-100'
+							}`}
 						>
 							<svg
 								xmlns='http://www.w3.org/2000/svg'
@@ -394,7 +396,7 @@ export const Navbar: React.FC = () => {
 							<img
 								src='/images/images.jpeg'
 								alt='dummy-image'
-								className='w-10 h-10 rounded-full cursor-pointer'
+								className='w-[52px] h-[52px] rounded-full cursor-pointer'
 							/>
 						</>
 					)}
@@ -411,10 +413,11 @@ export const Navbar: React.FC = () => {
 						style={{ ...FONTS.paragraph, fontWeight: 500, fontSize: '18px' }}
 						className={({ isActive }) =>
 							`relative pb-1 text-md font-semibold transition-all duration-300 ease-in-out whitespace-nowrap
-	${isActive
-								? 'text-red-900 after:content-[""] after:absolute after:left-0 after:bottom-9 after:h-[2.5px] after:w-full after:bg-red-900 after:transition-all after:duration-300'
-								: 'text-red-800 after:content-[""] after:absolute after:left-0 after:bottom-9 after:h-[2.5px] after:w-0 after:bg-red-900 after:transition-all after:duration-300 hover:after:w-full'
-							}`
+	${
+		isActive
+			? 'text-red-900 after:content-[""] after:absolute after:left-0 after:bottom-9 after:h-[2.5px] after:w-full after:bg-red-900 after:transition-all after:duration-300'
+			: 'text-red-800 after:content-[""] after:absolute after:left-0 after:bottom-9 after:h-[2.5px] after:w-0 after:bg-red-900 after:transition-all after:duration-300 hover:after:w-full'
+	}`
 						}
 					>
 						{item.title}

@@ -20,6 +20,8 @@ import AutoPopup from './RightSidePopup';
 import { getAllServiceCategories } from '../../features/ServicesPage/service';
 import { postSparePartsData } from '../../features/spareparts';
 import { FONTS } from '../../constants/constant';
+import { useAuth } from '../auth/AuthContext';
+import LoginPromptModal from '../../components/Authentication/LoginPromptModal';
 
 interface ServiceItem {
 	name: string;
@@ -143,7 +145,8 @@ const ServicesPage: React.FC = () => {
 		id: string;
 		name: string;
 	} | null>(null);
-
+	const [showLoginModal, setShowLoginModal] = useState(false);
+	const { isAuthenticated } = useAuth();
 
 	const fetchAllServiceCategory = async () => {
 		try {
@@ -153,8 +156,8 @@ const ServicesPage: React.FC = () => {
 				// Filter to only show the selected category if one is selected
 				const categories = selectedCategory
 					? response.data.data.filter(
-						(cat: any) => cat._id === selectedCategory.id
-					)
+							(cat: any) => cat._id === selectedCategory.id
+					  )
 					: response.data.data;
 
 				setServiceCategories(categories);
@@ -178,12 +181,12 @@ const ServicesPage: React.FC = () => {
 
 	useEffect(() => {
 		fetchAllServiceCategory();
-		setSelectedCategory(null)
+		setSelectedCategory(null);
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const storedCategory: any = localStorage.getItem('selectedCategory');
-	//console.log(storedCategory, 'storedCategory');	
+
 	useEffect(() => {
 		if (storedCategory) {
 			setActiveNavItem(storedCategory?.name);
@@ -274,21 +277,27 @@ const ServicesPage: React.FC = () => {
 	// console.log(activeNavItem, 'activeNavItem');
 
 	const handleAddToCart = async (serviceId: string) => {
-		const packageToAdd = selectedPackage.find((p) => p.packageId === serviceId);
-		if (packageToAdd) {
-			setCart([...cart, packageToAdd]);
-			try {
-				const data = {
-					service: serviceId,
-					type: 'service',
-				};
-				const response = await postSparePartsData(data);
-				if (response) {
-					setShowCartNotification(true);
-					setTimeout(() => setShowCartNotification(false), 3000);
+		if (!isAuthenticated) {
+			setShowLoginModal(true);
+		} else if (isAuthenticated) {
+			const packageToAdd = selectedPackage.find(
+				(p) => p.packageId === serviceId
+			);
+			if (packageToAdd) {
+				setCart([...cart, packageToAdd]);
+				try {
+					const data = {
+						service: serviceId,
+						type: 'service',
+					};
+					const response = await postSparePartsData(data);
+					if (response) {
+						setShowCartNotification(true);
+						setTimeout(() => setShowCartNotification(false), 3000);
+					}
+				} catch (error) {
+					console.log(error);
 				}
-			} catch (error) {
-				console.log(error);
 			}
 		}
 	};
@@ -370,20 +379,22 @@ const ServicesPage: React.FC = () => {
 									<div
 										key={index}
 										onClick={() => handleNavClick(item.name)}
-										className={`group relative flex items-center px-4 py-4 rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-[1.02] ${activeNavItem === item.name
-											? 'bg-gradient-to-r from-red-50 to-red-100 text-red-700 shadow-lg shadow-red-100/50 border border-red-200'
-											: 'text-gray-600 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-red-600 hover:shadow-md'
-											} ${!item.isActive ? 'opacity-70' : ''}`}
+										className={`group relative flex items-center px-4 py-4 rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-[1.02] ${
+											activeNavItem === item.name
+												? 'bg-gradient-to-r from-red-50 to-red-100 text-red-700 shadow-lg shadow-red-100/50 border border-red-200'
+												: 'text-gray-600 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-red-600 hover:shadow-md'
+										} ${!item.isActive ? 'opacity-70' : ''}`}
 									>
 										{activeNavItem === item.name && (
 											<div className='absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-8 bg-red-500 rounded-r-full'></div>
 										)}
 
 										<div
-											className={`mr-4 flex-shrink-0 p-2 rounded-lg transition-all duration-300 ${activeNavItem === item.name
-												? 'bg-red-200/50 text-red-600'
-												: 'bg-gray-100 text-gray-500 group-hover:bg-red-100 group-hover:text-red-500'
-												}`}
+											className={`mr-4 flex-shrink-0 p-2 rounded-lg transition-all duration-300 ${
+												activeNavItem === item.name
+													? 'bg-red-200/50 text-red-600'
+													: 'bg-gray-100 text-gray-500 group-hover:bg-red-100 group-hover:text-red-500'
+											}`}
 										>
 											{item.icon}
 										</div>
@@ -393,10 +404,11 @@ const ServicesPage: React.FC = () => {
 										</span>
 
 										<div
-											className={`ml-auto opacity-0 transform translate-x-2 transition-all duration-300 ${activeNavItem === item.name
-												? 'opacity-100 translate-x-0'
-												: 'group-hover:opacity-100 group-hover:translate-x-0'
-												}`}
+											className={`ml-auto opacity-0 transform translate-x-2 transition-all duration-300 ${
+												activeNavItem === item.name
+													? 'opacity-100 translate-x-0'
+													: 'group-hover:opacity-100 group-hover:translate-x-0'
+											}`}
 										>
 											<svg
 												className='w-4 h-4'
@@ -466,8 +478,9 @@ const ServicesPage: React.FC = () => {
 								return (
 									<div
 										key={pkg.id}
-										className={`bg-[#FAF3EB] rounded-lg lg:w-[600px] md:w-[400px] shadow-lg relative transition-all duration-300 hover:shadow-xl ${isSelected ? 'ring-2 ring-red-500' : ''
-											}`}
+										className={`bg-[#FAF3EB] rounded-lg lg:w-[600px] md:w-[400px] shadow-lg relative transition-all duration-300 hover:shadow-xl ${
+											isSelected ? 'ring-2 ring-red-500' : ''
+										}`}
 									>
 										{pkg.isRecommended && (
 											<div className='absolute top-0 left-0 z-10 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-1 rounded-br-lg'>
@@ -648,10 +661,7 @@ const ServicesPage: React.FC = () => {
 								packageId: selectedPackageId,
 								carDetails,
 							};
-							setSelectedPackage((prev) => [
-								...prev,
-								data
-							]);
+							setSelectedPackage((prev) => [...prev, data]);
 							setShowForm(false);
 						}}
 						packageId={selectedPackageId}
@@ -667,6 +677,10 @@ const ServicesPage: React.FC = () => {
 					message='Explore our comprehensive service packages. Select what your vehicle needs and book an appointment with ease.'
 				/>
 			)}
+			<LoginPromptModal
+				isOpen={showLoginModal}
+				onClose={() => setShowLoginModal(false)}
+			/>
 		</div>
 	);
 };

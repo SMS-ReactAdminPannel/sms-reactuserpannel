@@ -60,7 +60,7 @@ const SignupPage = () => {
 	// }
 
 	return (
-		<AuthLayout title='Sign Up'>
+		<AuthLayout title=''>
 			<form onSubmit={handleSubmit(onSubmit)} className='space-y-6'>
 				{/* Phone Number */}
 				<div className='flex flex-col space-y-2'>
@@ -186,18 +186,18 @@ const SignupPage = () => {
 				{/* Submit Button */}
 				<button
 					type='submit'
-					className='w-full py-3 text-white font-semibold rounded-full shadow-md hover:shadow-xl transition-all duration-300 bg-gradient-to-r from-[#9b111e] to-[#d23c3c]'
+					className='w-full py-3 text-white font-semibold rounded-full shadow-md hover:shadow-xl transition-all duration-300 bg-red-900 hover:bg-red-700'
 				>
 					Sign Up
 				</button>
-				<div className='text-center pt-1'>
+				{/* <div className='text-center pt-1'>
 					<Link
 						to='/login'
 						className='text-white hover:underline text-lg text-[#d23c3c] font-bold'
 					>
 						Back to Login
 					</Link>
-				</div>
+				</div> */}
 			</form>
 		</AuthLayout>
 	);
