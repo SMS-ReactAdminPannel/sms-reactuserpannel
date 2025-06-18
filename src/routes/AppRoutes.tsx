@@ -16,8 +16,8 @@ import FaqPage from '../pages/FAQs/FaqPage';
 import EnterEmailOrPhone from '../pages/auth/EnterEmailOrPhone';
 import OtpVerificationPage from '../pages/auth/OtpVerificationPage';
 import SignupPage from '../pages/auth/SignupPage';
-import ResetPassword from '../pages/auth/ResetPassword';
-import { HomePageIntro } from '../pages/HomeIntro/HomePageIntro';
+// import ResetPassword from '../pages/auth/ResetPassword';
+// import { HomePageIntro } from '../pages/HomeIntro/HomePageIntro';
 // import { useAuth } from '../pages/auth/AuthContext';
 import ContactPage from '../pages/ContactPage/ContactPage';
 import CategoryPage from '../components/spareparts/CategoryPage';
@@ -26,17 +26,17 @@ import ProductPage from '../components/spareparts/ProductPage';
 const AppRoutes = () => {
 	// const { isAuthenticated } = useAuth();
 
-	const AuthRoutes = () => (
-		<Routes>
-			{/* <Route path='enter-email-or-phone' element={<EnterEmailOrPhone />} />
-			<Route path='verify-otp' element={<OtpVerificationPage />} /> */}
-			{/* <Route path='signup' element={<SignupPage />} />
-			<Route path='login' element={<LoginPage />} /> */}
-			<Route path='reset-password' element={<ResetPassword />} />
-			<Route path='homepageintro' element={<HomePageIntro />} />
-			<Route path='*' element={<Navigate to='/homepageintro' />} />
-		</Routes>
-	);
+	// const AuthRoutes = () => (
+	// 	<Routes>
+	// 		{/* <Route path='enter-email-or-phone' element={<EnterEmailOrPhone />} />
+	// 		<Route path='verify-otp' element={<OtpVerificationPage />} /> */}
+	// 		{/* <Route path='signup' element={<SignupPage />} />
+	// 		<Route path='login' element={<LoginPage />} /> */}
+	// 		<Route path='reset-password' element={<ResetPassword />} />
+	// 		<Route path='homepageintro' element={<HomePageIntro />} />
+	// 		<Route path='*' element={<Navigate to='/homepageintro' />} />
+	// 	</Routes>
+	// );
 
 	const AdminRoutes = () => (
 		<Routes>
