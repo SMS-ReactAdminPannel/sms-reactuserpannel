@@ -1,11 +1,11 @@
 import React, { useState, useRef, useEffect } from 'react';
 
+const cities = ['Chennai', 'Coimbatore', 'Madurai'];
 const CustomDropdown: React.FC = () => {
 	const [isOpen, setIsOpen] = useState(false);
-	const [selectedCity, setSelectedCity] = useState('Select City');
+	const [selectedCity, setSelectedCity] = useState(cities[0]);
 	const dropdownRef = useRef<HTMLDivElement>(null);
 
-	const cities = ['Chennai', 'Coimbatore', 'Madurai'];
 
 	const toggleDropdown = () => setIsOpen((prev) => !prev);
 

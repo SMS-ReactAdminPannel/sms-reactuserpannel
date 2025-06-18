@@ -9,6 +9,7 @@ import { toast } from 'react-toastify';
 import bgImage from '../../assets/checkout-bg_1_.png';
 import { postBookingService } from '../../features/Bookings/service';
 import { FONTS } from '../../constants/constant';
+import { useAuth } from '../auth/AuthContext';
 
 interface spare {
 	discount: number;
@@ -84,6 +85,7 @@ export default function SparePartsCart() {
 	// >([]);
 	// const [showSummary, setShowSummary] = useState(false);
 	// const [showsSummary, setShowsSummary] = useState(false);
+	const { isAuthenticated } = useAuth();
 	const [cartId, setCartId] = useState<string>('');
 	const [serviceId, setServiceCartId] = useState<string>('');
 	const totalPartPrice = books.reduce(
@@ -119,7 +121,7 @@ export default function SparePartsCart() {
 						category: product.productId?.category || '',
 						description: product.productId?.description || '',
 						stock: Number(product.productId?.stock) || 0,
-						discount: 0
+						discount: 0,
 					})
 				);
 				setBooks(spares);
@@ -138,7 +140,7 @@ export default function SparePartsCart() {
 						description: service.description || '',
 						image: service.productId?.image || bgImage,
 						is_active: service.productId?.stock || true,
-						discount: 0
+						discount: 0,
 					})
 				);
 				setServices(mappedServices);
@@ -150,10 +152,11 @@ export default function SparePartsCart() {
 		}
 	};
 
-	useEffect(() => {
-		books_valid();
-		setActiveTab('ServiceBookingPage');
-	}, []);
+	isAuthenticated &&
+		useEffect(() => {
+			books_valid();
+			setActiveTab('ServiceBookingPage');
+		}, []);
 
 	// if (isLoading) {
 	// 	return (
@@ -231,7 +234,7 @@ export default function SparePartsCart() {
 	const filteredServices = services;
 
 	const SparePartCard = ({ part }: { part: spare }) => {
-		const quantity: number = part.quantity || 1
+		const quantity: number = part.quantity || 1;
 
 		return (
 			<div className='border rounded-lg h-[190px] shadow max-w-xl mx-left p-2 mb-6 bg-white hover:shadow-md transition duration-300'>
@@ -255,10 +258,11 @@ export default function SparePartsCart() {
 
 					<div className='flex-1 flex flex-col justify-between'>
 						<div
-							className={`relative left-[305px] text-xs text-center px-2 w-[90px] py-0.5 rounded font-medium ${part.stock
-								? 'bg-green-100 text-green-700'
-								: 'bg-red-700 text-white'
-								}`}
+							className={`relative left-[305px] text-xs text-center px-2 w-[90px] py-0.5 rounded font-medium ${
+								part.stock
+									? 'bg-green-100 text-green-700'
+									: 'bg-red-700 text-white'
+							}`}
 						>
 							{part.stock ? 'In Stock' : 'Out of Stock'}
 						</div>
@@ -328,10 +332,11 @@ export default function SparePartsCart() {
 
 					<div className='flex-1 flex flex-col justify-between'>
 						<span
-							className={`relative left-[325px] text-xs px-2 w-[65px] py-0.5 rounded font-medium ${serv.is_active
-								? 'bg-green-100 text-green-700'
-								: 'bg-red-700 text-white'
-								}`}
+							className={`relative left-[325px] text-xs px-2 w-[65px] py-0.5 rounded font-medium ${
+								serv.is_active
+									? 'bg-green-100 text-green-700'
+									: 'bg-red-700 text-white'
+							}`}
 						>
 							{serv.is_active ? 'Available' : 'Not Available'}
 						</span>
@@ -396,8 +401,9 @@ export default function SparePartsCart() {
 					<div className='relative inline-flex p-1 bg-[#FAF3EB] rounded-full border border-gray-300'>
 						<button
 							onClick={() => setActiveTab('service')}
-							className={`px-6 py-3 rounded-full flex items-center gap-2 z-10 transition-colors duration-300 ${activeTab === 'service' ? 'text-white' : 'text-black '
-								}`}
+							className={`px-6 py-3 rounded-full flex items-center gap-2 z-10 transition-colors duration-300 ${
+								activeTab === 'service' ? 'text-white' : 'text-black '
+							}`}
 						>
 							<Wrench className='text-lg' />
 							SparePart Orders
@@ -405,20 +411,22 @@ export default function SparePartsCart() {
 
 						<button
 							onClick={() => setActiveTab('ServiceBookingPage')}
-							className={`px-6 py-3 rounded-full flex items-center gap-2 z-10 transition-colors duration-300 ${activeTab === 'ServiceBookingPage'
-								? 'text-white'
-								: 'text-black '
-								}`}
+							className={`px-6 py-3 rounded-full flex items-center gap-2 z-10 transition-colors duration-300 ${
+								activeTab === 'ServiceBookingPage'
+									? 'text-white'
+									: 'text-black '
+							}`}
 						>
 							<Car className='text-xl' />
 							Service Order
 						</button>
 						{/* Animated indicator with smooth sliding */}
 						<div
-							className={`absolute inset-y-1 h-[calc(100%-0.5rem)] bg-[#9b111e] rounded-full shadow-md transition-all duration-300 ease-in-out ${activeTab === 'service'
-								? 'left-1 w-[calc(50%-0.25rem)]'
-								: 'left-[calc(50%+0.25rem)] w-[calc(50%-0.25rem)]'
-								}`}
+							className={`absolute inset-y-1 h-[calc(100%-0.5rem)] bg-[#9b111e] rounded-full shadow-md transition-all duration-300 ease-in-out ${
+								activeTab === 'service'
+									? 'left-1 w-[calc(50%-0.25rem)]'
+									: 'left-[calc(50%+0.25rem)] w-[calc(50%-0.25rem)]'
+							}`}
 						/>
 					</div>
 				</div>

@@ -17,6 +17,7 @@ import { getBookingAll } from '../../features/Bookings/service';
 import serviceImg from '../../assets/serviceimages/generalservice.png';
 import spareImg from '../../assets/CAR GEAR/car gear.jpg';
 import { FONTS } from '../../constants/constant';
+import { useAuth } from '../auth/AuthContext';
 
 interface OrderDetails {
 	id: string;
@@ -113,24 +114,26 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 
 	const getPrice = () => {
 		if (isService) {
-			return order.services?.reduce(
-				(sum, service) => sum + (service?.price ?? 0),
-				0
-			) ?? 0;
+			return (
+				order.services?.reduce(
+					(sum, service) => sum + (service?.price ?? 0),
+					0
+				) ?? 0
+			);
 		} else {
-			return order.products?.reduce(
-				(sum, product) => sum + (parseInt(product?.price ?? '0') * (product?.quantity ?? 0)),
-				0
-			) ?? 0;
+			return (
+				order.products?.reduce(
+					(sum, product) =>
+						sum + parseInt(product?.price ?? '0') * (product?.quantity ?? 0),
+					0
+				) ?? 0
+			);
 		}
 	};
-
-
 
 	return (
 		<div className='opacity-90 rounded-2xl shadow-lg border max-w-6xl mx-auto border-red-800 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:border-red-700'>
 			<div className='flex flex-col'>
-
 				{/* Top Section */}
 				<div className='flex flex-row'>
 					{/* Image Section */}
@@ -145,8 +148,24 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 
 						{/* Type Badge */}
 						<div className='absolute top-3 left-3 z-10'>
-							<span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${isService ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'}`}>
-								{isService ? <><Wrench className='w-3 h-3 mr-1' />Service</> : <><Package className='w-3 h-3 mr-1' />Product</>}
+							<span
+								className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+									isService
+										? 'bg-purple-100 text-purple-800'
+										: 'bg-blue-100 text-blue-800'
+								}`}
+							>
+								{isService ? (
+									<>
+										<Wrench className='w-3 h-3 mr-1' />
+										Service
+									</>
+								) : (
+									<>
+										<Package className='w-3 h-3 mr-1' />
+										Product
+									</>
+								)}
 							</span>
 						</div>
 					</div>
@@ -157,17 +176,29 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 							<div className='flex justify-between'>
 								{/* Name and Description */}
 								<div>
-									<h3 className='text-xl font-bold text-red-900 mb-1'>{getName()}</h3>
-									<p className='text-red-700 text-sm leading-relaxed'>{getDescription()}</p>
+									<h3 className='text-xl font-bold text-red-900 mb-1'>
+										{getName()}
+									</h3>
+									<p className='text-red-700 text-sm leading-relaxed'>
+										{getDescription()}
+									</p>
 									<div className='flex items-center text-sm text-red-700 mt-2'>
 										<Calendar className='w-4 h-4 text-red-800 mr-2' />
-										<span>{orderDate.toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+										<span>
+											{orderDate.toLocaleDateString('en-US', {
+												year: 'numeric',
+												month: 'long',
+												day: 'numeric',
+											})}
+										</span>
 									</div>
 								</div>
 
 								{/* Price + Old Order */}
 								<div className='text-right'>
-									<div className='text-2xl font-bold text-gray-900'>₹{getPrice().toLocaleString()}</div>
+									<div className='text-2xl font-bold text-gray-900'>
+										₹{getPrice().toLocaleString()}
+									</div>
 									{isOld && (
 										<span className='text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full mt-1 inline-block'>
 											Old Order
@@ -208,44 +239,69 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 					{showDetails && (
 						<div className='bg-[#FAF3EB] rounded-xl shadow p-6 border border-red-200 mt-4'>
 							<div className='flex  md:flex-row justify-between gap-6'>
-
 								{/* Price Summary */}
 								<div className='md:w-1/2 space-y-2 ml-10'>
-									<h4 className='text-lg font-bold text-red-900 mb-2'>Price Summary</h4>
-									<p className='text-sm text-red-600'><span >Product</span><span className='pl-5'>:</span> {getName()}</p>
-									<p className='text-sm text-red-600'><span>Base Price</span><span className='pl-1'>:</span> ₹  {getPrice().toLocaleString()}</p>
-									<p className='text-sm text-red-600'><span>Tax (5%)</span><span className='pl-3'>:</span> ₹  {(getPrice() * 0.05).toFixed(2)}</p>
+									<h4 className='text-lg font-bold text-red-900 mb-2'>
+										Price Summary
+									</h4>
+									<p className='text-sm text-red-600'>
+										<span>Product</span>
+										<span className='pl-5'>:</span> {getName()}
+									</p>
+									<p className='text-sm text-red-600'>
+										<span>Base Price</span>
+										<span className='pl-1'>:</span> ₹{' '}
+										{getPrice().toLocaleString()}
+									</p>
+									<p className='text-sm text-red-600'>
+										<span>Tax (5%)</span>
+										<span className='pl-3'>:</span> ₹{' '}
+										{(getPrice() * 0.05).toFixed(2)}
+									</p>
 									<div className='border-t border-orange-200 pt-2 mb-2'>
-										<p className='text-sm text-red-900 font-bold'><strong>Total<span className='pl-8'>:</span></strong> ₹  {(getPrice() * 1.05).toFixed(2)}</p>
+										<p className='text-sm text-red-900 font-bold'>
+											<strong>
+												Total<span className='pl-8'>:</span>
+											</strong>{' '}
+											₹ {(getPrice() * 1.05).toFixed(2)}
+										</p>
 									</div>
 								</div>
 
 								{/* Order Info */}
 								<div className='md:w-1/2 space-y-2 mr-30 border border-red-500 rounded-lg p-4'>
-									<h4 className='text-lg font-bold text-red-900 mb-2'>Order Info</h4>
-									<p className='text-sm text-red-600'><span>Status<span className='pl-11'>:</span></span> {order.status || "Pending"}</p>
-									<p className='text-sm text-red-600'><span>Order Type<span className='pl-3'>:</span></span> {isService ? "Service" : "Product"}</p>
+									<h4 className='text-lg font-bold text-red-900 mb-2'>
+										Order Info
+									</h4>
 									<p className='text-sm text-red-600'>
-										<span>Placed On<span className='pl-5'>:</span></span>{" "}
-										{orderDate.toLocaleDateString("en-US", {
-											year: "numeric",
-											month: "long",
-											day: "numeric",
+										<span>
+											Status<span className='pl-11'>:</span>
+										</span>{' '}
+										{order.status || 'Pending'}
+									</p>
+									<p className='text-sm text-red-600'>
+										<span>
+											Order Type<span className='pl-3'>:</span>
+										</span>{' '}
+										{isService ? 'Service' : 'Product'}
+									</p>
+									<p className='text-sm text-red-600'>
+										<span>
+											Placed On<span className='pl-5'>:</span>
+										</span>{' '}
+										{orderDate.toLocaleDateString('en-US', {
+											year: 'numeric',
+											month: 'long',
+											day: 'numeric',
 										})}
 									</p>
 								</div>
-
-
 							</div>
 						</div>
 					)}
-
-
-
 				</div>
 			</div>
 		</div>
-
 	);
 };
 
@@ -258,51 +314,54 @@ const OrdersPage: React.FC = () => {
 	const [orders, setOrders] = useState<OrderDetails[]>([]);
 	const orderTitle = useScrollAnimation<HTMLHeadingElement>();
 	// const [isLoading, setIsLoading] = useState(false);
+	const { isAuthenticated } = useAuth();
 
-	useEffect(() => {
-		const fetchOrders = async () => {
-			try {
-				const response: any = await getBookingAll({});
-				if (response?.data) {
-					const transformedOrders = [
-						...(response.data.productConfirm?.map((productOrder: any) => ({
-							id: productOrder._id,
-							uuid: productOrder.uuid,
-							name:
-								productOrder.products?.[0]?.productId?.productName ||
-								'Product Order',
-							date: productOrder.confirm_Date,
-							price: productOrder.amount,
-							status: productOrder.status,
-							type: 'spare',
-							products: productOrder.products,
-						})) || []),
+	isAuthenticated &&
+		useEffect(() => {
+			const fetchOrders = async () => {
+				try {
+					const response: any = await getBookingAll({});
+					if (response?.data) {
+						const transformedOrders = [
+							...(response.data.productConfirm?.map((productOrder: any) => ({
+								id: productOrder._id,
+								uuid: productOrder.uuid,
+								name:
+									productOrder.products?.[0]?.productId?.productName ||
+									'Product Order',
+								date: productOrder.confirm_Date,
+								price: productOrder.amount,
+								status: productOrder.status,
+								type: 'spare',
+								products: productOrder.products,
+							})) || []),
 
-						...(response.data.serviceConfirm?.map((serviceOrder: any) => ({
-							id: serviceOrder._id,
-							uuid: serviceOrder.uuid,
-							name: serviceOrder.services?.[0]?.service_name || 'Service Order',
-							description: serviceOrder.services?.[0]?.description,
-							date: serviceOrder.confirm_Date,
-							price: serviceOrder.amount,
-							status: serviceOrder.status,
-							type: 'service',
-							services: serviceOrder.services,
-						})) || []),
-					];
+							...(response.data.serviceConfirm?.map((serviceOrder: any) => ({
+								id: serviceOrder._id,
+								uuid: serviceOrder.uuid,
+								name:
+									serviceOrder.services?.[0]?.service_name || 'Service Order',
+								description: serviceOrder.services?.[0]?.description,
+								date: serviceOrder.confirm_Date,
+								price: serviceOrder.amount,
+								status: serviceOrder.status,
+								type: 'service',
+								services: serviceOrder.services,
+							})) || []),
+						];
 
-					setOrders(transformedOrders);
+						setOrders(transformedOrders);
+						// setIsLoading(false);
+					}
+				} catch (err) {
+					console.error('Error fetching orders:', err);
+				} finally {
 					// setIsLoading(false);
 				}
-			} catch (err) {
-				console.error('Error fetching orders:', err);
-			} finally {
-				// setIsLoading(false);
-			}
-		};
+			};
 
-		fetchOrders();
-	}, []);
+			fetchOrders();
+		}, []);
 
 	const filteredOrders = useMemo(() => {
 		return orders
@@ -393,60 +452,61 @@ const OrdersPage: React.FC = () => {
 				</div>
 
 				{/* Filters and Search */}
-<div className='bg-[#FAF3EB] rounded-2xl shadow-sm mx-7 border border-gray-100 p-6 mb-8 '>
+				<div className='bg-[#FAF3EB] rounded-2xl shadow-sm mx-7 border border-gray-100 p-6 mb-8 '>
+					{/* First Row: Search */}
+					<div className='mb-6'>
+						<div className='relative w-full'>
+							<Search className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5' />
+							<input
+								type='text'
+								value={searchTerm}
+								placeholder='Search orders...'
+								onChange={(e) => setSearchTerm(e.target.value)}
+								className='w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all'
+							/>
+						</div>
+					</div>
 
-  {/* First Row: Search */}
-  <div className='mb-6'>
-    <div className='relative w-full'>
-      <Search className='absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-5 w-5' />
-      <input
-        type='text'
-        value={searchTerm}
-        placeholder='Search orders...'
-        onChange={(e) => setSearchTerm(e.target.value)}
-        className='w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all'
-      />
-    </div>
-  </div>
+					{/* Second Row: Filters + Sort + Reset */}
+					<div className='flex flex-col  gap-4'>
+						{/* Filter Buttons */}
+						<div className='flex flex-wrap gap-2 bg-gray-100 rounded-xl p-1'>
+							<button
+								onClick={() => setFilterType('all')}
+								className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+									filterType === 'all'
+										? 'bg-red-900 text-white shadow-sm'
+										: 'text-gray-600 hover:text-gray-900'
+								}`}
+							>
+								All Orders
+							</button>
+							<button
+								onClick={() => setFilterType('spare')}
+								className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${
+									filterType === 'spare'
+										? 'bg-red-900 text-white shadow-sm'
+										: 'text-gray-600 hover:text-gray-900'
+								}`}
+							>
+								<Package className='w-4 h-4 mr-1' />
+								Spare Parts
+							</button>
+							<button
+								onClick={() => setFilterType('service')}
+								className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${
+									filterType === 'service'
+										? 'bg-red-900 text-white shadow-sm'
+										: 'text-gray-600 hover:text-gray-900'
+								}`}
+							>
+								<Wrench className='w-4 h-4 mr-1' />
+								Services
+							</button>
+						</div>
 
-  {/* Second Row: Filters + Sort + Reset */}
-  <div className='flex flex-col  gap-4'>
-
-    {/* Filter Buttons */}
-    <div className='flex flex-wrap gap-2 bg-gray-100 rounded-xl p-1'>
-      <button
-        onClick={() => setFilterType('all')}
-        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${filterType === 'all'
-          ? 'bg-red-900 text-white shadow-sm'
-          : 'text-gray-600 hover:text-gray-900'
-          }`}
-      >
-        All Orders
-      </button>
-      <button
-        onClick={() => setFilterType('spare')}
-        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${filterType === 'spare'
-          ? 'bg-red-900 text-white shadow-sm'
-          : 'text-gray-600 hover:text-gray-900'
-          }`}
-      >
-        <Package className='w-4 h-4 mr-1' />
-        Spare Parts
-      </button>
-      <button
-        onClick={() => setFilterType('service')}
-        className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${filterType === 'service'
-          ? 'bg-red-900 text-white shadow-sm'
-          : 'text-gray-600 hover:text-gray-900'
-          }`}
-      >
-        <Wrench className='w-4 h-4 mr-1' />
-        Services
-      </button>
-    </div>
-
-    {/* Sort Dropdown */}
-    {/* <select
+						{/* Sort Dropdown */}
+						{/* <select
       value={sortBy}
       onChange={(e) => setSortBy(e.target.value as 'date' | 'price' | 'name')}
       className='px-4 py-2 w-full md:w-auto rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 transition-all duration-200 shadow-sm hover:shadow-md font-medium text-sm'
@@ -456,8 +516,8 @@ const OrdersPage: React.FC = () => {
       <option value='name'>Sort by Name</option>
     </select> */}
 
-    {/* Reset Button */}
-    {/* <button
+						{/* Reset Button */}
+						{/* <button
       onClick={() => {
         setSearchTerm('');
         setFilterType('all');
@@ -467,10 +527,8 @@ const OrdersPage: React.FC = () => {
     >
       Reset Filters
     </button> */}
-
-  </div>
-</div>
-
+					</div>
+				</div>
 
 				{/* Orders List */}
 				<div className='space-y-6'>

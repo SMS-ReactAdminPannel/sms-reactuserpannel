@@ -4,7 +4,7 @@ import { BrowserRouter } from 'react-router-dom';
 import AppRoutes from './routes/AppRoutes.tsx';
 import { AuthProvider } from './pages/auth/AuthContext.tsx';
 import 'react-toastify/dist/ReactToastify.css';
-
+import { Toaster } from 'react-hot-toast';
 
 function App() {
 	return (
@@ -12,6 +12,7 @@ function App() {
 			<BrowserRouter>
 				<AuthProvider>
 					<AppRoutes />
+					<Toaster position='top-center' reverseOrder={false} />
 					<ToastContainer
 						position='top-right'
 						autoClose={3000}

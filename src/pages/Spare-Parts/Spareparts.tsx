@@ -11,8 +11,10 @@ import spareimg from '../../assets/CAR DIFFERENTIAL/Car differential.jpg';
 import { FONTS } from '../../constants/constant';
 // import { SiTicktick } from 'react-icons/si';
 import { Link } from 'react-router-dom';
-import spareImg from '../../assets/CarPart1.jfif'
-
+import spareImg from '../../assets/CarPart1.jfif';
+import toast from 'react-hot-toast';
+import { useAuth } from '../auth/AuthContext';
+import LoginPromptModal from '../../components/Authentication/LoginPromptModal';
 
 interface SparePart {
 	id: string;
@@ -78,9 +80,10 @@ const SpareParts: React.FC = () => {
 	>([]);
 
 	const [showAllProducts, setShowAllProducts] = useState(false);
+	const { isAuthenticated } = useAuth();
+	const [showLoginModal, setShowLoginModal] = useState(false);
 
 	// const {CategoryData} = useSparePartsDataset;
-
 
 	// const [error, setError] = useState<string | null>(null);
 	// const [isLoading, setIsLoading] = useState(true);
@@ -89,7 +92,6 @@ const SpareParts: React.FC = () => {
 		try {
 			// setError(null);
 			const response: any = await getSparePartsData({});
-			console.log(response)
 			if (response && response.data && response.data.data) {
 				if (Array.isArray(response.data.data)) {
 					const validatedParts = response.data.data.map((part: any) => {
@@ -189,19 +191,25 @@ const SpareParts: React.FC = () => {
 
 	// Add to cart button functions
 	const handleAddToCart = async (part: SparePart) => {
-		try {
-			const payload = {
-				products: {
-					productId: part.id,
-					price: part.price?.toString(),
-					quantity: quantity,
-				},
-				type: 'spare',
-			};
-			const response = await postSparePartsData(payload);
-			console.log(response, 'add to cart response');
-		} catch (error) {
-			console.error('Error adding to cart:', error);
+		if (isAuthenticated) {
+			try {
+				const payload = {
+					products: {
+						productId: part.id,
+						price: part.price?.toString(),
+						quantity: quantity,
+					},
+					type: 'spare',
+				};
+				const response = await postSparePartsData(payload);
+				if (response) {
+					toast.success('Item added to cart!', { duration: 2000 });
+				}
+			} catch (error) {
+				console.error('Error adding to cart:', error);
+			}
+		} else if (!isAuthenticated) {
+			setShowLoginModal(true);
 		}
 	};
 
@@ -352,8 +360,9 @@ const SpareParts: React.FC = () => {
 											₹{part.price.toLocaleString()}
 										</div>
 										<div
-											className={`mt-2 text-xs font-semibold ${part.stock ? 'text-green-600' : 'text-red-600'
-												}`}
+											className={`mt-2 text-xs font-semibold ${
+												part.stock ? 'text-green-600' : 'text-red-600'
+											}`}
 										>
 											{part.stock ? 'In Stock' : 'Out of Stock'}
 										</div>
@@ -413,10 +422,11 @@ const SpareParts: React.FC = () => {
 						>
 							Our Bundles
 							<span
-								className={`absolute top-11 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${bundleTitle.isVisible
-									? 'scale-x-100 w-full'
-									: 'scale-x-0 w-full'
-									}`}
+								className={`absolute top-11 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+									bundleTitle.isVisible
+										? 'scale-x-100 w-full'
+										: 'scale-x-0 w-full'
+								}`}
 							></span>
 						</span>
 					</h1>
@@ -506,10 +516,11 @@ const SpareParts: React.FC = () => {
 							<button
 								key={index}
 								onClick={() => setCurrentIndex(index)}
-								className={`w-3 h-3 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 ${index === currentIndex
-									? 'bg-[#9b111e]'
-									: 'bg-gray-400 hover:bg-gray-500'
-									}`}
+								className={`w-3 h-3 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 ${
+									index === currentIndex
+										? 'bg-[#9b111e]'
+										: 'bg-gray-400 hover:bg-gray-500'
+								}`}
 								aria-label={`Go to slide ${index + 1}`}
 							/>
 						))}
@@ -550,28 +561,40 @@ const SpareParts: React.FC = () => {
 				</div>
 			</div>
 
-			<div className="max-w-full px-4 md:px-6 lg:px-8">
-				<h1 className=" text-[#9b111e] mb-8 text-center" style={{ ...FONTS.heading }}>
+			<div className='max-w-full px-4 md:px-6 lg:px-8'>
+				<h1
+					className=' text-[#9b111e] mb-8 text-center'
+					style={{ ...FONTS.heading }}
+				>
 					By Categories
 				</h1>
 
-				<div className=" grid grid-cols-4 gap-6">
+				<div className=' grid grid-cols-4 gap-6'>
 					{categories.map(({ id, title, items }) => (
-						<div key={id} className="flex flex-col gap-4 p-6 border rounded-xl shadow-md">
-							<div className="flex justify-between items-center">
-								<h2 className="text-md font-bold uppercase text-[#9b111e]">{title}</h2>
-								<img src={spareImg} alt={title} className="w-16 h-16 object-contain" />
+						<div
+							key={id}
+							className='flex flex-col gap-4 p-6 border rounded-xl shadow-md'
+						>
+							<div className='flex justify-between items-center'>
+								<h2 className='text-md font-bold uppercase text-[#9b111e]'>
+									{title}
+								</h2>
+								<img
+									src={spareImg}
+									alt={title}
+									className='w-16 h-16 object-contain'
+								/>
 							</div>
-							<ul className="space-y-1 text-sm">
+							<ul className='space-y-1 text-sm'>
 								{items.slice(0, 3).map((item, index) => (
-									<li key={index} className="hover:underline cursor-pointer">
+									<li key={index} className='hover:underline cursor-pointer'>
 										{item}
 									</li>
 								))}
 							</ul>
 							<Link
 								to={`/spare-parts/category/${id}`}
-								className="text-sm font-semibold relative bottom-[1px] text-red-700 cursor-pointer hover:underline mt-1"
+								className='text-sm font-semibold relative bottom-[1px] text-red-700 cursor-pointer hover:underline mt-1'
 							>
 								ALL CATEGORIES →
 							</Link>
@@ -579,7 +602,6 @@ const SpareParts: React.FC = () => {
 					))}
 				</div>
 			</div>
-
 
 			{/* Edit Product Modal */}
 			{selectedPart && (
@@ -663,6 +685,12 @@ const SpareParts: React.FC = () => {
 					</div>
 				</div>
 			)}
+			<div>
+				<LoginPromptModal
+					isOpen={showLoginModal}
+					onClose={() => setShowLoginModal(false)}
+				/>
+			</div>
 		</div>
 	);
 };

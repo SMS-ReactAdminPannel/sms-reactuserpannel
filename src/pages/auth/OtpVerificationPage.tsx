@@ -130,20 +130,20 @@ const OtpVerificationPage = () => {
 					<button
 						type='button'
 						onClick={handleOtpVerify}
-						className='w-full py-2 mt-2 text-white font-semibold rounded-full bg-gradient-to-r from-[#9b111e] to-[#d23c3c] text-sm'
+						className='w-full py-2 mt-2 text-white font-semibold rounded-full bg-red-900 hover:bg-red-700 text-sm'
 					>
 						Verify OTP
 					</button>
 				</div>
 
-				<div className='text-center pt-1'>
+				{/* <div className='text-center pt-1'>
 					<Link
 						to='/login'
 						className='text-white hover:underline text-lg text-[#d23c3c] font-bold'
 					>
 						Back to Login
 					</Link>
-				</div>
+				</div> */}
 			</form>
 		</AuthLayout>
 	);
