@@ -106,6 +106,10 @@ const OtpVerificationPage = () => {
 					<label className='text-sm font-semibold text-white'>
 						Enter the 6-digit OTP
 					</label>
+					<label className='text-sm font-semibold text-white'>
+						{otpData.otp}
+					</label>
+
 					<div className='flex justify-between space-x-2'>
 						{otpDigits.map((digit, idx) => (
 							<input
