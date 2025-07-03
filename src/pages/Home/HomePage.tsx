@@ -35,7 +35,7 @@ import Roadsideassistant from '../../assets/CAR ROADSIDE/Roadside assistant.jpg'
 import Prebooking from '../../assets/CAR PREBOOKING/Prebooking.jpg';
 import Annualmaintenance from '../../assets/CAR ANNUAL MAINTENANCE/Annual maintenance.jpg';
 import appimage from '../../assets/LOGO.png';
-import bgImg from '../../assets/home/aesthetic-background-with-patterned-glass-texture.jpg';
+// import bgImg from '../../assets/home/aesthetic-background-with-patterned-glass-texture.jpg';
 import bgImg2 from '../../assets/home/studio-background-concept-abstract-empty-light-gradient-purple-studio-room-background-product.jpg';
 import bgImg3 from '../../assets/checkout-bg_1_.png';
 
