@@ -10,49 +10,55 @@ export const COLORS = {
 };
 
 export const FONTS = {
-	header: {
-		fontFamily: 'Open Sans',
-		fontWeight: 400,
-		fontSize: '32px',
-	},
-	heading: {
-		fontFamily: 'Koh Santepheap',
-		fontWeight: 400,
-		fontSize: '36px',
-	},
-	sub_heading: {
-		fontFamily: 'Koh Santepheap',
-		fontWeight: 400,
-		fontSize: '30px',
-	},
-	sub_heading1: {
-		fontFamily: 'Koh Santepheap',
-		fontWeight: 400,
-		fontSize: '24px',
-	},
-	sub_heading2: {
-		fontFamily: 'Koh Santepheap',
-		fontWeight: 400,
-		fontSize: '20px',
-	},
-	paragraph: {
-		fontFamily: 'Figtree',
-		fontWeight: 400,
-		fontSize: '16px',
-	},
-	sub_paragraph1: {
-		fontFamily: 'Figtree',
-		fontWeight: 400,
-		fontSize: '14px',
-	},
-	sub_paragraph2: {
-		fontFamily: 'Figtree',
-		fontWeight: 400,
-		fontSize: '12px',
-	},
-	sub_paragraph3: {
-		fontFamily: 'Figtree',
-		fontWeight: 400,
-		fontSize: '10px',
-	},
-};
+header: {
+    fontFamily:"'Montserrat', sans-serif", 
+    fontWeight: 600,
+    fontSize: "22px",
+    color: "#1F75FF"
+  },
+  //Card heading 
+  subheader: {
+   fontFamily:"'Montserrat', sans-serif", 
+    fontWeight: 400,
+    fontSize: "20px",
+    color: "#1F75FF"
+  },
+  //Card sub heading
+
+  //paragraph
+  paragraph: {
+    fontFamily: "'poppins',sans-serif",
+    fontWeight: 500,
+    fontSize: "16px",
+    color: " #717171"
+  },
+  subParagraph: {
+    fontFamily: "'poppins',sans-serif",
+    fontWeight: 300,
+    fontSize: "12px",
+    color: "#717171"
+  },
+  //Card description 
+  description: {
+    fontFamily: "'poppins',sans-serif",
+    fontSize: "12px",
+    fontWeight: 200,
+    color: "#717171",
+  },
+  //table header
+  tableHeader : {
+    fontFamily: "'poppins',sans-serif",
+    fontWeight: 600,
+    fontSize: "16px",
+    color: "#717171"
+  },
+  Button :{
+	fontFamily: "'poppins',sans-serif",
+    fontWeight: 600,
+    fontSize: "16px",
+	backgroundcolor:'#1F75FF'
+	
+  }
+
+ };
+

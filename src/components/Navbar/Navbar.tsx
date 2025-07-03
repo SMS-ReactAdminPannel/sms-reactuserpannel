@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../pages/auth/AuthContext';
 import { COLORS, FONTS } from '../../constants/constant';
-import Logo from '../../assets/LOGO.png';
+import Logo from '../../assets/Userlogo.png';
 import { FiSearch } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import ProfileMenu from '../home/ProfileMenu';
@@ -152,7 +152,7 @@ export const Navbar: React.FC = () => {
 	return (
 		<header className='bg-white text-white w-full fixed top-0 z-50 border-b-2 border-red-900'>
 			{/* Top Navbar */}
-			<div className='bg-red-900 h-[2px]'></div>
+			<div className='bg-[#717171]-900 h-[2px]'></div>
 			<div className='flex items-center justify-between px-24 py-2 space-x-4'>
 				{/* Logo & Location */}
 				<div className='flex items-center space-x-4'>
@@ -160,7 +160,7 @@ export const Navbar: React.FC = () => {
 						<img
 							src={Logo}
 							alt='yes mechanic logo'
-							className='w-[185px] h-[28px]'
+							className=' left -ml-16 w-[185px] h-[28px]'
 						/>
 					</Link>
 				</div>
@@ -169,7 +169,7 @@ export const Navbar: React.FC = () => {
 					<img src={TruckIcon} style={{ width: '30px' }} />
 					<label
 						className='text-red-900 cursor-pointer'
-						style={{ ...FONTS.sub_paragraph1, fontWeight: 600 }}
+						style={{ ...FONTS.subheader }}
 					>
 						QUICK DELIVERY
 					</label>
@@ -182,57 +182,55 @@ export const Navbar: React.FC = () => {
 
 				{/* Search Bar */}
 				<div className='flex flex-1 justify-end'>
-					<input
-						type='text'
-						className='px-4 py-2 text-[#9b111e] placeholder-gray-600 text-sm bg-[#fdefe9] rounded-l-md focus:outline-none focus:ring-[#9b111e] w-[290px] shadow-md'
-						placeholder='Search'
-						value={search}
-						onChange={(e) => setSearch(e.target.value)}
-					/>
+  <input
+    type='text'
+    className='px-4 py-2 text-blue-900 placeholder-gray-600 text-sm bg-[#fdefe9] rounded-l-md focus:outline-none focus:ring-[#9b111e] w-[290px] shadow-md'
+    placeholder='Search'
+    value={search}
+    onChange={(e) => setSearch(e.target.value)}
+  />
 
-					<button className='bg-red-900 px-3 py-2 rounded-r-md'>
-						<FiSearch
-							className='text-black text-xl'
-							color={COLORS.white}
-							size={18}
-						/>
-					</button>
-				</div>
+  <button className='bg-[#1F75FF] px-3 py-2 rounded-r-md shadow-md'>
+    <FiSearch className='text-white text-xl' size={18} />
+  </button>
+</div>
+
 
 				{/* Right Side Options */}
 				<div className='flex items-center text-sm gap-3'>
 					<div className='relative' ref={notificationRef}>
-						<button
-							aria-label='Notifications'
-							onClick={handleBellClick}
-							className={`relative p-2.5 rounded-full focus:outline-none transform transition-transform duration-200 ease-in-out ${
-								isBellActive ? 'scale-90' : 'scale-100'
-							}`}
-						>
-							<svg
-								xmlns='http://www.w3.org/2000/svg'
-								fill='none'
-								viewBox='0 0 24 24'
-								strokeWidth={1.8}
-								stroke='currentColor'
-								className='w-6 h-6 text-red-900'
-							>
-								<path
-									strokeLinecap='round'
-									strokeLinejoin='round'
-									d='M12 22c1.1 0 2-.9 2-2h-4a2 2 0 002 2zm6-6V11c0-3.3-2.2-6.1-5.3-6.8V4a.7.7 0 00-1.4 0v.2C8.2 4.9 6 7.7 6 11v5l-1.7 1.7a1 1 0 00.7 1.7h14a1 1 0 00.7-1.7L18 16z'
-								/>
-							</svg>
-							{unreadCount > 0 && (
-								<span className='absolute top-0 right-1 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full'>
-									{unreadCount}
-								</span>
-							)}
-						</button>
+					<button
+  aria-label='Notifications'
+  onClick={handleBellClick}
+  className={`relative p-2.5 rounded-full bg-[#1F75FF] focus:outline-none transform transition-transform duration-200 ease-in-out ${
+    isBellActive ? 'scale-90' : 'scale-100'
+  }`}
+>
+  <svg
+    xmlns='http://www.w3.org/2000/svg'
+    fill='none'
+    viewBox='0 0 24 24'
+    strokeWidth={1.8}
+    stroke='currentColor'
+    className='w-6 h-6 text-white'
+  >
+    <path
+      strokeLinecap='round'
+      strokeLinejoin='round'
+      d='M12 22c1.1 0 2-.9 2-2h-4a2 2 0 002 2zm6-6V11c0-3.3-2.2-6.1-5.3-6.8V4a.7.7 0 00-1.4 0v.2C8.2 4.9 6 7.7 6 11v5l-1.7 1.7a1 1 0 00.7 1.7h14a1 1 0 00.7-1.7L18 16z'
+    />
+  </svg>
+  {unreadCount > 0 && (
+    <span className='absolute top-0 right-1 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full'>
+      {unreadCount}
+    </span>
+  )}
+</button>
+
 
 						{showNotifications && (
 							<div className='absolute right-0 mt-2 w-80 rounded-lg shadow-xl bg-white z-50 overflow-hidden'>
-								<div className='bg-red-900 p-3'>
+								<div className='bg-blue-600 p-3'>
 									<h3 className='text-white font-bold'>Notifications</h3>
 								</div>
 								<div className='max-h-80 overflow-y-auto'>
@@ -248,7 +246,7 @@ export const Navbar: React.FC = () => {
 												<div className='absolute left-0 top-0 h-full w-1 bg-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-200'></div>
 
 												<div className='flex justify-between items-start'>
-													<p className='text-sm text-red-900 font-semibold'>
+													<p className='text-sm text-b-900 font-semibold'>
 														{notification.title}
 													</p>
 												</div>
@@ -258,7 +256,7 @@ export const Navbar: React.FC = () => {
 											</div>
 										))
 									) : (
-										<p className='p-3 text-gray-500 text-sm'>
+										<p className='p-3 text-bule-500 text-sm'>
 											No notifications
 										</p>
 									)}
@@ -266,7 +264,7 @@ export const Navbar: React.FC = () => {
 								<div className='p-3 bg-gray-50 text-center border-t'>
 									<button
 										onClick={handleViewAllNotifications}
-										className='text-red-600 hover:text-red-800 font-medium text-sm transition-colors'
+										className='text-red-600 hover:text-blue-800 font-medium text-sm transition-colors'
 									>
 										View All Notifications
 									</button>
@@ -299,7 +297,7 @@ export const Navbar: React.FC = () => {
 												navigate('/');
 											}, 1000);
 										}}
-										className='px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700'
+										className='px-4 py-2 rounded bg-bule-600 text-white hover:bg-bule-700'
 									>
 										OK
 									</button>
@@ -381,8 +379,8 @@ export const Navbar: React.FC = () => {
 							navigate('/booking-cart');
 						}}
 					>
-						<IoCartOutline className='text-3xl cursor-pointer text-red-900' />
-						<span className='absolute w-auto h-auto -top-2 left-6 bg-red-500 text-white text-xs rounded-full px-1 cursor-pointer text-center'>
+						<IoCartOutline className='text-3xl cursor-pointer  bg-[#1F75FF] text-red-900' />
+						<span className='absolute w-auto h-auto -top-2 left-6 bg-bule-500 text-white text-xs rounded-full px-1 cursor-pointer text-center'>
 							{cartCount || 0}
 						</span>
 					</div>
@@ -396,7 +394,7 @@ export const Navbar: React.FC = () => {
 							<img
 								src='/images/images.jpeg'
 								alt='dummy-image'
-								className='w-[52px] h-[52px] rounded-full cursor-pointer'
+								className='w-[52px] h-[52px]  mr-10 rounded-full cursor-pointer'
 							/>
 						</>
 					)}
@@ -405,18 +403,18 @@ export const Navbar: React.FC = () => {
 
 			{/* Bottom Navbar - Categories */}
 
-			<div className='bg-[#fdefe9] px-24 py-1.5 flex items-center justify-center gap-10 shadow-lg'>
+			<div className='bg-[#1F75FF] px-24 py-1.5 **:!text-white flex items-center justify-center gap-10 shadow-lg' style={{...FONTS.subheader}}>
 				{navData?.map((item, idx) => (
 					<NavLink
 						key={idx}
 						to={item.link}
 						style={{ ...FONTS.paragraph, fontWeight: 500, fontSize: '18px' }}
 						className={({ isActive }) =>
-							`relative pb-1 text-md font-semibold transition-all duration-300 ease-in-out whitespace-nowrap
+							`relative pb-5 text-md text-center  !text-white font-semibold transition-all duration-300 ease-in-out whitespace-nowrap
 	${
 		isActive
-			? 'text-red-900 after:content-[""] after:absolute after:left-0 after:bottom-9 after:h-[2.5px] after:w-full after:bg-red-900 after:transition-all after:duration-300'
-			: 'text-red-800 after:content-[""] after:absolute after:left-0 after:bottom-9 after:h-[2.5px] after:w-0 after:bg-red-900 after:transition-all after:duration-300 hover:after:w-full'
+			? '!text-white-900 after:content-[""] after:absolute after:left-0 after:bottom-9 after:h-[2.5px] after:w-full after:bg-white-900 after:transition-all after:duration-300'
+			: '!text-white-800 after:content-[""] after:absolute after:left-0 after:bottom-9 after:h-[2.5px] after:w-0 after:bg-white-900 after:transition-all after:duration-300 hover:after:w-full'
 	}`
 						}
 					>
@@ -428,7 +426,7 @@ export const Navbar: React.FC = () => {
 					<button
 						className='text-white py-1 px-8 rounded-full'
 						style={{
-							...FONTS.paragraph,
+							...FONTS.Button,
 							fontWeight: 600,
 							backgroundImage: `linear-gradient(to right, #9b111e, rgba(255,0,0,1), #9b111e)`,
 						}}
