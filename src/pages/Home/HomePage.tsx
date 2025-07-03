@@ -185,15 +185,15 @@ const HomePage: React.FC = () => {
 	return (
 		<>
 			<div className='h-auto'>
-				<div className='bg-red-900 h-[25px]'></div>
+				<div className='bg-[#0050A5] '></div>
 				<ImageCarousel images={imageUrls} interval={2500} />
 			</div>
 
 			<div className=''>
-				<div className='px-24 h-auto bg-red-100 py-24'>
+				<div className='px-24 h-auto bg-white py-24'>
 					<h1
 						ref={servicesTitle.elementRef}
-						className='text-2xl pb-16 text-red-900 text-center -mt-6'
+						className='text-2xl pb-16 text-[#0050A5] text-center -mt-6'
 						style={{ ...FONTS.heading }}
 					>
 						<span className='inline-block pb-1 relative'>
@@ -216,10 +216,10 @@ const HomePage: React.FC = () => {
 								onClick={() =>
 									handleServiceClick(service.id, service.category_name)
 								}
-								className={`bg-[#FAF3EB] rounded-lg p-2 shadow-md hover:shadow-lg transition-shadow ease-in duration-300 border-b-2 cursor-pointer transform hover:scale-102 border-red-900`}
+								className={`bg-[#fff] rounded-lg p-2 shadow-md hover:shadow-lg transition-shadow ease-in duration-300 border-l-2 border-b-2 cursor-pointer transform hover:scale-102 border-[#0050A5]`}
 							>
 								<div className='flex mx-4 gap-3'>
-									<div className='text-[#9b111e] flex justify-center'>
+									<div className='text-[#0050A5] flex justify-center'>
 										<img
 											className='w-[100px] h-[70px] m-2 rounded'
 											src={serviceImg}
@@ -238,7 +238,7 @@ const HomePage: React.FC = () => {
 					</div>
 				</div>
 				<div
-					className={`h-[90vh] bg-[url(${bgImg})] flex justify-center items-center`}
+					className={`h-[90vh] flex justify-center items-center`}
 				>
 					<div className='mx-24'>
 						<PromoCarousel />

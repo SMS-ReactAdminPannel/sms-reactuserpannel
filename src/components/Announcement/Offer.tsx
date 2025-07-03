@@ -81,13 +81,13 @@ const Offer: React.FC = () => {
 	const offerTitle = useScrollAnimation<HTMLHeadingElement>();
 
 	return (
-		<div className='p-6 bg-gradient-to-br from-blue-50 to-blue-100 min-h-screen'>
+		<div className='p-6 bg-gradient-to-br font-bold from-blue-50 to-blue-100 min-h-screen'>
 			<h1
 				ref={offerTitle.elementRef}
 				className='text-center'
 				style={{ ...FONTS.heading }}
 			>
-				<span className='inline-block pb-1 relative text-center text-red-900 mb-10'>
+				<span className='inline-block pb-1  relative text-center text-[#0050A5] mb-10'>
 					Yes Mechanic Special Offers
 					{/* <span
 						className={`absolute top-[52px] left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
@@ -109,7 +109,7 @@ const Offer: React.FC = () => {
 						transition={{ delay: index * 0.15, duration: 0.5 }}
 						className='relative rounded-xl shadow-lg p-4 bg-white/70 backdrop-blur-md border border-white/30'
 					>
-						<span className='absolute top-4 right-4 bg-red-700 text-white text-xs font-lg px-2 py-1 rounded-md shadow-sm'>
+						<span className='absolute top-4 right-4 bg-[#0050A5] text-white text-xs font-lg px-2 py-1 rounded-md shadow-sm'>
 							{offer.badge}
 						</span>
 
@@ -136,7 +136,7 @@ const Offer: React.FC = () => {
 						<motion.button
 							whileTap={{ scale: 0.96 }}
 							whileHover={{ scale: 1.05 }}
-							className='mt-4 w-full py-2 bg-red-700 hover:bg-red-700 text-white rounded-md font-medium shadow-md transition-all'
+							className='mt-4 w-full py-2 bg-[#0050A5] hover:bg-red-700 text-white rounded-md font-medium shadow-md transition-all'
 						>
 							Book Now
 						</motion.button>
