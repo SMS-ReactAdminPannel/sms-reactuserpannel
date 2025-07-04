@@ -299,7 +299,7 @@ export const Navbar: React.FC = () => {
 												navigate('/');
 											}, 1000);
 										}}
-										className='px-4 py-2 rounded bg-red-600 text-white hover:bg-[#0050A5]'
+										className='px-4 py-2 rounded bg-[#0050A5] text-white hover:bg-[#0050A5]'
 									>
 										OK
 									</button>
@@ -410,13 +410,13 @@ export const Navbar: React.FC = () => {
 					<NavLink
 						key={idx}
 						to={item.link}
-						style={{ ...FONTS.paragraph, fontWeight: 500, fontSize: '18px' }}
+						style={{ ...FONTS.paragraph, fontWeight: 500, fontSize: '16px', fontFamily: 'Montserrat' }}
 						className={({ isActive }) =>
 							`relative pb-1 text-md font-semibold transition-all duration-300 ease-in-out whitespace-nowrap
 	${
 		isActive
-			? 'text-white-900 after:content-[""] after:absolute after:left-0 after:bottom-11 after:h-[2.7px] after:w-full after:bg-white after:transition-all after:duration-300'
-			: 'text-white-800 after:content-[""] after:absolute after:left-0 after:bottom-11 after:h-[2.7px] after:w-0 after:bg-white after:transition-all after:duration-300 hover:after:w-full'
+			? 'text-white-900 after:content-[""] after:absolute after:left-0 after:bottom-11 after:h-[2.9px] after:w-full after:bg-white after:transition-all after:duration-300'
+			: 'text-white-800 after:content-[""] after:absolute after:left-0 after:bottom-11 after:h-[2.9px] after:w-0 after:bg-white after:transition-all after:duration-300 hover:after:w-full'
 	}`
 						}
 					>
@@ -431,6 +431,7 @@ export const Navbar: React.FC = () => {
 							...FONTS.paragraph,
 							fontWeight: 600,
 							backgroundColor: '#fff',
+							fontFamily: 'Montserrat',
 						}}
 						onClick={() => navigate('/contact-us')}
 					>

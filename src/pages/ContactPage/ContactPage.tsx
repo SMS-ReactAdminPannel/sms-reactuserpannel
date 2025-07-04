@@ -5,10 +5,10 @@ const ContactPage = () => {
 	return (
 		<div className='py-12 px-4 sm:px-6 lg:px-8 bg-gradient-to-br from-blue-50 to-blue-100 min-h-screen'>
 			<div className='text-center mb-8'>
-				<h1 className='text-red-900 sm:text-4xl' style={{ ...FONTS.heading }}>
+				<h1 className='text-[#0050A5] sm:text-4xl' style={{ ...FONTS.heading }}>
 					Have Questions About Our Services?
 				</h1>
-				<p className='mt-3 max-w-2xl mx-auto text-lg text-red-500 sm:mt-4'>
+				<p className='mt-3 max-w-2xl mx-auto text-lg text-[#0050A5] sm:mt-4'>
 					Fill out the form below and our team will get back to you within 24
 					hours.
 				</p>
@@ -18,11 +18,11 @@ const ContactPage = () => {
 
 			<div className='mt-12 max-w-7xl mx-auto grid gap-8 lg:grid-cols-2'>
 				<div className='bg-white p-6 rounded-lg shadow'>
-					<h3 className='text-lg font-medium text-red-900'>Our Contact Info</h3>
+					<h3 className='text-lg font-medium text-[#0050A5]'>Our Contact Info</h3>
 					<div className='mt-4 space-y-4'>
 						<p className='flex items-start'>
 							<svg
-								className='h-6 w-6 text-red-600'
+								className='h-6 w-6 text-[#0050A5]'
 								fill='none'
 								viewBox='0 0 24 24'
 								stroke='currentColor'
@@ -38,7 +38,7 @@ const ContactPage = () => {
 						</p>
 						<p className='flex items-start'>
 							<svg
-								className='h-6 w-6 text-red-600'
+								className='h-6 w-6 text-[#0050A5]'
 								fill='none'
 								viewBox='0 0 24 24'
 								stroke='currentColor'
@@ -56,7 +56,7 @@ const ContactPage = () => {
 				</div>
 
 				<div className='bg-white p-6 rounded-lg shadow'>
-					<h3 className='text-lg font-medium text-red-900'>Service Hours</h3>
+					<h3 className='text-lg font-medium text-[#0050A5]'>Service Hours</h3>
 					<div className='mt-4 space-y-2'>
 						<p className='text-gray-600'>Monday - Friday: 8:00 AM - 6:00 PM</p>
 						<p className='text-gray-600'>Saturday: 9:00 AM - 4:00 PM</p>

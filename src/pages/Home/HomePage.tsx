@@ -226,7 +226,7 @@ const HomePage: React.FC = () => {
 									</div>
 									<h3
 										className='text-center my-auto text-[#0050A5]'
-										style={{ ...FONTS.paragraph, fontWeight: 500 }}
+										style={{ ...FONTS.sub_heading1, fontWeight: 500 }}
 									>
 										{service.category_name}
 									</h3>
