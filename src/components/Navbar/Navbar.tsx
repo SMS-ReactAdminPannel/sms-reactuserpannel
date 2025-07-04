@@ -393,8 +393,20 @@ export const Navbar: React.FC = () => {
 						</>
 					) : (
 						<>
-							
-
+							<div className='flex gap-2'>
+								<button 
+									className='bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-all duration-300 hover:scale-105'
+									onClick={() => navigate('/login')}
+								>
+									Login
+								</button>
+								<button 
+									className='bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-all duration-300 hover:scale-105'
+									onClick={() => navigate('/signup')}
+								>
+									Sign Up
+								</button>
+							</div>
 						</>
 					)}
 				</div>
