@@ -29,7 +29,7 @@ const CustomDropdown: React.FC = () => {
 	}, []);
 
 	return (
-		<div ref={dropdownRef} className='relative inline-block w-40'>
+		<div ref={dropdownRef} className='relative inline-block w-40 '>
 			<button
 				onClick={toggleDropdown}
 				className='w-full flex justify-between items-center px-4 py-2 text-[#0050A5]-900 font-semibold bg-white rounded shadow cursor-pointer'

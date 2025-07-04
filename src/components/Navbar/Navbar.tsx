@@ -159,7 +159,7 @@ export const Navbar: React.FC = () => {
 	};
 
 	return (
-		<header className='bg-white text-white w-full fixed top-0 z-50 border-b-2 border-white-900'>
+		<header className='bg-white text-white w-full fixed top-0 z-50 border-b-2 border-white-900 '>
 			{/* Top Navbar */}
 			<div className='bg-[#0050A5] h-[2px]'></div>
 			<div className='flex items-center justify-between px-24 py-2 space-x-4'>
@@ -184,16 +184,14 @@ export const Navbar: React.FC = () => {
 					</label>
 				</div>
 
-				<div className='text-[#0050A5] flex items-center '>
+				<div className='text-[#0050A5] flex items-center border border-[#0050A5] rounded-md'>
 					<CustomDropdown />
 				</div>
-				{/* 
-
 				{/* Search Bar */}
 				<div className='flex flex-1 justify-end'>
 					<input
 						type='text'
-						className='px-4 py-2 text-[#0050A5] placeholder-gray-600 text-sm bg-[#BED0EC] rounded-l-md focus:outline-none focus:ring-[#0050A5] w-[290px] shadow-md'
+						className='px-4 py-2 text-[#0050A5] placeholder-gray-600 text-sm bg-[#fff] rounded-l-md focus:outline-none focus:ring-[#0050A5] w-[290px] shadow-md border border-[#0050A5] focus:border-[#0050A5]'
 						placeholder='Search'
 						value={search}
 						onChange={(e) => setSearch(e.target.value)}
@@ -409,12 +407,7 @@ export const Navbar: React.FC = () => {
 								>
 									Login
 								</button>
-								<button 
-									className='bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-all duration-300 hover:scale-105'
-									onClick={() => navigate('/signup')}
-								>
-									Sign Up
-								</button>
+								
 							</div>
 						</>
 					)}
