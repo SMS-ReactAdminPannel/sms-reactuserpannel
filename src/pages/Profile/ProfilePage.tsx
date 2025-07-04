@@ -390,7 +390,7 @@ const ProfilePage: React.FC = () => {
 										</div>
 										<button
 											onClick={() => handleEditProfile()}
-											className='w-full py-3 text-white font-medium rounded-lg hover:opacity-90 transition-all duration-300 hover:scale-105 shadow-lg'
+											className='w-full py-3 text-white font-medium rounded-lg hover:opacity-90 transition-all duration-300  shadow-lg'
 											style={{ backgroundColor: '#0050A5' }}
 										>
 											SAVE
@@ -437,7 +437,7 @@ const ProfilePage: React.FC = () => {
 										<div className='flex flex-col items-center justify-center'>
 											<button
 												onClick={() => setEditMode(true)}
-												className='w-[180px]  py-1.5 text-white font-medium rounded-lg hover:opacity-90 transition-all duration-300 hover:scale-105 shadow-lg mt-4'
+												className='w-[180px]  py-1.5 text-white font-medium rounded-lg hover:opacity-90 transition-all duration-300  shadow-lg mt-4'
 												style={{ backgroundColor: '#0050A5' }}
 											>
 												EDIT
