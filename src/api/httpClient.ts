@@ -15,8 +15,7 @@ Axios.interceptors.request.use((config) => {
 	const token = localStorage.getItem('authToken');
 
 	if (token) {
-		config.headers['Authorization'] =
-			'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImN1c3RvbWVyQGdtYWlsLmNvbSIsInJvbGUiOiJjdXN0b21lciIsInV1aWQiOiI1Yjk3M2UxZC03MTg3LTQ4NjMtYTI1Ni1hNTM4YzczOWFjMjAiLCJpZCI6IkMxMDEiLCJpYXQiOjE3NDkxODMyMjYsImV4cCI6MTc1MTc3NTIyNn0.cHLqhmKAzcMfCSE5Uw5iVlRzuerLlPr69nydBrdbsR8wCdPZ8xBTrnpdQbkY8UdwYmtDgL-kEkmSqdFjzGhQzo6avV6Nm9BEqC6EXga1AyVk7p8oi71XDVgkboFtD-vQiYDmRWYJdDGyRPbbEgb401cjn_Ub8qIDFT6eaedHEh5h7y8Wk7gnNx5NXP5cT44WBMRaAolk0ziOu4enXJ14Op9Oler-gWYYe9pB5sEY-y9kAg2QY-eSlXZNEXEdz_eVzOy3rw4wafHKm8BsHneq4axE-741Qjmg_AVZvKbRXULbV0bMb1mzbJ7gMRAcWIUY8fMGriGPAeFuo9xrldZ26g';
+		config.headers['Authorization'] =`${token ? token : ''}`;
 	}
 	return config;
 });
