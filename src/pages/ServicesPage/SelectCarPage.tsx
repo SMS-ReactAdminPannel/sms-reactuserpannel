@@ -178,7 +178,7 @@ const SelectCarPage: React.FC<SelectCarPageProps> = ({
 			<div className='bg-white shadow-md p-3'>
 				<button
 					onClick={onClose}
-					className='bg-red-600 px-2 text-white rounded-md  relative left-[315px] hover:bg-red-900'
+					className='bg-[#0050A5] px-2 text-white rounded-md  relative left-[315px] hover:bg-[#0050A5]-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200 font-medium'
 				>
 					X
 				</button>

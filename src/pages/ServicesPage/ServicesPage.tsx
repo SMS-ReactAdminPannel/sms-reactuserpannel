@@ -345,9 +345,9 @@ const ServicesPage: React.FC = () => {
 			{/* Vertical Left Sidebar Navigation */}
 			<div className='flex min-h-screen bg-gradient-to-br from-gray-50 to-gray-100'>
 				{/* Left Sidebar */}
-				<div className='fixed left-0 top-8 w-[280px] h-[800px] bg-white shadow-2xl flex flex-col z-10 border-r border-gray-100'>
+				<div className='fixed left-0 top-8 w-[280px] h-[800px] bg-white shadow-2xl flex flex-col z-10 border-r border-[#0050A5]-50'>
 					{/* Header Section */}
-					<div className='p-6 border-b border-gray-100 flex-shrink-0 bg-gradient-to-r from-red-500 to-red-600'>
+					<div className='p-6 border-b border-[#0050A5] flex-shrink-0 bg-gradient-to-r from-[#0050A5] to-[#0050A5]'>
 						<div className='flex items-center space-x-3'>
 							<div className='w-10 h-10 bg-white/20 rounded-xl flex items-center justify-center backdrop-blur-sm'>
 								<svg
@@ -381,19 +381,19 @@ const ServicesPage: React.FC = () => {
 										onClick={() => handleNavClick(item.name)}
 										className={`group relative flex items-center px-4 py-4 rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-[1.02] ${
 											activeNavItem === item.name
-												? 'bg-gradient-to-r from-red-50 to-red-100 text-red-700 shadow-lg shadow-red-100/50 border border-red-200'
-												: 'text-gray-600 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-red-600 hover:shadow-md'
+												? 'bg-gradient-to-r from-red-50 to-red-100 text-[#0050A5] shadow-lg shadow-[#0050A5]/20 border border-[#0050A5]'
+												: 'text-gray-600 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-[#0050A5] hover:shadow-md'
 										} ${!item.isActive ? 'opacity-70' : ''}`}
 									>
 										{activeNavItem === item.name && (
-											<div className='absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-8 bg-red-500 rounded-r-full'></div>
+											<div className='absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-8 bg-[#0050A5] rounded-r-full'></div>
 										)}
 
 										<div
 											className={`mr-4 flex-shrink-0 p-2 rounded-lg transition-all duration-300 ${
 												activeNavItem === item.name
-													? 'bg-red-200/50 text-red-600'
-													: 'bg-gray-100 text-gray-500 group-hover:bg-red-100 group-hover:text-red-500'
+													? 'bg-[#BED0EC] text-[#0050A5]-600'
+													: 'bg-gray-100 text-gray-500 group-hover:bg-[#BED0EC] group-hover:text-[#0050A5]]'
 											}`}
 										>
 											{item.icon}
@@ -437,7 +437,7 @@ const ServicesPage: React.FC = () => {
 				<div className='mx-auto px-6 py-8'>
 					<div className='mb-8'>
 						<h1 ref={serviceTitle.elementRef} style={{ ...FONTS.sub_heading }}>
-							<span className='inline-block pb-1 relative text-[#9b111e] mb-2'>
+							<span className='inline-block pb-1 relative text-[#0050A5] mb-2'>
 								{currentContent?.title || 'Services'}
 								{/* <span
 									className={`absolute top-11 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${serviceTitle.isVisible
@@ -456,11 +456,11 @@ const ServicesPage: React.FC = () => {
 					</div>
 
 					{!currentContent || currentContent.packages.length === 0 ? (
-						<div className='bg-[#FAF3EB] rounded-lg shadow p-8 text-center w-[600px]'>
-							<div className='text-gray-400 mb-4'>
+						<div className='bg-[#BED0EC] rounded-lg shadow p-8 text-center w-[600px]'>
+							<div className='text-[#0050A5] mb-4'>
 								<Wrench className='w-12 h-12 mx-auto' />
 							</div>
-							<h3 className='text-lg font-medium text-red-700 mb-2'>
+							<h3 className='text-lg font-medium text-[#0050A5] mb-2'>
 								No Services Available
 							</h3>
 							<p className='text-gray-500'>
@@ -478,8 +478,8 @@ const ServicesPage: React.FC = () => {
 								return (
 									<div
 										key={pkg.id}
-										className={`bg-[#FAF3EB] rounded-lg lg:w-[600px] md:w-[400px] shadow-lg relative transition-all duration-300 hover:shadow-xl ${
-											isSelected ? 'ring-2 ring-red-500' : ''
+										className={`bg-[#d8e1ef] rounded-lg lg:w-[600px] md:w-[400px] shadow-lg relative transition-all duration-300 hover:shadow-xl ${
+											isSelected ? 'ring-2 ring-[#0050A5]-500' : ''
 										}`}
 									>
 										{pkg.isRecommended && (
@@ -509,20 +509,20 @@ const ServicesPage: React.FC = () => {
 												<div className='flex justify-between items-start mb-4'>
 													<div className='relative'>
 														<h2
-															className='text-[#9b111e] mb-2'
+															className='text-[#0050A5] mb-2'
 															style={{ ...FONTS.sub_heading2 }}
 														>
 															{pkg.title}
 														</h2>
-														<div className='absolute font-bold flex flex-row items-center w-[122px] bottom-[40px] left-[430px] px-3 py-1 rounded-full bg-red-600 text-white text-sm'>
+														<div className='absolute font-bold flex flex-row items-center w-[122px] bottom-[40px] left-[430px] px-3 py-1 rounded-full bg-[#0050A5] text-white text-sm'>
 															<Clock className='w-4 h-4 mr-1' />
 															{pkg.duration}
 														</div>
 														<div className='flex space-x-4 text-sm'>
-															<span className='inline-flex items-center px-3 py-1 rounded-full opacity-70 text-red-600'>
+															<span className='inline-flex items-center px-3 py-1 rounded-full opacity-70 text-[#0050A5]'>
 																{pkg.warranty}
 															</span>
-															<span className='inline-flex items-center px-3 py-1 rounded-full opacity-70 text-red-600'>
+															<span className='inline-flex items-center px-3 py-1 rounded-full opacity-70 text-[#0050A5]'>
 																{pkg.frequency}
 															</span>
 														</div>
@@ -539,9 +539,9 @@ const ServicesPage: React.FC = () => {
 														.map((service, index) => (
 															<div
 																key={index}
-																className='flex items-center text-sm text-gray-700 group'
+																className='flex items-center text-sm text-[#0050A5] group'
 															>
-																<div className='w-5 h-5 bg-green-100 rounded-full flex items-center justify-center mr-3 flex-shrink-0 group-hover:bg-green-200 transition-colors'>
+																<div className='w-5 h-5 bg-[#BED0EC] rounded-full flex items-center justify-center mr-3 flex-shrink-0 group-hover:bg-[#BED0EC] transition-colors'>
 																	<div>{service.icon}</div>
 																</div>
 																<span className='group-hover:text-gray-900 transition-colors'>
@@ -580,7 +580,7 @@ const ServicesPage: React.FC = () => {
 																<span className='line-through text-gray-400 mr-2 text-sm'>
 																	{pkg.price}
 																</span>
-																<span className='text-red-600 font-bold text-xl'>
+																<span className='text-[#0050A5]-600 font-bold text-xl'>
 																	{pkg.discountPrice}
 																</span>
 															</>
@@ -602,7 +602,7 @@ const ServicesPage: React.FC = () => {
 																	</button>
 																	<button
 																		onClick={() => handleRemoveFromCart(pkg.id)}
-																		className='p-2 text-gray-500 hover:text-red-600 transition-colors'
+																		className='p-2 text-gray-500 hover:text-[#0050A5] transition-colors'
 																		title='Remove from cart'
 																	>
 																		<X className='w-5 h-5' />
@@ -612,13 +612,13 @@ const ServicesPage: React.FC = () => {
 																<>
 																	<button
 																		onClick={() => handleAddToCart(pkg.id)}
-																		className='px-4 py-2 bg-red-800 text-white rounded-md hover:bg-red-700 transition-colors'
+																		className='px-4 py-2 bg-[#0050A5] text-white rounded-md hover:bg-[#0050A5] transition-colors'
 																	>
 																		Add to Cart
 																	</button>
 																	<button
 																		onClick={() => handleRemoveFromCart(pkg.id)}
-																		className='px-4 py-2 border border-red-600 rounded-md hover:bg-red-700 hover:text-white transition-colors text-red-600'
+																		className='px-4 py-2 border border-[#0050A5] rounded-md hover:bg-[#0050A5] hover:text-white transition-colors text-White'
 																	>
 																		Cancel
 																	</button>
@@ -628,7 +628,7 @@ const ServicesPage: React.FC = () => {
 													) : (
 														<button
 															onClick={() => handleSelectCar(pkg.id)}
-															className='px-4 py-2 rounded-lg font-semibold bg-white border-2 border-red-500 text-red-500 hover:bg-red-50 hover:text-red-700 transition-all duration-200 shadow-md hover:shadow-lg'
+															className='px-4 py-2 rounded-lg font-semibold bg-white border-2 border-[#0050A5] text-[#0050A5] hover:bg-[#0050A5]-50 hover:text-[#0050A5] transition-all duration-200 shadow-md hover:shadow-lg'
 														>
 															SELECT CAR
 														</button>
