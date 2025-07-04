@@ -363,7 +363,7 @@ const ProfilePage: React.FC = () => {
 												</span>
 											</p>
 											<p className='text-lg'>
-												<strong className='text-gray-700'>Location:</strong>{' '}
+												<strong className='text-gray-700'>Address:</strong>{' '}
 												<span className='text-gray-600'>
 													{profileData?.contact_info?.address1
 														? profileData?.contact_info?.address1 +
@@ -400,7 +400,7 @@ const ProfilePage: React.FC = () => {
 								</p>
 								<button
 									onClick={() => setIsCarTab(true)}
-									className='px-3 py-1 border-2 border-white bg-white text-[#0050A5] rounded-full text-white font-medium  transition-all duration-300 hover:scale-105'
+									className='px-3 py-1 border-2 border-white bg-white text-[#0050A5] rounded-full  font-medium  transition-all duration-300 hover:scale-105'
 								>
 									CAR DETAILS
 								</button>
