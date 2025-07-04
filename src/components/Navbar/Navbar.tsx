@@ -393,11 +393,8 @@ export const Navbar: React.FC = () => {
 						</>
 					) : (
 						<>
-							<img
-								src='/images/images.jpeg'
-								alt='dummy-image'
-								className='w-[52px] h-[52px] rounded-full cursor-pointer'
-							/>
+							
+
 						</>
 					)}
 				</div>
