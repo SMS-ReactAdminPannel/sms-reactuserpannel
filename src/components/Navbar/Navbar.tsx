@@ -152,7 +152,7 @@ export const Navbar: React.FC = () => {
 	return (
 		<header className='bg-white text-white w-full fixed top-0 z-50 border-b-2 border-white-900'>
 			{/* Top Navbar */}
-			<div className='bg-red-900 h-[2px]'></div>
+			<div className='bg-[#0050A5] h-[2px]'></div>
 			<div className='flex items-center justify-between px-24 py-2 space-x-4'>
 				{/* Logo & Location */}
 				<div className='flex items-center space-x-4'>
