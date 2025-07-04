@@ -42,7 +42,10 @@ export const API_END_POINTS = {
 		patch: '/api/booking/:id/cancel',
 	},
 
-	offer: {},
+	offer: {
+		Post:"/api/announcement/create",
+    	Get:"/api/announcement/all",
+	},
 
 	auth: {
 		post_login: '/api/customer/auth/login',

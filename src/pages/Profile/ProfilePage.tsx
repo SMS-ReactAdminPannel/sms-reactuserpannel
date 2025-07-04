@@ -28,6 +28,7 @@ const ProfilePage: React.FC = () => {
 	const [editMode, setEditMode] = useState(false);
 	const [showHistory, setShowHistory] = useState<number | null>(null);
 	const [profileData, setProfileData] = useState<any>({});
+	const [errors, setErrors] = useState<any>({});
 	// const [isLoading, setIsLoading] = useState(true);
 
 	const fetchUserProfile = async () => {
@@ -65,9 +66,37 @@ const ProfilePage: React.FC = () => {
 		],
 	});
 
+	const validateField = (name: string, value: string) => {
+		switch (name) {
+			case 'firstName':
+			case 'lastName':
+				return !value.trim() ? 'This field is required' : '';
+			case 'email':
+				if (!value.trim()) return 'Email is required';
+				if (!/^[^\s@]+@gmail\.com$/.test(value)) return 'Email must be a Gmail address';
+				return '';
+			case 'number':
+				if (!value.trim()) return 'Phone number is required';
+				if (!/^[6-9]\d{9}$/.test(value.replace(/\D/g, ''))) return 'Invalid Indian phone number format';
+				return '';
+			case 'address':
+				return !value.trim() ? 'Address is required' : '';
+			default:
+				return '';
+		}
+	};
+
 	const handleUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
-		setProfileData((prev: any) => ({ ...prev, [name]: value }));
+		let finalValue = value;
+		
+		if (name === 'number') {
+			finalValue = value.replace(/[^0-9]/g, '');
+		}
+		
+		setProfileData((prev: any) => ({ ...prev, [name]: finalValue }));
+		const error = validateField(name, finalValue);
+		setErrors((prev: any) => ({ ...prev, [name]: error }));
 	};
 
 	const handleCarChange = (
@@ -91,7 +120,24 @@ const ProfilePage: React.FC = () => {
 		setShowHistory(null);
 	};
 
+	const validateForm = () => {
+		const newErrors: any = {};
+		const fields = ['firstName', 'lastName', 'email', 'number', 'address'];
+		
+		fields.forEach(field => {
+			const error = validateField(field, profileData[field] || '');
+			if (error) newErrors[field] = error;
+		});
+		
+		setErrors(newErrors);
+		return Object.keys(newErrors).length === 0;
+	};
+
 	const handleEditProfile = async () => {
+		if (!validateForm()) {
+			return;
+		}
+		
 		setEditMode(false);
 		try {
 			const response = await updateUserProfile(profileData);
@@ -277,56 +323,71 @@ const ProfilePage: React.FC = () => {
 							<div className='w-full max-w-sm space-y-4'>
 								{editMode ? (
 									<>
-										<input
-											name='firstName'
-											value={profileData?.firstName}
-											onChange={handleUserChange}
-											placeholder='Name'
-											className='w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300'
-											style={
-												{ '--tw-ring-color': '#0050A5' } as React.CSSProperties
-											}
-										/>
-										<input
-											name='lastName'
-											value={profileData?.lastName}
-											onChange={handleUserChange}
-											placeholder='Name'
-											className='w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300'
-											style={
-												{ '--tw-ring-color': '#0050A5' } as React.CSSProperties
-											}
-										/>
-										<input
-											name='email'
-											value={profileData?.email}
-											onChange={handleUserChange}
-											placeholder='Email'
-											className='w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300'
-											style={
-												{ '--tw-ring-color': '#0050A5' } as React.CSSProperties
-											}
-										/>
-										<input
-											name='number'
-											value={profileData?.number}
-											onChange={handleUserChange}
-											placeholder='Phone Number'
-											className='w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300'
-											style={
-												{ '--tw-ring-color': '#0050A5' } as React.CSSProperties
-											}
-										/>
-										<input
-											name='address'
-											value={profileData?.address}
-											onChange={handleUserChange}
-											placeholder='Address'
-											className='w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300'
-											style={
-												{ '--tw-ring-color': '#0050A5' } as React.CSSProperties
-											}
-										/>
+										<div>
+											<input
+												name='firstName'
+												value={profileData?.firstName || ''}
+												onChange={handleUserChange}
+												placeholder='First Name'
+												className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${errors.firstName ? 'ring-2 ring-red-500' : ''}`}
+												style={
+													{ '--tw-ring-color': errors.firstName ? '#ef4444' : '#0050A5' } as React.CSSProperties
+												}
+											/>
+											{errors.firstName && <p className='text-red-500 text-sm mt-1'>{errors.firstName}</p>}
+										</div>
+										<div>
+											<input
+												name='lastName'
+												value={profileData?.lastName || ''}
+												onChange={handleUserChange}
+												placeholder='Last Name'
+												className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${errors.lastName ? 'ring-2 ring-red-500' : ''}`}
+												style={
+													{ '--tw-ring-color': errors.lastName ? '#ef4444' : '#0050A5' } as React.CSSProperties
+												}
+											/>
+											{errors.lastName && <p className='text-red-500 text-sm mt-1'>{errors.lastName}</p>}
+										</div>
+										<div>
+											<input
+												name='email'
+												value={profileData?.email || ''}
+												onChange={handleUserChange}
+												placeholder='Email'
+												className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${errors.email ? 'ring-2 ring-red-500' : ''}`}
+												style={
+													{ '--tw-ring-color': errors.email ? '#ef4444' : '#0050A5' } as React.CSSProperties
+												}
+											/>
+											{errors.email && <p className='text-red-500 text-sm mt-1'>{errors.email}</p>}
+										</div>
+										<div>
+											<input
+												name='number'
+												value={profileData?.number || ''}
+												onChange={handleUserChange}
+												placeholder='Phone Number'
+												className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${errors.number ? 'ring-2 ring-red-500' : ''}`}
+												style={
+													{ '--tw-ring-color': errors.number ? '#ef4444' : '#0050A5' } as React.CSSProperties
+												}
+											/>
+											{errors.number && <p className='text-red-500 text-sm mt-1'>{errors.number}</p>}
+										</div>
+										<div>
+											<input
+												name='address'
+												value={profileData?.address || ''}
+												onChange={handleUserChange}
+												placeholder='Address'
+												className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${errors.address ? 'ring-2 ring-red-500' : ''}`}
+												style={
+													{ '--tw-ring-color': errors.address ? '#ef4444' : '#0050A5' } as React.CSSProperties
+												}
+											/>
+											{errors.address && <p className='text-red-500 text-sm mt-1'>{errors.address}</p>}
+										</div>
 										<button
 											onClick={() => handleEditProfile()}
 											className='w-full py-3 text-white font-medium rounded-lg hover:opacity-90 transition-all duration-300 hover:scale-105 shadow-lg'
