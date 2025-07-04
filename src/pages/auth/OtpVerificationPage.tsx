@@ -120,17 +120,17 @@ const OtpVerificationPage = () => {
 								onChange={(e) => handleOtpChange(idx, e.target.value)}
 								onKeyDown={(e) => handleOtpKeyDown(e, idx)}
 								// ref={(el) => (otpRefs.current[idx] = el)}
-								className='w-10 h-12 text-center text-lg rounded-lg border border-[#d77c7c] bg-white/80 text-[#7c0c0c] focus:ring-2 focus:ring-[#9b111e]'
+								className='w-10 h-12 text-center text-lg rounded-lg border border-[#0050A5] bg-white/80 text-[#0050A5] focus:ring-2 focus:ring-[#0050A5]'
 							/>
 						))}
 					</div>
 					{errors.otp && (
-						<span className='text-xs text-red-500'>{errors.otp.message}</span>
+						<span className='text-xs text-[#0050A5]'>{errors.otp.message}</span>
 					)}
 					<button
 						type='button'
 						onClick={handleOtpVerify}
-						className='w-full py-2 mt-2 text-white font-semibold rounded-full bg-red-900 hover:bg-red-700 text-sm'
+						className='w-full py-2 mt-2 text-white font-semibold rounded-full bg-[#0050A5] hover:bg-[#004494] text-sm'
 					>
 						Verify OTP
 					</button>

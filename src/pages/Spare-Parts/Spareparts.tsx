@@ -685,12 +685,10 @@ const SpareParts: React.FC = () => {
 					</div>
 				</div>
 			)}
-			<div>
-				<LoginPromptModal
-					isOpen={showLoginModal}
-					onClose={() => setShowLoginModal(false)}
-				/>
-			</div>
+			<LoginPromptModal
+				isOpen={showLoginModal}
+				onClose={() => setShowLoginModal(false)}
+			/>
 		</div>
 	);
 };

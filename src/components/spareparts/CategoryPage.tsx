@@ -61,7 +61,7 @@ const CategoryPage = () => {
               <div className="absolute bottom-0 left-0 right-0 z-10 p-6 bg-white/90 backdrop-blur-sm rounded-b-3xl">
                 <div className="flex items-center justify-between mb-4">
                   <div>
-                    <h2 className="text-xl font-bold text-gray-800 mb-1 group-hover:text-red-500 transition-colors">
+                    <h2 className="text-xl font-bold text-gray-800 mb-1 group-hover:text-[#0050A5] transition-colors">
                       {product.spareparts_name}
                     </h2>
                     <p className="text-sm text-gray-500">Premium Quality</p>
@@ -71,7 +71,7 @@ const CategoryPage = () => {
                   to={`/spare-parts/product/${product.id}`}
                   className="group block"
                 >
-                  <button className="w-[150px] bg-gradient-to-br from-[#700808] via-[#a61c1c] to-[#d23c3c] hover:from-[#ef4444] hover:to-[#f97316] text-white font-semibold py-1 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
+                  <button className="w-[150px] bg-[#0050A5] hover:from-[#0050A5] hover:to-[#0050A5] text-white font-semibold py-1 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl">
                     View Details
                   </button>
                 </Link>

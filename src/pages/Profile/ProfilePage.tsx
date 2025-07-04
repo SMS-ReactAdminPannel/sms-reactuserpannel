@@ -359,17 +359,17 @@ const ProfilePage: React.FC = () => {
 											<p className='text-lg'>
 												<strong className='text-gray-700'>Phone:</strong>{' '}
 												<span className='text-gray-600'>
-													{profileData?.contact_info?.phoneNumber || 'N/A'}
+													{profileData?.number || profileData?.contact_info?.phoneNumber || 'N/A'}
 												</span>
 											</p>
 											<p className='text-lg'>
 												<strong className='text-gray-700'>Address:</strong>{' '}
 												<span className='text-gray-600'>
-													{profileData?.contact_info?.address1
+													{profileData?.address || 
+													(profileData?.contact_info?.address1
 														? profileData?.contact_info?.address1 +
-														' ' +
-														profileData?.contact_info?.address2
-														: 'N/A'}
+														(profileData?.contact_info?.address2 ? ' ' + profileData?.contact_info?.address2 : '')
+														: 'N/A') || 'N/A'}
 												</span>
 											</p>
 										</div>

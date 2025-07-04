@@ -23,7 +23,7 @@ const LoginPromptModal: React.FC<Props> = ({ isOpen, onClose }) => {
 			contentLabel='Login Required'
 			ariaHideApp={false}
 			className='w-[90%] max-w-md mx-auto mt-40 bg-white p-6 rounded shadow'
-			overlayClassName='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center'
+			overlayClassName='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]'
 		>
 			<h2 className='text-xl font-semibold mb-2'>Please SignUp</h2>
 			<p className='text-gray-700 mb-4'>

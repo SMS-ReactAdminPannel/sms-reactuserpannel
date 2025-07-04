@@ -77,11 +77,11 @@ const SignupPage = () => {
 								message: 'Enter a valid 10-digit Indian phone number',
 							},
 						})}
-						className={`w-full px-4 py-3 border text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9b111e] bg-white text-sm ${errors.phone ? 'border-red-500' : 'border-[#d77c7c]'
+						className={`w-full px-4 py-3 border text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0050A5] bg-white text-sm ${errors.phone ? 'border-[#0050A5]' : 'border-[#0050A5]'
 							}`}
 					/>
 					{errors.phone && (
-						<span className='text-xs text-red-600'>{errors.phone.message}</span>
+						<span className='text-xs text-[#0050A5]'>{errors.phone.message}</span>
 					)}
 				</div>
 
@@ -100,11 +100,11 @@ const SignupPage = () => {
 								message: 'Invalid email format',
 							},
 						})}
-						className={`w-full px-4 py-3 border text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9b111e] bg-white text-sm ${errors.email ? 'border-red-500' : 'border-[#d77c7c]'
+						className={`w-full px-4 py-3 border text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0050A5] bg-white text-sm ${errors.email ? 'border-[#0050A5]' : 'border-[#0050A5]'
 							}`}
 					/>
 					{errors.email && (
-						<span className='text-xs text-red-600'>{errors.email.message}</span>
+						<span className='text-xs text-[#0050A5]'>{errors.email.message}</span>
 					)}
 				</div>
 
@@ -127,7 +127,7 @@ const SignupPage = () => {
 										'Must include uppercase, lowercase, number, special char',
 								},
 							})}
-							className={`w-full px-4 py-3 pr-10 border text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9b111e] bg-white text-sm ${errors.password ? 'border-red-500' : 'border-[#d77c7c]'
+							className={`w-full px-4 py-3 pr-10 border text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0050A5] bg-white text-sm ${errors.password ? 'border-[#0050A5]' : 'border-[#0050A5]'
 								}`}
 						/>
 						<span
@@ -135,14 +135,14 @@ const SignupPage = () => {
 							onClick={() => setShowPassword(!showPassword)}
 						>
 							{showPassword ? (
-								<EyeIcon className='w-5 h-5 text-[#9b111e]' />
+								<EyeIcon className='w-5 h-5 text-[#0050A5]' />
 							) : (
-								<EyeSlashIcon className='w-5 h-5 text-[#9b111e]' />
+								<EyeSlashIcon className='w-5 h-5 text-[#0050A5]' />
 							)}
 						</span>
 					</div>
 					{errors.password && (
-						<span className='text-xs text-red-600'>
+						<span className='text-xs text-[#0050A5]'>
 							{errors.password.message}
 						</span>
 					)}
@@ -162,7 +162,7 @@ const SignupPage = () => {
 								validate: (value) =>
 									value === password || 'Passwords do not match',
 							})}
-							className={`w-full px-4 py-3 pr-10 border text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9b111e] bg-white text-sm ${errors.confirmPassword ? 'border-red-500' : 'border-[#d77c7c]'
+							className={`w-full px-4 py-3 pr-10 border text-gray-800 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0050A5] bg-white text-sm ${errors.confirmPassword ? 'border-[#0050A5]' : 'border-[#0050A5]'
 								}`}
 						/>
 						<span
@@ -170,14 +170,14 @@ const SignupPage = () => {
 							onClick={() => setShowConfirmPassword(!showConfirmPassword)}
 						>
 							{showConfirmPassword ? (
-								<EyeIcon className='w-5 h-5 text-[#9b111e]' />
+								<EyeIcon className='w-5 h-5 text-[#0050A5]' />
 							) : (
-								<EyeSlashIcon className='w-5 h-5 text-[#9b111e]' />
+								<EyeSlashIcon className='w-5 h-5 text-[#0050A5]' />
 							)}
 						</span>
 					</div>
 					{errors.confirmPassword && (
-						<span className='text-xs text-red-600'>
+						<span className='text-xs text-[#0050A5]'>
 							{errors.confirmPassword.message}
 						</span>
 					)}
@@ -186,7 +186,7 @@ const SignupPage = () => {
 				{/* Submit Button */}
 				<button
 					type='submit'
-					className='w-full py-3 text-white font-semibold rounded-full shadow-md hover:shadow-xl transition-all duration-300 bg-red-900 hover:bg-red-700'
+					className='w-full py-3 text-white font-semibold rounded-full shadow-md hover:shadow-xl transition-all duration-300 bg-[#0050A5] hover:bg-[#0050A5]'
 				>
 					Sign Up
 				</button>

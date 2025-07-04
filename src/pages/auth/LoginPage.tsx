@@ -73,7 +73,7 @@ const LoginPage = () => {
 			<form onSubmit={handleSubmit(onSubmit)} className='space-y-6 '>
 				{/* Error message display */}
 				{error && (
-					<div className='p-3 text-sm text-white bg-red-500 rounded-md'>
+					<div className='p-3 text-sm text-white bg-[#0050A5] rounded-md'>
 						{error}
 					</div>
 				)}
@@ -90,12 +90,12 @@ const LoginPage = () => {
 								message: 'Invalid email format',
 							},
 						})}
-						className={`w-full px-4 py-3 border text-gray-800 placeholder:text-[#9f3f3f] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#9b111e] bg-white text-sm transition ${errors.email ? 'border-red-500' : 'border-[#d77c7c]'
+						className={`w-full px-4 py-3 border text-gray-800 placeholder:text-[#0050A5] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0050B5] bg-white text-sm transition ${errors.email ? 'border-[#0050A5]' : 'border-[#0050A5]'
 							}`}
 					/>
 					{errors.email && (
 						<span
-							className='text-xs text-red-600'
+							className='text-xs text-[#0050A5]'
 							style={{ ...FONTS.paragraph, fontSize: '12px' }}
 						>
 							{errors.email.message}
@@ -123,7 +123,7 @@ const LoginPage = () => {
 										'Password must contain uppercase, lowercase, number, and special character',
 								},
 							})}
-							className={`w-full px-4 py-3 border text-gray-800 placeholder:text-[#9f3f3f] rounded-lg pr-10 focus:outline-none focus:ring-2 focus:ring-[#9b111e] bg-white text-sm ${errors.password ? 'border-red-500' : 'border-[#d77c7c]'
+							className={`w-full px-4 py-3 border text-gray-800 placeholder:text-[#0050A5] rounded-lg pr-10 focus:outline-none focus:ring-2 focus:ring-[#0050A5] bg-white text-sm ${errors.password ? 'border-[#0050A5]' : 'border-[#0050A5]'
 								}`}
 						/>
 						<span
@@ -131,15 +131,15 @@ const LoginPage = () => {
 							onClick={() => setShowPassword(!showPassword)}
 						>
 							{showPassword ? (
-								<EyeIcon className='w-5 h-5 text-[#9b111e]' />
+								<EyeIcon className='w-5 h-5 text-[#0050A5]' />
 							) : (
-								<EyeSlashIcon className='w-5 h-5 text-[#9b111e]' />
+								<EyeSlashIcon className='w-5 h-5 text-[#0050A5]' />
 							)}
 						</span>
 					</div>
 					{errors.password && (
 						<span
-							className='text-xs text-red-600'
+							className='text-xs text-[#0050A5]'
 							style={{ ...FONTS.paragraph, fontSize: '12px' }}
 						>
 							{errors.password.message}
@@ -151,7 +151,7 @@ const LoginPage = () => {
 				<button
 					type='submit'
 					disabled={isLoading}
-					className={`w-full py-3 text-white font-semibold rounded-full shadow-md hover:shadow-xl transition-all duration-300 hover:brightness-110 text-sm bg-gradient-to-r from-[#9b111e] to-[#d23c3c] ${isLoading ? 'opacity-70 cursor-not-allowed' : ''
+					className={`w-full py-3 text-white font-semibold rounded-full shadow-md hover:shadow-xl transition-all duration-300 hover:brightness-110 text-sm bg-[#0050A5] ${isLoading ? 'opacity-70 cursor-not-allowed' : ''
 						}`}
 				>
 					{isLoading ? (
@@ -169,7 +169,7 @@ const LoginPage = () => {
 					<div className='text-right'>
 						<Link
 							to='/reset-password'
-							className='text-white hover:underline hover:text-[#d23c3c]'
+							className='text-white hover:underline'
 						>
 							Forgot Password?
 						</Link>
@@ -179,7 +179,7 @@ const LoginPage = () => {
 							Don't have an account?{' '}
 							<Link
 								to='/signup '
-								className='text-[#d23c3c] font-semibold hover:underline'
+								className='text-[#0050A5] font-semibold hover:underline'
 							>
 								Sign up
 							</Link>

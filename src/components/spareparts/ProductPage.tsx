@@ -72,7 +72,7 @@ const ProductPage = () => {
             </div>
             <div className="md:w-2/5">
               <h1 className="text-2xl font-bold mb-4">{item.spareparts_name}</h1>
-              <p className="text-xl text-red-600 font-semibold mb-4">₹{item.price}</p>
+              <p className="text-xl text-[#0050A5] font-semibold mb-4">₹{item.price}</p>
               <p className="mb-6">{item.spareparts_name}</p>
 
               <h2 className="text-lg font-semibold mb-2">Specifications:</h2>
@@ -101,7 +101,7 @@ const ProductPage = () => {
 
               <div className='text-sm mt-3 mb-2'>
                 Total Price:{' '}
-                <span className='font-semibold text-[#9b111e]'>
+                <span className='font-semibold text-[#0050A5]'>
                   ₹{(Number(item.price) * quantity).toLocaleString()}
                 </span>
               </div>
@@ -109,11 +109,7 @@ const ProductPage = () => {
               {/* <Toaster position="top-center" /> */}
               <button
                 onClick={handleAddToCart}
-                className={`w-[150px] bg-gradient-to-br ${isAdded
-                  ? 'from-#22c55e to-#16a34a'
-                  : 'from-[#700808] via-[#a61c1c] to-[#d23c3c] hover:from-[#ef4444] hover:to-[#f97316]'
-                  } text-white font-semibold py-1 rounded-full transition-all duration-200 transform hover:scale-105 shadow-lg hover:shadow-xl`}
-                disabled={isAdded}
+                className={`w-[150px] bg-[#0050A5] text-white font-semibold py-1 rounded-full transition-all duration-300 transform  shadow-lg `}
               >
                 {isAdded ? 'Added!' : 'Add To Cart'}
               </button>
