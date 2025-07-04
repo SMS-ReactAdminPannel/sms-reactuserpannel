@@ -44,7 +44,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 		<div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999] p-4'>
 			<div
 				ref={modalRef}
-				className='bg-[#FAF3EB] rounded-2xl shadow-2xl w-full max-w-2xl md:max-w-xl sm:max-w-md overflow-hidden'
+				className='bg-[#BED0EC] rounded-2xl shadow-2xl w-full max-w-2xl md:max-w-xl sm:max-w-md overflow-hidden'
 			>
 				<div className='bg-gradient-to-r from-red-600 to-red-800 p-6 flex items-center justify-between text-white'>
 					<div className='flex items-center space-x-4'>
@@ -60,7 +60,7 @@ export const ProfileModal: React.FC<ProfileModalProps> = ({
 					</div>
 					<button
 						onClick={onClose}
-						className='bg-[#FAF3EB] text-red-600 font-semibold p-2 rounded-lg shadow hover:bg-[#f8e0b0] transition'
+						className='bg-[#BED0EC] text-[#0050A5]-600 font-semibold p-2 rounded-lg shadow hover:bg-[#BED0EC] transition'
 						aria-label='Close profile details'
 					>
 						<svg

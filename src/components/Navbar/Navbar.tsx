@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../../pages/auth/AuthContext';
 import { COLORS, FONTS } from '../../constants/constant';
-import Logo from '../../assets/LOGO.png';
+import Logo from '../../assets/User (5).png';
 import { FiSearch } from 'react-icons/fi';
 import { Link } from 'react-router-dom';
 import ProfileMenu from '../home/ProfileMenu';
@@ -150,9 +150,9 @@ export const Navbar: React.FC = () => {
 	};
 
 	return (
-		<header className='bg-white text-white w-full fixed top-0 z-50 border-b-2 border-red-900'>
+		<header className='bg-white text-white w-full fixed top-0 z-50 border-b-2 border-white-900'>
 			{/* Top Navbar */}
-			<div className='bg-red-900 h-[2px]'></div>
+			<div className='bg-[#0050A5] h-[2px]'></div>
 			<div className='flex items-center justify-between px-24 py-2 space-x-4'>
 				{/* Logo & Location */}
 				<div className='flex items-center space-x-4'>
@@ -160,7 +160,7 @@ export const Navbar: React.FC = () => {
 						<img
 							src={Logo}
 							alt='yes mechanic logo'
-							className='w-[185px] h-[28px]'
+							className='w-[185px] h-[auto]'
 						/>
 					</Link>
 				</div>
@@ -168,14 +168,14 @@ export const Navbar: React.FC = () => {
 				<div className='text-white flex items-center gap-1'>
 					<img src={TruckIcon} style={{ width: '30px' }} />
 					<label
-						className='text-red-900 cursor-pointer'
+						className='text-[#0050A5] cursor-pointer'
 						style={{ ...FONTS.sub_paragraph1, fontWeight: 600 }}
 					>
 						QUICK DELIVERY
 					</label>
 				</div>
 
-				<div className='text-white flex items-center '>
+				<div className='text-[#0050A5] flex items-center '>
 					<CustomDropdown />
 				</div>
 				{/* 
@@ -184,13 +184,13 @@ export const Navbar: React.FC = () => {
 				<div className='flex flex-1 justify-end'>
 					<input
 						type='text'
-						className='px-4 py-2 text-[#9b111e] placeholder-gray-600 text-sm bg-[#fdefe9] rounded-l-md focus:outline-none focus:ring-[#9b111e] w-[290px] shadow-md'
+						className='px-4 py-2 text-[#0050A5] placeholder-gray-600 text-sm bg-[#BED0EC] rounded-l-md focus:outline-none focus:ring-[#0050A5] w-[290px] shadow-md'
 						placeholder='Search'
 						value={search}
 						onChange={(e) => setSearch(e.target.value)}
 					/>
 
-					<button className='bg-red-900 px-3 py-2 rounded-r-md'>
+					<button className='bg-[#0050A5] px-3 py-2 rounded-r-md'>
 						<FiSearch
 							className='text-black text-xl'
 							color={COLORS.white}
@@ -215,7 +215,7 @@ export const Navbar: React.FC = () => {
 								viewBox='0 0 24 24'
 								strokeWidth={1.8}
 								stroke='currentColor'
-								className='w-6 h-6 text-red-900'
+								className='w-6 h-6 text-[#0050A5]'
 							>
 								<path
 									strokeLinecap='round'
@@ -224,49 +224,49 @@ export const Navbar: React.FC = () => {
 								/>
 							</svg>
 							{unreadCount > 0 && (
-								<span className='absolute top-0 right-1 bg-red-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full'>
+								<span className='absolute top-0 right-1 bg-[#0050A5]-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full'>
 									{unreadCount}
 								</span>
 							)}
 						</button>
 
 						{showNotifications && (
-							<div className='absolute right-0 mt-2 w-80 rounded-lg shadow-xl bg-white z-50 overflow-hidden'>
-								<div className='bg-red-900 p-3'>
-									<h3 className='text-white font-bold'>Notifications</h3>
+							<div className='absolute right-0 mt-2 w-80 rounded-lg shadow-xl bg-[#BED0EC] z-50 overflow-hidden'>
+								<div className='bg-[]-900 p-3'>
+									<h3 className='text-[#0050A5] font-bold'>Notifications</h3>
 								</div>
 								<div className='max-h-80 overflow-y-auto'>
 									{filteredMails.length > 0 ? (
 										filteredMails.map((notification: any) => (
 											<div
 												key={notification._id}
-												className={`group relative p-3 border-b hover:bg-gray-50 transition-colors duration-150 bg-red-50
+												className={`group relative p-3 border-b hover:bg-gray-50 transition-colors duration-150 bg-[#BED0EC]-50
 												}`}
 											>
 												{/* This vertical red line will now appear on hover */}
 
-												<div className='absolute left-0 top-0 h-full w-1 bg-red-600 opacity-0 group-hover:opacity-100 transition-opacity duration-200'></div>
+												<div className='absolute left-0 top-0 h-full w-1 bg-[#BED0EC]-600 opacity-0 group-hover:opacity-100 transition-opacity duration-200'></div>
 
 												<div className='flex justify-between items-start'>
-													<p className='text-sm text-red-900 font-semibold'>
+													<p className='text-sm text-[#BED0EC]-900 font-semibold'>
 														{notification.title}
 													</p>
 												</div>
-												<p className='text-xs text-red-800 mt-1 text-right'>
+												<p className='text-xs text-[#BED0EC]-800 mt-1 text-right'>
 													{formatDate(notification?.created_at)}
 												</p>
 											</div>
 										))
 									) : (
-										<p className='p-3 text-gray-500 text-sm'>
+										<p className='p-3 text-[#0050A5] text-center text-sm'>
 											No notifications
 										</p>
 									)}
 								</div>
-								<div className='p-3 bg-gray-50 text-center border-t'>
+								<div className='p-3 bg-[#0050A5] text-center border-t'>
 									<button
 										onClick={handleViewAllNotifications}
-										className='text-red-600 hover:text-red-800 font-medium text-sm transition-colors'
+										className='text-white hover:text-white font-medium text-sm transition-colors'
 									>
 										View All Notifications
 									</button>
@@ -279,7 +279,7 @@ export const Navbar: React.FC = () => {
 					{showLogoutConfirm && (
 						<div className='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[9999]'>
 							<div className='bg-white rounded-xl shadow-lg w-80 p-6 space-y-4 text-center'>
-								<h2 className='text-lg font-semibold text-red-600'>
+								<h2 className='text-lg font-semibold text-[#0050A5]'>
 									Are you sure you want to logout?
 								</h2>
 								<div className='flex justify-center gap-4 mt-4'>
@@ -299,7 +299,7 @@ export const Navbar: React.FC = () => {
 												navigate('/');
 											}, 1000);
 										}}
-										className='px-4 py-2 rounded bg-red-600 text-white hover:bg-red-700'
+										className='px-4 py-2 rounded bg-[#0050A5] text-white'
 									>
 										OK
 									</button>
@@ -381,8 +381,8 @@ export const Navbar: React.FC = () => {
 							navigate('/booking-cart');
 						}}
 					>
-						<IoCartOutline className='text-3xl cursor-pointer text-red-900' />
-						<span className='absolute w-auto h-auto -top-2 left-6 bg-red-500 text-white text-xs rounded-full px-1 cursor-pointer text-center'>
+						<IoCartOutline className='text-3xl cursor-pointer text-[#0050A5]' />
+						<span className='absolute w-auto h-auto -top-2 left-6 bg-[#0050A5] text-white text-xs rounded-full px-1 cursor-pointer text-center'>
 							{cartCount || 0}
 						</span>
 					</div>
@@ -393,11 +393,20 @@ export const Navbar: React.FC = () => {
 						</>
 					) : (
 						<>
-							<img
-								src='/images/images.jpeg'
-								alt='dummy-image'
-								className='w-[52px] h-[52px] rounded-full cursor-pointer'
-							/>
+							<div className='flex gap-2'>
+								<button 
+									className='bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-all duration-300 hover:scale-105'
+									onClick={() => navigate('/login')}
+								>
+									Login
+								</button>
+								<button 
+									className='bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded-lg transition-all duration-300 hover:scale-105'
+									onClick={() => navigate('/signup')}
+								>
+									Sign Up
+								</button>
+							</div>
 						</>
 					)}
 				</div>
@@ -405,18 +414,18 @@ export const Navbar: React.FC = () => {
 
 			{/* Bottom Navbar - Categories */}
 
-			<div className='bg-[#fdefe9] px-24 py-1.5 flex items-center justify-center gap-10 shadow-lg'>
+			<div className='bg-[#0854a4] px-24 py-4 flex items-center justify-center gap-14 shadow-lg'>
 				{navData?.map((item, idx) => (
 					<NavLink
 						key={idx}
 						to={item.link}
-						style={{ ...FONTS.paragraph, fontWeight: 500, fontSize: '18px' }}
+						style={{ ...FONTS.paragraph, fontWeight: 500, fontSize: '16px', fontFamily: 'Montserrat' }}
 						className={({ isActive }) =>
 							`relative pb-1 text-md font-semibold transition-all duration-300 ease-in-out whitespace-nowrap
 	${
 		isActive
-			? 'text-red-900 after:content-[""] after:absolute after:left-0 after:bottom-9 after:h-[2.5px] after:w-full after:bg-red-900 after:transition-all after:duration-300'
-			: 'text-red-800 after:content-[""] after:absolute after:left-0 after:bottom-9 after:h-[2.5px] after:w-0 after:bg-red-900 after:transition-all after:duration-300 hover:after:w-full'
+			? 'text-white-900 after:content-[""] after:absolute after:left-0 after:bottom-11 after:h-[2.9px] after:w-full after:bg-white after:transition-all after:duration-300'
+			: 'text-white-800 after:content-[""] after:absolute after:left-0 after:bottom-11 after:h-[2.9px] after:w-0 after:bg-white after:transition-all after:duration-300 hover:after:w-full'
 	}`
 						}
 					>
@@ -426,11 +435,12 @@ export const Navbar: React.FC = () => {
 
 				<div className='flex justify-end'>
 					<button
-						className='text-white py-1 px-8 rounded-full'
+						className='text-[#0854a4] py-1 px-8 rounded-full'
 						style={{
 							...FONTS.paragraph,
 							fontWeight: 600,
-							backgroundImage: `linear-gradient(to right, #9b111e, rgba(255,0,0,1), #9b111e)`,
+							backgroundColor: '#fff',
+							fontFamily: 'Montserrat',
 						}}
 						onClick={() => navigate('/contact-us')}
 					>

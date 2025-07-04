@@ -1,4 +1,5 @@
 import React from 'react';
+import { FONTS } from '../../constants/constant';
 
 const TermsConditionsPage: React.FC = () => {
   const sections = [
@@ -25,20 +26,20 @@ const TermsConditionsPage: React.FC = () => {
   ];
 
   return (
-    <div className=" mx-auto p-6 bg-[#f4eae5]">
+    <div className=" mx-auto p-6 bg-[#BED0EC]" style={{fontFamily:FONTS.header.fontFamily}}>
       <div className="space-y-8">
-        <div className="border-b border-gray-200 pb-6">
-          <h1 className="text-3xl font-bold text-[#9b111e] mb-2">Terms & Conditions</h1>
-          <p className="text-gray-600">Please read these terms and conditions carefully before using our service.</p>
+        <div className="border-b border-[#0050A5] pb-6">
+          <h1 className="text-3xl font-bold text-[#0050A5] mb-2">Terms & Conditions</h1>
+          <p className="text-gray-500">Please read these terms and conditions carefully before using our service.</p>
         </div>
 
         <div className="space-y-6">
           {sections.map((section, index) => (
-            <div key={index} className="bg-[#ead7cf] rounded-lg p-6 hover:bg-[#e9ccc0] transition-colors duration-200">
-              <h2 className="text-xl font-bold text-gray-900 mb-4 leading-tight">
+            <div key={index} className="bg-white rounded-lg p-6  transition-colors duration-200">
+              <h2 className="text-xl font-bold text-[#0050A5] mb-4 leading-tight">
                 {section.title}
               </h2>
-              <p className="text-gray-700 leading-relaxed text-base">
+              <p className="text-gray-500 leading-relaxed text-base">
                 {section.content}
               </p>
             </div>

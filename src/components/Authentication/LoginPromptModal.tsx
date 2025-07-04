@@ -38,7 +38,7 @@ const LoginPromptModal: React.FC<Props> = ({ isOpen, onClose }) => {
 				</button>
 				<button
 					onClick={handleLogin}
-					className='px-4 py-2 rounded bg-red-900 text-white hover:bg-red-700'
+					className='px-4 py-2 rounded bg-[#0050A5] text-white hover:bg-[#004494]'
 				>
 					Sign Up
 				</button>

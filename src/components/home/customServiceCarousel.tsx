@@ -57,13 +57,13 @@ const CustomServicesGrid: React.FC = () => {
 	}, []);
 
 	return (
-		<div className='py-10'>
+		<div className='py-10 '>
 			<h1
 				ref={spareTitle.elementRef}
 				className='text-2xl mb-10 text-red-900 text-center'
 				style={{ ...FONTS.heading }}
 			>
-				<span className='inline-block pb-1 relative'>
+				<span className='inline-block pb-1 relative text-[#0050A5]'>
 					Available Spare Parts
 					{/* <span
 						className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
@@ -76,7 +76,7 @@ const CustomServicesGrid: React.FC = () => {
 				{spareParts.map((item) => (
 					<div
 						key={item._id}
-						className='bg-[#E5D0AC] rounded-lg p-2 shadow-3xl hover:shadow-4xl hover:scale-102 transition-transform duration-300 text-center text-red-900 relative '
+						className='bg-[#BED0EC] rounded-lg p-2 shadow-3xl hover:shadow-4xl hover:scale-102 transition-transform duration-300 text-center text-red-900 relative '
 					>
 						<div className='w-full h-[125px] bg-white flex items-center justify-center overflow-hidden rounded'>
 							<img
@@ -93,7 +93,7 @@ const CustomServicesGrid: React.FC = () => {
 								{item.brand}
 							</span>
 						)}
-						<p className='mt-3' style={{ ...FONTS.paragraph, fontWeight: 600 }}>
+						<p className='mt-3 text-[#0050A5]' style={{ ...FONTS.paragraph, fontWeight: 600 }}>
 							{item.productName}
 						</p>
 					</div>

@@ -43,7 +43,7 @@ const handleBookClick = () => {
 
 			<div className='fixed top-36 right-3 pointer-events-auto'>
 							 {showMessage && (
-                           <div className="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg shadow-md text-sm">
+                           <div className="mt-4 px-4 py-2 bg-[#0050A5] text-white rounded-lg shadow-md text-sm">
                             Select the car first then booking services!
                            </div> 
 						)}
@@ -77,12 +77,12 @@ const handleBookClick = () => {
 								className='animate-bounce'
 								style={{ animationDelay: '0.5s' }}
 							>
-								<Car className='w-6 h-6 text-red-600' />
+								<Car className='w-6 h-6 text-[#0050A5]' />
 							</div>
 						</div>
 						<div className='absolute top-8 right-16'>
 							<div className='animate-pulse' style={{ animationDelay: '1s' }}>
-								<Wrench className='w-4 h-4' style={{ color: '#9b111e' }} />
+								<Wrench className='w-4 h-4' style={{ color: '#0050A5' }} />
 							</div>
 						</div>
 
@@ -97,17 +97,17 @@ const handleBookClick = () => {
 									>
 										<Sparkles className='w-6 h-6 text-yellow-500' />
 									</div>
-									<h3 className='font-bold text-xl text-gray-800 bg-gradient-to-r from-red-600 to-red-800 bg-clip-text text-transparent'>
+									<h3 className='font-bold text-xl text-gray-800 bg-[#0050A5] bg-clip-text text-transparent'>
 										{title}
 									</h3>
 								</div>
 								<button
 									onClick={handleClose}
-									className='group relative p-2 rounded-full bg-white/80 backdrop-blur-sm border border-gray-200/50 hover:bg-red-50 hover:border-red-200 transition-all duration-300 transform hover:scale-110 active:scale-95'
+									className='group relative p-2 rounded-full bg-white/80 backdrop-blur-sm border border-[#BED0EC]-200/50 hover:bg-[#0050A5] hover:border-[#0050A5] transition-all duration-300 transform hover:scale-110 active:scale-95'
 									aria-label='Close popup'
 								>
-									<X className='w-4 h-4 text-red-600 group-hover:text-red-900 transition-colors' />
-									<div className='absolute inset-0 rounded-full bg-red-500/20 scale-0 group-hover:scale-100 transition-transform duration-300' />
+									<X className='w-4 h-4 text-[#0050A5] group-hover:text-[white] transition-colors' />
+									<div className='absolute inset-0 rounded-full bg-[#0050A5]-500/20 scale-0 group-hover:scale-100 transition-transform duration-300' />
 								</button>
 							</div>
 
@@ -118,7 +118,7 @@ const handleBookClick = () => {
 
 								{/* Additional content for height */}
 								<div className='bg-gradient-to-r from-red-600/10 to-red-800/10 rounded-xl p-4 border border-red-200/50'>
-									<h4 className='font-semibold text-red-800 mb-2'>
+									<h4 className='font-semibold text-[#0050A5] mb-2'>
 										Premium Services Include:
 									</h4>
 									<ul className='text-sm text-gray-600 space-y-1'>
@@ -134,9 +134,9 @@ const handleBookClick = () => {
 								<div className='flex space-x-3 mt-auto'>
 									<button
 									onClick={handleBookClick} 
-										className='group flex-1 bg-gradient-to-r from-red-600 to-red-800 text-white px-4 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 hover:from-red-700 hover:to-red-900'
+										className='group flex-1 bg-[#0050A5] text-white px-4 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-300 hover:from-red-700 hover:to-red-900'
 										style={{
-											backgroundImage:`linear-gradient(to right, #dc2626, #9b111e)`,
+											backgroundImage:'##0050A5',
 										}}
 									>
 										<span className='flex items-center justify-center space-x-2'>
@@ -146,7 +146,7 @@ const handleBookClick = () => {
 											</div>
 										</span>
 									</button>
-									<button className='px-4 py-3 rounded-xl border-2 border-red-200 text-red-600 font-semibold hover:border-red-300 hover:text-red-700 hover:bg-red-50 transition-all duration-300 transform hover:-translate-y-0.5'>
+									<button className='px-4 py-3 rounded-xl border-2 border-[#0050A5] text-[#0050A5] font-semibold hover:border-[#BED0EC]-300 hover:text-[white] hover:bg-[#0050A5] transition-all duration-300 transform hover:-translate-y-0.5'>
 										Later
 									</button>
 						
@@ -157,7 +157,7 @@ const handleBookClick = () => {
 							{/* Progress indicator */}
 							<div className='mt-6 w-full bg-gray-200 rounded-full h-1 overflow-hidden'>
 								<div
-									className='h-full bg-gradient-to-r from-red-600 to-red-800 rounded-full animate-pulse'
+									className='h-full bg-[#0050A5] rounded-full animate-pulse'
 									style={{
 										width: '100%',
 										animation: 'slideProgress 4s ease-in-out infinite',

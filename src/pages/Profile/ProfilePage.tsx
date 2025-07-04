@@ -123,8 +123,8 @@ const ProfilePage: React.FC = () => {
 					<div className='flex h-full w-full'>
 						{/* Red Section - Left */}
 						<div
-							className='w-1/2 bg-gradient-to-br from-red-700 via-red-800 to-red-900 relative overflow-hidden'
-							style={{ backgroundColor: '#9b111e' }}
+							className='w-1/2  relative overflow-hidden'
+							style={{ backgroundColor: '#0050A5' }}
 						>
 							<div className='absolute inset-0 bg-gradient-to-br from-red-600/20 to-transparent' />
 							<div className='relative z-10 flex flex-col items-center justify-center h-full text-white p-8'>
@@ -134,7 +134,7 @@ const ProfilePage: React.FC = () => {
 								</p>
 								<button
 									onClick={() => setIsCarTab(false)}
-									className='px-3 py-1 border-2 border-white/30 rounded-full text-white font-medium hover:bg-white/10 transition-all duration-300 hover:scale-105'
+									className='px-3 py-1 border-2 border-white bg-white rounded-full text-[#0050A5] font-medium  transition-all duration-300 hover:scale-105'
 								>
 									USER PROFILE
 								</button>
@@ -144,7 +144,7 @@ const ProfilePage: React.FC = () => {
 
 						{/* Car Details Section - Right */}
 						<div className='w-1/2 flex flex-col  p-8 bg-gray-50 relative'>
-							<h2 className='text-3xl font-bold text-gray-800 mb-6 text-center'>
+							<h2 className='text-3xl font-bold text-[#0050A5] mb-6 text-center'>
 								Car Details
 							</h2>
 
@@ -175,7 +175,7 @@ const ProfilePage: React.FC = () => {
 														className='w-full px-3 py-2 text-sm bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300'
 														style={
 															{
-																'--tw-ring-color': '#9b111e',
+																'--tw-ring-color': '#0050A5',
 															} as React.CSSProperties
 														}
 													/>
@@ -195,13 +195,13 @@ const ProfilePage: React.FC = () => {
 														className='w-full px-3 py-2 text-sm bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300'
 														style={
 															{
-																'--tw-ring-color': '#9b111e',
+																'--tw-ring-color': '#0050A5',
 															} as React.CSSProperties
 														}
 													/>
 												</div>
 												<div className='flex justify-end mt-3'>
-													<button className='w-auto py-1 px-2 bg-[#9b111e] text-white text-sm font-medium rounded-lg transition-transform duration-300 hover:scale-105'>
+													<button className='w-auto py-1 px-2 bg-[#0050A5] text-white text-sm font-medium rounded-lg transition-transform duration-300 hover:scale-105'>
 														CAR HISTORY
 													</button>
 												</div>
@@ -251,7 +251,7 @@ const ProfilePage: React.FC = () => {
 										<button
 											onClick={addCar}
 											className='w-[180px] py-1.5 text-white font-medium rounded-lg  transition-all duration-300 hover:scale-95 shadow-lg sticky bottom-0'
-											style={{ backgroundColor: '#9b111e' }}
+											style={{ backgroundColor: '#0050A5' }}
 										>
 											ADD ANOTHER CAR
 										</button>
@@ -270,7 +270,7 @@ const ProfilePage: React.FC = () => {
 					<div className='flex h-full w-full'>
 						{/* User Profile Section - Left */}
 						<div className='w-1/2 flex flex-col items-center justify-center p-4 bg-gray-50 relative'>
-							<h2 className='text-3xl font-bold text-gray-800 mb-6'>
+							<h2 className='text-3xl font-bold text-[#0050A5] mb-6'>
 								User Information
 							</h2>
 
@@ -284,7 +284,7 @@ const ProfilePage: React.FC = () => {
 											placeholder='Name'
 											className='w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300'
 											style={
-												{ '--tw-ring-color': '#9b111e' } as React.CSSProperties
+												{ '--tw-ring-color': '#0050A5' } as React.CSSProperties
 											}
 										/>
 										<input
@@ -294,7 +294,7 @@ const ProfilePage: React.FC = () => {
 											placeholder='Name'
 											className='w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300'
 											style={
-												{ '--tw-ring-color': '#9b111e' } as React.CSSProperties
+												{ '--tw-ring-color': '#0050A5' } as React.CSSProperties
 											}
 										/>
 										<input
@@ -304,7 +304,7 @@ const ProfilePage: React.FC = () => {
 											placeholder='Email'
 											className='w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300'
 											style={
-												{ '--tw-ring-color': '#9b111e' } as React.CSSProperties
+												{ '--tw-ring-color': '#0050A5' } as React.CSSProperties
 											}
 										/>
 										<input
@@ -314,7 +314,7 @@ const ProfilePage: React.FC = () => {
 											placeholder='Phone Number'
 											className='w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300'
 											style={
-												{ '--tw-ring-color': '#9b111e' } as React.CSSProperties
+												{ '--tw-ring-color': '#0050A5' } as React.CSSProperties
 											}
 										/>
 										<input
@@ -324,13 +324,13 @@ const ProfilePage: React.FC = () => {
 											placeholder='Address'
 											className='w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300'
 											style={
-												{ '--tw-ring-color': '#9b111e' } as React.CSSProperties
+												{ '--tw-ring-color': '#0050A5' } as React.CSSProperties
 											}
 										/>
 										<button
 											onClick={() => handleEditProfile()}
 											className='w-full py-3 text-white font-medium rounded-lg hover:opacity-90 transition-all duration-300 hover:scale-105 shadow-lg'
-											style={{ backgroundColor: '#9b111e' }}
+											style={{ backgroundColor: '#0050A5' }}
 										>
 											SAVE
 										</button>
@@ -377,7 +377,7 @@ const ProfilePage: React.FC = () => {
 											<button
 												onClick={() => setEditMode(true)}
 												className='w-[180px]  py-1.5 text-white font-medium rounded-lg hover:opacity-90 transition-all duration-300 hover:scale-105 shadow-lg mt-4'
-												style={{ backgroundColor: '#9b111e' }}
+												style={{ backgroundColor: '#0050A5' }}
 											>
 												EDIT
 											</button>
@@ -389,8 +389,8 @@ const ProfilePage: React.FC = () => {
 
 						{/* Red Section - Right */}
 						<div
-							className='w-1/2 bg-gradient-to-br from-red-700 via-red-800 to-red-900 relative overflow-hidden'
-							style={{ backgroundColor: '#9b111e' }}
+							className='w-1/2  relative overflow-hidden'
+							style={{ backgroundColor: '#0050A5' }}
 						>
 							<div className='absolute inset-0 bg-gradient-to-br from-red-600/20 to-transparent' />
 							<div className='relative z-10 flex flex-col items-center justify-center h-full text-white p-8'>
@@ -400,7 +400,7 @@ const ProfilePage: React.FC = () => {
 								</p>
 								<button
 									onClick={() => setIsCarTab(true)}
-									className='px-3 py-1 border-2 border-white/30 rounded-full text-white font-medium hover:bg-white/10 transition-all duration-300 hover:scale-105'
+									className='px-3 py-1 border-2 border-white bg-white text-[#0050A5] rounded-full text-white font-medium  transition-all duration-300 hover:scale-105'
 								>
 									CAR DETAILS
 								</button>

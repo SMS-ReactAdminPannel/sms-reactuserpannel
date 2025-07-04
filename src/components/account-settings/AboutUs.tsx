@@ -56,10 +56,10 @@ const AboutPage: React.FC = () => {
   return (
     <div className="  bg-white shadow-lg rounded-xl ">
       {/* Hero Section */}
-      <div className="relative bg-[#9b111e] text-white rounded-lg ">
+      <div className="relative bg-[#0050A5] text-white rounded-lg ">
         <div className="relative max-w-7xl mx-auto px-4 py-24 sm:px-6 lg:px-8">
           <div className="text-center">
-            <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-white to-blue-200 bg-clip-text text-transparent">
+            <h1 className="text-5xl font-bold mb-6 text-[white] bg-clip-text ">
               About AutoCare Pro
             </h1>
             <p className="text-xl text-blue-100 max-w-3xl mx-auto leading-relaxed">
@@ -73,10 +73,10 @@ const AboutPage: React.FC = () => {
       {/* Stats Section */}
       <div className="bg-white  mb-3  px-6">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 border-b border-gray-200 py-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 border-b border-[#0050A5] py-12">
             {stats.map((stat, index) => (
               <div key={index} className="text-center group hover:transform hover:scale-105 transition-all duration-300">
-                <div className="text-4xl font-bold text-[#9b111e] mb-2 group-hover:text-[#9b111e] ">
+                <div className="text-4xl font-bold text-[#0050A5] mb-2 group-hover:text-[#0050A5] ">
                   {stat.number}
                 </div>
                 <div className="text-gray-600 font-medium">{stat.label}</div>
@@ -90,7 +90,7 @@ const AboutPage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="space-y-6">
-              <h2 className="text-4xl font-bold text-[#9b111e]">Our Story</h2>
+              <h2 className="text-4xl font-bold text-[#0050A5]">Our Story</h2>
               <div className="space-y-4 text-gray-600 leading-relaxed">
                 <p className="text-lg">
                   Founded in 2008 by automotive enthusiast John Miller, AutoCare Pro began as a small 
@@ -125,7 +125,7 @@ const AboutPage: React.FC = () => {
       <div className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-[#9b111e] mb-4">Why Choose Us</h2>
+            <h2 className="text-4xl font-bold text-[#0050A5] mb-4">Why Choose Us</h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               We're not just another auto shop. Here's what sets us apart from the competition.
             </p>
@@ -148,7 +148,7 @@ const AboutPage: React.FC = () => {
       <div className="py-20 bg-gradient-to-br from-gray-50 to-blue-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
-            <h2 className="text-4xl font-bold text-[#9b111e] mb-4">Meet Our Expert Team</h2>
+            <h2 className="text-4xl font-bold text-[#0050A5] mb-4">Meet Our Expert Team</h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
               Our certified technicians bring decades of combined experience to every job.
             </p>
@@ -182,7 +182,7 @@ const AboutPage: React.FC = () => {
       <div className="space-y-12">
         {/* Our Mission */}
         <div className="text-left">
-          <h3 className="text-2xl font-bold text-[#d35028] mb-4">
+          <h3 className="text-2xl font-bold text-[#0050A5] mb-4">
             Our Mission
           </h3>
           <p className="text-gray-600 leading-relaxed text-lg">
@@ -192,7 +192,7 @@ const AboutPage: React.FC = () => {
         </div>
         {/* Our Values */}
         <div className="text-left">
-          <h3 className="text-2xl font-bold text-[#d35028] mb-4">
+          <h3 className="text-2xl font-bold text-[#0050A5] mb-4">
             Our Values
           </h3>
           <ul className="space-y-3 text-gray-600">
@@ -228,7 +228,7 @@ const AboutPage: React.FC = () => {
   </div>
 </div>
       {/* Contact CTA */}
-      <div className="bg-[#9b111e] py-20">
+      <div className="bg-[#0050A5] py-20">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-4xl font-bold text-white mb-6">Ready to Experience the Difference?</h2>
           <p className="text-xl text-blue-100 mb-8 max-w-2xl mx-auto">
