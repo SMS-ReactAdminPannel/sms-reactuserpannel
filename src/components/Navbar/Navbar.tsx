@@ -299,7 +299,7 @@ export const Navbar: React.FC = () => {
 												navigate('/');
 											}, 1000);
 										}}
-										className='px-4 py-2 rounded bg-[#0050A5] text-white hover:bg-[#0050A5]'
+										className='px-4 py-2 rounded bg-[#0050A5] text-white'
 									>
 										OK
 									</button>

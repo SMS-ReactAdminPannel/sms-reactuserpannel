@@ -334,7 +334,7 @@ export default function SparePartsCart() {
 						<span
 							className={`relative left-[325px] text-xs px-2 w-[65px] py-0.5 rounded font-medium ${
 								serv.is_active
-									? 'bg-green-100 text-green-700'
+									? 'bg-[#BED0EC] text-[#0050A5]'
 									: 'bg-red-700 text-white'
 							}`}
 						>
@@ -342,7 +342,7 @@ export default function SparePartsCart() {
 						</span>
 						<div>
 							<div className='flex justify-between items-start'>
-								<h3 className='text-base font-semibold text-gray-800'>
+								<h3 className='text-base font-semibold text-[#0050A5]'>
 									{serv.service_name}
 								</h3>
 							</div>
@@ -353,7 +353,7 @@ export default function SparePartsCart() {
 						</div>
 
 						<div className='flex gap-2 items-center'>
-							<span className='text-lg font-bold text-red-600'>
+							<span className='text-lg font-bold text-[#0050A5]'>
 								₹{serv.price}
 							</span>
 							<span className='line-through text-sm text-gray-400 '>
@@ -363,7 +363,7 @@ export default function SparePartsCart() {
 
 						<div className='flex gap-2 '>
 							<button
-								className='bg-[#9b111e] mt-[-16px] ml-[289px]  hover:bg-red-700 text-white px-4 py-1.5 rounded font-semibold transition ml-48'
+								className='bg-[#0050A5] mt-[-16px] ml-[289px] text-white px-4 py-1.5 rounded font-semibold transition ml-48'
 								onClick={() => handleDelete(serv._id)}
 							>
 								REMOVE
@@ -480,12 +480,12 @@ export default function SparePartsCart() {
 							<div className='bg-white rounded-lg shadow-md p-4 mb-6  '>
 								<div className='flex justify-between items-center mb-1'>
 									<div>
-										<h2 className='text-lg font-semibold text-red-600'>
+										<h2 className='text-lg font-semibold text-[#0050A5]'>
 											PRICE DETAILS
 										</h2>
 									</div>
 								</div>
-								<div className='border-t border-orange-200 pt-2 w-full'></div>
+								<div className='border-t border-[#0050A5] pt-2 w-full'></div>
 								<h3 className='text-base font-semibold text-black-600 mb-4'>
 									Confirmed Service Orders
 								</h3>
@@ -508,8 +508,8 @@ export default function SparePartsCart() {
 										</span>
 									</div>
 								</div>
-								<div className='border-t border-orange-200 pt-2 mb-2'>
-									<div className='flex justify-between font-bold text-orange-700'>
+								<div className='border-t border-[#0050A5] pt-2 mb-2'>
+									<div className='flex justify-between font-bold text-[#0050A5]'>
 										<span>Total</span>
 										<span>₹{totalPartPrice}</span>
 									</div>
@@ -517,7 +517,7 @@ export default function SparePartsCart() {
 								<div className='flex justify-center'>
 									<button
 										type='submit'
-										className='flex justify-center gap-2 items-center mx-auto shadow-xl text-lg text-white bg-[#9b111e] backdrop-blur-md lg:font-semibold isolation-auto relative z-10 px-6 py-2 overflow-hidden border-2 rounded-full group hover:bg-red-700'
+										className='flex justify-center gap-2 items-center mx-auto shadow-xl text-lg text-white bg-[#0050A5] backdrop-blur-md lg:font-semibold isolation-auto relative z-10 px-6 py-2 overflow-hidden border-2 rounded-full group '
 										onClick={async () => {
 											try {
 												if (books.length > 0) {
@@ -540,12 +540,12 @@ export default function SparePartsCart() {
 							<div className='bg-white rounded-lg shadow-md p-4 '>
 								<div className='flex justify-between items-center mb-1'>
 									<div>
-										<h2 className='text-lg font-semibold text-red-600'>
+										<h2 className='text-lg font-semibold text-[#0050A5]'>
 											PRICE DETAILS
 										</h2>
 									</div>
 								</div>
-								<div className='border-t border-orange-200 pt-2 w-full'></div>
+								<div className='border-t border-[#0050A5] pt-2 w-full'></div>
 								<h3 className='text-base font-semibold text-black-600 mb-4'>
 									Confirmed Service Orders
 								</h3>
@@ -567,8 +567,8 @@ export default function SparePartsCart() {
 										</span>
 									</div>
 								</div>
-								<div className='border-t border-orange-200 pt-2 mb-4'>
-									<div className='flex justify-between font-bold text-orange-700'>
+								<div className='border-t border-[#0050A5] pt-2 mb-4'>
+									<div className='flex justify-between font-bold text-[#0050A5]'>
 										<span>Total</span>
 										<span>₹{totalServicePrice}</span>
 									</div>
@@ -576,7 +576,7 @@ export default function SparePartsCart() {
 								<div className='flex justify-center'>
 									<button
 										type='submit'
-										className='flex justify-center gap-2 items-center mx-auto shadow-xl text-lg text-white bg-[#9b111e] backdrop-blur-md lg:font-semibold isolation-auto border-gray-50 relative z-10 px-6 py-2 overflow-hidden border-2 rounded-full group -mt-2'
+										className='flex justify-center gap-2 items-center mx-auto shadow-xl text-lg text-white bg-[#0050A5] backdrop-blur-md lg:font-semibold isolation-auto border-gray-50 relative z-10 px-6 py-2 overflow-hidden border-2 rounded-full group -mt-2'
 										onClick={async () => {
 											try {
 												await placeServiceOrder();
