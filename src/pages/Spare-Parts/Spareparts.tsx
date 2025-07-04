@@ -204,6 +204,10 @@ const SpareParts: React.FC = () => {
 				const response = await postSparePartsData(payload);
 				if (response) {
 					toast.success('Item added to cart!', { duration: 2000 });
+					// Refresh cart count in navbar
+					if ((window as any).refreshCartCount) {
+						(window as any).refreshCartCount();
+					}
 				}
 			} catch (error) {
 				console.error('Error adding to cart:', error);

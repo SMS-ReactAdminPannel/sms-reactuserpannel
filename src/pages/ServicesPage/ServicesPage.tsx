@@ -294,6 +294,10 @@ const ServicesPage: React.FC = () => {
 					if (response) {
 						setShowCartNotification(true);
 						setTimeout(() => setShowCartNotification(false), 3000);
+						// Refresh cart count in navbar
+						if ((window as any).refreshCartCount) {
+							(window as any).refreshCartCount();
+						}
 					}
 				} catch (error) {
 					console.log(error);

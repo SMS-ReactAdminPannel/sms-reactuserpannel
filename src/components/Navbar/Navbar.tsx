@@ -69,18 +69,27 @@ export const Navbar: React.FC = () => {
 	const fetchBookingCartCount = async () => {
 		try {
 			const response: any = await booking_cart({});
-			if (response) {
-				setCartCount(
-					response.data.data[0].services.length +
-						response.data.data[1].services.length +
-						response.data.data[0].products.length +
-						response.data.data[1].products.length
-				);
+			if (response?.data?.data) {
+				const data = response.data.data;
+				const count = (data[0]?.services?.length || 0) + 
+							  (data[1]?.services?.length || 0) + 
+							  (data[0]?.products?.length || 0) + 
+							  (data[1]?.products?.length || 0);
+				setCartCount(count);
+				console.log('Cart count:', count);
 			}
 		} catch (error) {
-			console.log(error);
+			console.log('Cart count error:', error);
 		}
 	};
+
+	// Expose cart refresh function globally
+	useEffect(() => {
+		(window as any).refreshCartCount = fetchBookingCartCount;
+		return () => {
+			delete (window as any).refreshCartCount;
+		};
+	}, []);
 
 	useEffect(() => {
 		fetchAllNotifications();
@@ -382,8 +391,8 @@ export const Navbar: React.FC = () => {
 						}}
 					>
 						<IoCartOutline className='text-3xl cursor-pointer text-[#0050A5]' />
-						<span className='absolute w-auto h-auto -top-2 left-6 bg-[#0050A5] text-white text-xs rounded-full px-1 cursor-pointer text-center'>
-							{cartCount || 0}
+						<span className='absolute -top-2 left-6 bg-red-500 text-white text-xs rounded-full min-w-[18px] h-[18px] flex items-center justify-center cursor-pointer'>
+							{cartCount}
 						</span>
 					</div>
 					{/* Profile Dropdown */}
