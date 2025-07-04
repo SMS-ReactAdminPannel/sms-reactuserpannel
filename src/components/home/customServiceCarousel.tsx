@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { FONTS } from '../../constants/constant';
 import { getHomeData } from '../../features/home';
 import DummyImage from '../../assets/CAR BRAKES/Car brakes.jpg';
@@ -37,6 +38,7 @@ const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 
 const CustomServicesGrid: React.FC = () => {
 	const [spareParts, setSpareParts] = useState<any[]>([]);
+	const navigate = useNavigate();
 
 	const spareTitle = useScrollAnimation<HTMLHeadingElement>();
 
@@ -76,7 +78,8 @@ const CustomServicesGrid: React.FC = () => {
 				{spareParts.map((item) => (
 					<div
 						key={item._id}
-						className='bg-[#BED0EC] rounded-lg p-2 shadow-3xl hover:shadow-4xl hover:scale-102 transition-transform duration-300 text-center text-red-900 relative '
+						className='bg-[#BED0EC] rounded-lg p-2 shadow-3xl hover:shadow-4xl hover:scale-102 transition-transform duration-300 text-center text-red-900 relative cursor-pointer'
+						onClick={() => navigate('/spare-parts')}
 					>
 						<div className='w-full h-[125px] bg-white flex items-center justify-center overflow-hidden rounded'>
 							<img
