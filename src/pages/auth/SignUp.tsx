@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { COLORS, FONTS } from '../../constants/constant';
+import {  FONTS } from '../../constants/constant';
 
 const SignUp: React.FC = () => {
 	const [phone, setPhone] = useState('');
