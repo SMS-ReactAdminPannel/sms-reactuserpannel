@@ -240,7 +240,7 @@ const PromoCarousel: React.FC = () => {
 									<li key={i}>{point}</li>
 								))}
 							</ul>
-							<button className='bg-white  text-white font-semibold py-2 px-4 rounded-lg transition-all text-[#0050A5]'>
+							<button className='bg-white font-semibold py-2 px-4 rounded-lg transition-all text-[#0050A5]'>
 								{card.cta}
 							</button>
 						</div>
