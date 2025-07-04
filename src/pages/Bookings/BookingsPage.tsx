@@ -404,7 +404,6 @@ const OrdersPage: React.FC = () => {
 	return (
 		<div
 			className='min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100'
-			style={{ backgroundImage: `url("${bgImage}")` }}
 		>
 			<div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
 				{/* Header */}
@@ -414,7 +413,7 @@ const OrdersPage: React.FC = () => {
 						ref={orderTitle.elementRef}
 						style={{ ...FONTS.heading }}
 					>
-						<span className='inline-block pb-1 relative text-red-900 mb-2'>
+						<span className='inline-block pb-1 relative text-[#0050A5] mb-2'>
 							My Orders
 							{/* <span
 								className={`absolute top-14 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${orderTitle.isVisible
@@ -424,12 +423,12 @@ const OrdersPage: React.FC = () => {
 							></span> */}
 						</span>
 					</h1>
-					<p className='text-red-600 text-lg max-w-6xl mx-auto'>
+					<p className='text-[#0050A5] text-lg max-w-6xl mx-auto'>
 						Track and manage all your orders in one place
 					</p>
 
 					{/* Stats */}
-					<div className='flex space-x-6 mt-4 max-w-6xl mx-auto text-[#9b111e]'>
+					<div className='flex space-x-6 mt-4 max-w-6xl mx-auto text-[#0050A5]'>
 						<div className='bg-white rounded-lg px-4 py-2 shadow-sm border'>
 							<span className='text-2xl font-bold text-gray-900'>
 								{totalOrders}
@@ -452,7 +451,7 @@ const OrdersPage: React.FC = () => {
 				</div>
 
 				{/* Filters and Search */}
-				<div className='bg-[#FAF3EB] rounded-2xl shadow-sm mx-7 border border-gray-100 p-6 mb-8 '>
+				<div className='bg-[#BED0EC] rounded-2xl shadow-sm mx-7 border border-gray-100 p-6 mb-8 '>
 					{/* First Row: Search */}
 					<div className='mb-6'>
 						<div className='relative w-full'>
@@ -470,12 +469,12 @@ const OrdersPage: React.FC = () => {
 					{/* Second Row: Filters + Sort + Reset */}
 					<div className='flex flex-col  gap-4'>
 						{/* Filter Buttons */}
-						<div className='flex flex-wrap gap-2 bg-gray-100 rounded-xl p-1'>
+						<div className='flex flex-wrap gap-2 bg-[white] rounded-xl p-1'>
 							<button
 								onClick={() => setFilterType('all')}
 								className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
 									filterType === 'all'
-										? 'bg-red-900 text-white shadow-sm'
+										? 'bg-[#0050A5] text-white shadow-sm'
 										: 'text-gray-600 hover:text-gray-900'
 								}`}
 							>
@@ -485,7 +484,7 @@ const OrdersPage: React.FC = () => {
 								onClick={() => setFilterType('spare')}
 								className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${
 									filterType === 'spare'
-										? 'bg-red-900 text-white shadow-sm'
+										? 'bg-[#0050A5] text-white shadow-sm'
 										: 'text-gray-600 hover:text-gray-900'
 								}`}
 							>
@@ -496,7 +495,7 @@ const OrdersPage: React.FC = () => {
 								onClick={() => setFilterType('service')}
 								className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${
 									filterType === 'service'
-										? 'bg-red-900 text-white shadow-sm'
+										? 'bg-[#0050A5] text-white shadow-sm'
 										: 'text-gray-600 hover:text-gray-900'
 								}`}
 							>
@@ -538,7 +537,7 @@ const OrdersPage: React.FC = () => {
 						))
 					) : (
 						<div className='text-center py-16 bg-white rounded-2xl shadow-sm border border-gray-100'>
-							<Package className='h-16 w-16 text-gray-400 mx-auto mb-4' />
+							<Package className='h-16 w-16 text-[#BED0EC] mx-auto mb-4' />
 							<h3 className='text-xl font-semibold text-gray-900 mb-2'>
 								No orders found
 							</h3>
