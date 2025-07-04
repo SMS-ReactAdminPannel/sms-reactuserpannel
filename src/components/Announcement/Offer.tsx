@@ -136,7 +136,7 @@ const Offer: React.FC = () => {
 						<motion.button
 							whileTap={{ scale: 0.96 }}
 							whileHover={{ scale: 1.05 }}
-							className='mt-4 w-full py-2 bg-[#0050A5] hover:bg-red-700 text-white rounded-md font-medium shadow-md transition-all'
+							className='mt-4 w-full py-2 bg-[#0050A5]  text-white rounded-md font-medium shadow-md transition-all'
 						>
 							Book Now
 						</motion.button>
