@@ -321,8 +321,8 @@ const SpareParts: React.FC = () => {
 						<div className='col-span-full text-center py-8'>
 							<p className='text-gray-500 text-lg'>
 								{searchTerm
-									? 'No products found matching your search.'
-									: 'No products available.'}
+									? 'No products found matching your search'
+									: 'No products available'}
 							</p>
 						</div>
 					) : (
@@ -573,38 +573,44 @@ const SpareParts: React.FC = () => {
 					By Categories
 				</h1>
 
-				<div className=' grid grid-cols-4 gap-6'>
-					{categories.map(({ id, title, items }) => (
-						<div
-							key={id}
-							className='flex flex-col gap-4 p-6 border rounded-xl shadow-md'
-						>
-							<div className='flex justify-between items-center'>
-								<h2 className='text-md font-bold uppercase text-[#0050A5]'>
-									{title}
-								</h2>
-								<img
-									src={spareImg}
-									alt={title}
-									className='w-16 h-16 object-contain'
-								/>
-							</div>
-							<ul className='space-y-1 text-sm'>
-								{items.slice(0, 3).map((item, index) => (
-									<li key={index} className='hover:underline cursor-pointer'>
-										{item}
-									</li>
-								))}
-							</ul>
-							<Link
-								to={`/spare-parts/category/${id}`}
-								className='text-sm font-semibold relative bottom-[1px] text-[#0050A5] cursor-pointer hover:underline mt-1'
+				{categories.length !== 0 ? (
+					<div className=' grid grid-cols-4 gap-6'>
+						{categories?.map(({ id, title, items }) => (
+							<div
+								key={id}
+								className='flex flex-col gap-4 p-6 border rounded-xl shadow-md'
 							>
-								ALL CATEGORIES →
-							</Link>
-						</div>
-					))}
-				</div>
+								<div className='flex justify-between items-center'>
+									<h2 className='text-md font-bold uppercase text-[#0050A5]'>
+										{title}
+									</h2>
+									<img
+										src={spareImg}
+										alt={title}
+										className='w-16 h-16 object-contain'
+									/>
+								</div>
+								<ul className='space-y-1 text-sm'>
+									{items.slice(0, 3).map((item, index) => (
+										<li key={index} className='hover:underline cursor-pointer'>
+											{item}
+										</li>
+									))}
+								</ul>
+								<Link
+									to={`/spare-parts/category/${id}`}
+									className='text-sm font-semibold relative bottom-[1px] text-[#0050A5] cursor-pointer hover:underline mt-1'
+								>
+									ALL CATEGORIES →
+								</Link>
+							</div>
+						))}
+					</div>
+				) : (
+					<div className='flex items-center justify-center'>
+						<p className='text-gray-500'>No Categories available</p>
+					</div>
+				)}
 			</div>
 
 			{/* Edit Product Modal */}
