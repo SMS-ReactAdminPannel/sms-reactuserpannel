@@ -14,7 +14,7 @@ interface BookingModalProps {
 		duration?: string;
 	};
 	isAuthenticated?: boolean;
-	onAddToCart?: () => void;
+	onAddToCart?: (requestType: string, schedule_date: typeof Date) => void;
 	onOpenSignUp?: () => void;
 }
 
@@ -27,7 +27,7 @@ const BookingModal = ({
 	onOpenSignUp,
 }: BookingModalProps) => {
 	const [selectedBookingType, setSelectedBookingType] = useState<
-		'general' | 'prebook'
+		'general' | 'schedule'
 	>('general');
 	const [startTime, setStartTime] = useState('');
 	const [endTime, setEndTime] = useState('');
@@ -80,22 +80,20 @@ const BookingModal = ({
 						{/* Booking Type Selection */}
 						<div className='flex mb-6 rounded-md overflow-hidden border border-gray-300'>
 							<button
-								className={`flex-1 py-3 px-4 text-center font-medium transition-colors focus:outline-none ${
-									selectedBookingType === 'general'
-										? 'bg-blue-500 text-white'
-										: 'bg-white text-gray-700 hover:bg-gray-100'
-								}`}
+								className={`flex-1 py-3 px-4 text-center font-medium transition-colors focus:outline-none ${selectedBookingType === 'general'
+									? 'bg-blue-500 text-white'
+									: 'bg-white text-gray-700 hover:bg-gray-100'
+									}`}
 								onClick={() => setSelectedBookingType('general')}
 							>
 								General Service
 							</button>
 							<button
-								className={`flex-1 py-3 px-4 text-center font-medium transition-colors focus:outline-none ${
-									selectedBookingType === 'prebook'
-										? 'bg-blue-500 text-white'
-										: 'bg-white text-gray-700 hover:bg-gray-100'
-								}`}
-								onClick={() => setSelectedBookingType('prebook')}
+								className={`flex-1 py-3 px-4 text-center font-medium transition-colors focus:outline-none ${selectedBookingType === 'schedule'
+									? 'bg-blue-500 text-white'
+									: 'bg-white text-gray-700 hover:bg-gray-100'
+									}`}
+								onClick={() => setSelectedBookingType('schedule')}
 							>
 								Pre-Booked Service
 							</button>
@@ -156,7 +154,7 @@ const BookingModal = ({
 						)}
 
 						{/* Pre-Booked Service Details */}
-						{selectedBookingType === 'prebook' && (
+						{selectedBookingType === "schedule" && (
 							<div className='mb-6'>
 								<h4 className='text-lg font-bold mb-4'>Select Date & Time</h4>
 
@@ -206,7 +204,7 @@ const BookingModal = ({
 						<button
 							onClick={() => {
 								if (isAuthenticated) {
-									onAddToCart?.();
+									onAddToCart(selectedBookingType, selectedDate);
 								} else {
 									onOpenSignUp?.();
 								}
