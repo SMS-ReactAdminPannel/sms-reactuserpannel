@@ -179,6 +179,7 @@ export default function SparePartsCart() {
 		try {
 			const payload = {
 				cartId: serviceId,
+				requestType:"schedule"
 			};
 			const response = await postBookingService(payload);
 			if (response) {
