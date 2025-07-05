@@ -8,6 +8,9 @@ interface BookingModalProps {
 	isOpen: boolean;
 	onClose: () => void;
 	selectedService?: {
+		id: string;
+		title?: string;
+		price?: number;
 		duration?: string;
 	};
 	isAuthenticated?: boolean;
@@ -32,25 +35,40 @@ const BookingModal = ({
 
 	if (!isOpen) return null;
 
-	return (
-		<div className='fixed inset-0 z-999 overflow-y-auto'>
-			<div className='flex items-center justify-center mt-24 h-[90vh] pt-4 px-4 pb-20 text-center sm:block sm:p-0 overflow-y-auto'>
-				{/* Background overlay */}
-				<div className='fixed inset-0 transition-opacity' aria-hidden='true'>
-					<div
-						className='absolute inset-0 bg-gray-500 opacity-15'
-						onClick={onClose}
-					></div>
-				</div>
+	const handleModalClick = (e: React.MouseEvent) => {
+		e.stopPropagation();
+	};
 
-				{/* Modal container */}
-				<div className='inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full'>
+	return (
+		<div className='fixed inset-0 z-[1000] overflow-y-auto'>
+			{/* Backdrop - click to close */}
+			<div
+				className='fixed inset-0 bg-black bg-opacity-50 transition-opacity'
+				onClick={onClose}
+			></div>
+
+			{/* Modal container */}
+			<div className='flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0'>
+				{/* Center the modal */}
+				<span
+					className='hidden sm:inline-block sm:align-middle sm:h-screen'
+					aria-hidden='true'
+				>
+					&#8203;
+				</span>
+
+				{/* Modal content */}
+				<div
+					className='inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg w-full relative'
+					onClick={(e) => e.stopPropagation()}
+				>
+					{/* Modal header */}
 					<div className='bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4'>
 						{/* Header */}
 						<div className='flex items-center mb-4'>
 							<button
 								onClick={onClose}
-								className='mr-2 text-gray-700 hover:text-gray-900'
+								className='mr-2 text-gray-700 hover:text-gray-900 focus:outline-none'
 							>
 								<IonIcon icon={arrowBack} className='text-2xl' />
 							</button>
@@ -62,7 +80,7 @@ const BookingModal = ({
 						{/* Booking Type Selection */}
 						<div className='flex mb-6 rounded-md overflow-hidden border border-gray-300'>
 							<button
-								className={`flex-1 py-3 px-4 text-center font-medium transition-colors ${
+								className={`flex-1 py-3 px-4 text-center font-medium transition-colors focus:outline-none ${
 									selectedBookingType === 'general'
 										? 'bg-blue-500 text-white'
 										: 'bg-white text-gray-700 hover:bg-gray-100'
@@ -72,7 +90,7 @@ const BookingModal = ({
 								General Service
 							</button>
 							<button
-								className={`flex-1 py-3 px-4 text-center font-medium transition-colors ${
+								className={`flex-1 py-3 px-4 text-center font-medium transition-colors focus:outline-none ${
 									selectedBookingType === 'prebook'
 										? 'bg-blue-500 text-white'
 										: 'bg-white text-gray-700 hover:bg-gray-100'
@@ -186,8 +204,14 @@ const BookingModal = ({
 
 						{/* Book Service Button */}
 						<button
-							onClick={isAuthenticated ? onAddToCart : onOpenSignUp}
-							className='w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded transition-colors'
+							onClick={() => {
+								if (isAuthenticated) {
+									onAddToCart?.();
+								} else {
+									onOpenSignUp?.();
+								}
+							}}
+							className='w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-4 rounded transition-colors mt-4'
 						>
 							{selectedBookingType === 'general'
 								? 'BOOK NOW'

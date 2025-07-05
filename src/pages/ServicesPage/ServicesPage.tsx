@@ -266,32 +266,39 @@ const ServicesPage: React.FC = () => {
 	const handleAddToCart = async (serviceId: string) => {
 		if (!isAuthenticated) {
 			setShowLoginModal(true);
-		} else if (isAuthenticated) {
-			const packageToAdd = selectedPackage.find(
-				(p) => p.packageId === serviceId
-			);
-
+		} else {
+			setSelectedPackageId(serviceId);
 			setIsModalOpen(true);
-			if (packageToAdd) {
-				setCart([...cart, packageToAdd]);
-				try {
-					const data = {
-						service: serviceId,
-						type: 'service',
-					};
-					const response = await postSparePartsData(data);
-					if (response) {
-						setShowCartNotification(true);
-						setTimeout(() => setShowCartNotification(false), 3000);
-						if ((window as any).refreshCartCount) {
-							(window as any).refreshCartCount();
-						}
+		}
+	};
+
+	const handleConfirmBooking = async () => {
+		if (!selectedPackageId) return;
+
+		const packageToAdd = selectedPackage.find(
+			(p) => p.packageId === selectedPackageId
+		);
+
+		if (packageToAdd) {
+			setCart([...cart, packageToAdd]);
+			try {
+				const data = {
+					service: selectedPackageId,
+					type: 'service',
+				};
+				const response = await postSparePartsData(data);
+				if (response) {
+					setShowCartNotification(true);
+					setTimeout(() => setShowCartNotification(false), 3000);
+					if ((window as any).refreshCartCount) {
+						(window as any).refreshCartCount();
 					}
-				} catch (error) {
-					console.log(error);
 				}
+			} catch (error) {
+				console.log(error);
 			}
 		}
+		setIsModalOpen(false);
 	};
 
 	const handleRemoveFromCart = (serviceId: string) => {
@@ -320,11 +327,22 @@ const ServicesPage: React.FC = () => {
 		}));
 	};
 
+	// const handleAddToCart = () => {
+	// 	console.log('Adding to cart...');
+	// 	// Your add to cart logic here
+	// 	setIsModalOpen(false);
+	// };
+
+	const handleOpenSignUp = () => {
+		console.log('Opening sign up...');
+		// Your sign up logic here
+	};
+
 	const [showForm, setShowForm] = useState<boolean>(false);
 	const currentContent = activeNavItem ? contentSections[activeNavItem] : null;
 
 	return (
-		<div className='min-h-screen bg-gray-50 flex flex-start'>
+		<div className='min-h-screen bg-gray-50 flex flex-start relative'>
 			{/* Vertical Left Sidebar Navigation */}
 			<div className='flex min-h-screen bg-gradient-to-br from-gray-50 to-gray-100'>
 				{/* Left Sidebar */}
@@ -652,17 +670,6 @@ const ServicesPage: React.FC = () => {
 				</div>
 			)}
 
-			<div>
-				<BookingModal
-					isOpen={isModalOpen}
-					onClose={() => setIsModalOpen(false)}
-					selectedService={{ duration: '2 hours' }}
-					isAuthenticated={true}
-					onAddToCart={() => console.log('Add to cart')}
-					onOpenSignUp={() => console.log('Open sign up')}
-				/>
-			</div>
-
 			{/* Welcome Popup */}
 			<div>
 				{showWelcomePopup && (
@@ -677,6 +684,29 @@ const ServicesPage: React.FC = () => {
 				isOpen={showLoginModal}
 				onClose={() => setShowLoginModal(false)}
 			/>
+			{/* Booking Modal */}
+
+			{isModalOpen && selectedPackageId && (
+				<BookingModal
+					isOpen={isModalOpen}
+					onClose={() => setIsModalOpen(false)}
+					selectedService={{
+						id: selectedPackageId,
+						duration: '2 hours',
+						title: currentContent?.packages.find(
+							(p) => p.id === selectedPackageId
+						)?.title,
+						price: Number(
+							currentContent?.packages
+								.find((p) => p.id === selectedPackageId)
+								?.discountPrice.replace('₹', '') || 0
+						),
+					}}
+					isAuthenticated={isAuthenticated}
+					onAddToCart={handleConfirmBooking}
+					onOpenSignUp={() => setShowLoginModal(true)}
+				/>
+			)}
 		</div>
 	);
 };
