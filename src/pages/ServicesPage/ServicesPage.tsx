@@ -333,10 +333,10 @@ const ServicesPage: React.FC = () => {
 	// 	setIsModalOpen(false);
 	// };
 
-	const handleOpenSignUp = () => {
-		console.log('Opening sign up...');
-		// Your sign up logic here
-	};
+	// const handleOpenSignUp = () => {
+	// 	console.log('Opening sign up...');
+	// 	// Your sign up logic here
+	// };
 
 	const [showForm, setShowForm] = useState<boolean>(false);
 	const currentContent = activeNavItem ? contentSections[activeNavItem] : null;
