@@ -146,7 +146,9 @@ const BookingModal = ({
 									<label className='block font-medium mb-2'>Select Date:</label>
 									<DatePicker
 										selected={selectedDate}
-										onChange={(date: Date) => setSelectedDate(date)}
+										onChange={(date: Date | null) => {
+											if (date) setSelectedDate(date);
+										}}
 										minDate={new Date()}
 										className='w-full border border-gray-300 rounded p-2'
 									/>
