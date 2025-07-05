@@ -316,8 +316,8 @@ const OrdersPage: React.FC = () => {
 	// const [isLoading, setIsLoading] = useState(false);
 	const { isAuthenticated } = useAuth();
 
-	isAuthenticated &&
-		useEffect(() => {
+	useEffect(() => {
+		if (isAuthenticated) {
 			const fetchOrders = async () => {
 				try {
 					const response: any = await getBookingAll({});
@@ -361,7 +361,8 @@ const OrdersPage: React.FC = () => {
 			};
 
 			fetchOrders();
-		}, []);
+		}
+	}, [isAuthenticated]);
 
 	const filteredOrders = useMemo(() => {
 		return orders
@@ -402,9 +403,7 @@ const OrdersPage: React.FC = () => {
 	// }
 
 	return (
-		<div
-			className='min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100'
-		>
+		<div className='min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100'>
 			<div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
 				{/* Header */}
 				<div className='mb-8'>
