@@ -101,7 +101,7 @@ export default function SparePartsCart() {
 			const cartData = response?.data?.data;
 			if (!Array.isArray(cartData)) return;
 			const spareEntry = cartData.find((item) => item.type === 'spare');
-			const cartId = spareEntry._id;
+			const cartId = spareEntry?._id;
 			setCartId(cartId);
 
 			if (spareEntry?.products) {
@@ -139,6 +139,8 @@ export default function SparePartsCart() {
 						discount: 0,
 					})
 				);
+
+				console.log("Map" ,mappedServices)
 				setServices(mappedServices);
 			}
 		} catch (error) {
@@ -179,7 +181,7 @@ export default function SparePartsCart() {
 		try {
 			const payload = {
 				cartId: serviceId,
-				requestType:"schedule"
+				// requestType:"scheduled"
 			};
 			const response = await postBookingService(payload);
 			if (response) {
