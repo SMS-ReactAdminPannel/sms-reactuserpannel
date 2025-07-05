@@ -14,7 +14,7 @@ interface BookingModalProps {
 		duration?: string;
 	};
 	isAuthenticated?: boolean;
-	onAddToCart?: (requestType: string, schedule_date: typeof Date) => void;
+	onAddToCart?: (requestType: string, schedule_date: Date) => void;
 	onOpenSignUp?: () => void;
 }
 
@@ -204,7 +204,7 @@ const BookingModal = ({
 						<button
 							onClick={() => {
 								if (isAuthenticated) {
-									onAddToCart(selectedBookingType, selectedDate);
+									onAddToCart?.(selectedBookingType, selectedDate);
 								} else {
 									onOpenSignUp?.();
 								}

@@ -273,7 +273,7 @@ const ServicesPage: React.FC = () => {
 		}
 	};
 
-	const handleConfirmBooking = async (requestType: string, scheduleDate: typeof Date) => {
+	const handleConfirmBooking = async (requestType: string, schedule_date: Date) => {
 		if (!selectedPackageId) return;
 
 		const packageToAdd = selectedPackage.find(
@@ -287,7 +287,7 @@ const ServicesPage: React.FC = () => {
 					service: selectedPackageId,
 					type: 'service',
 					requestType,
-					schedule_date: scheduleDate,
+					schedule_date: schedule_date,
 				};
 				const response = await postSparePartsData(data);
 				if (response) {
