@@ -35,9 +35,9 @@ const BookingModal = ({
 
 	if (!isOpen) return null;
 
-	const handleModalClick = (e: React.MouseEvent) => {
-		e.stopPropagation();
-	};
+	// const handleModalClick = (e: React.MouseEvent) => {
+	// 	e.stopPropagation();
+	// };
 
 	return (
 		<div className='fixed inset-0 z-[1000] overflow-y-auto'>
