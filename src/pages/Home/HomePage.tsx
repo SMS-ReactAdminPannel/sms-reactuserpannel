@@ -199,35 +199,40 @@ const HomePage: React.FC = () => {
 							></span> */}
 						</span>
 					</h1>
-
-					<div className='grid md:grid-cols-4 sm:grid-cols-2 gap-4 justify-items-center'>
-						{serviceData.map((service) => (
-							<Link
-								to='/services'
-								key={service.id}
-								onClick={() =>
-									handleServiceClick(service.id, service.category_name)
-								}
-								className={`bg-[#d8e1ef] rounded-lg md:h-56 sm:h-auto w-60 p-2 shadow-md hover:shadow-lg transition-shadow ease-in duration-300 border-1 border-b-2 cursor-pointer transform hover:scale-102 border-[#0050A5]`}
-							>
-								<div className='flex flex-col items-center justify-center h-full gap-1'>
-									<div className='text-[#0050A5] flex justify-center items-center h-32 w-full'>
-										<img
-											className='w-full h-32 rounded'
-											src={serviceImg}
-											alt={service.category_name}
-										/>
+					{serviceData?.length !== 0 ? (
+						<div className='grid md:grid-cols-4 sm:grid-cols-2 gap-4 justify-items-center'>
+							{serviceData?.map((service) => (
+								<Link
+									to='/services'
+									key={service?.id}
+									onClick={() =>
+										handleServiceClick(service?.id, service?.category_name)
+									}
+									className={`bg-[#d8e1ef] rounded-lg md:h-56 sm:h-auto w-60 p-2 shadow-md hover:shadow-lg transition-shadow ease-in duration-300 border-1 border-b-2 cursor-pointer transform hover:scale-102 border-[#0050A5]`}
+								>
+									<div className='flex flex-col items-center justify-center h-full gap-1'>
+										<div className='text-[#0050A5] flex justify-center items-center h-32 w-full'>
+											<img
+												className='w-full h-32 rounded'
+												src={serviceImg}
+												alt={service?.category_name}
+											/>
+										</div>
+										<h3
+											className='text-center my-auto text-[#0050A5]'
+											style={{ ...FONTS.sub_heading2, fontWeight: 500 }}
+										>
+											{service?.category_name}
+										</h3>
 									</div>
-									<h3
-										className='text-center my-auto text-[#0050A5]'
-										style={{ ...FONTS.sub_heading2, fontWeight: 500 }}
-									>
-										{service.category_name}
-									</h3>
-								</div>
-							</Link>
-						))}
-					</div>
+								</Link>
+							))}
+						</div>
+					) : (
+						<div className='flex justify-center items-center'>
+							<p className='text-lg font-semibold'>No Services available</p>
+						</div>
+					)}
 				</div>
 				<div className={`h-[90vh] flex justify-center items-center`}>
 					<div className='mx-24'>

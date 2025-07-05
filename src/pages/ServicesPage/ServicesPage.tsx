@@ -272,25 +272,25 @@ const ServicesPage: React.FC = () => {
 			);
 
 			setIsModalOpen(true);
-			if (packageToAdd) {
-				setCart([...cart, packageToAdd]);
-				try {
-					const data = {
-						service: serviceId,
-						type: 'service',
-					};
-					const response = await postSparePartsData(data);
-					if (response) {
-						setShowCartNotification(true);
-						setTimeout(() => setShowCartNotification(false), 3000);
-						if ((window as any).refreshCartCount) {
-							(window as any).refreshCartCount();
-						}
-					}
-				} catch (error) {
-					console.log(error);
-				}
-			}
+			// if (packageToAdd) {
+			// 	setCart([...cart, packageToAdd]);
+			// 	try {
+			// 		const data = {
+			// 			service: serviceId,
+			// 			type: 'service',
+			// 		};
+			// 		const response = await postSparePartsData(data);
+			// 		if (response) {
+			// 			setShowCartNotification(true);
+			// 			setTimeout(() => setShowCartNotification(false), 3000);
+			// 			if ((window as any).refreshCartCount) {
+			// 				(window as any).refreshCartCount();
+			// 			}
+			// 		}
+			// 	} catch (error) {
+			// 		console.log(error);
+			// 	}
+			// }
 		}
 	};
 
@@ -652,17 +652,6 @@ const ServicesPage: React.FC = () => {
 				</div>
 			)}
 
-			<div>
-				<BookingModal
-					isOpen={isModalOpen}
-					onClose={() => setIsModalOpen(false)}
-					selectedService={{ duration: '2 hours' }}
-					isAuthenticated={true}
-					onAddToCart={() => console.log('Add to cart')}
-					onOpenSignUp={() => console.log('Open sign up')}
-				/>
-			</div>
-
 			{/* Welcome Popup */}
 			<div>
 				{showWelcomePopup && (
@@ -677,6 +666,16 @@ const ServicesPage: React.FC = () => {
 				isOpen={showLoginModal}
 				onClose={() => setShowLoginModal(false)}
 			/>
+			<div>
+				<BookingModal
+					isOpen={isModalOpen}
+					onClose={() => setIsModalOpen(false)}
+					selectedService={{ duration: '2 hours' }}
+					isAuthenticated={true}
+					onAddToCart={() => console.log('Add to cart')}
+					onOpenSignUp={() => console.log('Open sign up')}
+				/>
+			</div>
 		</div>
 	);
 };

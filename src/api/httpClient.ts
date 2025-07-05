@@ -1,7 +1,7 @@
 import axios from 'axios';
 
-// const backEndUrl: string = 'https://sms-backend.onrender.com/api/v1';
-const backEndUrl: string = 'http://192.168.1.16:3000';
+const backEndUrl: string = 'https://sms-backend.onrender.com/api/v1';
+// const backEndUrl: string = 'http://192.168.1.16:3000';
 
 const Axios = axios.create({
 	baseURL: backEndUrl,
