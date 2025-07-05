@@ -100,7 +100,7 @@ export default function SparePartsCart() {
 			}
 			const cartData = response?.data?.data;
 			if (!Array.isArray(cartData)) return;
-			const spareEntry = cartData.find((item) => item.type !== 'spare');
+			const spareEntry = cartData.find((item) => item.type === 'spare');
 			console.log(spareEntry, "checing spare enter")
 			const cartId = spareEntry?._id;
 			setCartId(cartId);
@@ -108,7 +108,7 @@ export default function SparePartsCart() {
 			if (spareEntry?.products) {
 				const spares = spareEntry.products.map(
 					(product: any): spare => ({
-						_id: product._id || 0,
+						_id: product?._id || "",
 						productName: product.productId?.productName || 'Unknown',
 						price: Number(product.price) || 0,
 						brand: product.productId?.brand || 'Generic',
@@ -124,14 +124,15 @@ export default function SparePartsCart() {
 				setBooks(spares);
 			}
 
-			const serviceEntry = cartData.find((item) => item.type !== 'service');
-			const serviceId = serviceEntry._id;
+			const serviceEntry = cartData.find((item) => item.type === 'service');
+			const serviceId = serviceEntry?._id;
+			console.log(serviceEntry, "checing service enter")
 			setServiceCartId(serviceId);
 
 			if (serviceEntry?.services) {
 				const mappedServices = serviceEntry.services.map(
 					(service: any): service => ({
-						_id: service._id || '0',
+						_id: service?._id || '0',
 						service_name: service.service_name || 'Unknown',
 						price: Number(service.price) || 0,
 						description: service.description || '',
@@ -157,8 +158,6 @@ export default function SparePartsCart() {
 			setActiveTab('ServiceBookingPage');
 		}
 	}, [isAuthenticated]);
-
-	console.log(books, services, "checniokngoiwaehgh bhob")
 
 
 	const placeOrder = async () => {
