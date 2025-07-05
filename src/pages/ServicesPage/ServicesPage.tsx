@@ -17,7 +17,7 @@ import { useNavigate } from 'react-router-dom';
 import serviceImg from '../../assets/serviceimages/generalservice.png';
 import AutoPopup from './RightSidePopup';
 import { getAllServiceCategories } from '../../features/ServicesPage/service';
-import { postSparePartsData } from '../../features/spareparts';
+// import { postSparePartsData } from '../../features/spareparts';
 import { FONTS } from '../../constants/constant';
 import { useAuth } from '../auth/AuthContext';
 import LoginPromptModal from '../../components/Authentication/LoginPromptModal';
@@ -129,7 +129,7 @@ const ServicesPage: React.FC = () => {
 		[key: string]: boolean;
 	}>({});
 	const [cart, setCart] = useState<SelectedPackageInfo[]>([]);
-	const [showCartNotification, setShowCartNotification] = useState(false);
+	const [showCartNotification] = useState(false);
 	const [showWelcomePopup, setShowWelcomePopup] = useState(true);
 	const [serviceCategories, setServiceCategories] = useState<
 		ApiServiceCategory[]
@@ -267,11 +267,8 @@ const ServicesPage: React.FC = () => {
 		if (!isAuthenticated) {
 			setShowLoginModal(true);
 		} else if (isAuthenticated) {
-			const packageToAdd = selectedPackage.find(
-				(p) => p.packageId === serviceId
-			);
-
 			setIsModalOpen(true);
+			console.log('Adding service to cart:', serviceId);
 			// if (packageToAdd) {
 			// 	setCart([...cart, packageToAdd]);
 			// 	try {
