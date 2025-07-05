@@ -4,6 +4,7 @@ import { Wrench, Car } from 'lucide-react';
 import {
 	booking_cart,
 	deleteBookingCartProduct,
+	deleteBookingCartService,
 	postBookingProduct,
 } from '../../features/BookingCart/service';
 import { toast } from 'react-toastify';
@@ -197,12 +198,20 @@ export default function SparePartsCart() {
 	};
 
 	const handleDelete = async (id: number) => {
-		// setBooks((prev) => prev.filter((p) => p._id !== id));
-		// setServices((prev) => prev.filter((s) => s._id !== id));
-		const response = await deleteBookingCartProduct({ cartId, productId: id });
-		if (response) {
-			console.log('Product removed successfully', response);
-			toast.success('Product removed successfully', { autoClose: 2000 });
+		if (activeTab === 'service') {
+			const response = await deleteBookingCartProduct({ cartId, productId: id });
+			if (response) {
+				console.log('Product removed successfully', response);
+				toast.success('Product removed successfully', { autoClose: 2000 });
+				books_valid();
+			}
+		} else if (activeTab === 'ServiceBookingPage') {
+			const response = await deleteBookingCartService({ cartId: serviceId, serviceId: id });
+			if (response) {
+				console.log('Service removed successfully', response);
+				toast.success('Service removed successfully', { autoClose: 2000 });
+				books_valid();
+			}
 		}
 	};
 

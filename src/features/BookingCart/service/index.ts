@@ -36,3 +36,15 @@ export const deleteBookingCartProduct = async (params: any) => {
 		throw error;
 	}
 };
+
+export const deleteBookingCartService = async (params: any) => {
+	try {
+		const response = await new Client().user.booking_cart.deleteService(params);
+		if (response) {
+			return response;
+		}
+	} catch (error) {
+		console.error('Error in deleteBookingService:', error);
+		throw error;
+	}
+};
