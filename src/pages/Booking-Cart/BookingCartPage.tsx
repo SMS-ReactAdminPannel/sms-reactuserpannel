@@ -124,7 +124,7 @@ export default function SparePartsCart() {
 			}
 
 			const serviceEntry = cartData.find((item) => item.type === 'service');
-			const serviceId = serviceEntry._id;
+			const serviceId = serviceEntry?._id;
 			setServiceCartId(serviceId);
 
 			if (serviceEntry?.services) {
