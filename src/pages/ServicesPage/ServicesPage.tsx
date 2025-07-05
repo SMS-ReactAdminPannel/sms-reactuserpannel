@@ -273,7 +273,7 @@ const ServicesPage: React.FC = () => {
 		}
 	};
 
-	const handleConfirmBooking = async () => {
+	const handleConfirmBooking = async (requestType: string, scheduleDate: typeof Date) => {
 		if (!selectedPackageId) return;
 
 		const packageToAdd = selectedPackage.find(
@@ -286,6 +286,8 @@ const ServicesPage: React.FC = () => {
 				const data = {
 					service: selectedPackageId,
 					type: 'service',
+					requestType,
+					schedule_date: scheduleDate,
 				};
 				const response = await postSparePartsData(data);
 				if (response) {
@@ -382,8 +384,8 @@ const ServicesPage: React.FC = () => {
 										key={index}
 										onClick={() => handleNavClick(item.name)}
 										className={`group relative flex items-center px-4 py-4 rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-[1.02] ${activeNavItem === item.name
-												? 'bg-gradient-to-r from-red-50 to-red-100 text-[#0050A5] shadow-lg shadow-[#0050A5]/20 border border-[#0050A5]'
-												: 'text-gray-600 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-[#0050A5] hover:shadow-md'
+											? 'bg-gradient-to-r from-red-50 to-red-100 text-[#0050A5] shadow-lg shadow-[#0050A5]/20 border border-[#0050A5]'
+											: 'text-gray-600 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-[#0050A5] hover:shadow-md'
 											} ${!item.isActive ? 'opacity-70' : ''}`}
 									>
 										{activeNavItem === item.name && (
@@ -392,8 +394,8 @@ const ServicesPage: React.FC = () => {
 
 										<div
 											className={`mr-4 flex-shrink-0 p-2 rounded-lg transition-all duration-300 ${activeNavItem === item.name
-													? 'bg-[#BED0EC] text-[#0050A5]-600'
-													: 'bg-gray-100 text-gray-500 group-hover:bg-[#BED0EC] group-hover:text-[#0050A5]]'
+												? 'bg-[#BED0EC] text-[#0050A5]-600'
+												: 'bg-gray-100 text-gray-500 group-hover:bg-[#BED0EC] group-hover:text-[#0050A5]]'
 												}`}
 										>
 											{item.icon}
@@ -405,8 +407,8 @@ const ServicesPage: React.FC = () => {
 
 										<div
 											className={`ml-auto opacity-0 transform translate-x-2 transition-all duration-300 ${activeNavItem === item.name
-													? 'opacity-100 translate-x-0'
-													: 'group-hover:opacity-100 group-hover:translate-x-0'
+												? 'opacity-100 translate-x-0'
+												: 'group-hover:opacity-100 group-hover:translate-x-0'
 												}`}
 										>
 											<svg
