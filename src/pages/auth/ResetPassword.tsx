@@ -15,12 +15,11 @@ type ResetFormData = {
 
 const ResetPassword = () => {
 	const [step, setStep] = useState<'email' | 'otp' | 'reset'>('email');
-	const [otpDigits, setOtpDigits] = useState(Array(6).fill(''));
 	const [AuthToken, setAuthToken] = useState('');
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+	const [otpDigits, setOtpDigits] = useState(Array(6).fill(''));
 	const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
-	// const [isLoading, setIsLoading] = useState(false);
 	const navigate = useNavigate();
 	const {
 		register,

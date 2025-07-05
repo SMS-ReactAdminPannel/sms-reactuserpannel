@@ -71,12 +71,12 @@ export const Navbar: React.FC = () => {
 			const response: any = await booking_cart({});
 			if (response?.data?.data) {
 				const data = response.data.data;
-				const count = (data[0]?.services?.length || 0) + 
-							  (data[1]?.services?.length || 0) + 
-							  (data[0]?.products?.length || 0) + 
-							  (data[1]?.products?.length || 0);
+				const count =
+					(data[0]?.services?.length || 0) +
+					(data[1]?.services?.length || 0) +
+					(data[0]?.products?.length || 0) +
+					(data[1]?.products?.length || 0);
 				setCartCount(count);
-				console.log('Cart count:', count);
 			}
 		} catch (error) {
 			console.log('Cart count error:', error);
@@ -401,13 +401,12 @@ export const Navbar: React.FC = () => {
 					) : (
 						<>
 							<div className='flex gap-2'>
-								<button 
+								<button
 									className='bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg transition-all duration-300 hover:scale-105'
-									onClick={() => navigate('/signup')}
+									onClick={() => navigate('/login')}
 								>
 									Login
 								</button>
-								
 							</div>
 						</>
 					)}
@@ -421,7 +420,12 @@ export const Navbar: React.FC = () => {
 					<NavLink
 						key={idx}
 						to={item.link}
-						style={{ ...FONTS.paragraph, fontWeight: 500, fontSize: '16px', fontFamily: 'Montserrat' }}
+						style={{
+							...FONTS.paragraph,
+							fontWeight: 500,
+							fontSize: '16px',
+							fontFamily: 'Montserrat',
+						}}
 						className={({ isActive }) =>
 							`relative pb-1 text-md font-semibold transition-all duration-300 ease-in-out whitespace-nowrap
 	${

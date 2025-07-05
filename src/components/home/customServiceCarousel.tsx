@@ -78,7 +78,7 @@ const CustomServicesGrid: React.FC = () => {
 				{spareParts.map((item) => (
 					<div
 						key={item._id}
-						className='bg-[#BED0EC] rounded-lg p-2 shadow-3xl hover:shadow-4xl hover:scale-102 transition-transform duration-300 text-center text-red-900 relative cursor-pointer'
+						className='bg-[#d8e1ef] rounded-lg p-2 shadow-3xl hover:shadow-4xl hover:scale-102 transition-transform duration-300 text-center text-red-900 relative cursor-pointer'
 						onClick={() => navigate('/spare-parts')}
 					>
 						<div className='w-full h-[125px] bg-white flex items-center justify-center overflow-hidden rounded'>

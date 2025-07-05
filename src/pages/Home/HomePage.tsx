@@ -22,10 +22,7 @@ import { RiCustomerService2Fill } from 'react-icons/ri';
 import MustCare from '../../components/bookings/BookingsPage';
 import { COLORS, FONTS } from '../../constants/constant';
 import React, { useState, useRef, useEffect } from 'react';
-import {
-	
-	FaPhoneAlt,
-} from 'react-icons/fa';
+import { FaPhoneAlt } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import PromoCarousel from '../../components/home/offerCard';
 import CustomServicesCarousel from '../../components/home/customServiceCarousel';
@@ -46,10 +43,7 @@ import { FaFacebook } from 'react-icons/fa'; //facebook
 import { FaYoutube } from 'react-icons/fa'; //youtube
 import { SiIndeed } from 'react-icons/si'; //indeed
 import { BiLogoPlayStore } from 'react-icons/bi'; //play store
-import {
-	getAllServiceCategories,
-	
-} from '../../features/ServicesPage/service';
+import { getAllServiceCategories } from '../../features/ServicesPage/service';
 import { useNavigate } from 'react-router-dom';
 
 const imageUrls = [image1, image2, image3, image4];
@@ -120,10 +114,10 @@ const HomePage: React.FC = () => {
 			// setIsLoading(false);
 		}
 	};
-	
+
 	const fetchServiceData = async () => {
 		try {
-			const response = await getAllServiceCategories() as ApiResponse;
+			const response = (await getAllServiceCategories()) as ApiResponse;
 			if (response && response.data && response.data.data) {
 				setServiceData(response.data.data);
 				//console.log(response.data.data);
@@ -188,7 +182,7 @@ const HomePage: React.FC = () => {
 			</div>
 
 			<div className='text-[#0050A5]'>
-				<div className='px-24 h-auto bg-white py-24'>
+				<div className='px-24 h-auto bg-white py-24 bg-[#BED0EC]'>
 					<h1
 						ref={servicesTitle.elementRef}
 						className='text-2xl pb-16 text-[#0050A5] text-center -mt-6'
@@ -206,7 +200,7 @@ const HomePage: React.FC = () => {
 						</span>
 					</h1>
 
-					<div className='grid grid-cols-3 gap-6 max-w-6xl mx-auto'>
+					<div className='grid md:grid-cols-4 sm:grid-cols-2 gap-4 justify-items-center'>
 						{serviceData.map((service) => (
 							<Link
 								to='/services'
@@ -214,19 +208,19 @@ const HomePage: React.FC = () => {
 								onClick={() =>
 									handleServiceClick(service.id, service.category_name)
 								}
-								className={`bg-[#fff] rounded-lg p-2 shadow-md hover:shadow-lg transition-shadow ease-in duration-300 border-l-2 border-b-2 cursor-pointer transform hover:scale-102  border-[#0050A5]`}
+								className={`bg-[#d8e1ef] rounded-lg md:h-56 sm:h-auto w-60 p-2 shadow-md hover:shadow-lg transition-shadow ease-in duration-300 border-1 border-b-2 cursor-pointer transform hover:scale-102 border-[#0050A5]`}
 							>
-								<div className='flex mx-4 gap-3'>
-									<div className='text-[#0050A5] flex justify-center'>
+								<div className='flex flex-col items-center justify-center h-full gap-1'>
+									<div className='text-[#0050A5] flex justify-center items-center h-32 w-full'>
 										<img
-											className='w-[100px] h-[70px] m-2 rounded'
+											className='w-full h-32 rounded'
 											src={serviceImg}
 											alt={service.category_name}
 										/>
 									</div>
 									<h3
 										className='text-center my-auto text-[#0050A5]'
-										style={{ ...FONTS.sub_heading1, fontWeight: 500 }}
+										style={{ ...FONTS.sub_heading2, fontWeight: 500 }}
 									>
 										{service.category_name}
 									</h3>
@@ -235,15 +229,15 @@ const HomePage: React.FC = () => {
 						))}
 					</div>
 				</div>
-				<div
-					className={`h-[90vh] flex justify-center items-center`}
-				>
+				<div className={`h-[90vh] flex justify-center items-center`}>
 					<div className='mx-24'>
 						<PromoCarousel />
 					</div>
 				</div>
-				<div className='mx-24 '>
-					<CustomServicesCarousel />
+				<div className='bg-[#BED0EC]'>
+					<div className='mx-24'>
+						<CustomServicesCarousel />
+					</div>
 				</div>
 				<div className='mt-4 bg-white'>
 					<div className='h-[95vh]'>
@@ -475,7 +469,7 @@ const HomePage: React.FC = () => {
 
 						<div className='flex justify-center gap-10 mt-4 mb-10 flex-wrap'>
 							<div className='flex flex-col items-center text-center bg-[#BED0EC] shadow-md p-6 rounded-lg w-1/5 h-1/2 cursor-pointer tranform hover:scale-103 border-2 border-[#0050A5]'>
-								<GrWorkshop size={32}  />
+								<GrWorkshop size={32} />
 								<p
 									className='mt-3 '
 									style={{
@@ -597,14 +591,14 @@ const HomePage: React.FC = () => {
 				</div>
 
 				{/* FOOTER START */}
-				<footer className={`h-auto  pt-2 pl-28`}>
+				<footer className={`h-auto pt-2 pl-28`}>
 					<div className='grid grid-cols-4 gap-6 px-20'>
 						{/* Image Card - Full Height (No border) */}
 						<div className='col-span-1 p-4 rounded h-full border-0 -ml-28'>
 							<img
 								src={appimage}
 								alt='appimage'
-								className='p-2  h-[60px] w-[260px] rounded'
+								className='p-2 h-[60px] w-[260px] rounded'
 							/>
 						</div>
 
@@ -623,7 +617,7 @@ const HomePage: React.FC = () => {
 									{/* First Item */}
 									<li className='flex items-center py-1 text-[#0050A5] hover:underline cursor-pointer'>
 										<BsTruck className=' text-xl mr-2' />
-										<span  style={{ ...FONTS.paragraph }}>
+										<span style={{ ...FONTS.paragraph }}>
 											Free Shipping & Delivery
 										</span>
 									</li>
@@ -716,7 +710,7 @@ const HomePage: React.FC = () => {
 									</Link>
 								</ol>
 							</div>
-							<div className='w-[900px]'>
+							<div className='w-[900px] mr-10'>
 								<div className='grid grid-cols-1 gap-2 px-6'>
 									<div className=''>
 										<hr className='w-full border-0.5 border-[#0050A5]' />
@@ -787,32 +781,31 @@ const HomePage: React.FC = () => {
 							</div>
 						</div>
 					</div>
-
 				</footer>
-					{/* Footer Bottom */}
-					<div className='px-24 py-4 border-t border-[#0050A5] bg-[#BED0EC]'>
-						<div className='flex justify-between items-center text-[#0050A5]'>
-							<p style={{ ...FONTS.paragraph, fontSize: '14px' }}>
-								© 2024 YM Services. All rights reserved.
-							</p>
-							<div className='flex gap-4'>
-								<Link 
-									to='/privacy-policy' 
-									className='hover:underline'
-									style={{ ...FONTS.paragraph, fontSize: '14px' }}
-								>
-									Privacy Policy
-								</Link>
-								<Link 
-									to='/terms-conditions' 
-									className='hover:underline'
-									style={{ ...FONTS.paragraph, fontSize: '14px' }}
-								>
-									Terms & Conditions
-								</Link>
-							</div>
+				{/* Footer Bottom */}
+				<div className='px-24 py-4 border-t border-[#0050A5] bg-[#BED0EC]'>
+					<div className='flex justify-between items-center text-[#0050A5]'>
+						<p style={{ ...FONTS.paragraph, fontSize: '14px' }}>
+							© 2024 YM Services. All rights reserved.
+						</p>
+						<div className='flex gap-4'>
+							<Link
+								to='/privacy-policy'
+								className='hover:underline'
+								style={{ ...FONTS.paragraph, fontSize: '14px' }}
+							>
+								Privacy Policy
+							</Link>
+							<Link
+								to='/terms-conditions'
+								className='hover:underline'
+								style={{ ...FONTS.paragraph, fontSize: '14px' }}
+							>
+								Terms & Conditions
+							</Link>
 						</div>
 					</div>
+				</div>
 				{/* FOOTER END */}
 			</div>
 		</>

@@ -70,6 +70,12 @@ class Client {
 				httpClient.update(API_END_POINTS.booking_cart.put, params, data),
 			getById: (params: string) =>
 				httpClient.get(API_END_POINTS.booking_cart.getById, params),
+			deleteProduct: (data: any) =>
+				httpClient.delete(
+					API_END_POINTS.booking_cart.deleteProduct
+						.replace(':cartId', data?.cartId)
+						.replace(':productId', data?.productId)
+				),
 		},
 		service_bookings: {
 			post: (data: string) =>
@@ -121,14 +127,12 @@ class Client {
 		},
 
 		enquiry: {
-			post: (data: any) => 
-				httpClient.post(API_END_POINTS.enquiry.post, data),
+			post: (data: any) => httpClient.post(API_END_POINTS.enquiry.post, data),
 			getAll: (data: any) =>
 				httpClient.get(API_END_POINTS.enquiry.getAll, data),
 			update: (params: string, data: any) =>
 				httpClient.update(API_END_POINTS.enquiry.update, params, data),
-	
-	},
-}
+		},
+	};
 }
 export default Client;

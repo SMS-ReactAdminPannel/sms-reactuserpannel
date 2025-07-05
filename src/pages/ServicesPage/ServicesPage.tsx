@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useEffect, useState, useRef } from 'react';
 import {
 	Clock,
@@ -22,6 +21,7 @@ import { postSparePartsData } from '../../features/spareparts';
 import { FONTS } from '../../constants/constant';
 import { useAuth } from '../auth/AuthContext';
 import LoginPromptModal from '../../components/Authentication/LoginPromptModal';
+import BookingModal from '../../components/service-centers/ServiceBookingModal';
 
 interface ServiceItem {
 	name: string;
@@ -48,11 +48,9 @@ interface ContentSection {
 }
 
 interface CarSelect {
-	// Define your car details interface here
 	id: string;
 	model: string;
 	year: string;
-	// Add other car properties as needed
 }
 
 interface SelectedPackageInfo {
@@ -111,11 +109,9 @@ const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 
 		return () => {
 			if (elementRef.current) {
-				// eslint-disable-next-line react-hooks/exhaustive-deps
 				observer.unobserve(elementRef.current);
 			}
 		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return { elementRef, isVisible };
@@ -138,7 +134,6 @@ const ServicesPage: React.FC = () => {
 	const [serviceCategories, setServiceCategories] = useState<
 		ApiServiceCategory[]
 	>([]);
-	// const [isLoading, setIsLoading] = useState(true);
 	const navigate = useNavigate();
 	const serviceTitle = useScrollAnimation<HTMLHeadingElement>();
 	const [selectedCategory, setSelectedCategory] = useState<{
@@ -147,13 +142,12 @@ const ServicesPage: React.FC = () => {
 	} | null>(null);
 	const [showLoginModal, setShowLoginModal] = useState(false);
 	const { isAuthenticated } = useAuth();
+	const [isModalOpen, setIsModalOpen] = useState(false);
 
 	const fetchAllServiceCategory = async () => {
 		try {
-			// setIsLoading(true);
 			const response: any = await getAllServiceCategories();
 			if (response.data && response.data.data) {
-				// Filter to only show the selected category if one is selected
 				const categories = selectedCategory
 					? response.data.data.filter(
 							(cat: any) => cat._id === selectedCategory.id
@@ -174,15 +168,12 @@ const ServicesPage: React.FC = () => {
 			}
 		} catch (error) {
 			console.error('Error fetching service categories:', error);
-		} finally {
-			// setIsLoading(false);
 		}
 	};
 
 	useEffect(() => {
 		fetchAllServiceCategory();
 		setSelectedCategory(null);
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const storedCategory: any = localStorage.getItem('selectedCategory');
@@ -238,7 +229,6 @@ const ServicesPage: React.FC = () => {
 	};
 
 	const contentSections = mapApiToContentSections(serviceCategories);
-
 	const navigationItems = serviceCategories
 		.filter((category) => !category.is_deleted)
 		.map((category) => ({
@@ -269,12 +259,9 @@ const ServicesPage: React.FC = () => {
 	};
 
 	const handleNavClick = (navItem: string) => {
-		//console.log(navItem, 'navItem');
 		setActiveNavItem(navItem);
 		setSelectedPackage([]);
 	};
-
-	// console.log(activeNavItem, 'activeNavItem');
 
 	const handleAddToCart = async (serviceId: string) => {
 		if (!isAuthenticated) {
@@ -283,6 +270,8 @@ const ServicesPage: React.FC = () => {
 			const packageToAdd = selectedPackage.find(
 				(p) => p.packageId === serviceId
 			);
+
+			setIsModalOpen(true);
 			if (packageToAdd) {
 				setCart([...cart, packageToAdd]);
 				try {
@@ -294,7 +283,6 @@ const ServicesPage: React.FC = () => {
 					if (response) {
 						setShowCartNotification(true);
 						setTimeout(() => setShowCartNotification(false), 3000);
-						// Refresh cart count in navbar
 						if ((window as any).refreshCartCount) {
 							(window as any).refreshCartCount();
 						}
@@ -334,15 +322,6 @@ const ServicesPage: React.FC = () => {
 
 	const [showForm, setShowForm] = useState<boolean>(false);
 	const currentContent = activeNavItem ? contentSections[activeNavItem] : null;
-
-	// if (isLoading) {
-	// 	return (
-	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-	// 		</div>
-	// 	);
-	// }
 
 	return (
 		<div className='min-h-screen bg-gray-50 flex flex-start'>
@@ -673,14 +652,27 @@ const ServicesPage: React.FC = () => {
 				</div>
 			)}
 
-			{/* Welcome Popup */}
-			{showWelcomePopup && (
-				<AutoPopup
-					onClose={handleCloseWelcome}
-					title='Welcome to Car Services'
-					message='Explore our comprehensive service packages. Select what your vehicle needs and book an appointment with ease.'
+			<div>
+				<BookingModal
+					isOpen={isModalOpen}
+					onClose={() => setIsModalOpen(false)}
+					selectedService={{ duration: '2 hours' }}
+					isAuthenticated={true}
+					onAddToCart={() => console.log('Add to cart')}
+					onOpenSignUp={() => console.log('Open sign up')}
 				/>
-			)}
+			</div>
+
+			{/* Welcome Popup */}
+			<div>
+				{showWelcomePopup && (
+					<AutoPopup
+						onClose={handleCloseWelcome}
+						title='Welcome to Car Services'
+						message='Explore our comprehensive service packages. Select what your vehicle needs and book an appointment with ease.'
+					/>
+				)}
+			</div>
 			<LoginPromptModal
 				isOpen={showLoginModal}
 				onClose={() => setShowLoginModal(false)}

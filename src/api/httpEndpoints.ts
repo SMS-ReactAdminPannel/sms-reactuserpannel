@@ -33,6 +33,7 @@ export const API_END_POINTS = {
 		getById: '/api/customer/cart/:id',
 		put: '/api/customer/cart/:id',
 		delete: '/api/customer/:cartId/product/:productId',
+		deleteProduct: '/api/customer/cart/:cartId/product/:productId',
 	},
 
 	service_bookings: {
@@ -43,8 +44,8 @@ export const API_END_POINTS = {
 	},
 
 	offer: {
-		Post:"/api/announcement/create",
-    	Get:"/api/announcement/all",
+		Post: '/api/announcement/create',
+		Get: '/api/announcement/all',
 	},
 
 	auth: {
@@ -70,8 +71,8 @@ export const API_END_POINTS = {
 	},
 
 	enquiry: {
-		post:  '/api/serviceEnquiry/createEnquiry',
+		post: '/api/serviceEnquiry/createEnquiry',
 		getAll: '/api/serviceEnquiry/getAllEnquiries',
 		update: '/api/serviceEnquiry/updateEnquiry/:id',
-	}
+	},
 };

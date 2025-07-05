@@ -3,6 +3,7 @@ import { useEffect, useState, useRef } from 'react';
 import { Wrench, Car } from 'lucide-react';
 import {
 	booking_cart,
+	deleteBookingCartProduct,
 	postBookingProduct,
 } from '../../features/BookingCart/service';
 import { toast } from 'react-toastify';
@@ -58,20 +59,16 @@ const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 
 		return () => {
 			if (elementRef.current) {
-				// eslint-disable-next-line react-hooks/exhaustive-deps
 				observer.unobserve(elementRef.current);
 			}
 		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return { elementRef, isVisible };
 };
 
-// Main Component
 export default function SparePartsCart() {
 	const [books, setBooks] = useState<spare[]>([]);
-	// const [isLoading, setIsLoading] = useState(true);
 	const [activeTab, setActiveTab] = useState<'service' | 'ServiceBookingPage'>(
 		'service'
 	);
@@ -102,7 +99,6 @@ export default function SparePartsCart() {
 				// setIsLoading(false);
 			}
 			const cartData = response?.data?.data;
-
 			if (!Array.isArray(cartData)) return;
 			const spareEntry = cartData.find((item) => item.type === 'spare');
 			const cartId = spareEntry._id;
@@ -152,22 +148,13 @@ export default function SparePartsCart() {
 		}
 	};
 
-	isAuthenticated &&
-		useEffect(() => {
+	useEffect(() => {
+		if (isAuthenticated) {
 			books_valid();
 			setActiveTab('ServiceBookingPage');
-		}, []);
+		}
+	}, [isAuthenticated]);
 
-	// if (isLoading) {
-	// 	return (
-	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-	// 		</div>
-	// 	);
-	// }
-
-	// handle Place Order function
 	const placeOrder = async () => {
 		try {
 			const payload = {
@@ -177,7 +164,6 @@ export default function SparePartsCart() {
 			const response = await postBookingProduct(payload);
 			if (response) {
 				toast.success('Order placed successfully!', { autoClose: 2000 });
-				// setConfirmedPartOrders([]);
 			}
 		} catch (error: any) {
 			console.error('Order placement error:', {
@@ -185,8 +171,6 @@ export default function SparePartsCart() {
 				response: error.response?.data,
 			});
 			toast.error(error.response?.data?.message || 'Failed to place order');
-		} finally {
-			// setIsLoading(false);
 		}
 	};
 
@@ -199,35 +183,21 @@ export default function SparePartsCart() {
 			const response = await postBookingService(payload);
 			if (response) {
 				toast.success('Order placed successfully!', { autoClose: 2000 });
-				// setConfirmedPartOrders([]);
 			}
 		} catch (error: any) {
 			console.error('Order placement error:', error);
 			toast.error(error.response?.data?.message || 'Failed to place order');
-		} finally {
-			// setIsLoading(false);
 		}
 	};
 
-	// const handleConfirmPart = (product_id: number, quantity: number) => {
-	// 	const part = books.find((p) => p._id === product_id);
-	// 	if (part) {
-	// 		setConfirmedPartOrders((prev) => [...prev, { part, quantity }]);
-	// 		setShowSummary(true);
-	// 	}
-	// };
-
-	// const handleConfirmService = (serviceId: number, quantity: number) => {
-	// 	const serv = services.find((s) => s._id === serviceId);
-	// 	if (serv) {
-	// 		setConfirmedServiceOrders((prev) => [...prev, { serv, quantity }]);
-	// 		setShowsSummary(true);
-	// 	}
-	// };
-
-	const handleDelete = (id: number) => {
-		setBooks((prev) => prev.filter((p) => p._id !== id));
-		setServices((prev) => prev.filter((s) => s._id !== id));
+	const handleDelete = async (id: number) => {
+		// setBooks((prev) => prev.filter((p) => p._id !== id));
+		// setServices((prev) => prev.filter((s) => s._id !== id));
+		const response = await deleteBookingCartProduct({ cartId, productId: id });
+		if (response) {
+			console.log('Product removed successfully', response);
+			toast.success('Product removed successfully', { autoClose: 2000 });
+		}
 	};
 
 	const filteredParts = books;
@@ -476,7 +446,7 @@ export default function SparePartsCart() {
 					{/* Summary Sidebar */}
 					<div className=' fixed w-[520px] ml-[50px] left-1/2'>
 						{/* Parts Summary */}
-						{books.length > 0 && activeTab === 'service' && (
+						{books?.length > 0 && activeTab === 'service' && (
 							<div className='bg-white rounded-lg shadow-md p-4 mb-6  '>
 								<div className='flex justify-between items-center mb-1'>
 									<div>

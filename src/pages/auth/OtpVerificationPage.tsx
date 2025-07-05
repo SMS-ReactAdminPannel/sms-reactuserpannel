@@ -12,7 +12,7 @@ type OtpFormData = {
 };
 
 const OtpVerificationPage = () => {
-	const [otpDigits, setOtpDigits] = useState<string[]>(Array(6).fill(''));
+	const [otpDigits, setOtpDigits] = useState(Array(6).fill(''));
 	const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
 	const { login } = useAuth();
 	const {
@@ -20,11 +20,7 @@ const OtpVerificationPage = () => {
 		clearErrors,
 		formState: { errors },
 	} = useForm<OtpFormData>();
-
 	const navigate = useNavigate();
-	const otpDataRaw = localStorage.getItem('otpData');
-	const otpData = otpDataRaw ? JSON.parse(otpDataRaw) : null;
-	// const [isLoading, setIsLoading] = useState(false);
 
 	const handleOtpChange = (index: number, value: string) => {
 		if (!/^\d?$/.test(value)) return;
@@ -53,24 +49,23 @@ const OtpVerificationPage = () => {
 		}
 	};
 
+	const AuthToken: any = localStorage.getItem('AuthToken');
+	const otp = localStorage.getItem('OTP');
 	const handleOtpVerify = async () => {
-		const enteredOtp = otpDigits.join('');
-		// setIsLoading(true);
-		if (enteredOtp.length !== 6) {
+		const enteredOtp = otpDigits?.join('');
+		if (enteredOtp?.length !== 6) {
 			setError('otp', { message: 'Please enter a valid 6-digit OTP' });
 			return;
 		}
 
 		try {
 			clearErrors('otp');
-			const response: any = await verifyotp({
-				otp: enteredOtp,
-				AuthToken: otpData?.token,
-			});
-
+			const data: any = { AuthToken, otp: enteredOtp };
+			const response: any = await verifyotp(data);
 			if (response) {
-				localStorage.removeItem('otpData');
-				login(response.data.data);
+				localStorage.removeItem('AuthToken');
+				localStorage.removeItem('OTP');
+				login(response?.data?.data);
 				navigate('/');
 			} else {
 				setError('otp', {
@@ -78,26 +73,14 @@ const OtpVerificationPage = () => {
 						response?.message || 'OTP verification failed. Please try again.',
 				});
 			}
-			// setIsLoading(false);
 		} catch (error: any) {
 			setError('otp', {
 				message:
 					error?.response?.data?.message ||
 					'An error occurred during verification.',
 			});
-		} finally {
-			// setIsLoading(false);
 		}
 	};
-
-	// if (isLoading) {
-	// 	return (
-	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-	// 		</div>
-	// 	);
-	// }
 
 	return (
 		<AuthLayout title='Verify OTP'>
@@ -106,10 +89,9 @@ const OtpVerificationPage = () => {
 					<label className='text-sm font-semibold text-white'>
 						Enter the 6-digit OTP
 					</label>
-					<label className='text-sm font-semibold text-white'>
-						{otpData.otp}
-					</label>
-
+					<div>
+						<p className='text-white text-right'>OTP: {otp}</p>
+					</div>
 					<div className='flex justify-between space-x-2'>
 						{otpDigits.map((digit, idx) => (
 							<input
@@ -119,31 +101,24 @@ const OtpVerificationPage = () => {
 								value={digit}
 								onChange={(e) => handleOtpChange(idx, e.target.value)}
 								onKeyDown={(e) => handleOtpKeyDown(e, idx)}
-								// ref={(el) => (otpRefs.current[idx] = el)}
+								ref={(el) => {
+									if (el) otpRefs.current[idx] = el;
+								}}
 								className='w-10 h-12 text-center text-lg rounded-lg border border-[#0050A5] bg-white/80 text-[#0050A5] focus:ring-2 focus:ring-[#0050A5]'
 							/>
 						))}
 					</div>
 					{errors.otp && (
-						<span className='text-xs text-[#0050A5]'>{errors.otp.message}</span>
+						<span className='text-xs text-red-500'>{errors.otp.message}</span>
 					)}
 					<button
 						type='button'
 						onClick={handleOtpVerify}
-						className='w-full py-2 mt-2 text-white font-semibold rounded-full bg-[#0050A5] hover:bg-[#004494] text-sm'
+						className='w-full py-2 mt-2 text-white font-semibold rounded-full bg-[#0050A5] text-sm'
 					>
 						Verify OTP
 					</button>
 				</div>
-
-				{/* <div className='text-center pt-1'>
-					<Link
-						to='/login'
-						className='text-white hover:underline text-lg text-[#d23c3c] font-bold'
-					>
-						Back to Login
-					</Link>
-				</div> */}
 			</form>
 		</AuthLayout>
 	);
