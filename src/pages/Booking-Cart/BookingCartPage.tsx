@@ -4,6 +4,7 @@ import { Wrench, Car } from 'lucide-react';
 import {
 	booking_cart,
 	deleteBookingCartProduct,
+	deleteBookingCartService,
 	postBookingProduct,
 } from '../../features/BookingCart/service';
 import { toast } from 'react-toastify';
@@ -101,13 +102,14 @@ export default function SparePartsCart() {
 			const cartData = response?.data?.data;
 			if (!Array.isArray(cartData)) return;
 			const spareEntry = cartData.find((item) => item.type === 'spare');
-			const cartId = spareEntry._id;
+			console.log(spareEntry, "checing spare enter")
+			const cartId = spareEntry?._id;
 			setCartId(cartId);
 
 			if (spareEntry?.products) {
 				const spares = spareEntry.products.map(
 					(product: any): spare => ({
-						_id: product._id || 0,
+						_id: product?._id || "",
 						productName: product.productId?.productName || 'Unknown',
 						price: Number(product.price) || 0,
 						brand: product.productId?.brand || 'Generic',
@@ -124,13 +126,14 @@ export default function SparePartsCart() {
 			}
 
 			const serviceEntry = cartData.find((item) => item.type === 'service');
-			const serviceId = serviceEntry._id;
+			const serviceId = serviceEntry?._id;
+			console.log(serviceEntry, "checing service enter")
 			setServiceCartId(serviceId);
 
 			if (serviceEntry?.services) {
 				const mappedServices = serviceEntry.services.map(
 					(service: any): service => ({
-						_id: service._id || '0',
+						_id: service?._id || '0',
 						service_name: service.service_name || 'Unknown',
 						price: Number(service.price) || 0,
 						description: service.description || '',
@@ -139,6 +142,8 @@ export default function SparePartsCart() {
 						discount: 0,
 					})
 				);
+
+				console.log("Map", mappedServices)
 				setServices(mappedServices);
 			}
 		} catch (error) {
@@ -154,6 +159,7 @@ export default function SparePartsCart() {
 			setActiveTab('ServiceBookingPage');
 		}
 	}, [isAuthenticated]);
+
 
 	const placeOrder = async () => {
 		try {
@@ -179,6 +185,7 @@ export default function SparePartsCart() {
 		try {
 			const payload = {
 				cartId: serviceId,
+				// requestType:"scheduled"
 			};
 			const response = await postBookingService(payload);
 			if (response) {
@@ -191,12 +198,20 @@ export default function SparePartsCart() {
 	};
 
 	const handleDelete = async (id: number) => {
-		// setBooks((prev) => prev.filter((p) => p._id !== id));
-		// setServices((prev) => prev.filter((s) => s._id !== id));
-		const response = await deleteBookingCartProduct({ cartId, productId: id });
-		if (response) {
-			console.log('Product removed successfully', response);
-			toast.success('Product removed successfully', { autoClose: 2000 });
+		if (activeTab === 'service') {
+			const response = await deleteBookingCartProduct({ cartId, productId: id });
+			if (response) {
+				console.log('Product removed successfully', response);
+				toast.success('Product removed successfully', { autoClose: 2000 });
+				books_valid();
+			}
+		} else if (activeTab === 'ServiceBookingPage') {
+			const response = await deleteBookingCartService({ cartId: serviceId, serviceId: id });
+			if (response) {
+				console.log('Service removed successfully', response);
+				toast.success('Service removed successfully', { autoClose: 2000 });
+				books_valid();
+			}
 		}
 	};
 
@@ -228,11 +243,10 @@ export default function SparePartsCart() {
 
 					<div className='flex-1 flex flex-col justify-between'>
 						<div
-							className={`relative left-[305px] text-xs text-center px-2 w-[90px] py-0.5 rounded font-medium ${
-								part.stock
-									? 'bg-[#BED0EC] text-[#0050A5]'
-									: 'bg-[#0050A5] text-white'
-							}`}
+							className={`relative left-[305px] text-xs text-center px-2 w-[90px] py-0.5 rounded font-medium ${part.stock
+								? 'bg-[#BED0EC] text-[#0050A5]'
+								: 'bg-[#0050A5] text-white'
+								}`}
 						>
 							{part.stock ? 'In Stock' : 'Out of Stock'}
 						</div>
@@ -302,11 +316,10 @@ export default function SparePartsCart() {
 
 					<div className='flex-1 flex flex-col justify-between'>
 						<span
-							className={`relative left-[325px] text-xs px-2 w-[65px] py-0.5 rounded font-medium ${
-								serv.is_active
-									? 'bg-[#BED0EC] text-[#0050A5]'
-									: 'bg-red-700 text-white'
-							}`}
+							className={`relative left-[325px] text-xs px-2 w-[65px] py-0.5 rounded font-medium ${serv.is_active
+								? 'bg-[#BED0EC] text-[#0050A5]'
+								: 'bg-red-700 text-white'
+								}`}
 						>
 							{serv.is_active ? 'Available' : 'Not Available'}
 						</span>
@@ -348,7 +361,7 @@ export default function SparePartsCart() {
 	return (
 		<div
 			className='min-h-screen p-6 '
-			// style={{ backgroundImage: `url(${bgImage})` }}
+		// style={{ backgroundImage: `url(${bgImage})` }}
 		>
 			<div className='max-w-7xl mx-auto'>
 				{/* Header */}
@@ -371,9 +384,8 @@ export default function SparePartsCart() {
 					<div className='relative inline-flex p-1 bg-[#BED0EC] rounded-full border border-gray-300'>
 						<button
 							onClick={() => setActiveTab('service')}
-							className={`px-6 py-3 rounded-full flex items-center gap-2 z-10 transition-colors duration-300 ${
-								activeTab === 'service' ? 'text-white' : 'text-black '
-							}`}
+							className={`px-6 py-3 rounded-full flex items-center gap-2 z-10 transition-colors duration-300 ${activeTab === 'service' ? 'text-white' : 'text-black '
+								}`}
 						>
 							<Wrench className='text-lg' />
 							SparePart Orders
@@ -381,22 +393,20 @@ export default function SparePartsCart() {
 
 						<button
 							onClick={() => setActiveTab('ServiceBookingPage')}
-							className={`px-6 py-3 rounded-full flex items-center gap-2 z-10 transition-colors duration-300 ${
-								activeTab === 'ServiceBookingPage'
-									? 'text-white'
-									: 'text-black '
-							}`}
+							className={`px-6 py-3 rounded-full flex items-center gap-2 z-10 transition-colors duration-300 ${activeTab === 'ServiceBookingPage'
+								? 'text-white'
+								: 'text-black '
+								}`}
 						>
 							<Car className='text-xl' />
 							Service Order
 						</button>
 						{/* Animated indicator with smooth sliding */}
 						<div
-							className={`absolute inset-y-1 h-[calc(100%-0.5rem)] bg-[#0050A5] rounded-full shadow-md transition-all duration-300 ease-in-out ${
-								activeTab === 'service'
-									? 'left-1 w-[calc(50%-0.25rem)]'
-									: 'left-[calc(50%+0.25rem)] w-[calc(50%-0.25rem)]'
-							}`}
+							className={`absolute inset-y-1 h-[calc(100%-0.5rem)] bg-[#0050A5] rounded-full shadow-md transition-all duration-300 ease-in-out ${activeTab === 'service'
+								? 'left-1 w-[calc(50%-0.25rem)]'
+								: 'left-[calc(50%+0.25rem)] w-[calc(50%-0.25rem)]'
+								}`}
 						/>
 					</div>
 				</div>

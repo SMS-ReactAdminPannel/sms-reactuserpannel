@@ -17,11 +17,12 @@ import { useNavigate } from 'react-router-dom';
 import serviceImg from '../../assets/serviceimages/generalservice.png';
 import AutoPopup from './RightSidePopup';
 import { getAllServiceCategories } from '../../features/ServicesPage/service';
-import { postSparePartsData } from '../../features/spareparts';
+// import { postSparePartsData } from '../../features/spareparts';
 import { FONTS } from '../../constants/constant';
 import { useAuth } from '../auth/AuthContext';
 import LoginPromptModal from '../../components/Authentication/LoginPromptModal';
 import BookingModal from '../../components/service-centers/ServiceBookingModal';
+import { postSparePartsData } from '../../features/spareparts';
 
 interface ServiceItem {
 	name: string;
@@ -129,7 +130,6 @@ const ServicesPage: React.FC = () => {
 		[key: string]: boolean;
 	}>({});
 	const [cart, setCart] = useState<SelectedPackageInfo[]>([]);
-	const [showCartNotification, setShowCartNotification] = useState(false);
 	const [showWelcomePopup, setShowWelcomePopup] = useState(true);
 	const [serviceCategories, setServiceCategories] = useState<
 		ApiServiceCategory[]
@@ -143,6 +143,7 @@ const ServicesPage: React.FC = () => {
 	const [showLoginModal, setShowLoginModal] = useState(false);
 	const { isAuthenticated } = useAuth();
 	const [isModalOpen, setIsModalOpen] = useState(false);
+	const [showCartNotification, setShowCartNotification] = useState(false);
 
 	const fetchAllServiceCategory = async () => {
 		try {
@@ -150,8 +151,8 @@ const ServicesPage: React.FC = () => {
 			if (response.data && response.data.data) {
 				const categories = selectedCategory
 					? response.data.data.filter(
-							(cat: any) => cat._id === selectedCategory.id
-					  )
+						(cat: any) => cat._id === selectedCategory.id
+					)
 					: response.data.data;
 
 				setServiceCategories(categories);
@@ -272,7 +273,7 @@ const ServicesPage: React.FC = () => {
 		}
 	};
 
-	const handleConfirmBooking = async () => {
+	const handleConfirmBooking = async (requestType: string, schedule_date: Date) => {
 		if (!selectedPackageId) return;
 
 		const packageToAdd = selectedPackage.find(
@@ -285,6 +286,8 @@ const ServicesPage: React.FC = () => {
 				const data = {
 					service: selectedPackageId,
 					type: 'service',
+					requestType,
+					schedule_date: schedule_date,
 				};
 				const response = await postSparePartsData(data);
 				if (response) {
@@ -333,10 +336,10 @@ const ServicesPage: React.FC = () => {
 	// 	setIsModalOpen(false);
 	// };
 
-	const handleOpenSignUp = () => {
-		console.log('Opening sign up...');
-		// Your sign up logic here
-	};
+	// const handleOpenSignUp = () => {
+	// 	console.log('Opening sign up...');
+	// 	// Your sign up logic here
+	// };
 
 	const [showForm, setShowForm] = useState<boolean>(false);
 	const currentContent = activeNavItem ? contentSections[activeNavItem] : null;
@@ -380,22 +383,20 @@ const ServicesPage: React.FC = () => {
 									<div
 										key={index}
 										onClick={() => handleNavClick(item.name)}
-										className={`group relative flex items-center px-4 py-4 rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-[1.02] ${
-											activeNavItem === item.name
-												? 'bg-gradient-to-r from-red-50 to-red-100 text-[#0050A5] shadow-lg shadow-[#0050A5]/20 border border-[#0050A5]'
-												: 'text-gray-600 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-[#0050A5] hover:shadow-md'
-										} ${!item.isActive ? 'opacity-70' : ''}`}
+										className={`group relative flex items-center px-4 py-4 rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-[1.02] ${activeNavItem === item.name
+											? 'bg-gradient-to-r from-red-50 to-red-100 text-[#0050A5] shadow-lg shadow-[#0050A5]/20 border border-[#0050A5]'
+											: 'text-gray-600 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-[#0050A5] hover:shadow-md'
+											} ${!item.isActive ? 'opacity-70' : ''}`}
 									>
 										{activeNavItem === item.name && (
 											<div className='absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-8 bg-[#0050A5] rounded-r-full'></div>
 										)}
 
 										<div
-											className={`mr-4 flex-shrink-0 p-2 rounded-lg transition-all duration-300 ${
-												activeNavItem === item.name
-													? 'bg-[#BED0EC] text-[#0050A5]-600'
-													: 'bg-gray-100 text-gray-500 group-hover:bg-[#BED0EC] group-hover:text-[#0050A5]]'
-											}`}
+											className={`mr-4 flex-shrink-0 p-2 rounded-lg transition-all duration-300 ${activeNavItem === item.name
+												? 'bg-[#BED0EC] text-[#0050A5]-600'
+												: 'bg-gray-100 text-gray-500 group-hover:bg-[#BED0EC] group-hover:text-[#0050A5]]'
+												}`}
 										>
 											{item.icon}
 										</div>
@@ -405,11 +406,10 @@ const ServicesPage: React.FC = () => {
 										</span>
 
 										<div
-											className={`ml-auto opacity-0 transform translate-x-2 transition-all duration-300 ${
-												activeNavItem === item.name
-													? 'opacity-100 translate-x-0'
-													: 'group-hover:opacity-100 group-hover:translate-x-0'
-											}`}
+											className={`ml-auto opacity-0 transform translate-x-2 transition-all duration-300 ${activeNavItem === item.name
+												? 'opacity-100 translate-x-0'
+												: 'group-hover:opacity-100 group-hover:translate-x-0'
+												}`}
 										>
 											<svg
 												className='w-4 h-4'
@@ -479,9 +479,8 @@ const ServicesPage: React.FC = () => {
 								return (
 									<div
 										key={pkg.id}
-										className={`bg-[#d8e1ef] rounded-lg lg:w-[600px] md:w-[400px] shadow-lg relative transition-all duration-300 hover:shadow-xl ${
-											isSelected ? 'ring-2 ring-[#0050A5]-500' : ''
-										}`}
+										className={`bg-[#d8e1ef] rounded-lg lg:w-[600px] md:w-[400px] shadow-lg relative transition-all duration-300 hover:shadow-xl ${isSelected ? 'ring-2 ring-[#0050A5]-500' : ''
+											}`}
 									>
 										{pkg.isRecommended && (
 											<div className='absolute top-0 left-0 z-10 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-1 rounded-br-lg'>

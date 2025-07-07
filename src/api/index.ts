@@ -76,6 +76,12 @@ class Client {
 						.replace(':cartId', data?.cartId)
 						.replace(':productId', data?.productId)
 				),
+			deleteService: (data: any) =>
+				httpClient.delete(
+					API_END_POINTS.booking_cart.deleteService
+						.replace(':cartId', data?.cartId)
+						.replace(':serviceId', data?.serviceId)
+				),
 		},
 		service_bookings: {
 			post: (data: string) =>
