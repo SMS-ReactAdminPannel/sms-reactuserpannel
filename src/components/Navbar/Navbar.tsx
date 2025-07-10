@@ -427,7 +427,7 @@ export const Navbar: React.FC = () => {
 							fontFamily: 'Montserrat',
 						}}
 						className={({ isActive }) =>
-							`relative pb-5 text-md text-center  !text-white font-semibold transition-all duration-300 ease-in-out whitespace-nowrap
+							`relative pb-1 text-md font-semibold transition-all duration-300 ease-in-out whitespace-nowrap
 	${
 		isActive
 			? 'text-white-900 after:content-[""] after:absolute after:left-0 after:bottom-11 after:h-[2.9px] after:w-full after:bg-white after:transition-all after:duration-300'
@@ -443,7 +443,7 @@ export const Navbar: React.FC = () => {
 					<button
 						className='text-[#0854a4] py-1 px-8 rounded-full'
 						style={{
-							...FONTS.Button,
+							...FONTS.paragraph,
 							fontWeight: 600,
 							backgroundColor: '#fff',
 							fontFamily: 'Montserrat',
