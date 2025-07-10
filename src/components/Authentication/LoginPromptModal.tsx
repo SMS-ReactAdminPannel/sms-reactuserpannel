@@ -13,7 +13,7 @@ const LoginPromptModal: React.FC<Props> = ({ isOpen, onClose }) => {
 
 	const handleLogin = () => {
 		onClose();
-		navigate('/signup'); // Adjust path based on your route
+		navigate('/login');
 	};
 
 	return (
@@ -23,12 +23,10 @@ const LoginPromptModal: React.FC<Props> = ({ isOpen, onClose }) => {
 			contentLabel='Login Required'
 			ariaHideApp={false}
 			className='w-[90%] max-w-md mx-auto mt-40 bg-white p-6 rounded shadow'
-			overlayClassName='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center'
+			overlayClassName='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]'
 		>
 			<h2 className='text-xl font-semibold mb-2'>Please SignUp</h2>
-			<p className='text-gray-700 mb-4'>
-				You need to sign up to book a service.
-			</p>
+			<p className='text-gray-700 mb-4'>You need to login to book a service.</p>
 			<div className='flex justify-end space-x-4'>
 				<button
 					onClick={onClose}
@@ -38,9 +36,9 @@ const LoginPromptModal: React.FC<Props> = ({ isOpen, onClose }) => {
 				</button>
 				<button
 					onClick={handleLogin}
-					className='px-4 py-2 rounded bg-red-900 text-white hover:bg-red-700'
+					className='px-4 py-2 rounded bg-[#0050A5] text-white hover:bg-[#004494]'
 				>
-					Sign Up
+					Login
 				</button>
 			</div>
 		</Modal>

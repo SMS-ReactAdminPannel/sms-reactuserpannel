@@ -105,7 +105,7 @@ const EnquiryForm = () => {
 				className='text-center'
 				style={{ ...FONTS.heading }}
 			>
-				<span className='inline-block pb-1 relative text-center text-red-900 mb-10'>
+				<span className='inline-block pb-1 relative text-center text-[#0050A5] mb-10'>
 					Enquiry Form
 					{/* <span
 						className={`absolute top-[52px] left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${enquiryTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
@@ -124,7 +124,7 @@ const EnquiryForm = () => {
 				<div>
 					<label
 						htmlFor='name'
-						className='block text-sm font-medium text-red-700'
+						className='block text-sm font-medium text-[#0050A5]'
 					>
 						Full Name *
 					</label>
@@ -135,14 +135,14 @@ const EnquiryForm = () => {
 						value={formData.fullName}
 						onChange={handleChange}
 						required
-						className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500'
+						className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#0050A5] focus:border-[#0050A5]'
 					/>
 				</div>
 
 				<div>
 					<label
 						htmlFor='email'
-						className='block text-sm font-medium text-red-700'
+						className='block text-sm font-medium text-[#0050A5]'
 					>
 						Email *
 					</label>
@@ -153,14 +153,14 @@ const EnquiryForm = () => {
 						value={formData.email}
 						onChange={handleChange}
 						required
-						className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500'
+						className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#0050A5] focus:border-[#0050A5]'
 					/>
 				</div>
 
 				<div>
 					<label
 						htmlFor='phone'
-						className='block text-sm font-medium text-red-700'
+						className='block text-sm font-medium text-[#0050A5]'
 					>
 						Phone Number *
 					</label>
@@ -172,14 +172,14 @@ const EnquiryForm = () => {
 						onChange={handleChange}
 						maxLength={10}
 						required
-						className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500'
+						className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#0050A5] focus:border-[#0050A5]'
 					/>
 				</div>
 
 				<div>
 					<label
 						htmlFor='carModel'
-						className='block text-sm font-medium text-red-700'
+						className='block text-sm font-medium text-[#0050A5]'
 					>
 						Car Model *
 					</label>
@@ -190,14 +190,14 @@ const EnquiryForm = () => {
 						value={formData.carModel}
 						onChange={handleChange}
 						required
-						className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500'
+						className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#0050A5] focus:border-[#0050A5]'
 					/>
 				</div>
 
 				<div>
 					<label
 						htmlFor='serviceType'
-						className='block text-sm font-medium text-red-700'
+						className='block text-sm font-medium text-[#0050A5]'
 					>
 						Service Type *
 					</label>
@@ -206,7 +206,7 @@ const EnquiryForm = () => {
 						name='ServiceType'
 						value={formData.ServiceType}
 						onChange={handleChange}
-						className='mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-red-500 focus:border-red-500 rounded-md'
+						className='mt-1 block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-[#0050A5] focus:border-[#0050A5] rounded-md'
 					>
 						<option value='general'>General Service</option>
 						<option value='oil'>Oil Change</option>
@@ -220,7 +220,7 @@ const EnquiryForm = () => {
 				<div>
 					<label
 						htmlFor='preferredDate'
-						className='block text-sm font-medium text-red-700'
+						className='block text-sm font-medium text-[#0050A5]'
 					>
 						Preferred Service Date
 					</label>
@@ -230,14 +230,14 @@ const EnquiryForm = () => {
 						name='Date'
 						value={formData.Date}
 						onChange={handleChange}
-						className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500'
+						className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#0050A5] focus:border-[#0050A5]'
 					/>
 				</div>
 
 				<div>
 					<label
 						htmlFor='enquiry'
-						className='block text-sm font-medium text-red-700'
+						className='block text-sm font-medium text-[#0050A5]'
 					>
 						Your Enquiry *
 					</label>
@@ -248,14 +248,14 @@ const EnquiryForm = () => {
 						value={formData.yourEnquiry}
 						onChange={handleChange}
 						required
-						className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-red-500 focus:border-red-500'
+						className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#0050A5] focus:border-[#0050A5]'
 					/>
 				</div>
 
 				<div className='flex justify-center space-x-4 mt-6'>
 					<button
 						type='submit'
-						className='w-1/5 flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-red-900 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-700'
+						className='w-1/5 flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#0050A5] hover:bg-[#004494] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#004494]'
 					>
 						Submit
 					</button>

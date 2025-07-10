@@ -3,6 +3,8 @@ import { useEffect, useState, useRef } from 'react';
 import { Wrench, Car } from 'lucide-react';
 import {
 	booking_cart,
+	deleteBookingCartProduct,
+	deleteBookingCartService,
 	postBookingProduct,
 } from '../../features/BookingCart/service';
 import { toast } from 'react-toastify';
@@ -58,20 +60,16 @@ const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 
 		return () => {
 			if (elementRef.current) {
-				// eslint-disable-next-line react-hooks/exhaustive-deps
 				observer.unobserve(elementRef.current);
 			}
 		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return { elementRef, isVisible };
 };
 
-// Main Component
 export default function SparePartsCart() {
 	const [books, setBooks] = useState<spare[]>([]);
-	// const [isLoading, setIsLoading] = useState(true);
 	const [activeTab, setActiveTab] = useState<'service' | 'ServiceBookingPage'>(
 		'service'
 	);
@@ -102,16 +100,16 @@ export default function SparePartsCart() {
 				// setIsLoading(false);
 			}
 			const cartData = response?.data?.data;
-
 			if (!Array.isArray(cartData)) return;
 			const spareEntry = cartData.find((item) => item.type === 'spare');
-			const cartId = spareEntry._id;
+			console.log(spareEntry, "checing spare enter")
+			const cartId = spareEntry?._id;
 			setCartId(cartId);
 
 			if (spareEntry?.products) {
 				const spares = spareEntry.products.map(
 					(product: any): spare => ({
-						_id: product._id || 0,
+						_id: product?._id || "",
 						productName: product.productId?.productName || 'Unknown',
 						price: Number(product.price) || 0,
 						brand: product.productId?.brand || 'Generic',
@@ -128,13 +126,14 @@ export default function SparePartsCart() {
 			}
 
 			const serviceEntry = cartData.find((item) => item.type === 'service');
-			const serviceId = serviceEntry._id;
+			const serviceId = serviceEntry?._id;
+			console.log(serviceEntry, "checing service enter")
 			setServiceCartId(serviceId);
 
 			if (serviceEntry?.services) {
 				const mappedServices = serviceEntry.services.map(
 					(service: any): service => ({
-						_id: service._id || '0',
+						_id: service?._id || '0',
 						service_name: service.service_name || 'Unknown',
 						price: Number(service.price) || 0,
 						description: service.description || '',
@@ -143,6 +142,8 @@ export default function SparePartsCart() {
 						discount: 0,
 					})
 				);
+
+				console.log("Map", mappedServices)
 				setServices(mappedServices);
 			}
 		} catch (error) {
@@ -152,22 +153,14 @@ export default function SparePartsCart() {
 		}
 	};
 
-	isAuthenticated &&
-		useEffect(() => {
+	useEffect(() => {
+		if (isAuthenticated) {
 			books_valid();
 			setActiveTab('ServiceBookingPage');
-		}, []);
+		}
+	}, [isAuthenticated]);
 
-	// if (isLoading) {
-	// 	return (
-	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-	// 		</div>
-	// 	);
-	// }
 
-	// handle Place Order function
 	const placeOrder = async () => {
 		try {
 			const payload = {
@@ -177,7 +170,6 @@ export default function SparePartsCart() {
 			const response = await postBookingProduct(payload);
 			if (response) {
 				toast.success('Order placed successfully!', { autoClose: 2000 });
-				// setConfirmedPartOrders([]);
 			}
 		} catch (error: any) {
 			console.error('Order placement error:', {
@@ -185,8 +177,6 @@ export default function SparePartsCart() {
 				response: error.response?.data,
 			});
 			toast.error(error.response?.data?.message || 'Failed to place order');
-		} finally {
-			// setIsLoading(false);
 		}
 	};
 
@@ -195,39 +185,34 @@ export default function SparePartsCart() {
 		try {
 			const payload = {
 				cartId: serviceId,
+				// requestType:"scheduled"
 			};
 			const response = await postBookingService(payload);
 			if (response) {
 				toast.success('Order placed successfully!', { autoClose: 2000 });
-				// setConfirmedPartOrders([]);
 			}
 		} catch (error: any) {
 			console.error('Order placement error:', error);
 			toast.error(error.response?.data?.message || 'Failed to place order');
-		} finally {
-			// setIsLoading(false);
 		}
 	};
 
-	// const handleConfirmPart = (product_id: number, quantity: number) => {
-	// 	const part = books.find((p) => p._id === product_id);
-	// 	if (part) {
-	// 		setConfirmedPartOrders((prev) => [...prev, { part, quantity }]);
-	// 		setShowSummary(true);
-	// 	}
-	// };
-
-	// const handleConfirmService = (serviceId: number, quantity: number) => {
-	// 	const serv = services.find((s) => s._id === serviceId);
-	// 	if (serv) {
-	// 		setConfirmedServiceOrders((prev) => [...prev, { serv, quantity }]);
-	// 		setShowsSummary(true);
-	// 	}
-	// };
-
-	const handleDelete = (id: number) => {
-		setBooks((prev) => prev.filter((p) => p._id !== id));
-		setServices((prev) => prev.filter((s) => s._id !== id));
+	const handleDelete = async (id: number) => {
+		if (activeTab === 'service') {
+			const response = await deleteBookingCartProduct({ cartId, productId: id });
+			if (response) {
+				console.log('Product removed successfully', response);
+				toast.success('Product removed successfully', { autoClose: 2000 });
+				books_valid();
+			}
+		} else if (activeTab === 'ServiceBookingPage') {
+			const response = await deleteBookingCartService({ cartId: serviceId, serviceId: id });
+			if (response) {
+				console.log('Service removed successfully', response);
+				toast.success('Service removed successfully', { autoClose: 2000 });
+				books_valid();
+			}
+		}
 	};
 
 	const filteredParts = books;
@@ -237,7 +222,7 @@ export default function SparePartsCart() {
 		const quantity: number = part.quantity || 1;
 
 		return (
-			<div className='border rounded-lg h-[190px] shadow max-w-xl mx-left p-2 mb-6 bg-white hover:shadow-md transition duration-300'>
+			<div className='border rounded-lg h-[190px] shadow max-w-xl mx-left p-2 mb-6 bg-[white] hover:shadow-md transition duration-300'>
 				<div className='flex justify-star gap-4'>
 					<div className='w-32 h-32 relative group overflow-hidden rounded border'>
 						<img
@@ -258,17 +243,16 @@ export default function SparePartsCart() {
 
 					<div className='flex-1 flex flex-col justify-between'>
 						<div
-							className={`relative left-[305px] text-xs text-center px-2 w-[90px] py-0.5 rounded font-medium ${
-								part.stock
-									? 'bg-green-100 text-green-700'
-									: 'bg-red-700 text-white'
-							}`}
+							className={`relative left-[305px] text-xs text-center px-2 w-[90px] py-0.5 rounded font-medium ${part.stock
+								? 'bg-[#BED0EC] text-[#0050A5]'
+								: 'bg-[#0050A5] text-white'
+								}`}
 						>
 							{part.stock ? 'In Stock' : 'Out of Stock'}
 						</div>
 						<div>
 							<div className='flex justify-between items-start'>
-								<h3 className='text-base font-semibold text-gray-800'>
+								<h3 className='text-base font-semibold text-[#0050A5]'>
 									{part.productName}
 								</h3>
 							</div>
@@ -279,7 +263,7 @@ export default function SparePartsCart() {
 						</div>
 
 						<div className='flex gap-2 items-center'>
-							<span className='text-lg font-bold text-red-600'>
+							<span className='text-lg font-bold text-[#0050A5]'>
 								₹{part.price}
 							</span>
 							<span className='line-through text-sm text-gray-400 '>
@@ -291,13 +275,13 @@ export default function SparePartsCart() {
 							<span className='px-2 font-medium'>Quantity : {quantity}</span>
 
 							<button
-								className='bg-[#9b111e] ml-[180px] hover:bg-red-700 text-white px-4 py-1.5 rounded font-semibold transition ml-48'
+								className='bg-[#0050A5] ml-[180px]  text-white px-4 py-1.5 rounded font-semibold transition ml-48'
 								onClick={() => handleDelete(part._id)}
 							>
 								REMOVE
 							</button>
 						</div>
-						<div className='text-sm text-green-700 font-medium flex items-center gap-1'>
+						<div className='text-sm text-[#0050A5] font-medium flex items-center gap-1'>
 							<span className='text-base'>🚚</span>
 							Delivery by{' '}
 							<span className='font-semibold ml-1'>Sat, Jun 14</span>
@@ -332,17 +316,16 @@ export default function SparePartsCart() {
 
 					<div className='flex-1 flex flex-col justify-between'>
 						<span
-							className={`relative left-[325px] text-xs px-2 w-[65px] py-0.5 rounded font-medium ${
-								serv.is_active
-									? 'bg-green-100 text-green-700'
-									: 'bg-red-700 text-white'
-							}`}
+							className={`relative left-[325px] text-xs px-2 w-[65px] py-0.5 rounded font-medium ${serv.is_active
+								? 'bg-[#BED0EC] text-[#0050A5]'
+								: 'bg-red-700 text-white'
+								}`}
 						>
 							{serv.is_active ? 'Available' : 'Not Available'}
 						</span>
 						<div>
 							<div className='flex justify-between items-start'>
-								<h3 className='text-base font-semibold text-gray-800'>
+								<h3 className='text-base font-semibold text-[#0050A5]'>
 									{serv.service_name}
 								</h3>
 							</div>
@@ -353,7 +336,7 @@ export default function SparePartsCart() {
 						</div>
 
 						<div className='flex gap-2 items-center'>
-							<span className='text-lg font-bold text-red-600'>
+							<span className='text-lg font-bold text-[#0050A5]'>
 								₹{serv.price}
 							</span>
 							<span className='line-through text-sm text-gray-400 '>
@@ -363,7 +346,7 @@ export default function SparePartsCart() {
 
 						<div className='flex gap-2 '>
 							<button
-								className='bg-[#9b111e] mt-[-16px] ml-[289px]  hover:bg-red-700 text-white px-4 py-1.5 rounded font-semibold transition ml-48'
+								className='bg-[#0050A5] mt-[-16px] ml-[289px] text-white px-4 py-1.5 rounded font-semibold transition ml-48'
 								onClick={() => handleDelete(serv._id)}
 							>
 								REMOVE
@@ -377,8 +360,8 @@ export default function SparePartsCart() {
 
 	return (
 		<div
-			className='min-h-screen p-6 bg-gray-100'
-			style={{ backgroundImage: `url(${bgImage})` }}
+			className='min-h-screen p-6 '
+		// style={{ backgroundImage: `url(${bgImage})` }}
 		>
 			<div className='max-w-7xl mx-auto'>
 				{/* Header */}
@@ -387,7 +370,7 @@ export default function SparePartsCart() {
 					className='text-center'
 					style={{ ...FONTS.heading }}
 				>
-					<span className='inline-block pb-1 relative text-[#9b111e] mb-6'>
+					<span className='inline-block pb-1 relative text-[#0050A5] mb-6'>
 						My Cart
 						{/* <span
 							className={`absolute top-14 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${cartTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
@@ -398,12 +381,11 @@ export default function SparePartsCart() {
 
 				{/* Tabs */}
 				<div className='mb-6 ml-[65px]'>
-					<div className='relative inline-flex p-1 bg-[#FAF3EB] rounded-full border border-gray-300'>
+					<div className='relative inline-flex p-1 bg-[#BED0EC] rounded-full border border-gray-300'>
 						<button
 							onClick={() => setActiveTab('service')}
-							className={`px-6 py-3 rounded-full flex items-center gap-2 z-10 transition-colors duration-300 ${
-								activeTab === 'service' ? 'text-white' : 'text-black '
-							}`}
+							className={`px-6 py-3 rounded-full flex items-center gap-2 z-10 transition-colors duration-300 ${activeTab === 'service' ? 'text-white' : 'text-black '
+								}`}
 						>
 							<Wrench className='text-lg' />
 							SparePart Orders
@@ -411,22 +393,20 @@ export default function SparePartsCart() {
 
 						<button
 							onClick={() => setActiveTab('ServiceBookingPage')}
-							className={`px-6 py-3 rounded-full flex items-center gap-2 z-10 transition-colors duration-300 ${
-								activeTab === 'ServiceBookingPage'
-									? 'text-white'
-									: 'text-black '
-							}`}
+							className={`px-6 py-3 rounded-full flex items-center gap-2 z-10 transition-colors duration-300 ${activeTab === 'ServiceBookingPage'
+								? 'text-white'
+								: 'text-black '
+								}`}
 						>
 							<Car className='text-xl' />
 							Service Order
 						</button>
 						{/* Animated indicator with smooth sliding */}
 						<div
-							className={`absolute inset-y-1 h-[calc(100%-0.5rem)] bg-[#9b111e] rounded-full shadow-md transition-all duration-300 ease-in-out ${
-								activeTab === 'service'
-									? 'left-1 w-[calc(50%-0.25rem)]'
-									: 'left-[calc(50%+0.25rem)] w-[calc(50%-0.25rem)]'
-							}`}
+							className={`absolute inset-y-1 h-[calc(100%-0.5rem)] bg-[#0050A5] rounded-full shadow-md transition-all duration-300 ease-in-out ${activeTab === 'service'
+								? 'left-1 w-[calc(50%-0.25rem)]'
+								: 'left-[calc(50%+0.25rem)] w-[calc(50%-0.25rem)]'
+								}`}
 						/>
 					</div>
 				</div>
@@ -476,16 +456,16 @@ export default function SparePartsCart() {
 					{/* Summary Sidebar */}
 					<div className=' fixed w-[520px] ml-[50px] left-1/2'>
 						{/* Parts Summary */}
-						{books.length > 0 && activeTab === 'service' && (
+						{books?.length > 0 && activeTab === 'service' && (
 							<div className='bg-white rounded-lg shadow-md p-4 mb-6  '>
 								<div className='flex justify-between items-center mb-1'>
 									<div>
-										<h2 className='text-lg font-semibold text-red-600'>
+										<h2 className='text-lg font-semibold text-[#0050A5]'>
 											PRICE DETAILS
 										</h2>
 									</div>
 								</div>
-								<div className='border-t border-orange-200 pt-2 w-full'></div>
+								<div className='border-t border-[#0050A5] pt-2 w-full'></div>
 								<h3 className='text-base font-semibold text-black-600 mb-4'>
 									Confirmed Service Orders
 								</h3>
@@ -508,8 +488,8 @@ export default function SparePartsCart() {
 										</span>
 									</div>
 								</div>
-								<div className='border-t border-orange-200 pt-2 mb-2'>
-									<div className='flex justify-between font-bold text-orange-700'>
+								<div className='border-t border-[#0050A5] pt-2 mb-2'>
+									<div className='flex justify-between font-bold text-[#0050A5]'>
 										<span>Total</span>
 										<span>₹{totalPartPrice}</span>
 									</div>
@@ -517,7 +497,7 @@ export default function SparePartsCart() {
 								<div className='flex justify-center'>
 									<button
 										type='submit'
-										className='flex justify-center gap-2 items-center mx-auto shadow-xl text-lg text-white bg-[#9b111e] backdrop-blur-md lg:font-semibold isolation-auto relative z-10 px-6 py-2 overflow-hidden border-2 rounded-full group hover:bg-red-700'
+										className='flex justify-center gap-2 items-center mx-auto shadow-xl text-lg text-white bg-[#0050A5] backdrop-blur-md lg:font-semibold isolation-auto relative z-10 px-6 py-2 overflow-hidden border-2 rounded-full group '
 										onClick={async () => {
 											try {
 												if (books.length > 0) {
@@ -540,12 +520,12 @@ export default function SparePartsCart() {
 							<div className='bg-white rounded-lg shadow-md p-4 '>
 								<div className='flex justify-between items-center mb-1'>
 									<div>
-										<h2 className='text-lg font-semibold text-red-600'>
+										<h2 className='text-lg font-semibold text-[#0050A5]'>
 											PRICE DETAILS
 										</h2>
 									</div>
 								</div>
-								<div className='border-t border-orange-200 pt-2 w-full'></div>
+								<div className='border-t border-[#0050A5] pt-2 w-full'></div>
 								<h3 className='text-base font-semibold text-black-600 mb-4'>
 									Confirmed Service Orders
 								</h3>
@@ -567,8 +547,8 @@ export default function SparePartsCart() {
 										</span>
 									</div>
 								</div>
-								<div className='border-t border-orange-200 pt-2 mb-4'>
-									<div className='flex justify-between font-bold text-orange-700'>
+								<div className='border-t border-[#0050A5] pt-2 mb-4'>
+									<div className='flex justify-between font-bold text-[#0050A5]'>
 										<span>Total</span>
 										<span>₹{totalServicePrice}</span>
 									</div>
@@ -576,7 +556,7 @@ export default function SparePartsCart() {
 								<div className='flex justify-center'>
 									<button
 										type='submit'
-										className='flex justify-center gap-2 items-center mx-auto shadow-xl text-lg text-white bg-[#9b111e] backdrop-blur-md lg:font-semibold isolation-auto border-gray-50 relative z-10 px-6 py-2 overflow-hidden border-2 rounded-full group -mt-2'
+										className='flex justify-center gap-2 items-center mx-auto shadow-xl text-lg text-white bg-[#0050A5] backdrop-blur-md lg:font-semibold isolation-auto border-gray-50 relative z-10 px-6 py-2 overflow-hidden border-2 rounded-full group -mt-2'
 										onClick={async () => {
 											try {
 												await placeServiceOrder();

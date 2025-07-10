@@ -1,16 +1,21 @@
-import { useEffect} from 'react';
+import { useEffect, useState } from 'react';
 import Offer from '../../components/Announcement/Offer';
+import HttpClient from '../../api/httpClient';
+import { API_END_POINTS } from '../../api/httpEndpoints';
 
 const Announcement = () => {
-	// const [isLoading, setIsLoading] = useState(true);
+	const [announcements, setAnnouncements] = useState([]);
 
 	const fetchAllOffers = async () => {
 		try {
-			// setIsLoading(false);
+			const response = await HttpClient.get(API_END_POINTS.offer.Get) as any;
+			// console.log('Full API Response:', response);
+			// console.log('Response.data:', response.data);
+			const dataToSet = response.data?.data || [];
+			// console.log('Data being set to state:', dataToSet);
+			setAnnouncements(dataToSet);
 		} catch (error) {
-			console.log(error);
-		} finally {
-			// setIsLoading(false);
+			console.log('API Error:', error);
 		}
 	};
 
@@ -28,7 +33,7 @@ const Announcement = () => {
 	// }
 	return (
 		<div style={{ textAlign: 'center', padding: '30px' }}>
-			<Offer />
+			<Offer announcements={announcements} />
 		</div>
 	);
 };

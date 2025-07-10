@@ -33,8 +33,8 @@ export default function GmailStyleInbox() {
 			filter === 'all'
 				? true
 				: filter === 'unread'
-					? !mail.is_read
-					: mail.is_read
+				? !mail.is_read
+				: mail.is_read
 		);
 
 	const fetchAllNotifications = async () => {
@@ -43,8 +43,7 @@ export default function GmailStyleInbox() {
 			const data: MailItem[] = response?.data?.data || [];
 			const sortedData = data.sort(
 				(b, a) =>
-					new Date(b?.created_at).getTime() -
-					new Date(a?.created_at).getTime()
+					new Date(b?.created_at).getTime() - new Date(a?.created_at).getTime()
 			);
 			setMails(sortedData);
 			// setIsLoading(false);
@@ -58,15 +57,6 @@ export default function GmailStyleInbox() {
 	useEffect(() => {
 		fetchAllNotifications();
 	}, []);
-
-	// if (isLoading) {
-	// 	return (
-	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-	// 		</div>
-	// 	);
-	// }
 
 	const handleUpdateNotification = async (notification: any) => {
 		setSelectedMail(notification);
@@ -82,20 +72,20 @@ export default function GmailStyleInbox() {
 	};
 
 	return (
-		<div className='min-h-screen bg-[#FAF3EB] p-2 font-[Poppins]'>
+		<div className='min-h-screen bg-[#d8e1ef] p-2 font-[Poppins]'>
 			<div className='flex items-center mb-6 mt-6'>
 				<button
 					onClick={() => navigate(-1)}
-					className='flex items-center text-[#9b111e] hover:underline mr-4 pl-2'
+					className='flex items-center text-[#0050A5] hover:underline mr-4 pl-2'
 				>
 					<FaArrowLeft className='mr-1' />
 				</button>
-				<h1 className='text-3xl font-bold text-[#9b111e]'>Notification</h1>
+				<h1 className='text-3xl font-bold text-[#0050A5]'>Notification</h1>
 			</div>
 			<div className='flex h-[80vh] border rounded-2xl overflow-hidden shadow-lg bg-white'>
 				{/* Sidebar */}
-				<aside className='w-64 border-r bg-[#fdefe9] p-6'>
-					<h2 className='text-lg font-semibold text-[#9b111e] mb-4'>Filters</h2>
+				<aside className='w-64 border-r bg-[#BED0EC] p-6'>
+					<h2 className='text-lg font-semibold text-[#0050A5] mb-4'>Filters</h2>
 					<div className='space-y-3'>
 						{['all', 'unread', 'read'].map((f) => (
 							<button
@@ -104,10 +94,11 @@ export default function GmailStyleInbox() {
 									setFilter(f as 'all' | 'unread' | 'read');
 									setSelectedMail(null);
 								}}
-								className={`block w-full text-left px-4 py-2 rounded-lg transition-all duration-200 ${filter === f
-									? 'bg-[#9b111e] text-white'
-									: 'bg-transparent text-gray-700 hover:bg-gray-100'
-									}`}
+								className={`block w-full text-left px-4 py-2 rounded-lg transition-all duration-200 ${
+									filter === f
+										? 'bg-[#0050A5] text-white'
+										: 'bg-transparent text-gray-700 hover:bg-gray-100'
+								}`}
 							>
 								{f.charAt(0).toUpperCase() + f.slice(1)}
 							</button>
@@ -122,10 +113,11 @@ export default function GmailStyleInbox() {
 							<div
 								key={index}
 								onClick={() => handleUpdateNotification(mail)}
-								className={`cursor-pointer flex gap-4 p-4  rounded-xl hover:bg-blue-50 transition duration-150 ${mail.unread
-									? 'bg-gray-100 font-semibold'
-									: 'border border-gray-200'
-									}`}
+								className={`cursor-pointer flex gap-4 p-4  rounded-xl hover:bg-blue-50 transition duration-150 ${
+									mail.unread
+										? 'bg-gray-100 font-semibold'
+										: 'border border-gray-200'
+								}`}
 							>
 								<div className='p-[1px] rounded-full bg-gradient-to-r from-red-600 to-red-800 inline-block'>
 									<img
@@ -140,7 +132,7 @@ export default function GmailStyleInbox() {
 											{mail.sender}
 										</span>
 
-										<p className='text-sm font-medium text-[#9b111e] mt-2'>
+										<p className='text-sm font-medium text-[#0050A5] mt-2'>
 											{mail.title}
 										</p>
 										<p className='text-xs text-gray-500 mt-2'>
@@ -163,7 +155,7 @@ export default function GmailStyleInbox() {
 							<div>
 								<button
 									onClick={() => setSelectedMail(null)}
-									className='text-md text-[#9b111e] hover:underline mb-4 inline-flex items-center'
+									className='text-md text-[#0050A5] hover:underline mb-4 inline-flex items-center'
 								>
 									← Back to list
 								</button>

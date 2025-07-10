@@ -178,7 +178,7 @@ const SelectCarPage: React.FC<SelectCarPageProps> = ({
 			<div className='bg-white shadow-md p-3'>
 				<button
 					onClick={onClose}
-					className='bg-red-600 px-2 text-white rounded-md  relative left-[315px] hover:bg-red-900'
+					className='bg-[#0050A5] px-2 text-white rounded-md  relative left-[315px] hover:bg-[#0050A5]-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200 font-medium'
 				>
 					X
 				</button>
@@ -200,7 +200,7 @@ const SelectCarPage: React.FC<SelectCarPageProps> = ({
 								id='brand'
 								value={selectedCar.brand}
 								onChange={(e) => handleBrandChange(e.target.value)}
-								className='w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 appearance-none bg-white'
+								className='w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#0050A5] focus:border-[#0050A5] appearance-none bg-white'
 							>
 								<option value=''>Select Brand</option>
 								{brands.map((brand) => (
@@ -227,7 +227,7 @@ const SelectCarPage: React.FC<SelectCarPageProps> = ({
 								value={selectedCar.model}
 								onChange={(e) => handleModelChange(e.target.value)}
 								disabled={!selectedCar.brand}
-								className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 appearance-none ${
+								className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#0050A5]-500 focus:border-[#0050A5] appearance-none ${
 									!selectedCar.brand
 										? 'bg-gray-100 cursor-not-allowed'
 										: 'bg-white'
@@ -258,7 +258,7 @@ const SelectCarPage: React.FC<SelectCarPageProps> = ({
 								value={selectedCar.year}
 								onChange={(e) => handleYearChange(Number(e.target.value))}
 								disabled={!selectedCar.model}
-								className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 appearance-none ${
+								className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#0050A5]-500 focus:border-[#0050A5] appearance-none ${
 									!selectedCar.model
 										? 'bg-gray-100 cursor-not-allowed'
 										: 'bg-white'
@@ -289,7 +289,7 @@ const SelectCarPage: React.FC<SelectCarPageProps> = ({
 								value={selectedCar.fuel}
 								onChange={(e) => handleFuelChange(e.target.value)}
 								disabled={!selectedCar.year}
-								className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-red-500 appearance-none ${
+								className={`w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-[#0050A5]-500 focus:border-[#0050A5] appearance-none ${
 									!selectedCar.year
 										? 'bg-gray-100 cursor-not-allowed'
 										: 'bg-white'
@@ -323,7 +323,7 @@ const SelectCarPage: React.FC<SelectCarPageProps> = ({
 					{/* Submit Button */}
 					<button
 						onClick={handleSubmit}
-						className='ml-[110px] bg-red-600 text-white py-2 px-8 rounded-md hover:bg-red-900 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 transition-colors duration-200 font-medium'
+						className='ml-[110px] bg-[#0050A5] text-white py-2 px-8 rounded-md hover:bg-[white] hover:text-[#0050A5] focus:outline-none focus:ring-2 focus:ring-[#0050A5]-500 focus:ring-offset-2 transition-colors duration-200 font-medium'
 					>
 						Confirm
 					</button>

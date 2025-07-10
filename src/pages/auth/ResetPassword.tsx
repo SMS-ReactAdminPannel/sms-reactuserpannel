@@ -15,12 +15,11 @@ type ResetFormData = {
 
 const ResetPassword = () => {
 	const [step, setStep] = useState<'email' | 'otp' | 'reset'>('email');
-	const [otpDigits, setOtpDigits] = useState(Array(6).fill(''));
 	const [AuthToken, setAuthToken] = useState('');
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+	const [otpDigits, setOtpDigits] = useState(Array(6).fill(''));
 	const otpRefs = useRef<(HTMLInputElement | null)[]>([]);
-	// const [isLoading, setIsLoading] = useState(false);
 	const navigate = useNavigate();
 	const {
 		register,
@@ -169,18 +168,18 @@ const ResetPassword = () => {
 							type='email'
 							placeholder='Enter your email address'
 							{...register('email', { required: 'Email is required' })}
-							className={`w-full mb-5 px-4 py-3 border text-[#7c0c0c] rounded-lg bg-white/70 placeholder:text-[#9f3f3f] focus:ring-2 focus:ring-[#9b111e] text-sm ${errors.email ? 'border-red-500' : 'border-[#d77c7c]'
+							className={`w-full mb-5 px-4 py-3 border text-[#0050A5] rounded-lg bg-white/70 placeholder:text-[#0050A5] focus:ring-2 focus:ring-[#0050A5] text-sm ${errors.email ? 'border-[#0050A5]' : 'border-[#0050A5]'
 								}`}
 						/>
 						{errors.email && (
-							<span className='text-xs text-red-500'>
+							<span className='text-xs text-[#0050A5]'>
 								{errors.email.message}
 							</span>
 						)}
 						<button
 							type='button'
 							onClick={handleEmailSubmit}
-							className='w-full py-2 mt-2 text-white font-semibold rounded-full bg-gradient-to-r from-[#9b111e] to-[#d23c3c] text-sm'
+							className='w-full py-2 mt-2 text-white font-semibold rounded-full bg-[#0050A5] text-sm'
 						>
 							Send OTP
 						</button>
@@ -205,17 +204,17 @@ const ResetPassword = () => {
 									ref={(el) => {
 										if (el) otpRefs.current[idx] = el;
 									}}
-									className='w-10 h-12 text-center text-lg rounded-lg border border-[#d77c7c] bg-white/80 text-[#7c0c0c] focus:ring-2 focus:ring-[#9b111e]'
+									className='w-10 h-12 text-center text-lg rounded-lg border border-[#0050A5] bg-white/80 text-[#0050A5] focus:ring-2 focus:ring-[#0050A5]'
 								/>
 							))}
 						</div>
 						{errors.otp && (
-							<span className='text-xs text-red-500'>{errors.otp.message}</span>
+							<span className='text-xs text-[#0050A5]'>{errors.otp.message}</span>
 						)}
 						<button
 							type='button'
 							onClick={handleOtpVerify}
-							className='w-full py-2 mt-2 text-white font-semibold rounded-full bg-gradient-to-r from-[#9b111e] to-[#d23c3c] text-sm'
+							className='w-full py-2 mt-2 text-white font-semibold rounded-full bg-[#0050A5] text-sm'
 						>
 							Verify OTP
 						</button>
@@ -243,7 +242,7 @@ const ResetPassword = () => {
 												'Include uppercase, lowercase, number & special char',
 										},
 									})}
-									className={`w-full px-4 py-3 border text-[#7c0c0c] placeholder:text-[#9f3f3f] rounded-lg bg-white/70 pr-10 text-sm ${errors.newPassword ? 'border-red-500' : 'border-[#d77c7c]'
+									className={`w-full px-4 py-3 border text-white placeholder:text-[#0050A5] rounded-lg bg-white/70 pr-10 text-sm ${errors.newPassword ? 'border-[#0050A5]' : 'border-[#0050A5]'
 										}`}
 								/>
 								<span
@@ -251,14 +250,14 @@ const ResetPassword = () => {
 									onClick={() => setShowPassword(!showPassword)}
 								>
 									{showPassword ? (
-										<EyeIcon className='w-5 h-5 text-[#9b111e]' />
+										<EyeIcon className='w-5 h-5 text-[#0050A5]' />
 									) : (
-										<EyeSlashIcon className='w-5 h-5 text-[#9b111e]' />
+										<EyeSlashIcon className='w-5 h-5 text-[#0050A5]' />
 									)}
 								</span>
 							</div>
 							{errors.newPassword && (
-								<span className='text-xs text-red-500'>
+								<span className='text-xs text-[#0050A5]'>
 									{errors.newPassword.message}
 								</span>
 							)}
@@ -276,8 +275,8 @@ const ResetPassword = () => {
 									{...register('confirmPassword', {
 										required: 'Please confirm your password',
 									})}
-									className={`w-full px-4 py-3 border text-[#7c0c0c] placeholder:text-[#9f3f3f] rounded-lg bg-white/70 pr-10 text-sm ${errors.confirmPassword
-										? 'border-red-500'
+									className={`w-full px-4 py-3 border text-white placeholder:text-[#0050A5] rounded-lg bg-white/70 pr-10 text-sm ${errors.confirmPassword
+										? 'border-[#0050A5]'
 										: 'border-[#d77c7c]'
 										}`}
 								/>
@@ -286,14 +285,14 @@ const ResetPassword = () => {
 									onClick={() => setShowConfirmPassword(!showConfirmPassword)}
 								>
 									{showConfirmPassword ? (
-										<EyeIcon className='w-5 h-5 text-[#9b111e]' />
+										<EyeIcon className='w-5 h-5 text-[#0050A5]' />
 									) : (
-										<EyeSlashIcon className='w-5 h-5 text-[#9b111e]' />
+										<EyeSlashIcon className='w-5 h-5 text-[#0050A5]' />
 									)}
 								</span>
 							</div>
 							{errors.confirmPassword && (
-								<span className='text-xs text-red-500'>
+								<span className='text-xs text-[#0050A5]'>
 									{errors.confirmPassword.message}
 								</span>
 							)}
@@ -302,7 +301,7 @@ const ResetPassword = () => {
 						{/* Submit Button */}
 						<button
 							type='submit'
-							className='w-full py-3 text-white font-semibold rounded-full shadow-md hover:shadow-xl transition-all duration-300 hover:brightness-110 text-sm bg-gradient-to-r from-[#9b111e] to-[#d23c3c]'
+							className='w-full py-3 text-white font-semibold rounded-full shadow-md hover:shadow-xl transition-all duration-300 hover:brightness-110 text-sm bg-[#0050A5]'
 						>
 							Reset Password
 						</button>
@@ -312,7 +311,7 @@ const ResetPassword = () => {
 				<div className='text-center pt-1'>
 					<Link
 						to='/login'
-						className='text-white hover:underline text-md text-[#d23c3c] font-bold'
+						className='text-white hover:underline text-md text-white font-bold'
 					>
 						Back to Login
 					</Link>

@@ -204,6 +204,10 @@ const SpareParts: React.FC = () => {
 				const response = await postSparePartsData(payload);
 				if (response) {
 					toast.success('Item added to cart!', { duration: 2000 });
+					// Refresh cart count in navbar
+					if ((window as any).refreshCartCount) {
+						(window as any).refreshCartCount();
+					}
 				}
 			} catch (error) {
 				console.error('Error adding to cart:', error);
@@ -235,7 +239,7 @@ const SpareParts: React.FC = () => {
 		<div className='p-12 mx-8'>
 			<h1 className='text-center' ref={offerTitle.elementRef}>
 				<span
-					className='inline-block pb-1 relative text-[#9b111e] mb-2'
+					className='inline-block pb-1 relative text-[#0050A5] mb-2'
 					style={{ ...FONTS.heading }}
 				>
 					Spare Parts
@@ -252,12 +256,12 @@ const SpareParts: React.FC = () => {
 					<input
 						type='text'
 						placeholder='Search by product name...'
-						className='border border-red-300 rounded-full px-5 py-2 pr-10 w-full focus:outline-none focus:ring-2 focus:ring-[#9b111e]'
+						className='border border-[#0050A5] rounded-full px-5 py-2 pr-10 w-full focus:outline-none focus:ring-2 focus:ring-[#0050A5]'
 						value={searchTerm}
 						onChange={(e) => setSearchTerm(e.target.value)}
 					/>
 					<button
-						className='absolute right-3 top-[85%] -translate-y-1/2 text-xl text-[#de687a] hover:text-red-600 transition-all duration-200 hover:scale-105 hover:bg-[#f1a2a9] p-1 rounded-full'
+						className='absolute right-3 top-[85%] -translate-y-1/2 text-xl text-[#0050A5] hover:text-white transition-all duration-200 hover:scale-105 hover:bg-[#0050A5] p-1 rounded-full'
 						onClick={() => {
 							if (searchTerm !== '') {
 								setSearchTerm('');
@@ -275,7 +279,7 @@ const SpareParts: React.FC = () => {
 				{/* Content - Left Side */}
 				<div className='flex-1 order-none lg:order-none'>
 					<h2
-						className='text-[#9b111e] mb-3 md:mb-4'
+						className='text-[#0050A5] mb-3 md:mb-4'
 						style={{ ...FONTS.sub_heading }}
 					>
 						Welcome to Auto Spare Hub
@@ -299,7 +303,7 @@ const SpareParts: React.FC = () => {
 
 			<h1 className='text-center' ref={productTitle.elementRef}>
 				<span
-					className='inline-block pb-1 relative text-[#9b111e] mb-10'
+					className='inline-block pb-1 relative text-[#0050A5] mb-10'
 					style={{ ...FONTS.heading }}
 				>
 					Products
@@ -317,8 +321,8 @@ const SpareParts: React.FC = () => {
 						<div className='col-span-full text-center py-8'>
 							<p className='text-gray-500 text-lg'>
 								{searchTerm
-									? 'No products found matching your search.'
-									: 'No products available.'}
+									? 'No products found matching your search'
+									: 'No products available'}
 							</p>
 						</div>
 					) : (
@@ -326,7 +330,7 @@ const SpareParts: React.FC = () => {
 							{displayedParts.map((part, index) => (
 								<div
 									key={part.id}
-									className='group relative border rounded-lg overflow-hidden shadow transition-transform duration-300 cursor-pointer bg-[#efe7d0]  hover:shadow-[0_0_10px_rgba(155,17,30,0.5)]'
+									className='group relative border rounded-lg overflow-hidden shadow transition-transform duration-300 cursor-pointer bg-[#BED0EC]  hover:shadow-[0_0_10px_#BED0EC]'
 									onClick={() => setSelectedPart(part)}
 									onMouseEnter={() => setHoveredIndex(index)}
 									onMouseLeave={() => setHoveredIndex(null)}
@@ -356,7 +360,7 @@ const SpareParts: React.FC = () => {
 										<div className='text-md text-gray-600 mb-1'>
 											{part.type}
 										</div>
-										<div className='text-md font-bold text-[#9b111e]'>
+										<div className='text-md font-bold text-[#0050A5]'>
 											₹{part.price.toLocaleString()}
 										</div>
 										<div
@@ -369,7 +373,7 @@ const SpareParts: React.FC = () => {
 
 										{/* Cart Icon Button */}
 										<button
-											className='absolute bottom-4 right-5 bg-white p-3 rounded-full shadow hover:bg-[#9b111e] hover:text-white transition'
+											className='absolute bottom-4 right-5 bg-white p-3 rounded-full shadow hover:bg-[#0050A5] hover:text-white transition'
 											onClick={(e) => {
 												e.stopPropagation();
 												handleAddToCart(part);
@@ -389,7 +393,7 @@ const SpareParts: React.FC = () => {
 					{!showAllProducts && filteredParts.length > 8 && (
 						<button
 							onClick={() => setShowAllProducts(true)}
-							className='bg-[#9b111e] text-white px-6 py-2 rounded-md hover:bg-[#7a0d17] transition-colors duration-200'
+							className='bg-[#0050A5] text-white px-6 py-2 rounded-md  transition-colors duration-200'
 						>
 							View All Products ({filteredParts.length})
 						</button>
@@ -417,12 +421,12 @@ const SpareParts: React.FC = () => {
 				<div className='bg-gray-100 mt-16 transition-shadow p-8'>
 					<h1 className='text-center' ref={bundleTitle.elementRef}>
 						<span
-							className='inline-block pb-1 relative text-[#9b111e] mb-2'
+							className='inline-block pb-1 relative text-[#0050A5] mb-2'
 							style={{ ...FONTS.heading }}
 						>
 							Our Bundles
 							<span
-								className={`absolute top-11 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
+								className={`absolute top-11 left-1/2 h-[1px] bg-[#0050A5] transform -translate-x-1/2 origin-center transition-all duration-700 ${
 									bundleTitle.isVisible
 										? 'scale-x-100 w-full'
 										: 'scale-x-0 w-full'
@@ -489,7 +493,7 @@ const SpareParts: React.FC = () => {
 									return prev - 1;
 								});
 							}}
-							className='bg-[#9b111e] text-white px-6 py-2 rounded-lg hover:bg-red-800 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50'
+							className='bg-[#0050A5] text-white px-6 py-2 rounded-lg  transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#BED0EC] focus:ring-opacity-50'
 							aria-label='Previous slide'
 						>
 							← Previous
@@ -503,7 +507,7 @@ const SpareParts: React.FC = () => {
 									return prev + 1;
 								});
 							}}
-							className='bg-[#9b111e] text-white px-6 py-2 rounded-lg hover:bg-red-800 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50'
+							className='bg-[#0050A5] text-white px-6 py-2 rounded-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-[#BED0EC] focus:ring-opacity-50'
 							aria-label='Next slide'
 						>
 							Next →
@@ -518,7 +522,7 @@ const SpareParts: React.FC = () => {
 								onClick={() => setCurrentIndex(index)}
 								className={`w-3 h-3 rounded-full transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-opacity-50 ${
 									index === currentIndex
-										? 'bg-[#9b111e]'
+										? 'bg-[#0050A5]'
 										: 'bg-gray-400 hover:bg-gray-500'
 								}`}
 								aria-label={`Go to slide ${index + 1}`}
@@ -531,7 +535,7 @@ const SpareParts: React.FC = () => {
 			{/* Bottom Full Width Section */}
 			<div className='w-full py-12 px-6 flex flex-col-2 lg:flex-row items-center gap-8'>
 				<div className='flex-1 max-w-2xl lg:order-1'>
-					<h2 className='text-[#9b111e] mb-6' style={{ ...FONTS.sub_heading }}>
+					<h2 className='text-[#0050A5] mb-6' style={{ ...FONTS.sub_heading }}>
 						Professional Auto Service & Support
 					</h2>
 					<p className='text-gray-700 mb-6 text-sm leading-relaxed'>
@@ -563,44 +567,50 @@ const SpareParts: React.FC = () => {
 
 			<div className='max-w-full px-4 md:px-6 lg:px-8'>
 				<h1
-					className=' text-[#9b111e] mb-8 text-center'
+					className=' text-[#0050A5] mb-8 text-center'
 					style={{ ...FONTS.heading }}
 				>
 					By Categories
 				</h1>
 
-				<div className=' grid grid-cols-4 gap-6'>
-					{categories.map(({ id, title, items }) => (
-						<div
-							key={id}
-							className='flex flex-col gap-4 p-6 border rounded-xl shadow-md'
-						>
-							<div className='flex justify-between items-center'>
-								<h2 className='text-md font-bold uppercase text-[#9b111e]'>
-									{title}
-								</h2>
-								<img
-									src={spareImg}
-									alt={title}
-									className='w-16 h-16 object-contain'
-								/>
-							</div>
-							<ul className='space-y-1 text-sm'>
-								{items.slice(0, 3).map((item, index) => (
-									<li key={index} className='hover:underline cursor-pointer'>
-										{item}
-									</li>
-								))}
-							</ul>
-							<Link
-								to={`/spare-parts/category/${id}`}
-								className='text-sm font-semibold relative bottom-[1px] text-red-700 cursor-pointer hover:underline mt-1'
+				{categories.length !== 0 ? (
+					<div className=' grid grid-cols-4 gap-6'>
+						{categories?.map(({ id, title, items }) => (
+							<div
+								key={id}
+								className='flex flex-col gap-4 p-6 border rounded-xl shadow-md'
 							>
-								ALL CATEGORIES →
-							</Link>
-						</div>
-					))}
-				</div>
+								<div className='flex justify-between items-center'>
+									<h2 className='text-md font-bold uppercase text-[#0050A5]'>
+										{title}
+									</h2>
+									<img
+										src={spareImg}
+										alt={title}
+										className='w-16 h-16 object-contain'
+									/>
+								</div>
+								<ul className='space-y-1 text-sm'>
+									{items.slice(0, 3).map((item, index) => (
+										<li key={index} className='hover:underline cursor-pointer'>
+											{item}
+										</li>
+									))}
+								</ul>
+								<Link
+									to={`/spare-parts/category/${id}`}
+									className='text-sm font-semibold relative bottom-[1px] text-[#0050A5] cursor-pointer hover:underline mt-1'
+								>
+									ALL CATEGORIES →
+								</Link>
+							</div>
+						))}
+					</div>
+				) : (
+					<div className='flex items-center justify-center'>
+						<p className='text-gray-500'>No Categories available</p>
+					</div>
+				)}
 			</div>
 
 			{/* Edit Product Modal */}
@@ -615,7 +625,7 @@ const SpareParts: React.FC = () => {
 					>
 						<button
 							onClick={() => setSelectedPart(null)}
-							className='absolute top-2 right-2 text-3xl font-bold text-gray-600 hover:text-red-600'
+							className='absolute top-2 right-2 text-3xl font-bold text-gray-600 hover:text-[#0050A5]'
 							aria-label='Close modal'
 						>
 							&times;
@@ -663,7 +673,7 @@ const SpareParts: React.FC = () => {
 
 						<div className='text-sm mt-3 mb-2'>
 							Total Price:{' '}
-							<span className='font-semibold text-[#9b111e]'>
+							<span className='font-semibold text-[#0050A5]'>
 								₹{(selectedPart.price * quantity).toLocaleString()}
 							</span>
 						</div>
@@ -672,7 +682,7 @@ const SpareParts: React.FC = () => {
 							{parseInt(selectedPart.stock) >= quantity ? (
 								<button
 									onClick={() => handleAddToCart(selectedPart)}
-									className='mt-2 w-full bg-[#9b111e] text-white px-4 py-2 rounded hover:bg-[#7f0d18] transition'
+									className='mt-2 w-full bg-[#0050A5] text-white px-4 py-2 rounded  transition'
 								>
 									Add to Cart
 								</button>
@@ -685,12 +695,10 @@ const SpareParts: React.FC = () => {
 					</div>
 				</div>
 			)}
-			<div>
-				<LoginPromptModal
-					isOpen={showLoginModal}
-					onClose={() => setShowLoginModal(false)}
-				/>
-			</div>
+			<LoginPromptModal
+				isOpen={showLoginModal}
+				onClose={() => setShowLoginModal(false)}
+			/>
 		</div>
 	);
 };
