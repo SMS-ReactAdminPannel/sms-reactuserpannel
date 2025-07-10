@@ -140,9 +140,24 @@ const ProfilePage: React.FC = () => {
 		
 		setEditMode(false);
 		try {
-			const response = await updateUserProfile(profileData);
+			// Send only allowed fields
+			const transformedData = {
+				firstName: profileData.firstName,
+				lastName: profileData.lastName,
+				email: profileData.email,
+				contact_info: `${profileData.number || profileData.contact_info?.phoneNumber || ''}, ${profileData.address || profileData.contact_info?.address1 || ''}`
+			};
+			
+			const response = await updateUserProfile(transformedData);
 			if (response) {
 				console.log('Profile updated successfully:', response);
+				// Update local state with new data
+				setProfileData((prev: any) => ({
+					...prev,
+					...transformedData,
+					number: profileData.number,
+					address: profileData.address
+				}));
 			}
 		} catch (error) {
 			console.error('Error updating profile:', error);
@@ -227,7 +242,7 @@ const ProfilePage: React.FC = () => {
 													/>
 												</div>
 
-												<div>
+												{/* <div>
 													<label className='text-sm font-semibold block mb-1 text-gray-700'>
 														Issue Description
 													</label>
@@ -245,12 +260,12 @@ const ProfilePage: React.FC = () => {
 															} as React.CSSProperties
 														}
 													/>
-												</div>
-												<div className='flex justify-end mt-3'>
+												</div> */}
+												{/* <div className='flex justify-end mt-3'>
 													<button className='w-auto py-1 px-2 bg-[#0050A5] text-white text-sm font-medium rounded-lg transition-transform duration-300 hover:scale-105'>
 														CAR HISTORY
 													</button>
-												</div>
+												</div> */}
 											</div>
 
 											{/* Service History Panel */}
@@ -420,17 +435,19 @@ const ProfilePage: React.FC = () => {
 											<p className='text-lg'>
 												<strong className='text-gray-700'>Phone:</strong>{' '}
 												<span className='text-gray-600'>
-													{profileData?.number || profileData?.contact_info?.phoneNumber || 'N/A'}
+													{profileData?.number || 
+													(typeof profileData?.contact_info === 'string' 
+														? profileData.contact_info.split(', ')[0] 
+														: profileData?.contact_info?.phoneNumber) || 'N/A'}
 												</span>
 											</p>
 											<p className='text-lg'>
 												<strong className='text-gray-700'>Address:</strong>{' '}
 												<span className='text-gray-600'>
 													{profileData?.address || 
-													(profileData?.contact_info?.address1
-														? profileData?.contact_info?.address1 +
-														(profileData?.contact_info?.address2 ? ' ' + profileData?.contact_info?.address2 : '')
-														: 'N/A') || 'N/A'}
+													(typeof profileData?.contact_info === 'string' 
+														? profileData.contact_info.split(', ')[1] 
+														: profileData?.contact_info?.address1) || 'N/A'}
 												</span>
 											</p>
 										</div>
