@@ -102,7 +102,6 @@ export default function SparePartsCart() {
 			const cartData = response?.data?.data;
 			if (!Array.isArray(cartData)) return;
 			const spareEntry = cartData.find((item) => item.type === 'spare');
-			console.log(spareEntry, "checing spare enter")
 			const cartId = spareEntry?._id;
 			setCartId(cartId);
 
@@ -127,7 +126,6 @@ export default function SparePartsCart() {
 
 			const serviceEntry = cartData.find((item) => item.type === 'service');
 			const serviceId = serviceEntry?._id;
-			console.log(serviceEntry, "checing service enter")
 			setServiceCartId(serviceId);
 
 			if (serviceEntry?.services) {

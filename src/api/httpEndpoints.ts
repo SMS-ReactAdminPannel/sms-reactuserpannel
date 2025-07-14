@@ -58,6 +58,7 @@ export const API_END_POINTS = {
 		post_forgot_password: '/api/customer/auth/forget-pass',
 		post_resend_otp: '/api/customer/auth/resend-otp',
 		post_reset_password: '/api/customer/auth/reset-pass',
+		post_image: '/api/image/singlefile/userid/',
 	},
 
 	notification: {

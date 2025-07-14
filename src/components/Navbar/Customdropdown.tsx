@@ -1,32 +1,28 @@
 import React, { useState, useRef, useEffect } from 'react';
 
 const cities = ['Chennai', 'Coimbatore', 'Madurai'];
+
 const CustomDropdown: React.FC = () => {
-	const [isOpen, setIsOpen] = useState(false);
-	const [selectedCity, setSelectedCity] = useState(cities[0]);
-	const dropdownRef = useRef<HTMLDivElement>(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [selectedCity, setSelectedCity] = useState(cities[0]);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
+  const toggleDropdown = () => setIsOpen((prev) => !prev);
 
-	const toggleDropdown = () => setIsOpen((prev) => !prev);
+  const selectCity = (city: string) => {
+    setSelectedCity(city);
+    setIsOpen(false);
+  };
 
-	const selectCity = (city: string) => {
-		setSelectedCity(city);
-		setIsOpen(false);
-	};
-
-	// Close dropdown if clicked outside
-	useEffect(() => {
-		const handleClickOutside = (event: MouseEvent) => {
-			if (
-				dropdownRef.current &&
-				!dropdownRef.current.contains(event.target as Node)
-			) {
-				setIsOpen(false);
-			}
-		};
-		document.addEventListener('mousedown', handleClickOutside);
-		return () => document.removeEventListener('mousedown', handleClickOutside);
-	}, []);
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+        setIsOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
 
 	return (
 		<div ref={dropdownRef} className='relative inline-block w-40 '>

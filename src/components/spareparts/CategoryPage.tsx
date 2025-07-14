@@ -2,13 +2,12 @@ import { Link, useParams } from 'react-router-dom';
 import { useSparePartsDataset } from '../spareparts/data/Product';
 import { IoMdArrowRoundBack } from 'react-icons/io';
 import { useNavigate } from 'react-router-dom';
-import spareImg from '../../assets/CarPart1.jfif';
 
 const CategoryPage = () => {
 	const { parts } = useSparePartsDataset();
 	const { categoryId } = useParams();
-	const category = parts.filter(
-		(cat) => cat.category?.toLowerCase() === categoryId?.toLowerCase()
+	const category = parts?.filter(
+		(cat) => cat?.category?.toLowerCase() === categoryId?.toLowerCase()
 	);
 	if (!category) return <div>Category not found</div>;
 
@@ -26,23 +25,17 @@ const CategoryPage = () => {
 						onClick={fallBack}
 						className='w-8 h-8 text-[#0050A5] cursor-pointer hover:text-blue-500 transition-colors relative top-[7px]'
 					/>
-					{category?.map((item, index) => {
-						return (
-							<div className='mb-5'>
-								<h1
-									key={index}
-									className='text-3xl font-bold text-[#0050A5] mb-2'
-								>
-									{item.category}
-								</h1>
-								<p className='text-gray-600'>Discover our premium collection</p>
-							</div>
-						);
-					})}
+
+					<div className='mb-5'>
+						<h1 className='text-3xl font-bold text-[#0050A5] mb-2'>
+							{category[0]?.category}
+						</h1>
+						<p className='text-gray-600'>Discover our premium collection</p>
+					</div>
 				</div>
 
-				<div className='grid lg:grid-cols-5 sm:grid-cols-2 gap-8'>
-					{category?.map((product) => (
+				<div className='grid lg:grid-cols-4 sm:grid-cols-2 '>
+					{category?.map((product: any) => (
 						<div
 							key={product?.id}
 							className='relative rounded-lg shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 overflow-hidden h-[330px] w-[230px] sm:w-full group'
@@ -51,7 +44,7 @@ const CategoryPage = () => {
 							<div
 								className='absolute inset-0 bg-cover bg-center z-0'
 								style={{
-									backgroundImage: `url(${spareImg})`,
+									backgroundImage: `url(${product?.image})`,
 									backgroundSize: 'cover',
 									backgroundPosition: 'center center',
 									backgroundRepeat: 'no-repeat',
@@ -65,7 +58,11 @@ const CategoryPage = () => {
 										<h2 className='text-xl font-bold text-[#0050A5] mb-1 group-hover:text-[#0050A5] transition-colors'>
 											{product?.spareparts_name}
 										</h2>
-										<p className='text-sm text-gray-500'>Premium Quality</p>
+										<div className='bg-green-500 inline-block px-2 py-0.5 rounded-md'>
+											<p className='text-sm text-white'>
+												Stock: {product?.stock}
+											</p>
+										</div>
 									</div>
 								</div>
 								<Link
@@ -82,7 +79,7 @@ const CategoryPage = () => {
 				</div>
 
 				{/* Empty State */}
-				{category.length === 0 && (
+				{category?.length === 0 && (
 					<div className='text-center py-16'>
 						<div className='bg-white rounded-3xl p-12 shadow-lg max-w-md mx-auto'>
 							<div className='w-24 h-24 bg-gray-100 rounded-full mx-auto mb-6 flex items-center justify-center'>
