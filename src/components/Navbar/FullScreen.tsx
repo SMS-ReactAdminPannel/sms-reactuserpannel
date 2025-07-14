@@ -26,7 +26,7 @@ const FullscreenButton: React.FC = () => {
 			<li className='relative'>
 				<button
 					onClick={handleFullscreen}
-					className='bg-transparent transition-all duration-200 text-[#9b111e] ease-in-out p-1 border-0 inline-block relative leading-none rounded'
+					className='bg-transparent transition-all duration-200 text-[#0050A5] ease-in-out p-1 border-0 inline-block relative leading-none rounded'
 					aria-label='Toggle fullscreen'
 				>
 					<i className='material-symbols-outlined text-[24px] hover:text-[28px] transition-all duration-200 ease-in-out'>

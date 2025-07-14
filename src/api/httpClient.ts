@@ -1,7 +1,8 @@
 import axios from 'axios';
 
-const backEndUrl: string = 'https://sms-node-backend-17xb.onrender.com';
-// const backEndUrl: string = 'http://localhost:3000';
+// const backEndUrl: string = 'https://sms-node-backend-17xb.onrender.com';
+// const backEndUrl: string = 'http://192.168.1.16:3000';
+const backEndUrl: string = 'http://localhost:3000'
 
 const Axios = axios.create({
 	baseURL: backEndUrl,
@@ -16,7 +17,7 @@ Axios.interceptors.request.use((config) => {
 	const token = localStorage.getItem('authToken');
 
 	if (token) {
-		config.headers['Authorization'] = token
+		config.headers['Authorization'] = `${token ? token : ''}`;
 	}
 	return config;
 });
@@ -45,7 +46,7 @@ class HttpClient {
 		return response?.data;
 	}
 
-	async patch(url: string, params: string, data: string) {
+	async patch(url: string, params?: string, data?: string) {
 		const response = await Axios.put(url, data, {
 			params: params,
 			headers: {},
@@ -53,7 +54,7 @@ class HttpClient {
 		return response?.data;
 	}
 
-	async delete(url: string, params: string) {
+	async delete(url: string, params?: string) {
 		const response = await Axios.delete(url, { params: params });
 		return response?.data;
 	}

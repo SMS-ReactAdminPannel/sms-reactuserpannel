@@ -28,6 +28,7 @@ const ProfilePage: React.FC = () => {
 	const [editMode, setEditMode] = useState(false);
 	const [showHistory, setShowHistory] = useState<number | null>(null);
 	const [profileData, setProfileData] = useState<any>({});
+	const [errors, setErrors] = useState<any>({});
 	// const [isLoading, setIsLoading] = useState(true);
 
 	const fetchUserProfile = async () => {
@@ -65,9 +66,37 @@ const ProfilePage: React.FC = () => {
 		],
 	});
 
+	const validateField = (name: string, value: string) => {
+		switch (name) {
+			case 'firstName':
+			case 'lastName':
+				return !value.trim() ? 'This field is required' : '';
+			case 'email':
+				if (!value.trim()) return 'Email is required';
+				if (!/^[^\s@]+@gmail\.com$/.test(value)) return 'Email must be a Gmail address';
+				return '';
+			case 'number':
+				if (!value.trim()) return 'Phone number is required';
+				if (!/^[6-9]\d{9}$/.test(value.replace(/\D/g, ''))) return 'Invalid Indian phone number format';
+				return '';
+			case 'address':
+				return !value.trim() ? 'Address is required' : '';
+			default:
+				return '';
+		}
+	};
+
 	const handleUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
-		setProfileData((prev: any) => ({ ...prev, [name]: value }));
+		let finalValue = value;
+		
+		if (name === 'number') {
+			finalValue = value.replace(/[^0-9]/g, '');
+		}
+		
+		setProfileData((prev: any) => ({ ...prev, [name]: finalValue }));
+		const error = validateField(name, finalValue);
+		setErrors((prev: any) => ({ ...prev, [name]: error }));
 	};
 
 	const handleCarChange = (
@@ -91,7 +120,24 @@ const ProfilePage: React.FC = () => {
 		setShowHistory(null);
 	};
 
+	const validateForm = () => {
+		const newErrors: any = {};
+		const fields = ['firstName', 'lastName', 'email', 'number', 'address'];
+		
+		fields.forEach(field => {
+			const error = validateField(field, profileData[field] || '');
+			if (error) newErrors[field] = error;
+		});
+		
+		setErrors(newErrors);
+		return Object.keys(newErrors).length === 0;
+	};
+
 	const handleEditProfile = async () => {
+		if (!validateForm()) {
+			return;
+		}
+		
 		setEditMode(false);
 		try {
 			const response = await updateUserProfile(profileData);
@@ -123,8 +169,8 @@ const ProfilePage: React.FC = () => {
 					<div className='flex h-full w-full'>
 						{/* Red Section - Left */}
 						<div
-							className='w-1/2 bg-gradient-to-br from-red-700 via-red-800 to-red-900 relative overflow-hidden'
-							style={{ backgroundColor: '#9b111e' }}
+							className='w-1/2  relative overflow-hidden'
+							style={{ backgroundColor: '#0050A5' }}
 						>
 							<div className='absolute inset-0 bg-gradient-to-br from-red-600/20 to-transparent' />
 							<div className='relative z-10 flex flex-col items-center justify-center h-full text-white p-8'>
@@ -134,7 +180,7 @@ const ProfilePage: React.FC = () => {
 								</p>
 								<button
 									onClick={() => setIsCarTab(false)}
-									className='px-3 py-1 border-2 border-white/30 rounded-full text-white font-medium hover:bg-white/10 transition-all duration-300 hover:scale-105'
+									className='px-3 py-1 border-2 border-white bg-white rounded-full text-[#0050A5] font-medium  transition-all duration-300 hover:scale-105'
 								>
 									USER PROFILE
 								</button>
@@ -144,7 +190,7 @@ const ProfilePage: React.FC = () => {
 
 						{/* Car Details Section - Right */}
 						<div className='w-1/2 flex flex-col  p-8 bg-gray-50 relative'>
-							<h2 className='text-3xl font-bold text-gray-800 mb-6 text-center'>
+							<h2 className='text-3xl font-bold text-[#0050A5] mb-6 text-center'>
 								Car Details
 							</h2>
 
@@ -175,7 +221,7 @@ const ProfilePage: React.FC = () => {
 														className='w-full px-3 py-2 text-sm bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300'
 														style={
 															{
-																'--tw-ring-color': '#9b111e',
+																'--tw-ring-color': '#0050A5',
 															} as React.CSSProperties
 														}
 													/>
@@ -195,13 +241,13 @@ const ProfilePage: React.FC = () => {
 														className='w-full px-3 py-2 text-sm bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300'
 														style={
 															{
-																'--tw-ring-color': '#9b111e',
+																'--tw-ring-color': '#0050A5',
 															} as React.CSSProperties
 														}
 													/>
 												</div>
 												<div className='flex justify-end mt-3'>
-													<button className='w-auto py-1 px-2 bg-[#9b111e] text-white text-sm font-medium rounded-lg transition-transform duration-300 hover:scale-105'>
+													<button className='w-auto py-1 px-2 bg-[#0050A5] text-white text-sm font-medium rounded-lg transition-transform duration-300 hover:scale-105'>
 														CAR HISTORY
 													</button>
 												</div>
@@ -251,7 +297,7 @@ const ProfilePage: React.FC = () => {
 										<button
 											onClick={addCar}
 											className='w-[180px] py-1.5 text-white font-medium rounded-lg  transition-all duration-300 hover:scale-95 shadow-lg sticky bottom-0'
-											style={{ backgroundColor: '#9b111e' }}
+											style={{ backgroundColor: '#0050A5' }}
 										>
 											ADD ANOTHER CAR
 										</button>
@@ -270,67 +316,82 @@ const ProfilePage: React.FC = () => {
 					<div className='flex h-full w-full'>
 						{/* User Profile Section - Left */}
 						<div className='w-1/2 flex flex-col items-center justify-center p-4 bg-gray-50 relative'>
-							<h2 className='text-3xl font-bold text-gray-800 mb-6'>
+							<h2 className='text-3xl font-bold text-[#0050A5] mb-6'>
 								User Information
 							</h2>
 
 							<div className='w-full max-w-sm space-y-4'>
 								{editMode ? (
 									<>
-										<input
-											name='firstName'
-											value={profileData?.firstName}
-											onChange={handleUserChange}
-											placeholder='Name'
-											className='w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300'
-											style={
-												{ '--tw-ring-color': '#9b111e' } as React.CSSProperties
-											}
-										/>
-										<input
-											name='lastName'
-											value={profileData?.lastName}
-											onChange={handleUserChange}
-											placeholder='Name'
-											className='w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300'
-											style={
-												{ '--tw-ring-color': '#9b111e' } as React.CSSProperties
-											}
-										/>
-										<input
-											name='email'
-											value={profileData?.email}
-											onChange={handleUserChange}
-											placeholder='Email'
-											className='w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300'
-											style={
-												{ '--tw-ring-color': '#9b111e' } as React.CSSProperties
-											}
-										/>
-										<input
-											name='number'
-											value={profileData?.number}
-											onChange={handleUserChange}
-											placeholder='Phone Number'
-											className='w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300'
-											style={
-												{ '--tw-ring-color': '#9b111e' } as React.CSSProperties
-											}
-										/>
-										<input
-											name='address'
-											value={profileData?.address}
-											onChange={handleUserChange}
-											placeholder='Address'
-											className='w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300'
-											style={
-												{ '--tw-ring-color': '#9b111e' } as React.CSSProperties
-											}
-										/>
+										<div>
+											<input
+												name='firstName'
+												value={profileData?.firstName || ''}
+												onChange={handleUserChange}
+												placeholder='First Name'
+												className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${errors.firstName ? 'ring-2 ring-red-500' : ''}`}
+												style={
+													{ '--tw-ring-color': errors.firstName ? '#ef4444' : '#0050A5' } as React.CSSProperties
+												}
+											/>
+											{errors.firstName && <p className='text-red-500 text-sm mt-1'>{errors.firstName}</p>}
+										</div>
+										<div>
+											<input
+												name='lastName'
+												value={profileData?.lastName || ''}
+												onChange={handleUserChange}
+												placeholder='Last Name'
+												className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${errors.lastName ? 'ring-2 ring-red-500' : ''}`}
+												style={
+													{ '--tw-ring-color': errors.lastName ? '#ef4444' : '#0050A5' } as React.CSSProperties
+												}
+											/>
+											{errors.lastName && <p className='text-red-500 text-sm mt-1'>{errors.lastName}</p>}
+										</div>
+										<div>
+											<input
+												name='email'
+												value={profileData?.email || ''}
+												onChange={handleUserChange}
+												placeholder='Email'
+												className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${errors.email ? 'ring-2 ring-red-500' : ''}`}
+												style={
+													{ '--tw-ring-color': errors.email ? '#ef4444' : '#0050A5' } as React.CSSProperties
+												}
+											/>
+											{errors.email && <p className='text-red-500 text-sm mt-1'>{errors.email}</p>}
+										</div>
+										<div>
+											<input
+												name='number'
+												value={profileData?.number || ''}
+												onChange={handleUserChange}
+												placeholder='Phone Number'
+												className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${errors.number ? 'ring-2 ring-red-500' : ''}`}
+												style={
+													{ '--tw-ring-color': errors.number ? '#ef4444' : '#0050A5' } as React.CSSProperties
+												}
+											/>
+											{errors.number && <p className='text-red-500 text-sm mt-1'>{errors.number}</p>}
+										</div>
+										<div>
+											<input
+												name='address'
+												value={profileData?.address || ''}
+												onChange={handleUserChange}
+												placeholder='Address'
+												className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${errors.address ? 'ring-2 ring-red-500' : ''}`}
+												style={
+													{ '--tw-ring-color': errors.address ? '#ef4444' : '#0050A5' } as React.CSSProperties
+												}
+											/>
+											{errors.address && <p className='text-red-500 text-sm mt-1'>{errors.address}</p>}
+										</div>
 										<button
 											onClick={() => handleEditProfile()}
-											className='w-full py-3 text-white font-medium rounded-lg hover:opacity-90 transition-all duration-300 hover:scale-105 shadow-lg'
-											style={{ backgroundColor: '#9b111e' }}
+											className='w-full py-3 text-white font-medium rounded-lg hover:opacity-90 transition-all duration-300  shadow-lg'
+											style={{ backgroundColor: '#0050A5' }}
 										>
 											SAVE
 										</button>
@@ -359,25 +420,25 @@ const ProfilePage: React.FC = () => {
 											<p className='text-lg'>
 												<strong className='text-gray-700'>Phone:</strong>{' '}
 												<span className='text-gray-600'>
-													{profileData?.contact_info?.phoneNumber || 'N/A'}
+													{profileData?.number || profileData?.contact_info?.phoneNumber || 'N/A'}
 												</span>
 											</p>
 											<p className='text-lg'>
-												<strong className='text-gray-700'>Location:</strong>{' '}
+												<strong className='text-gray-700'>Address:</strong>{' '}
 												<span className='text-gray-600'>
-													{profileData?.contact_info?.address1
+													{profileData?.address || 
+													(profileData?.contact_info?.address1
 														? profileData?.contact_info?.address1 +
-														' ' +
-														profileData?.contact_info?.address2
-														: 'N/A'}
+														(profileData?.contact_info?.address2 ? ' ' + profileData?.contact_info?.address2 : '')
+														: 'N/A') || 'N/A'}
 												</span>
 											</p>
 										</div>
 										<div className='flex flex-col items-center justify-center'>
 											<button
 												onClick={() => setEditMode(true)}
-												className='w-[180px]  py-1.5 text-white font-medium rounded-lg hover:opacity-90 transition-all duration-300 hover:scale-105 shadow-lg mt-4'
-												style={{ backgroundColor: '#9b111e' }}
+												className='w-[180px]  py-1.5 text-white font-medium rounded-lg hover:opacity-90 transition-all duration-300  shadow-lg mt-4'
+												style={{ backgroundColor: '#0050A5' }}
 											>
 												EDIT
 											</button>
@@ -389,8 +450,8 @@ const ProfilePage: React.FC = () => {
 
 						{/* Red Section - Right */}
 						<div
-							className='w-1/2 bg-gradient-to-br from-red-700 via-red-800 to-red-900 relative overflow-hidden'
-							style={{ backgroundColor: '#9b111e' }}
+							className='w-1/2  relative overflow-hidden'
+							style={{ backgroundColor: '#0050A5' }}
 						>
 							<div className='absolute inset-0 bg-gradient-to-br from-red-600/20 to-transparent' />
 							<div className='relative z-10 flex flex-col items-center justify-center h-full text-white p-8'>
@@ -400,7 +461,7 @@ const ProfilePage: React.FC = () => {
 								</p>
 								<button
 									onClick={() => setIsCarTab(true)}
-									className='px-3 py-1 border-2 border-white/30 rounded-full text-white font-medium hover:bg-white/10 transition-all duration-300 hover:scale-105'
+									className='px-3 py-1 border-2 border-white bg-white text-[#0050A5] rounded-full  font-medium  transition-all duration-300 hover:scale-105'
 								>
 									CAR DETAILS
 								</button>

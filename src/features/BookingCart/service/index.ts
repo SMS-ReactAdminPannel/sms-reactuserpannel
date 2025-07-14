@@ -24,3 +24,15 @@ export const postBookingProduct = async (params: any) => {
 		throw error;
 	}
 };
+
+export const deleteBookingCartProduct = async (params: any) => {
+	try {
+		const response = await new Client().user.booking_cart.deleteProduct(params);
+		if (response) {
+			return response;
+		}
+	} catch (error) {
+		console.error('Error in deleteBookingProduct:', error);
+		throw error;
+	}
+};

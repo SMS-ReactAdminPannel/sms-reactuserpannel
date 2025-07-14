@@ -11,7 +11,7 @@ import {
 	Clock,
 	Search,
 } from 'lucide-react';
-import bgImage from '../../assets/checkout-bg_1_.png';
+// import bgImage from '../../assets/checkout-bg_1_.png';
 import { getBookingAll } from '../../features/Bookings/service';
 
 import serviceImg from '../../assets/serviceimages/generalservice.png';
@@ -132,7 +132,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 	};
 
 	return (
-		<div className='opacity-90 rounded-2xl shadow-lg border max-w-6xl mx-auto border-red-800 overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:border-red-700'>
+		<div className='opacity-90 rounded-2xl shadow-lg border max-w-6xl mx-auto border-[#0050A5] overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:border-[#0050A5]'>
 			<div className='flex flex-col'>
 				{/* Top Section */}
 				<div className='flex flex-row'>
@@ -176,14 +176,14 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 							<div className='flex justify-between'>
 								{/* Name and Description */}
 								<div>
-									<h3 className='text-xl font-bold text-red-900 mb-1'>
+									<h3 className='text-xl font-bold text-[#0050A5] mb-1'>
 										{getName()}
 									</h3>
-									<p className='text-red-700 text-sm leading-relaxed'>
+									<p className='text-[#0050A5] text-sm leading-relaxed'>
 										{getDescription()}
 									</p>
-									<div className='flex items-center text-sm text-red-700 mt-2'>
-										<Calendar className='w-4 h-4 text-red-800 mr-2' />
+									<div className='flex items-center text-sm text-[#0050A5] mt-2'>
+										<Calendar className='w-4 h-4 text-[#0050A5] mr-2' />
 										<span>
 											{orderDate.toLocaleDateString('en-US', {
 												year: 'numeric',
@@ -237,29 +237,29 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 
 					{/* Details Card */}
 					{showDetails && (
-						<div className='bg-[#FAF3EB] rounded-xl shadow p-6 border border-red-200 mt-4'>
+						<div className='bg-[#BED0EC] rounded-xl shadow p-6 border border-[#0050A5] mt-4'>
 							<div className='flex  md:flex-row justify-between gap-6'>
 								{/* Price Summary */}
 								<div className='md:w-1/2 space-y-2 ml-10'>
-									<h4 className='text-lg font-bold text-red-900 mb-2'>
+									<h4 className='text-lg font-bold text-[#0050A5] mb-2'>
 										Price Summary
 									</h4>
-									<p className='text-sm text-red-600'>
+									<p className='text-sm text-[#0050A5]'>
 										<span>Product</span>
 										<span className='pl-5'>:</span> {getName()}
 									</p>
-									<p className='text-sm text-red-600'>
+									<p className='text-sm text-[#0050A5]'>
 										<span>Base Price</span>
 										<span className='pl-1'>:</span> ₹{' '}
 										{getPrice().toLocaleString()}
 									</p>
-									<p className='text-sm text-red-600'>
+									<p className='text-sm text-[#0050A5]'>
 										<span>Tax (5%)</span>
 										<span className='pl-3'>:</span> ₹{' '}
 										{(getPrice() * 0.05).toFixed(2)}
 									</p>
-									<div className='border-t border-orange-200 pt-2 mb-2'>
-										<p className='text-sm text-red-900 font-bold'>
+									<div className='border-t border-[#0050A5] pt-2 mb-2'>
+										<p className='text-sm text-[#0050A5] font-bold'>
 											<strong>
 												Total<span className='pl-8'>:</span>
 											</strong>{' '}
@@ -269,23 +269,23 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 								</div>
 
 								{/* Order Info */}
-								<div className='md:w-1/2 space-y-2 mr-30 border border-red-500 rounded-lg p-4'>
-									<h4 className='text-lg font-bold text-red-900 mb-2'>
+								<div className='md:w-1/2 space-y-2 mr-30 border border-[#0050A5] rounded-lg p-4'>
+									<h4 className='text-lg font-bold text-[#0050A5] mb-2'>
 										Order Info
 									</h4>
-									<p className='text-sm text-red-600'>
+									<p className='text-sm text-[#0050A5]'>
 										<span>
 											Status<span className='pl-11'>:</span>
 										</span>{' '}
 										{order.status || 'Pending'}
 									</p>
-									<p className='text-sm text-red-600'>
+									<p className='text-sm text-[#0050A5]'>
 										<span>
 											Order Type<span className='pl-3'>:</span>
 										</span>{' '}
 										{isService ? 'Service' : 'Product'}
 									</p>
-									<p className='text-sm text-red-600'>
+									<p className='text-sm text-[#0050A5]'>
 										<span>
 											Placed On<span className='pl-5'>:</span>
 										</span>{' '}
@@ -404,7 +404,6 @@ const OrdersPage: React.FC = () => {
 	return (
 		<div
 			className='min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100'
-			style={{ backgroundImage: `url("${bgImage}")` }}
 		>
 			<div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
 				{/* Header */}
@@ -414,7 +413,7 @@ const OrdersPage: React.FC = () => {
 						ref={orderTitle.elementRef}
 						style={{ ...FONTS.heading }}
 					>
-						<span className='inline-block pb-1 relative text-red-900 mb-2'>
+						<span className='inline-block pb-1 relative text-[#0050A5] mb-2'>
 							My Orders
 							{/* <span
 								className={`absolute top-14 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${orderTitle.isVisible
@@ -424,12 +423,12 @@ const OrdersPage: React.FC = () => {
 							></span> */}
 						</span>
 					</h1>
-					<p className='text-red-600 text-lg max-w-6xl mx-auto'>
+					<p className='text-[#0050A5] text-lg max-w-6xl mx-auto'>
 						Track and manage all your orders in one place
 					</p>
 
 					{/* Stats */}
-					<div className='flex space-x-6 mt-4 max-w-6xl mx-auto text-[#9b111e]'>
+					<div className='flex space-x-6 mt-4 max-w-6xl mx-auto text-[#0050A5]'>
 						<div className='bg-white rounded-lg px-4 py-2 shadow-sm border'>
 							<span className='text-2xl font-bold text-gray-900'>
 								{totalOrders}
@@ -452,7 +451,7 @@ const OrdersPage: React.FC = () => {
 				</div>
 
 				{/* Filters and Search */}
-				<div className='bg-[#FAF3EB] rounded-2xl shadow-sm mx-7 border border-gray-100 p-6 mb-8 '>
+				<div className='bg-[#BED0EC] rounded-2xl shadow-sm mx-7 border border-gray-100 p-6 mb-8 '>
 					{/* First Row: Search */}
 					<div className='mb-6'>
 						<div className='relative w-full'>
@@ -462,7 +461,7 @@ const OrdersPage: React.FC = () => {
 								value={searchTerm}
 								placeholder='Search orders...'
 								onChange={(e) => setSearchTerm(e.target.value)}
-								className='w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-red-500 focus:border-transparent transition-all'
+								className='w-full pl-10 pr-4 py-3 rounded-xl border border-gray-200 focus:outline-none focus:ring-2 focus:ring-[#0050A5] focus:border-transparent transition-all'
 							/>
 						</div>
 					</div>
@@ -470,12 +469,12 @@ const OrdersPage: React.FC = () => {
 					{/* Second Row: Filters + Sort + Reset */}
 					<div className='flex flex-col  gap-4'>
 						{/* Filter Buttons */}
-						<div className='flex flex-wrap gap-2 bg-gray-100 rounded-xl p-1'>
+						<div className='flex flex-wrap gap-2 bg-[white] rounded-xl p-1'>
 							<button
 								onClick={() => setFilterType('all')}
 								className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
 									filterType === 'all'
-										? 'bg-red-900 text-white shadow-sm'
+										? 'bg-[#0050A5] text-white shadow-sm'
 										: 'text-gray-600 hover:text-gray-900'
 								}`}
 							>
@@ -485,7 +484,7 @@ const OrdersPage: React.FC = () => {
 								onClick={() => setFilterType('spare')}
 								className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${
 									filterType === 'spare'
-										? 'bg-red-900 text-white shadow-sm'
+										? 'bg-[#0050A5] text-white shadow-sm'
 										: 'text-gray-600 hover:text-gray-900'
 								}`}
 							>
@@ -496,7 +495,7 @@ const OrdersPage: React.FC = () => {
 								onClick={() => setFilterType('service')}
 								className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${
 									filterType === 'service'
-										? 'bg-red-900 text-white shadow-sm'
+										? 'bg-[#0050A5] text-white shadow-sm'
 										: 'text-gray-600 hover:text-gray-900'
 								}`}
 							>
@@ -538,7 +537,7 @@ const OrdersPage: React.FC = () => {
 						))
 					) : (
 						<div className='text-center py-16 bg-white rounded-2xl shadow-sm border border-gray-100'>
-							<Package className='h-16 w-16 text-gray-400 mx-auto mb-4' />
+							<Package className='h-16 w-16 text-[#BED0EC] mx-auto mb-4' />
 							<h3 className='text-xl font-semibold text-gray-900 mb-2'>
 								No orders found
 							</h3>

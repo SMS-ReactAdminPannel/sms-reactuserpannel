@@ -205,7 +205,7 @@ const PromoCarousel: React.FC = () => {
 	}, [currentIndex]);
 
 	return (
-		<div className='w-full max-w-6xl mx-auto relative overflow-hidden rounded-3xl'>
+		<div className='w-full max-w-6xl mx-auto my-auto relative overflow-hidden rounded-2xl'>
 			<div
 				className={`flex ${
 					!isResetting ? 'transition-transform duration-500 ease-in-out' : ''
@@ -215,7 +215,7 @@ const PromoCarousel: React.FC = () => {
 				{loopCards.map((card, idx) => (
 					<div
 						key={idx}
-						className='min-w-full p-6 bg-red-900 flex items-center justify-between'
+						className='min-w-full p-6 bg-[#0050A5] flex items-center justify-between'
 					>
 						{/* Image Section */}
 						<div className='w-full flex justify-center items-center'>
@@ -235,12 +235,12 @@ const PromoCarousel: React.FC = () => {
 								<br />
 								<span className='text-2xl'>{card.subtitle}</span>
 							</h2>
-							<ul className='text-white text-lg mb-4 space-y-1 list-disc list-inside'>
+							<ul className='text-[#0050A5] text-lg mb-4 space-y-1 list-disc list-inside'>
 								{card.points.map((point, i) => (
 									<li key={i}>{point}</li>
 								))}
 							</ul>
-							<button className='bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg transition-all'>
+							<button className='bg-white font-semibold py-2 px-4 rounded-lg transition-all text-[#0050A5]'>
 								{card.cta}
 							</button>
 						</div>
