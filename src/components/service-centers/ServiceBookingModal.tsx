@@ -121,16 +121,16 @@ const BookingModal = ({
 										/>
 										<span>Working Hours: 9:00 AM - 5:00 PM</span>
 									</div>
-									<div className='flex items-center'>
+									{/* <div className='flex items-center'>
 										<IonIcon
 											icon={locationOutline}
 											className='text-blue-500 mr-2 text-xl'
 										/>
 										<span>Service Center Location</span>
-									</div>
+									</div> */}
 								</div>
 
-								<div className='mb-4'>
+								{/* <div className='mb-4'>
 									<label className='block font-medium mb-2'>
 										Preferred Time:
 									</label>
@@ -149,7 +149,7 @@ const BookingModal = ({
 											className='flex-1 border border-gray-300 rounded p-2'
 										/>
 									</div>
-								</div>
+								</div> */}
 							</div>
 						)}
 

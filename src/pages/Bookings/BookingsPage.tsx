@@ -130,6 +130,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 			);
 		}
 	};
+	console.log('Order:', order);
 
 	return (
 		<div className='opacity-90 rounded-2xl shadow-lg border max-w-6xl mx-auto border-[#0050A5] overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:border-[#0050A5]'>
@@ -140,14 +141,14 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 					<div className='md:w-48 h-40 relative overflow-hidden rounded-lg shadow-md'>
 						<div className='w-full h-full bg-gray-100 flex items-center justify-center'>
 							<img
-								src={isService ? serviceImg : spareImg}
+								src={order.imageUrl}
 								alt='order'
 								className='w-full h-full object-cover'
 							/>
 						</div>
 
 						{/* Type Badge */}
-						<div className='absolute top-3 left-3 z-10'>
+						<div className='absolute top-3 right-3 z-10'>
 							<span
 								className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
 									isService

@@ -131,52 +131,20 @@
 // export default PromoCarousel;
 
 import React, { useEffect, useState } from 'react';
-import carImage from '../../assets/CarPart2.jfif';
-import Wash from '../../assets/CAR WASH/Car wash.jpg';
-import Cardismantle from '../../assets/CAR DISMANTLE/Car dismantle.jpg';
-import Carpainting from '../../assets/CAR PAINTING/Car painting.jpg';
+import { getOfferData } from '../../features/Offers';
 
 interface PromoCardProps {
 	title: string;
-	subtitle: string;
+	// subtitle: string;
 	points: string[];
 	image: string;
 	cta: string;
+	description:string;
+	offer:string
 }
 
-const promoCards: PromoCardProps[] = [
-	{
-		title: 'GoShine',
-		subtitle: 'Combo',
-		points: ['Shine More, Pay Less', '3 Washes + 1 Deep Spa!'],
-		image: carImage,
-		cta: 'BUY NOW',
-	},
-	{
-		title: 'SuperClean',
-		subtitle: 'Offer',
-		points: ['Weekly Wash Pack', 'Includes Vacuuming'],
-		image: Wash,
-		cta: 'GET DEAL',
-	},
-	{
-		title: 'Dismantle For Checking',
-		subtitle: 'Observe',
-		points: ['Check every part', 'Replace the part'],
-		image: Cardismantle,
-		cta: 'BOOK NOW',
-	},
-	{
-		title: 'Painting',
-		subtitle: '',
-		points: ['Based on priority', 'Based on Customer need'],
-		image: Carpainting,
-		cta: 'BOOK NOW',
-	},
-];
 
 // Duplicate cards for seamless looping
-const loopCards = [...promoCards, ...promoCards];
 
 const PromoCarousel: React.FC = () => {
 	const [currentIndex, setCurrentIndex] = useState(0);
@@ -187,12 +155,14 @@ const PromoCarousel: React.FC = () => {
 			setCurrentIndex((prev) => prev + 1);
 		}, 3000);
 
+		fetchOfferData();
+
 		return () => clearInterval(interval);
 	}, []);
 
 	// Seamless reset when at midpoint
 	useEffect(() => {
-		if (currentIndex === promoCards.length) {
+		if (currentIndex === announcements.length) {
 			const timeout = setTimeout(() => {
 				setIsResetting(true);
 				setCurrentIndex(0);
@@ -204,6 +174,21 @@ const PromoCarousel: React.FC = () => {
 		}
 	}, [currentIndex]);
 
+
+
+	const [announcements, setAnnouncements] = useState<PromoCardProps[]>([]);
+	
+	const fetchOfferData = async () => {
+			try {
+				const response = (await getOfferData()) as any;
+				if (response ) {
+					setAnnouncements(response.data.data);
+				}
+			} catch (error) {
+				console.error('Error fetching service data:', error);
+			}
+		};
+
 	return (
 		<div className='w-full max-w-6xl mx-auto my-auto relative overflow-hidden rounded-2xl'>
 			<div
@@ -212,7 +197,7 @@ const PromoCarousel: React.FC = () => {
 				}`}
 				style={{ transform: `translateX(-${currentIndex * 100}%)` }}
 			>
-				{loopCards.map((card, idx) => (
+				{announcements?.map((card, idx) => (
 					<div
 						key={idx}
 						className='min-w-full p-6 bg-[#0050A5] flex items-center justify-between'
@@ -223,25 +208,27 @@ const PromoCarousel: React.FC = () => {
 								<img
 									src={card.image}
 									alt={card.title}
-									className='w-full h-full object-cover'
+									className='w-full h-full object-cover text-white'
 								/>
 							</div>
 						</div>
 
 						{/* Text Section */}
-						<div className='w-1/2 px-4'>
+						<div className='w-1/2 px-4 flex flex-col items-start gap-10 '>
+						<div>
 							<h2 className='text-white text-3xl font-bold leading-tight mb-2'>
 								{card.title} <span className='inline-block'>✨</span>
 								<br />
-								<span className='text-2xl'>{card.subtitle}</span>
+								<span className='text-xl'>{card.description}</span>
 							</h2>
-							<ul className='text-[#0050A5] text-lg mb-4 space-y-1 list-disc list-inside'>
-								{card.points.map((point, i) => (
-									<li key={i}>{point}</li>
-								))}
-							</ul>
+							<div className='text-green-700 inline-block px-2 rounded-lg font-bold bg-[#f1ff31] text-lg mb-4 space-y-1 list-disc list-inside'>
+								
+									<p >Offer Price : &#8377; {card.offer}</p>
+							
+							</div>
+							</div>
 							<button className='bg-white font-semibold py-2 px-4 rounded-lg transition-all text-[#0050A5]'>
-								{card.cta}
+								Apply Offer
 							</button>
 						</div>
 					</div>
