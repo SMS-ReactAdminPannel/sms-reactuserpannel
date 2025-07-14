@@ -2,7 +2,6 @@ import React, { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FONTS } from '../../constants/constant';
 import { getHomeData } from '../../features/home';
-import DummyImage from '../../assets/CAR BRAKES/Car brakes.jpg';
 
 const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 	options = {}
@@ -53,11 +52,8 @@ const CustomServicesGrid: React.FC = () => {
 				throw new Error('Error fetching spare parts data');
 			}
 		};
-
 		fetchSpareParts();
 	}, []);
-
-	console.log('Spare Parts:', spareParts);
 
 	return (
 		<div className='py-10 '>
@@ -77,7 +73,7 @@ const CustomServicesGrid: React.FC = () => {
 			</h1>
 			{spareParts.length !== 0 ? (
 				<div className='grid grid-cols-5 gap-10'>
-					{spareParts?.slice(0,15)?.map((item) => (
+					{spareParts?.slice(0, 15)?.map((item) => (
 						<div
 							key={item._id}
 							className='bg-[#d8e1ef] rounded-lg p-2 shadow-3xl hover:shadow-4xl hover:scale-102 transition-transform duration-300 text-center text-red-900 relative cursor-pointer'

@@ -14,10 +14,8 @@ import {
 } from 'lucide-react';
 import SelectCarPage from './SelectCarPage';
 import { useNavigate } from 'react-router-dom';
-import serviceImg from '../../assets/serviceimages/generalservice.png';
 import AutoPopup from './RightSidePopup';
 import { getAllServiceCategories } from '../../features/ServicesPage/service';
-// import { postSparePartsData } from '../../features/spareparts';
 import { FONTS } from '../../constants/constant';
 import { useAuth } from '../auth/AuthContext';
 import LoginPromptModal from '../../components/Authentication/LoginPromptModal';
@@ -32,8 +30,6 @@ interface ServiceItem {
 interface ServicePackage {
 	id: string;
 	title: string;
-	// warranty: string;
-	// frequency: string;
 	isRecommended?: boolean;
 	duration: string;
 	services: ServiceItem[];
@@ -153,8 +149,8 @@ const ServicesPage: React.FC = () => {
 			if (response.data && response.data.data) {
 				const categories = selectedCategory
 					? response.data.data.filter(
-						(cat: any) => cat._id === selectedCategory.id
-					)
+							(cat: any) => cat._id === selectedCategory.id
+					  )
 					: response.data.data;
 
 				setServiceCategories(categories);
@@ -179,12 +175,13 @@ const ServicesPage: React.FC = () => {
 		setSelectedCategory(null);
 	}, []);
 
-	const storedCategory: any = localStorage.getItem('selectedCategory');
+	const storedCategory: any = JSON.parse(
+		localStorage.getItem('selectedCategory') as ''
+	);
 
 	useEffect(() => {
 		if (storedCategory) {
 			setActiveNavItem(storedCategory?.name);
-			localStorage.removeItem('selectedCategory');
 		}
 	}, [storedCategory]);
 
@@ -196,20 +193,17 @@ const ServicesPage: React.FC = () => {
 		categories.forEach((category) => {
 			if (category.is_deleted) return;
 
-			const activeServices = category.services.filter(
+			const activeServices = category?.services?.filter(
 				(service) => service.is_active && !service.is_deleted
 			);
 
-			console.log('Active Services:', activeServices);
-			const packages: ServicePackage[] = activeServices.map((service) => {
+			const packages: ServicePackage[] = activeServices?.map((service) => {
 				const originalPrice = service.price;
 				const discountPrice = Math.round(originalPrice * 1.2);
 
 				return {
 					id: service._id,
 					title: service.service_name,
-					// warranty: '1000 Kms or 1 Month Warranty',
-					// frequency: 'As Required',
 					duration: service.duration,
 					image: service?.image,
 					services: [
@@ -263,6 +257,7 @@ const ServicesPage: React.FC = () => {
 	};
 
 	const handleNavClick = (navItem: string) => {
+		localStorage.removeItem('selectedCategory');
 		setActiveNavItem(navItem);
 		setSelectedPackage([]);
 	};
@@ -276,7 +271,10 @@ const ServicesPage: React.FC = () => {
 		}
 	};
 
-	const handleConfirmBooking = async (requestType: string, schedule_date: Date) => {
+	const handleConfirmBooking = async (
+		requestType: string,
+		schedule_date: Date
+	) => {
 		if (!selectedPackageId) return;
 
 		const packageToAdd = selectedPackage.find(
@@ -382,24 +380,26 @@ const ServicesPage: React.FC = () => {
 					<div className='flex-1 overflow-y-auto max-h-[calc(100vh-120px)] py-4 scrollbar-hide'>
 						<nav className='px-4'>
 							<div className='space-y-2'>
-								{navigationItems.map((item, index) => (
+								{navigationItems?.map((item, index) => (
 									<div
 										key={index}
 										onClick={() => handleNavClick(item.name)}
-										className={`group relative flex items-center px-4 py-4 rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-[1.02] ${activeNavItem === item.name
-											? 'bg-gradient-to-r from-red-50 to-red-100 text-[#0050A5] shadow-lg shadow-[#0050A5]/20 border border-[#0050A5]'
-											: 'text-gray-600 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-[#0050A5] hover:shadow-md'
-											} ${!item.isActive ? 'opacity-70' : ''}`}
+										className={`group relative flex items-center px-4 py-4 rounded-xl cursor-pointer transition-all duration-300 transform hover:scale-[1.02] ${
+											activeNavItem === item.name
+												? 'bg-gradient-to-r from-red-50 to-red-100 text-[#0050A5] shadow-lg shadow-[#0050A5]/20 border border-[#0050A5]'
+												: 'text-gray-600 hover:bg-gradient-to-r hover:from-gray-50 hover:to-gray-100 hover:text-[#0050A5] hover:shadow-md'
+										} ${!item.isActive ? 'opacity-70' : ''}`}
 									>
 										{activeNavItem === item.name && (
 											<div className='absolute left-0 top-1/2 transform -translate-y-1/2 w-1 h-8 bg-[#0050A5] rounded-r-full'></div>
 										)}
 
 										<div
-											className={`mr-4 flex-shrink-0 p-2 rounded-lg transition-all duration-300 ${activeNavItem === item.name
-												? 'bg-[#BED0EC] text-[#0050A5]-600'
-												: 'bg-gray-100 text-gray-500 group-hover:bg-[#BED0EC] group-hover:text-[#0050A5]]'
-												}`}
+											className={`mr-4 flex-shrink-0 p-2 rounded-lg transition-all duration-300 ${
+												activeNavItem === item.name
+													? 'bg-[#BED0EC] text-[#0050A5]-600'
+													: 'bg-gray-100 text-gray-500 group-hover:bg-[#BED0EC] group-hover:text-[#0050A5]]'
+											}`}
 										>
 											{item.icon}
 										</div>
@@ -409,10 +409,11 @@ const ServicesPage: React.FC = () => {
 										</span>
 
 										<div
-											className={`ml-auto opacity-0 transform translate-x-2 transition-all duration-300 ${activeNavItem === item.name
-												? 'opacity-100 translate-x-0'
-												: 'group-hover:opacity-100 group-hover:translate-x-0'
-												}`}
+											className={`ml-auto opacity-0 transform translate-x-2 transition-all duration-300 ${
+												activeNavItem === item.name
+													? 'opacity-100 translate-x-0'
+													: 'group-hover:opacity-100 group-hover:translate-x-0'
+											}`}
 										>
 											<svg
 												className='w-4 h-4'
@@ -459,7 +460,7 @@ const ServicesPage: React.FC = () => {
 						</p>
 					</div>
 
-					{!currentContent || currentContent.packages.length === 0 ? (
+					{!currentContent || currentContent?.packages?.length === 0 ? (
 						<div className='bg-[#BED0EC] rounded-lg shadow p-8 text-center w-[600px]'>
 							<div className='text-[#0050A5] mb-4'>
 								<Wrench className='w-12 h-12 mx-auto' />
@@ -473,7 +474,7 @@ const ServicesPage: React.FC = () => {
 						</div>
 					) : (
 						<div className='space-y-8'>
-							{currentContent.packages.map((pkg) => {
+							{currentContent?.packages?.map((pkg) => {
 								const isSelected = selectedPackage.some(
 									(p) => p.packageId === pkg.id
 								);
@@ -482,8 +483,9 @@ const ServicesPage: React.FC = () => {
 								return (
 									<div
 										key={pkg.id}
-										className={`bg-[#d8e1ef] rounded-lg lg:w-[600px] md:w-[400px] shadow-lg relative transition-all duration-300 hover:shadow-xl ${isSelected ? 'ring-2 ring-[#0050A5]-500' : ''
-											}`}
+										className={`bg-[#d8e1ef] rounded-lg lg:w-[600px] md:w-[400px] shadow-lg relative transition-all duration-300 hover:shadow-xl ${
+											isSelected ? 'ring-2 ring-[#0050A5]-500' : ''
+										}`}
 									>
 										{pkg.isRecommended && (
 											<div className='absolute top-0 left-0 z-10 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-1 rounded-br-lg'>
@@ -500,10 +502,6 @@ const ServicesPage: React.FC = () => {
 													src={pkg.image}
 													alt={pkg.title}
 													className='w-full h-full object-cover'
-													onError={(e) => {
-														e.currentTarget.src =
-															'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDIwMCAxNTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMTUwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik04NS4zMzMzIDc1SDExNC42NjdNMTAwIDYwLjMzMzNWODkuNjY2N00xMDAgMTA1QzExNi41NjkgMTA1IDEzMCA5MS41Njg1IDEzMCA3NUMxMzAgNTguNDMxNSAxMTYuNTY5IDQ1IDEwMCA0NUM4My40MzE1IDQ1IDcwIDU4LjQzMTUgNzAgNzVDNzAgOTEuNTY4NSA4My40MzE1IDEwNSAxMDAgMTA1WiIgc3Ryb2tlPSIjOUI5QkEzIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgc3Ryb2tlLWxpbmVqb2luPSJyb3VuZCIvPgo8L3N2Zz4K';
-													}}
 												/>
 											</div>
 
@@ -534,12 +532,12 @@ const ServicesPage: React.FC = () => {
 
 												{/* Services Grid */}
 												<div className='grid grid-cols-1 gap-3 mb-4'>
-													{pkg.services
-														.slice(
+													{pkg?.services
+														?.slice(
 															0,
 															expandedServices[pkg.id] ? pkg.services.length : 4
 														)
-														.map((service, index) => (
+														?.map((service, index) => (
 															<div
 																key={index}
 																className='flex items-center text-sm text-[#0050A5] group'
@@ -588,7 +586,8 @@ const ServicesPage: React.FC = () => {
 																</span>
 															</>
 														)}
-													</div><br/>
+													</div>
+													<br />
 
 													{/* Buttons */}
 													{isSelected ? (
@@ -696,7 +695,7 @@ const ServicesPage: React.FC = () => {
 						id: selectedPackageId,
 						duration: currentContent?.packages.find(
 							(p) => p.id === selectedPackageId
-							)?.duration,
+						)?.duration,
 						title: currentContent?.packages.find(
 							(p) => p.id === selectedPackageId
 						)?.title,
