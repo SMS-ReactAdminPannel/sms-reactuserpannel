@@ -3,7 +3,7 @@ import image1 from '../../assets/home/360_F_496483060_C9OG1wJpfmjMXcNmUBibmA9wYx
 import image2 from '../../assets/home/360_F_507812981_dGZXqBsqkBpEosDjTlJgmaJAyMFra7sp.jpg';
 import image3 from '../../assets/home/hand-mechanic-holding-car-service-600nw-2340377479.webp';
 import image4 from '../../assets/home/istockphoto-1387759698-612x612.jpg';
-import serviceImg from '../../assets/CAR ANNUAL MAINTENANCE/Annual maintenance.jpg';
+// import serviceImg from '../../assets/CAR ANNUAL MAINTENANCE/Annual maintenance.jpg';
 // import CarImg1 from '../../assets/CarImg1.jpg';
 
 import { RxLapTimer } from 'react-icons/rx';
@@ -120,7 +120,6 @@ const HomePage: React.FC = () => {
 			const response = (await getAllServiceCategories()) as ApiResponse;
 			if (response && response.data && response.data.data) {
 				setServiceData(response.data.data);
-				//console.log(response.data.data);
 			}
 		} catch (error) {
 			console.error('Error fetching service data:', error);
@@ -201,7 +200,7 @@ const HomePage: React.FC = () => {
 					</h1>
 					{serviceData?.length !== 0 ? (
 						<div className='grid md:grid-cols-4 sm:grid-cols-2 gap-4 justify-items-center'>
-							{serviceData?.map((service) => (
+							{serviceData?.slice(0,8)?.map((service:any) => (
 								<Link
 									to='/services'
 									key={service?.id}
@@ -214,7 +213,7 @@ const HomePage: React.FC = () => {
 										<div className='text-[#0050A5] flex justify-center items-center h-32 w-full'>
 											<img
 												className='w-full h-32 rounded'
-												src={serviceImg}
+												src={service?.image}
 												alt={service?.category_name}
 											/>
 										</div>

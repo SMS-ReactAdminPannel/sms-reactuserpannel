@@ -32,8 +32,8 @@ interface ServiceItem {
 interface ServicePackage {
 	id: string;
 	title: string;
-	warranty: string;
-	frequency: string;
+	// warranty: string;
+	// frequency: string;
 	isRecommended?: boolean;
 	duration: string;
 	services: ServiceItem[];
@@ -84,6 +84,8 @@ interface ApiService {
 	is_deleted: boolean;
 	created_at: string;
 	updated_at: string;
+	image: string;
+	duration: string;
 }
 
 const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
@@ -198,6 +200,7 @@ const ServicesPage: React.FC = () => {
 				(service) => service.is_active && !service.is_deleted
 			);
 
+			console.log('Active Services:', activeServices);
 			const packages: ServicePackage[] = activeServices.map((service) => {
 				const originalPrice = service.price;
 				const discountPrice = Math.round(originalPrice * 1.2);
@@ -205,10 +208,10 @@ const ServicesPage: React.FC = () => {
 				return {
 					id: service._id,
 					title: service.service_name,
-					warranty: '1000 Kms or 1 Month Warranty',
-					frequency: 'As Required',
-					duration: '2 Hrs Taken',
-					image: serviceImg,
+					// warranty: '1000 Kms or 1 Month Warranty',
+					// frequency: 'As Required',
+					duration: service.duration,
+					image: service?.image,
 					services: [
 						{
 							name: service.description || 'Service description not available',
@@ -514,18 +517,18 @@ const ServicesPage: React.FC = () => {
 														>
 															{pkg.title}
 														</h2>
-														<div className='absolute font-bold flex flex-row items-center w-[122px] bottom-[40px] left-[430px] px-3 py-1 rounded-full bg-[#0050A5] text-white text-sm'>
+														<div className='absolute font-bold flex justify-center items-center w-[122px] bottom-[40px] left-[430px] px-2 py-1 rounded-full bg-[#0050A5] text-white text-sm'>
 															<Clock className='w-4 h-4 mr-1' />
 															{pkg.duration}
 														</div>
-														<div className='flex space-x-4 text-sm'>
+														{/* <div className='flex space-x-4 text-sm'>
 															<span className='inline-flex items-center px-3 py-1 rounded-full opacity-70 text-[#0050A5]'>
 																{pkg.warranty}
 															</span>
 															<span className='inline-flex items-center px-3 py-1 rounded-full opacity-70 text-[#0050A5]'>
 																{pkg.frequency}
 															</span>
-														</div>
+														</div> */}
 													</div>
 												</div>
 
@@ -572,7 +575,7 @@ const ServicesPage: React.FC = () => {
 													</div>
 												)}
 
-												<div className='flex justify-between items-center mt-6'>
+												<div className='flex flex-col justify-between items-start mt-6'>
 													{/* Price and Discount */}
 													<div className='text-right mb-2'>
 														{isSelected && (
@@ -585,7 +588,7 @@ const ServicesPage: React.FC = () => {
 																</span>
 															</>
 														)}
-													</div>
+													</div><br/>
 
 													{/* Buttons */}
 													{isSelected ? (
@@ -691,7 +694,9 @@ const ServicesPage: React.FC = () => {
 					onClose={() => setIsModalOpen(false)}
 					selectedService={{
 						id: selectedPackageId,
-						duration: '2 hours',
+						duration: currentContent?.packages.find(
+							(p) => p.id === selectedPackageId
+							)?.duration,
 						title: currentContent?.packages.find(
 							(p) => p.id === selectedPackageId
 						)?.title,

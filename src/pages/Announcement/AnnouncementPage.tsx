@@ -1,21 +1,18 @@
 import { useEffect, useState } from 'react';
 import Offer from '../../components/Announcement/Offer';
-import HttpClient from '../../api/httpClient';
-import { API_END_POINTS } from '../../api/httpEndpoints';
+import { getOfferData } from '../../features/Offers';
 
 const Announcement = () => {
 	const [announcements, setAnnouncements] = useState([]);
 
 	const fetchAllOffers = async () => {
 		try {
-			const response = await HttpClient.get(API_END_POINTS.offer.Get) as any;
-			// console.log('Full API Response:', response);
-			// console.log('Response.data:', response.data);
-			const dataToSet = response.data?.data || [];
-			// console.log('Data being set to state:', dataToSet);
-			setAnnouncements(dataToSet);
+			const response = (await getOfferData()) as any;
+			if (response) {
+				setAnnouncements(response.data.data);
+			}
 		} catch (error) {
-			console.log('API Error:', error);
+			console.error('Error fetching service data:', error);
 		}
 	};
 
