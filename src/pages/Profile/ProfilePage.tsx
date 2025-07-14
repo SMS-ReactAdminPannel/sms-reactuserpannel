@@ -150,7 +150,6 @@ const ProfilePage: React.FC = () => {
 			
 			const response = await updateUserProfile(transformedData);
 			if (response) {
-				console.log('Profile updated successfully:', response);
 				// Update local state with new data
 				setProfileData((prev: any) => ({
 					...prev,

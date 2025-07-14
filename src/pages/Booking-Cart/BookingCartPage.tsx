@@ -8,7 +8,6 @@ import {
 	postBookingProduct,
 } from '../../features/BookingCart/service';
 import { toast } from 'react-toastify';
-import bgImage from '../../assets/checkout-bg_1_.png';
 import { postBookingService } from '../../features/Bookings/service';
 import { FONTS } from '../../constants/constant';
 import { useAuth } from '../auth/AuthContext';

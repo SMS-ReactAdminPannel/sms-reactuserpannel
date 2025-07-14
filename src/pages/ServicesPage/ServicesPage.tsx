@@ -200,7 +200,6 @@ const ServicesPage: React.FC = () => {
 				(service) => service.is_active && !service.is_deleted
 			);
 
-			console.log('Active Services:', activeServices);
 			const packages: ServicePackage[] = activeServices.map((service) => {
 				const originalPrice = service.price;
 				const discountPrice = Math.round(originalPrice * 1.2);

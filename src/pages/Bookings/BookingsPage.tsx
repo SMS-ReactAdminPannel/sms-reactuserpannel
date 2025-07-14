@@ -130,7 +130,6 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 			);
 		}
 	};
-	console.log('Order:', order);
 
 	return (
 		<div className='opacity-90 rounded-2xl shadow-lg border max-w-6xl mx-auto border-[#0050A5] overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:border-[#0050A5]'>
