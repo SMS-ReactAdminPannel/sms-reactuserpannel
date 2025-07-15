@@ -90,8 +90,14 @@ const ProfilePage: React.FC = () => {
         if (!/^[6-9]\d{9}$/.test(value.replace(/\D/g, "")))
           return "Invalid Indian phone number format";
         return "";
-      case "address":
+      case "address1":
         return !value.trim() ? "Address is required" : "";
+        case "address2":
+        return !value.trim() ? "Address 2 is required" : "";
+        case "city":
+        return !value.trim() ? "City is required" : "";
+        case "state":
+        return !value.trim() ? "state is required" : "";
       default:
         return "";
     }
@@ -151,7 +157,7 @@ const ProfilePage: React.FC = () => {
 
   const validateForm = () => {
     const newErrors: any = {};
-    const fields = ["firstName", "lastName", "email", "number", "address"];
+    const fields = ["firstName", "lastName", "email", "number", "address1","address2", "city", "state"];
 
     fields.forEach((field) => {
       const error = validateField(field, profileData[field] || "");
@@ -171,9 +177,13 @@ const ProfilePage: React.FC = () => {
     try {
       const contactInfoObj = {
         phoneNumber:
-          profileData.number || profileData.contact_info?.phoneNumber || "",
+          profileData?.phoneNumber,
         address1:
-          profileData.address || profileData.contact_info?.address1 || "",
+          profileData?.address1,
+        address2:
+          profileData?.address2,
+        city: profileData?.city,
+        state: profileData?.state,
       };
       // Send only allowed fields
       const transformedData = {
@@ -191,7 +201,8 @@ const ProfilePage: React.FC = () => {
           ...prev,
           ...transformedData,
           number: profileData.number,
-          address: profileData.address,
+          address1: profileData.address1,
+          address2: profileData.address2,
         }));
       }
     } catch (error) {
@@ -461,7 +472,7 @@ const ProfilePage: React.FC = () => {
                 User Information
               </h2>
 
-              <div className="w-full max-w-sm space-y-4">
+              <div className="w-full max-w-sm overflow-scroll scrollbar-hide px-2 space-y-4">
                 {editMode ? (
                   <>
                     <div>
@@ -535,13 +546,9 @@ const ProfilePage: React.FC = () => {
                     </div>
                     <div>
                       <input
-                        name="number"
+                        name="phoneNumber"
                         value={
-                          profileData?.number ||
-                          (typeof profileData?.contact_info === "string"
-                            ? profileData.contact_info.split(", ")[0]
-                            : profileData?.contact_info?.phoneNumber) ||
-                          "N/A"
+                          profileData?.contact_info?.phoneNumber
                         }
                         onChange={handleUserChange}
                         placeholder="Phone Number"
@@ -564,33 +571,113 @@ const ProfilePage: React.FC = () => {
                     </div>
                     <div>
                       <input
-                        name="address"
+                        name="address1"
                         value={
-                          profileData?.address ||
-                          (typeof profileData?.contact_info === "string"
-                            ? profileData.contact_info.split(", ")[1]
-                            : profileData?.contact_info?.address1) ||
-                          "N/A"
+                          profileData?.contact_info?.address1
                         }
                         onChange={handleUserChange}
-                        placeholder="Address"
+                        placeholder="Address 1"
                         className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
-                          errors.address ? "ring-2 ring-red-500" : ""
+                          errors.address1 ? "ring-2 ring-red-500" : ""
                         }`}
                         style={
                           {
-                            "--tw-ring-color": errors.address
+                            "--tw-ring-color": errors.address1
                               ? "#ef4444"
                               : "#0050A5",
                           } as React.CSSProperties
                         }
                       />
-                      {errors.address && (
+                      {errors.address1 && (
                         <p className="text-red-500 text-sm mt-1">
-                          {errors.address}
+                          {errors.address1}
                         </p>
                       )}
                     </div>
+
+                    <div>
+                      <input
+                        name="address2"
+                        value={
+                          profileData?.address2
+                        }
+                        onChange={handleUserChange}
+                        placeholder="Address 2"
+                        className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
+                          errors.address2 ? "ring-2 ring-red-500" : ""
+                        }`}
+                        style={
+                          {
+                            "--tw-ring-color": errors.address2
+                              ? "#ef4444"
+                              : "#0050A5",
+                          } as React.CSSProperties
+                        }
+                      />
+                      {errors.address2 && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.address2}
+                        </p>
+                      )}
+                    </div>
+
+
+                    <div>
+                      <input
+                        name="city"
+                        value={
+                          profileData?.city
+                        }
+                        onChange={handleUserChange}
+                        placeholder="City"
+                        className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
+                          errors.city ? "ring-2 ring-red-500" : ""
+                        }`}
+                        style={
+                          {
+                            "--tw-ring-color": errors.city
+                              ? "#ef4444"
+                              : "#0050A5",
+                          } as React.CSSProperties
+                        }
+                      />
+                      {errors.city && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.city}
+                        </p>
+                      )}
+                    </div>
+
+
+
+                                        <div>
+                      <input
+                        name="state"
+                        value={
+                          profileData?.contact_info?.state
+                        }
+                        onChange={handleUserChange}
+                        placeholder="state"
+                        className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
+                          errors.state ? "ring-2 ring-red-500" : ""
+                        }`}
+                        style={
+                          {
+                            "--tw-ring-color": errors.state
+                              ? "#ef4444"
+                              : "#0050A5",
+                          } as React.CSSProperties
+                        }
+                      />
+                      {errors.state && (
+                        <p className="text-red-500 text-sm mt-1">
+                          {errors.state}
+                        </p>
+                      )}
+                    </div>
+
+
+
 
                     <div>
                       <div className="px-4 py-3 bg-gray-200 border-0 rounded-lg ">
@@ -657,21 +744,25 @@ const ProfilePage: React.FC = () => {
                       <p className="text-lg">
                         <strong className="text-gray-700">Phone:</strong>{" "}
                         <span className="text-gray-600">
-                          {profileData?.number ||
-                            (typeof profileData?.contact_info === "string"
-                              ? profileData.contact_info.split(", ")[0]
-                              : profileData?.contact_info?.phoneNumber) ||
-                            "N/A"}
+                          {profileData?.contact_info?.phoneNumber ||"N/A"}
                         </span>
                       </p>
                       <p className="text-lg">
                         <strong className="text-gray-700">Address:</strong>{" "}
                         <span className="text-gray-600">
-                          {profileData?.address ||
-                            (typeof profileData?.contact_info === "string"
-                              ? profileData.contact_info.split(", ")[1]
-                              : profileData?.contact_info?.address1) ||
-                            "N/A"}
+                          {profileData?.contact_info?.address1}, {profileData?.contact_info?.address2}
+                        </span>
+                      </p>
+                      <p className="text-lg">
+                        <strong className="text-gray-700">City:</strong>{" "}
+                        <span className="text-gray-600">
+                          {profileData?.contact_info?.city}
+                        </span>
+                      </p>
+                      <p className="text-lg">
+                        <strong className="text-gray-700">State:</strong>{" "}
+                        <span className="text-gray-600">
+                          {profileData?.contact_info?.state}
                         </span>
                       </p>
                     </div>
