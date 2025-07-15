@@ -9,9 +9,10 @@ import { Link } from 'react-router-dom';
 import ProfileMenu from '../home/ProfileMenu';
 import CustomDropdown from './Customdropdown';
 import TruckIcon from '../../assets/carimages/delivery-truck.png';
-import { getAllNotifications } from '../../features/Notification/services';
+import { getAllNotifications, getNotificationsByUser } from '../../features/Notification/services';
 import { booking_cart } from '../../features/BookingCart/service';
 import { IoCartOutline } from 'react-icons/io5';
+import { useSocket } from '../../context/customerSocket';
 
 type MailItem = {
 	is_read: any;
@@ -42,6 +43,7 @@ export const Navbar: React.FC = () => {
 	const [search, setSearch] = useState('');
 	const [mails, setMails] = useState<MailItem[]>([]);
 	const [cartCount, setCartCount] = useState(0);
+	const socket = useSocket();
 
 	const filteredMails = mails
 		.filter((mail) => mail.recipient_type === 'user' && !mail.is_read)
@@ -53,8 +55,9 @@ export const Navbar: React.FC = () => {
 
 	const fetchAllNotifications = async () => {
 		try {
-			const response: any = await getAllNotifications('');
-			const data: MailItem[] = response?.data?.data || [];
+			const userId = localStorage.getItem('userId')
+			const response: any = await getNotificationsByUser(userId);
+			const data: MailItem[] = response?.data?.data?.notifications || [];
 			const sortedData = data.sort(
 				(a, b) =>
 					new Date(b?.created_at).getTime() -
@@ -157,6 +160,21 @@ export const Navbar: React.FC = () => {
 		const formatted = `${day}-${month}-${year} ${formattedHours}:${minutes}${ampm}`;
 		return formatted;
 	};
+
+	useEffect(() => {
+		if (!socket) return;
+
+		const handleNotify = (data) => {
+			console.log("Notification Recieved", data);
+			setMails((prev) => [data, ...prev])
+		}
+
+		socket.on('newNotification', handleNotify)
+
+		return () => {
+			socket.off('newNotification', handleNotify)
+		}
+	})
 
 	return (
 		<header className='bg-white text-white w-full fixed top-0 z-50 border-b-2 border-white-900 '>

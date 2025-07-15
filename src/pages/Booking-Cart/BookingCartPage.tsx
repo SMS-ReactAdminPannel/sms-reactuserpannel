@@ -173,6 +173,24 @@ export default function SparePartsCart() {
 			if (response) {
 				toast.success('Order placed successfully!', { autoClose: 2000 });
 			}
+
+			const adminNotification = {
+				title: "New Spare Part Booking",
+				message: `New Spare Part Booking Arrived`,
+				type: "info",
+				priority: "medium",
+				recipient_type: "admin",
+				recipient_id: "686967efa56e85869138d5b2",
+				is_read: false,
+				is_active: true,
+				is_sent: false,
+				created_at: new Date().toISOString(),
+			};
+
+			if (!socket) return null;
+			socket.emit("newNotification", adminNotification);
+			console.log("Notification emitted:", adminNotification);
+
 		} catch (error: any) {
 			console.error('Order placement error:', {
 				error: error.message,
