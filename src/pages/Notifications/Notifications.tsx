@@ -78,17 +78,17 @@ export default function GmailStyleInbox() {
 	useEffect(() => {
 		if (!socket) return;
 
-		const handleNotify = (data) => {
+		const handleNotify = (data:any) => {
 			console.log("Notification Recieved", data);
 			setMails((prev) => [data, ...prev])
-		}
+		};
 
-		socket.on('newNotification', handleNotify)
+		socket.on('newNotification', handleNotify);
 
 		return () => {
-			socket.off('newNotification', handleNotify)
+			socket.off('newNotification', handleNotify);
 		}
-	})
+	},[socket])
 
 
 	return (

@@ -17,10 +17,10 @@ import { useAuth } from '../auth/AuthContext';
 import LoginPromptModal from '../../components/Authentication/LoginPromptModal';
 
 interface SparePart {
-	id: string;
+	id: any;
 	spareparts_name: string;
 	price: number;
-	stock: string;
+	stock: any;
 	images: string[];
 	type: string;
 	image: string;
@@ -92,6 +92,7 @@ const SpareParts: React.FC = () => {
 		try {
 			// setError(null);
 			const response: any = await getSparePartsData({});
+
 			if (response && response.data && response.data.data) {
 				if (Array.isArray(response.data.data)) {
 					const validatedParts = response.data.data.map((part: any) => {
@@ -134,14 +135,15 @@ const SpareParts: React.FC = () => {
 	};
 
 	const transformToCategories = (parts: SparePart[]) => {
-		const categoriesMap = parts.reduce((acc, part) => {
+		const categoriesMap = parts.reduce((acc: any, part :any) => {
 			const categoryName = part.category || 'Uncategorized';
 			if (!acc[categoryName]) {
 				acc[categoryName] = {
 					id: categoryName.toLowerCase().replace(/\s+/g, '-'),
 					title: categoryName,
-					image: part.image || spareimg,
+					image: part.image,
 					items: [],
+					_id: part.id,
 				};
 			}
 			if (!acc[categoryName].items.includes(part.spareparts_name)) {
@@ -282,12 +284,12 @@ const SpareParts: React.FC = () => {
 						className='text-[#0050A5] mb-3 md:mb-4'
 						style={{ ...FONTS.sub_heading }}
 					>
-						Welcome to Auto Spare Hub
+						Ready to upgrade? Start exploring now!
 					</h2>
 					<p className='text-gray-700 mb-3 text-sm md:text-base'>
-						Discover top-quality auto spare parts. We offer genuine and after
-						market components with fast delivery and customer satisfaction
-						guaranteed.
+						From trusted genuine parts to reliable aftermarket options — we’ve
+						got what your car needs. Quick delivery and happy customers are our
+						promise!
 					</p>
 				</div>
 
@@ -317,7 +319,7 @@ const SpareParts: React.FC = () => {
 			{/* Product Grid */}
 			<div className=' mx-auto'>
 				<div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mb-8 px-2'>
-					{displayedParts.length === 0 ? (
+					{displayedParts?.length === 0 ? (
 						<div className='col-span-full text-center py-8'>
 							<p className='text-gray-500 text-lg'>
 								{searchTerm
@@ -327,7 +329,7 @@ const SpareParts: React.FC = () => {
 						</div>
 					) : (
 						<>
-							{displayedParts.map((part, index) => (
+							{displayedParts?.map((part, index) => (
 								<div
 									key={part.id}
 									className='group relative border rounded-lg overflow-hidden shadow transition-transform duration-300 cursor-pointer bg-[#BED0EC]  hover:shadow-[0_0_10px_#BED0EC]'
@@ -340,35 +342,31 @@ const SpareParts: React.FC = () => {
 										<img
 											src={
 												(hoveredIndex === index &&
-													part.images &&
-													part.images[1]) ||
-												part.images[0] ||
-												part.image ||
-												spareimg
+													part?.images &&
+													part?.images[1]) ||
+												part?.images[0] ||
+												part?.image
 											}
-											alt={part.spareparts_name}
+											alt={part?.spareparts_name}
 											className='w-auto rounded object-cover transition-all duration-300 ease-in-out rounded-md'
-											onError={(e) => {
-												(e.target as HTMLImageElement).src = spareimg;
-											}}
 										/>
 									</div>
 									<div className='p-6 px-6 relative'>
 										<div className='text-xl font-semibold line-clamp-2 mb-1'>
-											{part.spareparts_name}
+											{part?.spareparts_name}
 										</div>
 										<div className='text-md text-gray-600 mb-1'>
-											{part.type}
+											{part?.type}
 										</div>
 										<div className='text-md font-bold text-[#0050A5]'>
-											₹{part.price.toLocaleString()}
+											₹{part?.price.toLocaleString()}
 										</div>
 										<div
 											className={`mt-2 text-xs font-semibold ${
-												part.stock ? 'text-green-600' : 'text-red-600'
+												part?.stock ? 'text-green-600' : 'text-red-600'
 											}`}
 										>
-											{part.stock ? 'In Stock' : 'Out of Stock'}
+											{part?.stock ? 'In Stock' : 'Out of Stock'}
 										</div>
 
 										{/* Cart Icon Button */}
@@ -390,7 +388,7 @@ const SpareParts: React.FC = () => {
 
 				{/* View All/Show Less Buttons */}
 				<div className='flex justify-center gap-4 mt-6'>
-					{!showAllProducts && filteredParts.length > 8 && (
+					{!showAllProducts && filteredParts?.length > 8 && (
 						<button
 							onClick={() => setShowAllProducts(true)}
 							className='bg-[#0050A5] text-white px-6 py-2 rounded-md  transition-colors duration-200'
@@ -417,7 +415,7 @@ const SpareParts: React.FC = () => {
 			</div>
 
 			{/* Bundles Section - Only show if there are parts */}
-			{parts.length > 0 && (
+			{parts?.length > 0 && (
 				<div className='bg-gray-100 mt-16 transition-shadow p-8'>
 					<h1 className='text-center' ref={bundleTitle.elementRef}>
 						<span
@@ -445,7 +443,7 @@ const SpareParts: React.FC = () => {
 							onTouchEnd={handleTouchEnd}
 						>
 							{/* Add clones at the beginning and end for seamless looping */}
-							{[...parts.slice(-3), ...parts, ...parts.slice(0, 3)].map(
+							{[...parts?.slice(-3), ...parts, ...parts?.slice(0, 3)]?.map(
 								(part, index) => (
 									<div
 										key={`${part.id}-${index}`}
@@ -455,7 +453,7 @@ const SpareParts: React.FC = () => {
 											{/* Background Image with Overlay */}
 											<div
 												className='absolute inset-0 bg-cover bg-center blur-[2px]'
-												style={{ backgroundImage: `url(${spareimg}` }}
+												style={{ backgroundImage: `url(${part?.image}` }}
 											/>
 											<div className='absolute inset-0 bg-black opacity-10' />
 
@@ -463,16 +461,13 @@ const SpareParts: React.FC = () => {
 											<div className='relative z-10 flex flex-col items-center'>
 												<div className='w-16 h-16 mb-4 rounded-full bg-white bg-opacity-20 flex items-center justify-center backdrop-blur-sm'>
 													<img
-														src={spareimg}
-														alt={part.spareparts_name}
+														src={part?.image}
+														alt={part?.spareparts_name}
 														className='w-12 h-12 object-cover rounded-full'
-														onError={(e) => {
-															(e.target as HTMLImageElement).src = spareimg;
-														}}
 													/>
 												</div>
 												<div className='text-xl font-semibold mb-2'>
-													{part.spareparts_name}
+													{part?.spareparts_name}
 												</div>
 											</div>
 										</div>
@@ -573,9 +568,9 @@ const SpareParts: React.FC = () => {
 					By Categories
 				</h1>
 
-				{categories.length !== 0 ? (
+				{categories?.length !== 0 ? (
 					<div className=' grid grid-cols-4 gap-6'>
-						{categories?.map(({ id, title, items }) => (
+						{categories?.map(({ id, title, items, image, _id }) => (
 							<div
 								key={id}
 								className='flex flex-col gap-4 p-6 border rounded-xl shadow-md'
@@ -585,17 +580,22 @@ const SpareParts: React.FC = () => {
 										{title}
 									</h2>
 									<img
-										src={spareImg}
+										src={image}
 										alt={title}
 										className='w-16 h-16 object-contain'
 									/>
 								</div>
 								<ul className='space-y-1 text-sm'>
-									{items.slice(0, 3).map((item, index) => (
+									{items?.slice(0, 3).map((item, index) => {
+										return(
+										
+										<Link to={`/spare-parts/product/${_id}`}>
 										<li key={index} className='hover:underline cursor-pointer'>
 											{item}
 										</li>
-									))}
+										</Link>
+									)})}
+								
 								</ul>
 								<Link
 									to={`/spare-parts/category/${id}`}
@@ -637,22 +637,29 @@ const SpareParts: React.FC = () => {
 								src={
 									selectedPart.images && selectedPart.images[0]
 										? selectedPart.images[0]
-										: selectedPart.image || spareimg
+										: selectedPart.image
 								}
 								alt={selectedPart.spareparts_name}
 								className='w-48 h-48 object-cover rounded-lg shadow-md'
-								onError={(e) => {
-									(e.target as HTMLImageElement).src = spareimg;
-								}}
 							/>
 						</div>
 
 						<h2 className='text-lg font-bold mb-2'>
 							{selectedPart.spareparts_name}
 						</h2>
-						<p className='text-sm text-gray-600 mb-1'>
+						<div className='flex justify-between items-center mb-4'>
+						<p className='text-sm text-gray-600'>
 							Type: {selectedPart.type}
 						</p>
+
+						<p className={`${(selectedPart.stock) > 0 ? "bg-green-700":"bg-red-500"} text-white px-2 py-1 rounded-full text-sm font-semibold`}>
+							{selectedPart.stock && parseInt(selectedPart.stock) > 0 ? (
+								<span>Stock : {selectedPart.stock}</span>
+							) : (
+								<span>Out of Stock</span>
+							)}
+						</p>
+						</div>
 
 						<div className='flex items-center gap-2 mb-4'>
 							<span className='text-sm font-medium'>Quantity:</span>
@@ -664,8 +671,8 @@ const SpareParts: React.FC = () => {
 							</button>
 							<span className='px-2'>{quantity}</span>
 							<button
-								onClick={() => setQuantity((prev) => prev + 1)}
-								className='px-2 py-1 bg-gray-200 rounded hover:bg-gray-300'
+								onClick={() => setQuantity((prev) => quantity< parseInt(selectedPart.stock) ? prev + 1 : prev)}
+								className={`px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 ${parseInt(selectedPart.stock) <= quantity ? 'cursor-not-allowed opacity-50' : ''}`}
 							>
 								+
 							</button>

@@ -14,8 +14,8 @@ import {
 // import bgImage from '../../assets/checkout-bg_1_.png';
 import { getBookingAll } from '../../features/Bookings/service';
 
-import serviceImg from '../../assets/serviceimages/generalservice.png';
-import spareImg from '../../assets/CAR GEAR/car gear.jpg';
+//import serviceImg from '../../assets/serviceimages/generalservice.png';
+//import spareImg from '../../assets/CAR GEAR/car gear.jpg';
 import { FONTS } from '../../constants/constant';
 import { useAuth } from '../auth/AuthContext';
 
@@ -140,14 +140,14 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 					<div className='md:w-48 h-40 relative overflow-hidden rounded-lg shadow-md'>
 						<div className='w-full h-full bg-gray-100 flex items-center justify-center'>
 							<img
-								src={isService ? serviceImg : spareImg}
+								src={order.imageUrl}
 								alt='order'
 								className='w-full h-full object-cover'
 							/>
 						</div>
 
 						{/* Type Badge */}
-						<div className='absolute top-3 left-3 z-10'>
+						<div className='absolute top-3 right-3 z-10'>
 							<span
 								className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
 									isService
@@ -254,16 +254,16 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 										{getPrice().toLocaleString()}
 									</p>
 									<p className='text-sm text-[#0050A5]'>
-										<span>Tax (5%)</span>
+										<span>Tax (0%)</span>
 										<span className='pl-3'>:</span> ₹{' '}
-										{(getPrice() * 0.05).toFixed(2)}
+										{(getPrice() * 0).toFixed(2)}
 									</p>
 									<div className='border-t border-[#0050A5] pt-2 mb-2'>
 										<p className='text-sm text-[#0050A5] font-bold'>
 											<strong>
 												Total<span className='pl-8'>:</span>
 											</strong>{' '}
-											₹ {(getPrice() * 1.05).toFixed(2)}
+											₹ {(getPrice() * 1).toFixed(2)}
 										</p>
 									</div>
 								</div>
@@ -403,9 +403,7 @@ const OrdersPage: React.FC = () => {
 	// }
 
 	return (
-		<div
-			className='min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100'
-		>
+		<div className='min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100'>
 			<div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
 				{/* Header */}
 				<div className='mb-8'>

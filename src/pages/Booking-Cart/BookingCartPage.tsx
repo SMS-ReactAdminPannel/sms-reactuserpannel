@@ -8,7 +8,6 @@ import {
 	postBookingProduct,
 } from '../../features/BookingCart/service';
 import { toast } from 'react-toastify';
-import bgImage from '../../assets/checkout-bg_1_.png';
 import { postBookingService } from '../../features/Bookings/service';
 import { FONTS } from '../../constants/constant';
 import { useAuth } from '../auth/AuthContext';
@@ -104,7 +103,6 @@ export default function SparePartsCart() {
 			const cartData = response?.data?.data;
 			if (!Array.isArray(cartData)) return;
 			const spareEntry = cartData.find((item) => item.type === 'spare');
-			console.log(spareEntry, "checing spare enter")
 			const cartId = spareEntry?._id;
 			setCartId(cartId);
 
@@ -115,8 +113,8 @@ export default function SparePartsCart() {
 						productName: product.productId?.productName || 'Unknown',
 						price: Number(product.price) || 0,
 						brand: product.productId?.brand || 'Generic',
-						image: bgImage,
-						// image: product.productId?.image || '',
+						// image: bgImage,
+						image: product.productId?.image || '',
 						quantity: Number(product.quantity) || 1,
 						category: product.productId?.category || '',
 						description: product.productId?.description || '',
@@ -129,7 +127,6 @@ export default function SparePartsCart() {
 
 			const serviceEntry = cartData.find((item) => item.type === 'service');
 			const serviceId = serviceEntry?._id;
-			console.log(serviceEntry, "checing service enter")
 			setServiceCartId(serviceId);
 
 			if (serviceEntry?.services) {
@@ -139,13 +136,12 @@ export default function SparePartsCart() {
 						service_name: service.service_name || 'Unknown',
 						price: Number(service.price) || 0,
 						description: service.description || '',
-						image: service.productId?.image || bgImage,
+						image: service.productId?.image,
 						is_active: service.productId?.stock || true,
 						discount: 0,
 					})
 				);
 
-				console.log("Map", mappedServices)
 				setServices(mappedServices);
 			}
 		} catch (error) {
@@ -238,14 +234,12 @@ export default function SparePartsCart() {
 		if (activeTab === 'service') {
 			const response = await deleteBookingCartProduct({ cartId, productId: id });
 			if (response) {
-				console.log('Product removed successfully', response);
 				toast.success('Product removed successfully', { autoClose: 2000 });
 				books_valid();
 			}
 		} else if (activeTab === 'ServiceBookingPage') {
 			const response = await deleteBookingCartService({ cartId: serviceId, serviceId: id });
 			if (response) {
-				console.log('Service removed successfully', response);
 				toast.success('Service removed successfully', { autoClose: 2000 });
 				books_valid();
 			}
@@ -263,11 +257,7 @@ export default function SparePartsCart() {
 				<div className='flex justify-star gap-4'>
 					<div className='w-32 h-32 relative group overflow-hidden rounded border'>
 						<img
-							src={
-								part.image
-									? part.image
-									: 'https://boodmo.com/media/cache/catalog_part/images/parts/3fe3e3713e19d66a47bae04233a97cf4.webp'
-							}
+							src={part.image}
 							alt={part.productName}
 							className='object-contain w-full h-full p-2 transition-transform duration-300 group-hover:scale-105'
 						/>
@@ -336,11 +326,7 @@ export default function SparePartsCart() {
 				<div className='flex justify-star gap-4'>
 					<div className='w-32 h-32 relative group overflow-hidden rounded border'>
 						<img
-							src={
-								serv.image
-									? serv.image
-									: 'https://boodmo.com/media/cache/catalog_part/images/parts/3fe3e3713e19d66a47bae04233a97cf4.webp'
-							}
+							src={serv.image}
 							alt={serv.service_name}
 							className='object-contain w-full h-full p-2 transition-transform duration-300 group-hover:scale-105'
 						/>

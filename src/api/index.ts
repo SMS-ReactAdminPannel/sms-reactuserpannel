@@ -94,7 +94,10 @@ class Client {
 				httpClient.patch(API_END_POINTS.service_bookings.patch, params, data),
 		},
 
-		offer: {},
+		offer: {
+			getAll: () =>
+				httpClient.get(API_END_POINTS.offer.Get),
+		},
 		auth: {
 			login: (data: string) =>
 				httpClient.post(API_END_POINTS.auth.post_login, data),

@@ -1,4 +1,5 @@
 import EnquiryForm from '../../components/Enquiry Form/EnquiryForm';
+import ReplyMessageList from '../../components/Enquiry Form/ReplyMessageList';
 import { FONTS } from '../../constants/constant';
 
 const ContactPage = () => {
@@ -14,8 +15,14 @@ const ContactPage = () => {
 				</p>
 			</div>
 
-			<EnquiryForm />
+			 <div className="grid grid-cols-2 lg:grid-cols gap-8">
+       
+          <EnquiryForm/>
+      
 
+            <div className="bg-white p-6 rounded-lg shadow-md overflow-y-auto max-h-[132vh]">
+          <ReplyMessageList />
+        </div>  </div>
 			<div className='mt-12 max-w-7xl mx-auto grid gap-8 lg:grid-cols-2'>
 				<div className='bg-white p-6 rounded-lg shadow'>
 					<h3 className='text-lg font-medium text-[#0050A5]'>Our Contact Info</h3>

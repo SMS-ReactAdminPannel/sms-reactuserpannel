@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import { FONTS } from '../../constants/constant';
 import HttpClient from '../../api/httpClient';
 import { API_END_POINTS } from '../../api/httpEndpoints';
+import Offergift  from '../../assets/offer.png'
 
 type ServiceOffer = {
 	_id: string;
@@ -17,8 +18,6 @@ type ServiceOffer = {
 	image?: string;
 	badge?: string;
 };
-
-
 
 // Scroll - line animation
 
@@ -59,24 +58,30 @@ interface OfferProps {
 }
 
 const Offer: React.FC<OfferProps> = ({ announcements }) => {
-	const [localAnnouncements, setLocalAnnouncements] = useState<ServiceOffer[]>([]);
+	const [localAnnouncements, setLocalAnnouncements] = useState<ServiceOffer[]>(
+		[]
+	);
 	const offerTitle = useScrollAnimation<HTMLHeadingElement>();
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await HttpClient.get(API_END_POINTS.offer.Get) as any;
+				const response = (await HttpClient.get(
+					API_END_POINTS.offer.Get
+				)) as any;
 				const allData = response.data?.data || [];
-				
+
 				// Filter to show only admin announcements (exclude partner data)
 				const adminOnly = allData.filter((offer: ServiceOffer) => {
 					// Check if partnerId is empty array, null, undefined, or doesn't exist
-					return !offer.partnerId || 
-						   (Array.isArray(offer.partnerId) && offer.partnerId.length === 0) ||
-						   offer.partnerId === null ||
-						   offer.partnerId === undefined;
+					return (
+						!offer.partnerId ||
+						(Array.isArray(offer.partnerId) && offer.partnerId.length === 0) ||
+						offer.partnerId === null ||
+						offer.partnerId === undefined
+					);
 				});
-				
+
 				setLocalAnnouncements(adminOnly);
 			} catch (error) {
 				// Handle error silently
@@ -85,7 +90,8 @@ const Offer: React.FC<OfferProps> = ({ announcements }) => {
 		fetchData();
 	}, []);
 
-	const dataToShow = localAnnouncements.length > 0 ? localAnnouncements : announcements;
+	const dataToShow =
+		localAnnouncements.length > 0 ? localAnnouncements : announcements;
 
 	return (
 		<div className='p-6 bg-gradient-to-br font-bold from-blue-50 to-blue-100 min-h-screen'>
@@ -116,7 +122,9 @@ const Offer: React.FC<OfferProps> = ({ announcements }) => {
 							<div className='bg-[#0050A5]  text-white px-3 py-1 rounded-full text-sm font-semibold'>
 								Special Offer
 							</div>
-							<div className='text-2xl'>🎉</div>
+							<div className='text-xl w-24'>
+								<img src={Offergift} alt="offergift" />
+							</div>
 						</div>
 						<h3 className='text-2xl font-bold text-gray-800 mb-4 leading-tight'>
 							{offer.title}
@@ -143,9 +151,9 @@ const Offer: React.FC<OfferProps> = ({ announcements }) => {
 								)}
 							</div>
 						)}
-						<button className='w-full bg-[#0050A5] text-white py-3 px-6 rounded-lg font-semibold hover:from-blue-600 hover:to-[#0050A5] transition-all duration-300 shadow-lg hover:shadow-xl'>
+						{/* <button className='w-full bg-[#0050A5] text-white py-3 px-6 rounded-lg font-semibold hover:from-blue-600 hover:to-[#0050A5] transition-all duration-300 shadow-lg hover:shadow-xl'>
 							View Details →
-						</button>
+						</button> */}
 					</div>
 				))}
 				{/* {dataToShow.length === 0 && (

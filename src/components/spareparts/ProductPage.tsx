@@ -48,7 +48,7 @@ const ProductPage = () => {
 	};
 	return (
 		<>
-			{product.map((item: any, index: number) => (
+			{product?.map((item: any, index: number) => (
 				<div className='container mx-auto p-7' key={item.id || index}>
 					<IoMdArrowRoundBack
 						onClick={fallBack}
@@ -57,7 +57,7 @@ const ProductPage = () => {
 					<div className='flex xs:flex-col sm:flex-col md:flex-row gap-8'>
 						<div className='md:w-3/5 sm:w-4/5 md:h-[380px] sm:h-[300px]'>
 							<img
-								src={spareImg}
+								src={item?.image}
 								alt={item?.spareparts_name}
 								className='w-full h-full rounded-lg object-cover shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2'
 							/>
@@ -73,12 +73,14 @@ const ProductPage = () => {
 								</span>
 							</p>
 							<h2 className='text-lg font-semibold mb-2'>Specifications:</h2>
-							<ul className='mb-6'>
+							<ul className=''>
 								<li key={index} className='mb-1 text-sm'>
 									• {item?.spareparts_name}
 								</li>
 							</ul>
-
+							<div className='bg-green-600 inline-block my-3 px-2 py-0.5 rounded-md'>
+								<p className='text-white'>Stock: {item?.stock}</p>
+							</div>
 							<div className='flex items-center gap-2 mb-4'>
 								<span className='text-sm font-medium'>Quantity:</span>
 								<button
@@ -89,8 +91,8 @@ const ProductPage = () => {
 								</button>
 								<span className='px-2'>{quantity}</span>
 								<button
-									onClick={() => setQuantity((prev) => prev + 1)}
-									className='px-2 py-1 bg-[#BED0EC] rounded hover:bg-[#BED0EC] hover:scale-105 transition-transform duration-200'
+									onClick={() => setQuantity((prev) => (item?.stock > prev ? prev + 1 : prev))}
+									className={`px-2 py-1 bg-[#BED0EC] rounded hover:bg-[#BED0EC] hover:scale-105 transition-transform duration-200 ${item?.stock <= quantity ? 'opacity-50 cursor-not-allowed' : ''}`}
 								>
 									+
 								</button>
