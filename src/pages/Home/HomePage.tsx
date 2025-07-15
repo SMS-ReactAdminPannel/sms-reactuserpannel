@@ -103,7 +103,7 @@ const HomePage: React.FC = () => {
 	const contactTitle = useScrollAnimation<HTMLHeadingElement>();
 	// const [, setIsLoading] = useState(true);
 	const [serviceData, setServiceData] = useState<ServiceCategory[]>([]);
-	//const [selectedService, setSelectedService] = useState<any>(null);
+	const [selectedService, setSelectedService] = useState<any>(null);
 
 	const fetchHomePageData = () => {
 		try {
@@ -118,8 +118,8 @@ const HomePage: React.FC = () => {
 	const fetchServiceData = async () => {
 		try {
 			const response = (await getAllServiceCategories()) as ApiResponse;
-			if (response && response.data && response.data.data) {
-				setServiceData(response.data.data);
+			if (response && response?.data && response?.data?.data) {
+				setServiceData(response?.data?.data);
 			}
 		} catch (error) {
 			console.error('Error fetching service data:', error);
@@ -150,7 +150,6 @@ const HomePage: React.FC = () => {
 	}, []);
 
 	const handleServiceClick = (categoryId: string, categoryName: string) => {
-		// Store the category info in localStorage or pass via state
 		localStorage.setItem(
 			'selectedCategory',
 			JSON.stringify({
@@ -158,9 +157,6 @@ const HomePage: React.FC = () => {
 				name: categoryName,
 			})
 		);
-		// console.log('Selected Category:', categoryId, categoryName);
-
-		// Navigate to services page
 		navigate('/services');
 	};
 
@@ -200,12 +196,12 @@ const HomePage: React.FC = () => {
 					</h1>
 					{serviceData?.length !== 0 ? (
 						<div className='grid md:grid-cols-4 sm:grid-cols-2 gap-4 justify-items-center'>
-							{serviceData?.slice(0,8)?.map((service:any) => (
+							{serviceData?.slice(0, 8)?.map((service: any) => (
 								<Link
 									to='/services'
 									key={service?.id}
 									onClick={() =>
-										handleServiceClick(service?.id, service?.category_name)
+										handleServiceClick(service?._id, service?.category_name)
 									}
 									className={`bg-[#d8e1ef] rounded-lg md:h-56 sm:h-auto w-60 p-2 shadow-md hover:shadow-lg transition-shadow ease-in duration-300 border-1 border-b-2 cursor-pointer transform hover:scale-102 border-[#0050A5]`}
 								>

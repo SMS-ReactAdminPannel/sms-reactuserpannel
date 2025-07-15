@@ -83,7 +83,6 @@ export const Navbar: React.FC = () => {
 		}
 	};
 
-	// Expose cart refresh function globally
 	useEffect(() => {
 		(window as any).refreshCartCount = fetchBookingCartCount;
 		return () => {
@@ -162,24 +161,17 @@ export const Navbar: React.FC = () => {
 		<header className='bg-white text-white w-full fixed top-0 z-50 border-b-2 border-white-900 '>
 			{/* Top Navbar */}
 			<div className='bg-[#0050A5] h-[2px]'></div>
-			<div className='flex items-center justify-between px-24 py-2 space-x-4'>
+			<div className='flex items-center justify-between md:px-24 sm:px-12 py-2 space-x-4'>
 				{/* Logo & Location */}
 				<div className='flex items-center space-x-4'>
 					<Link to='/' className='text-2xl font-bold text-white'>
-						<img
-							src={Logo}
-							alt='yes mechanic logo'
-							className='w-[185px] h-[auto]'
-						/>
+						<img src={Logo} alt='yes mechanic logo' className='w-40 h-[auto]' />
 					</Link>
 				</div>
 
 				<div className='text-white flex items-center gap-1'>
-					<img src={TruckIcon} style={{ width: '30px' }} />
-					<label
-						className='text-[#0050A5] cursor-pointer'
-						style={{ ...FONTS.sub_paragraph1, fontWeight: 600 }}
-					>
+					<img src={TruckIcon} className='w-7' />
+					<label className='text-[#0050A5] cursor-pointer text-sm font-semibold'>
 						QUICK DELIVERY
 					</label>
 				</div>
@@ -191,7 +183,7 @@ export const Navbar: React.FC = () => {
 				<div className='flex flex-1 justify-end'>
 					<input
 						type='text'
-						className='px-4 py-2 text-[#0050A5] placeholder-gray-600 text-sm bg-[#fff] rounded-l-md focus:outline-none focus:ring-[#0050A5] w-[290px] shadow-md border border-[#0050A5] focus:border-[#0050A5]'
+						className='px-4 py-2 text-[#0050A5] placeholder-gray-600 text-sm bg-[#fff] rounded-l-md focus:outline-none focus:ring-[#0050A5] w-72 shadow-md border border-[#0050A5] focus:border-[#0050A5]'
 						placeholder='Search'
 						value={search}
 						onChange={(e) => setSearch(e.target.value)}

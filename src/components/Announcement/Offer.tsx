@@ -18,8 +18,6 @@ type ServiceOffer = {
 	badge?: string;
 };
 
-
-
 // Scroll - line animation
 
 const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
@@ -59,24 +57,30 @@ interface OfferProps {
 }
 
 const Offer: React.FC<OfferProps> = ({ announcements }) => {
-	const [localAnnouncements, setLocalAnnouncements] = useState<ServiceOffer[]>([]);
+	const [localAnnouncements, setLocalAnnouncements] = useState<ServiceOffer[]>(
+		[]
+	);
 	const offerTitle = useScrollAnimation<HTMLHeadingElement>();
 
 	useEffect(() => {
 		const fetchData = async () => {
 			try {
-				const response = await HttpClient.get(API_END_POINTS.offer.Get) as any;
+				const response = (await HttpClient.get(
+					API_END_POINTS.offer.Get
+				)) as any;
 				const allData = response.data?.data || [];
-				
+
 				// Filter to show only admin announcements (exclude partner data)
 				const adminOnly = allData.filter((offer: ServiceOffer) => {
 					// Check if partnerId is empty array, null, undefined, or doesn't exist
-					return !offer.partnerId || 
-						   (Array.isArray(offer.partnerId) && offer.partnerId.length === 0) ||
-						   offer.partnerId === null ||
-						   offer.partnerId === undefined;
+					return (
+						!offer.partnerId ||
+						(Array.isArray(offer.partnerId) && offer.partnerId.length === 0) ||
+						offer.partnerId === null ||
+						offer.partnerId === undefined
+					);
 				});
-				
+
 				setLocalAnnouncements(adminOnly);
 			} catch (error) {
 				// Handle error silently
@@ -85,7 +89,8 @@ const Offer: React.FC<OfferProps> = ({ announcements }) => {
 		fetchData();
 	}, []);
 
-	const dataToShow = localAnnouncements.length > 0 ? localAnnouncements : announcements;
+	const dataToShow =
+		localAnnouncements.length > 0 ? localAnnouncements : announcements;
 
 	return (
 		<div className='p-6 bg-gradient-to-br font-bold from-blue-50 to-blue-100 min-h-screen'>
