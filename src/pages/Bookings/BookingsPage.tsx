@@ -316,8 +316,8 @@ const OrdersPage: React.FC = () => {
 	// const [isLoading, setIsLoading] = useState(false);
 	const { isAuthenticated } = useAuth();
 
-	isAuthenticated &&
 		useEffect(() => {
+			if (isAuthenticated) {
 			const fetchOrders = async () => {
 				try {
 					const response: any = await getBookingAll({});
@@ -361,7 +361,8 @@ const OrdersPage: React.FC = () => {
 			};
 
 			fetchOrders();
-		}, []);
+		}
+		}, [isAuthenticated]);
 
 	const filteredOrders = useMemo(() => {
 		return orders

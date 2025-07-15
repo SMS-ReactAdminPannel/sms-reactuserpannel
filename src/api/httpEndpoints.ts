@@ -34,6 +34,7 @@ export const API_END_POINTS = {
 		put: '/api/customer/cart/:id',
 		delete: '/api/customer/:cartId/product/:productId',
 		deleteProduct: '/api/customer/cart/:cartId/product/:productId',
+		deleteService: '/api/customer/cart/:cartId/service/:serviceId',
 	},
 
 	service_bookings: {
@@ -57,10 +58,11 @@ export const API_END_POINTS = {
 		post_forgot_password: '/api/customer/auth/forget-pass',
 		post_resend_otp: '/api/customer/auth/resend-otp',
 		post_reset_password: '/api/customer/auth/reset-pass',
+		post_image: '/api/image/singlefile/userid/',
 	},
 
 	notification: {
-		getAll: '/api/notifications/',
+		getAll: '/api/notifications/customer',
 		update: '/api/notifications/:uuid',
 	},
 

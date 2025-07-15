@@ -148,12 +148,12 @@ const Offer: React.FC<OfferProps> = ({ announcements }) => {
 						</button>
 					</div>
 				))}
-				{dataToShow.length === 0 && (
+				{/* {dataToShow.length === 0 && (
 					<div className='col-span-3 text-center py-12'>
 						<div className='animate-spin rounded-full h-12 w-12 border-b-2 border-[#0050A5] mx-auto mb-4'></div>
 						<p className='text-gray-600 text-lg'>Loading amazing offers...</p>
 					</div>
-				)}
+				)} */}
 			</div>
 		</div>
 	);

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import axios from 'axios';
 
 // const backEndUrl: string = 'https://sms-node-backend-17xb.onrender.com';
