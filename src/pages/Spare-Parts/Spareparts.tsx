@@ -17,10 +17,10 @@ import { useAuth } from '../auth/AuthContext';
 import LoginPromptModal from '../../components/Authentication/LoginPromptModal';
 
 interface SparePart {
-	id: string;
+	id: any;
 	spareparts_name: string;
 	price: number;
-	stock: string;
+	stock: any;
 	images: string[];
 	type: string;
 	image: string;
@@ -135,7 +135,7 @@ const SpareParts: React.FC = () => {
 	};
 
 	const transformToCategories = (parts: SparePart[]) => {
-		const categoriesMap = parts.reduce((acc, part) => {
+		const categoriesMap = parts.reduce((acc: any, part :any) => {
 			const categoryName = part.category || 'Uncategorized';
 			if (!acc[categoryName]) {
 				acc[categoryName] = {
@@ -143,6 +143,7 @@ const SpareParts: React.FC = () => {
 					title: categoryName,
 					image: part.image,
 					items: [],
+					_id: part.id,
 				};
 			}
 			if (!acc[categoryName].items.includes(part.spareparts_name)) {
@@ -569,7 +570,7 @@ const SpareParts: React.FC = () => {
 
 				{categories?.length !== 0 ? (
 					<div className=' grid grid-cols-4 gap-6'>
-						{categories?.map(({ id, title, items, image }) => (
+						{categories?.map(({ id, title, items, image, _id }) => (
 							<div
 								key={id}
 								className='flex flex-col gap-4 p-6 border rounded-xl shadow-md'
@@ -585,11 +586,16 @@ const SpareParts: React.FC = () => {
 									/>
 								</div>
 								<ul className='space-y-1 text-sm'>
-									{items?.slice(0, 3).map((item, index) => (
+									{items?.slice(0, 3).map((item, index) => {
+										return(
+										
+										<Link to={`/spare-parts/product/${_id}`}>
 										<li key={index} className='hover:underline cursor-pointer'>
 											{item}
 										</li>
-									))}
+										</Link>
+									)})}
+								
 								</ul>
 								<Link
 									to={`/spare-parts/category/${id}`}
@@ -641,9 +647,19 @@ const SpareParts: React.FC = () => {
 						<h2 className='text-lg font-bold mb-2'>
 							{selectedPart.spareparts_name}
 						</h2>
-						<p className='text-sm text-gray-600 mb-1'>
+						<div className='flex justify-between items-center mb-4'>
+						<p className='text-sm text-gray-600'>
 							Type: {selectedPart.type}
 						</p>
+
+						<p className={`${(selectedPart.stock) > 0 ? "bg-green-700":"bg-red-500"} text-white px-2 py-1 rounded-full text-sm font-semibold`}>
+							{selectedPart.stock && parseInt(selectedPart.stock) > 0 ? (
+								<span>Stock : {selectedPart.stock}</span>
+							) : (
+								<span>Out of Stock</span>
+							)}
+						</p>
+						</div>
 
 						<div className='flex items-center gap-2 mb-4'>
 							<span className='text-sm font-medium'>Quantity:</span>
@@ -655,8 +671,8 @@ const SpareParts: React.FC = () => {
 							</button>
 							<span className='px-2'>{quantity}</span>
 							<button
-								onClick={() => setQuantity((prev) => prev + 1)}
-								className='px-2 py-1 bg-gray-200 rounded hover:bg-gray-300'
+								onClick={() => setQuantity((prev) => quantity< parseInt(selectedPart.stock) ? prev + 1 : prev)}
+								className={`px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 ${parseInt(selectedPart.stock) <= quantity ? 'cursor-not-allowed opacity-50' : ''}`}
 							>
 								+
 							</button>

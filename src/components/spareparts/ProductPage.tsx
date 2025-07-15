@@ -91,8 +91,8 @@ const ProductPage = () => {
 								</button>
 								<span className='px-2'>{quantity}</span>
 								<button
-									onClick={() => setQuantity((prev) => prev + 1)}
-									className='px-2 py-1 bg-[#BED0EC] rounded hover:bg-[#BED0EC] hover:scale-105 transition-transform duration-200'
+									onClick={() => setQuantity((prev) => (item?.stock > prev ? prev + 1 : prev))}
+									className={`px-2 py-1 bg-[#BED0EC] rounded hover:bg-[#BED0EC] hover:scale-105 transition-transform duration-200 ${item?.stock <= quantity ? 'opacity-50 cursor-not-allowed' : ''}`}
 								>
 									+
 								</button>
