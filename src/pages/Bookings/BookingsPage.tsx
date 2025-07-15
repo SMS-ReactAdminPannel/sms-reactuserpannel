@@ -14,8 +14,8 @@ import {
 // import bgImage from '../../assets/checkout-bg_1_.png';
 import { getBookingAll } from '../../features/Bookings/service';
 
-import serviceImg from '../../assets/serviceimages/generalservice.png';
-import spareImg from '../../assets/CAR GEAR/car gear.jpg';
+//import serviceImg from '../../assets/serviceimages/generalservice.png';
+//import spareImg from '../../assets/CAR GEAR/car gear.jpg';
 import { FONTS } from '../../constants/constant';
 import { useAuth } from '../auth/AuthContext';
 
@@ -254,16 +254,16 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 										{getPrice().toLocaleString()}
 									</p>
 									<p className='text-sm text-[#0050A5]'>
-										<span>Tax (5%)</span>
+										<span>Tax (0%)</span>
 										<span className='pl-3'>:</span> ₹{' '}
-										{(getPrice() * 0.05).toFixed(2)}
+										{(getPrice() * 0).toFixed(2)}
 									</p>
 									<div className='border-t border-[#0050A5] pt-2 mb-2'>
 										<p className='text-sm text-[#0050A5] font-bold'>
 											<strong>
 												Total<span className='pl-8'>:</span>
 											</strong>{' '}
-											₹ {(getPrice() * 1.05).toFixed(2)}
+											₹ {(getPrice() * 1).toFixed(2)}
 										</p>
 									</div>
 								</div>
