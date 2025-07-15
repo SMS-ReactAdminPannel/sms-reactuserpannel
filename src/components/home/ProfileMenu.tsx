@@ -54,7 +54,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ handleLogout }) => {
 	}, [navigate]);
 
 	return (
-		<div className='relative inline-block text-left' ref={menuRef}>
+		<div className='relative inline-block  text-left' ref={menuRef}>
 			<button
 				onClick={() => setIsOpen((prev) => !prev)}
 				className='focus:outline-none'
