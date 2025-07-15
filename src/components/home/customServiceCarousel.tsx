@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FONTS } from '../../constants/constant';
 import { getHomeData } from '../../features/home';
 
@@ -74,6 +74,7 @@ const CustomServicesGrid: React.FC = () => {
 			{spareParts.length !== 0 ? (
 				<div className='grid grid-cols-5 gap-10'>
 					{spareParts?.slice(0, 15)?.map((item) => (
+						<Link to={`/spare-parts/product/${item._id}`}>
 						<div
 							key={item._id}
 							className='bg-[#d8e1ef] rounded-lg p-2 shadow-3xl hover:shadow-4xl hover:scale-102 transition-transform duration-300 relative cursor-pointer'
@@ -101,6 +102,7 @@ const CustomServicesGrid: React.FC = () => {
 								{item?.productName}
 							</p>
 						</div>
+						</Link>
 					))}
 				</div>
 			) : (
