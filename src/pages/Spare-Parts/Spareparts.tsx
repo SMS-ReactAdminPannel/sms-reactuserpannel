@@ -1,33 +1,27 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect, useRef } from 'react';
 import { ShoppingCart } from 'lucide-react';
 import { Search, X } from 'lucide-react';
-
 import {
 	getSparePartsData,
 	postSparePartsData,
 } from '../../features/spareparts';
-import spareimg from '../../assets/CAR DIFFERENTIAL/Car differential.jpg';
 import { FONTS } from '../../constants/constant';
-// import { SiTicktick } from 'react-icons/si';
 import { Link } from 'react-router-dom';
-import spareImg from '../../assets/CarPart1.jfif';
 import toast from 'react-hot-toast';
 import { useAuth } from '../auth/AuthContext';
 import LoginPromptModal from '../../components/Authentication/LoginPromptModal';
 
 interface SparePart {
-	id: string;
+	id: any;
 	spareparts_name: string;
 	price: number;
-	stock: string;
+	stock: any;
+	inStock: any;
 	images: string[];
 	type: string;
 	image: string;
 	category?: string;
 }
-
-// Custom hook for Scroll Animation
 
 const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 	options = {}
@@ -53,11 +47,9 @@ const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 
 		return () => {
 			if (elementRef.current) {
-				// eslint-disable-next-line react-hooks/exhaustive-deps
 				observer.unobserve(elementRef.current);
 			}
 		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return { elementRef, isVisible };
@@ -83,19 +75,13 @@ const SpareParts: React.FC = () => {
 	const { isAuthenticated } = useAuth();
 	const [showLoginModal, setShowLoginModal] = useState(false);
 
-	// const {CategoryData} = useSparePartsDataset;
-
-	// const [error, setError] = useState<string | null>(null);
-	// const [isLoading, setIsLoading] = useState(true);
-
 	const fetchSpareParts = async () => {
 		try {
-			// setError(null);
 			const response: any = await getSparePartsData({});
 
-			if (response && response.data && response.data.data) {
+			if (response && response?.data && response?.data?.data) {
 				if (Array.isArray(response.data.data)) {
-					const validatedParts = response.data.data.map((part: any) => {
+					const validatedParts = response?.data?.data?.map((part: any) => {
 						return {
 							id: part._id || '',
 							spareparts_name: part.productName || '',
@@ -109,6 +95,7 @@ const SpareParts: React.FC = () => {
 								part.image ||
 								(Array.isArray(part.images) ? part.images[0] : ''),
 							category: part.category || 'Uncategorized',
+							inStock: part?.inStock,
 						};
 					});
 
@@ -124,18 +111,13 @@ const SpareParts: React.FC = () => {
 			}
 		} catch (error) {
 			console.error('Error fetching spare parts:', error);
-			// setError(
-			// 	error instanceof Error ? error.message : 'Failed to fetch spare parts'
-			// );
 			setParts([]);
 			setCategories([]);
-		} finally {
-			// setIsLoading(false);
 		}
 	};
 
 	const transformToCategories = (parts: SparePart[]) => {
-		const categoriesMap = parts.reduce((acc, part) => {
+		const categoriesMap = parts.reduce((acc: any, part: any) => {
 			const categoryName = part.category || 'Uncategorized';
 			if (!acc[categoryName]) {
 				acc[categoryName] = {
@@ -143,6 +125,7 @@ const SpareParts: React.FC = () => {
 					title: categoryName,
 					image: part.image,
 					items: [],
+					_id: part.id,
 				};
 			}
 			if (!acc[categoryName].items.includes(part.spareparts_name)) {
@@ -156,7 +139,6 @@ const SpareParts: React.FC = () => {
 
 	useEffect(() => {
 		fetchSpareParts();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const handleTouchStart = (e: React.TouchEvent): void => {
@@ -186,8 +168,8 @@ const SpareParts: React.FC = () => {
 		}
 	};
 
-	const filteredParts = parts.filter((part) =>
-		part.spareparts_name.toLowerCase().includes(searchTerm.toLowerCase())
+	const filteredParts = parts?.filter((part) =>
+		part?.spareparts_name?.toLowerCase().includes(searchTerm.toLowerCase())
 	);
 
 	// Add to cart button functions
@@ -196,8 +178,8 @@ const SpareParts: React.FC = () => {
 			try {
 				const payload = {
 					products: {
-						productId: part.id,
-						price: part.price?.toString(),
+						productId: part?.id,
+						price: part?.price?.toString(),
 						quantity: quantity,
 					},
 					type: 'spare',
@@ -205,7 +187,6 @@ const SpareParts: React.FC = () => {
 				const response = await postSparePartsData(payload);
 				if (response) {
 					toast.success('Item added to cart!', { duration: 2000 });
-					// Refresh cart count in navbar
 					if ((window as any).refreshCartCount) {
 						(window as any).refreshCartCount();
 					}
@@ -222,19 +203,11 @@ const SpareParts: React.FC = () => {
 		? filteredParts
 		: filteredParts.slice(0, 8);
 
+	console.log(displayedParts, 'display parts');
+
 	const offerTitle = useScrollAnimation<HTMLHeadingElement>();
 	const productTitle = useScrollAnimation<HTMLHeadingElement>();
 	const bundleTitle = useScrollAnimation<HTMLHeadingElement>();
-	// const categoryTitle = useScrollAnimation<HTMLHeadingElement>();
-
-	// if (isLoading) {
-	// 	return (
-	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-	// 		</div>
-	// 	);
-	// }
 
 	return (
 		<div className='p-12 mx-8'>
@@ -244,36 +217,8 @@ const SpareParts: React.FC = () => {
 					style={{ ...FONTS.heading }}
 				>
 					Spare Parts
-					{/* <span
-						className={`absolute top-14 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${offerTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
-							}`}
-					></span> */}
 				</span>
 			</h1>
-
-			<div className='flex items-center justify-end flex-wrap gap-4 mt-6 mb-6'>
-				{/* Search Bar */}
-				<div className='relative w-full max-w-md'>
-					<input
-						type='text'
-						placeholder='Search by product name...'
-						className='border border-[#0050A5] rounded-full px-5 py-2 pr-10 w-full focus:outline-none focus:ring-2 focus:ring-[#0050A5]'
-						value={searchTerm}
-						onChange={(e) => setSearchTerm(e.target.value)}
-					/>
-					<button
-						className='absolute right-3 top-[85%] -translate-y-1/2 text-xl text-[#0050A5] hover:text-white transition-all duration-200 hover:scale-105 hover:bg-[#0050A5] p-1 rounded-full'
-						onClick={() => {
-							if (searchTerm !== '') {
-								setSearchTerm('');
-							}
-						}}
-						aria-label={searchTerm ? 'Clear search' : 'Search'}
-					>
-						{searchTerm ? <X size={20} /> : <Search size={20} />}
-					</button>
-				</div>
-			</div>
 
 			{/* Hero Card */}
 			<div className='mb-8 w-full bg-gray-100 rounded-xl shadow p-4 md:p-6 flex flex-row lg:flex-row items-center gap-6 hover:shadow-lg transition-shadow duration-300 h-[280px]'>
@@ -304,16 +249,36 @@ const SpareParts: React.FC = () => {
 
 			<h1 className='text-center' ref={productTitle.elementRef}>
 				<span
-					className='inline-block pb-1 relative text-[#0050A5] mb-10'
+					className='inline-block pb-1 relative text-[#0050A5] mb-3'
 					style={{ ...FONTS.heading }}
 				>
 					Products
-					{/* <span
-						className={`absolute top-12 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${productTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
-							}`}
-					></span> */}
 				</span>
 			</h1>
+
+			<div className='flex items-center justify-end flex-wrap gap-4 mb-6'>
+				{/* Search Bar */}
+				<div className='relative w-full max-w-md'>
+					<input
+						type='text'
+						placeholder='Search by product name...'
+						className='border border-[#0050A5] rounded-full px-5 py-2 pr-10 w-full focus:outline-none focus:ring-2 focus:ring-[#0050A5]'
+						value={searchTerm}
+						onChange={(e) => setSearchTerm(e.target.value)}
+					/>
+					<button
+						className='absolute right-3 top-[85%] -translate-y-1/2 text-xl text-[#0050A5] hover:text-white transition-all duration-200 hover:scale-105 hover:bg-[#0050A5] p-1 rounded-full'
+						onClick={() => {
+							if (searchTerm !== '') {
+								setSearchTerm('');
+							}
+						}}
+						aria-label={searchTerm ? 'Clear search' : 'Search'}
+					>
+						{searchTerm ? <X size={20} /> : <Search size={20} />}
+					</button>
+				</div>
+			</div>
 
 			{/* Product Grid */}
 			<div className=' mx-auto'>
@@ -362,10 +327,10 @@ const SpareParts: React.FC = () => {
 										</div>
 										<div
 											className={`mt-2 text-xs font-semibold ${
-												part?.stock ? 'text-green-600' : 'text-red-600'
+												part?.inStock ? 'text-green-600' : 'text-red-600'
 											}`}
 										>
-											{part?.stock ? 'In Stock' : 'Out of Stock'}
+											{part?.inStock ? 'In Stock' : 'Out of Stock'}
 										</div>
 
 										{/* Cart Icon Button */}
@@ -569,7 +534,7 @@ const SpareParts: React.FC = () => {
 
 				{categories?.length !== 0 ? (
 					<div className=' grid grid-cols-4 gap-6'>
-						{categories?.map(({ id, title, items, image }) => (
+						{categories?.map(({ id, title, items, image, _id }) => (
 							<div
 								key={id}
 								className='flex flex-col gap-4 p-6 border rounded-xl shadow-md'
@@ -585,11 +550,18 @@ const SpareParts: React.FC = () => {
 									/>
 								</div>
 								<ul className='space-y-1 text-sm'>
-									{items?.slice(0, 3).map((item, index) => (
-										<li key={index} className='hover:underline cursor-pointer'>
-											{item}
-										</li>
-									))}
+									{items?.slice(0, 3).map((item, index) => {
+										return (
+											<Link to={`/spare-parts/product/${_id}`}>
+												<li
+													key={index}
+													className='hover:underline cursor-pointer'
+												>
+													{item}
+												</li>
+											</Link>
+										);
+									})}
 								</ul>
 								<Link
 									to={`/spare-parts/category/${id}`}
@@ -641,9 +613,21 @@ const SpareParts: React.FC = () => {
 						<h2 className='text-lg font-bold mb-2'>
 							{selectedPart.spareparts_name}
 						</h2>
-						<p className='text-sm text-gray-600 mb-1'>
-							Type: {selectedPart.type}
-						</p>
+						<div className='flex justify-between items-center mb-4'>
+							<p className='text-sm text-gray-600'>Type: {selectedPart.type}</p>
+
+							<p
+								className={`${
+									selectedPart.stock > 0 ? 'bg-green-700' : 'bg-red-500'
+								} text-white px-2 py-1 rounded-full text-sm font-semibold`}
+							>
+								{selectedPart.stock && parseInt(selectedPart.stock) > 0 ? (
+									<span>Stock : {selectedPart.stock}</span>
+								) : (
+									<span>Out of Stock</span>
+								)}
+							</p>
+						</div>
 
 						<div className='flex items-center gap-2 mb-4'>
 							<span className='text-sm font-medium'>Quantity:</span>
@@ -655,8 +639,16 @@ const SpareParts: React.FC = () => {
 							</button>
 							<span className='px-2'>{quantity}</span>
 							<button
-								onClick={() => setQuantity((prev) => prev + 1)}
-								className='px-2 py-1 bg-gray-200 rounded hover:bg-gray-300'
+								onClick={() =>
+									setQuantity((prev) =>
+										quantity < parseInt(selectedPart.stock) ? prev + 1 : prev
+									)
+								}
+								className={`px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 ${
+									parseInt(selectedPart.stock) <= quantity
+										? 'cursor-not-allowed opacity-50'
+										: ''
+								}`}
 							>
 								+
 							</button>

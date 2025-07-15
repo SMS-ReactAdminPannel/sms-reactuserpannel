@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import { FONTS } from '../../constants/constant';
 import HttpClient from '../../api/httpClient';
 import { API_END_POINTS } from '../../api/httpEndpoints';
+//import Offergift  from '../../assets/offer.png'
 
 type ServiceOffer = {
 	_id: string;
@@ -121,7 +122,9 @@ const Offer: React.FC<OfferProps> = ({ announcements }) => {
 							<div className='bg-[#0050A5]  text-white px-3 py-1 rounded-full text-sm font-semibold'>
 								Special Offer
 							</div>
-							<div className='text-2xl'>🎉</div>
+							<div className='w-24'>
+								<img src={offer?.image} alt="offergift" />
+							</div>
 						</div>
 						<h3 className='text-2xl font-bold text-gray-800 mb-4 leading-tight'>
 							{offer.title}
@@ -148,9 +151,9 @@ const Offer: React.FC<OfferProps> = ({ announcements }) => {
 								)}
 							</div>
 						)}
-						<button className='w-full bg-[#0050A5] text-white py-3 px-6 rounded-lg font-semibold hover:from-blue-600 hover:to-[#0050A5] transition-all duration-300 shadow-lg hover:shadow-xl'>
+						{/* <button className='w-full bg-[#0050A5] text-white py-3 px-6 rounded-lg font-semibold hover:from-blue-600 hover:to-[#0050A5] transition-all duration-300 shadow-lg hover:shadow-xl'>
 							View Details →
-						</button>
+						</button> */}
 					</div>
 				))}
 				{/* {dataToShow.length === 0 && (

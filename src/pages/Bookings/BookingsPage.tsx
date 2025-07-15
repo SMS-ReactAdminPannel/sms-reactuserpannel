@@ -14,8 +14,8 @@ import {
 // import bgImage from '../../assets/checkout-bg_1_.png';
 import { getBookingAll } from '../../features/Bookings/service';
 
-import serviceImg from '../../assets/serviceimages/generalservice.png';
-import spareImg from '../../assets/CAR GEAR/car gear.jpg';
+//import serviceImg from '../../assets/serviceimages/generalservice.png';
+//import spareImg from '../../assets/CAR GEAR/car gear.jpg';
 import { FONTS } from '../../constants/constant';
 import { useAuth } from '../auth/AuthContext';
 
@@ -87,6 +87,7 @@ interface OrderCardProps {
 }
 const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 	const [showDetails, setShowDetails] = useState(false);
+	//const [downloading, setDownloading] = useState(false);
 	const orderDate = new Date(order.date);
 	const isCompleted =
 		order.status === 'completed' || order.status === 'delivered';
@@ -130,7 +131,30 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 			);
 		}
 	};
-	console.log('Order:', order);
+
+	// const handleDownloadInvoice = async () => {
+	// 	try {
+	// 		setDownloading(true);
+	// 		const res = await fetch('file:///C:/Users/Admin/Downloads/g4.hall.pdf', {
+	// 			headers: { Accept: 'application/pdf' },
+	// 		});
+	// 		if (!res.ok) throw new Error('Could not download invoice');
+	// 		const blob = await res.blob();
+	// 		const url = URL.createObjectURL(blob);
+	// 		const a = document.createElement('a');
+	// 		a.href = url;
+	// 		a.download = `invoice_${order.uuid}.pdf`;
+	// 		document.body.appendChild(a);
+	// 		a.click();
+	// 		a.remove();
+	// 		URL.revokeObjectURL(url);
+	// 	} catch (err) {
+	// 		console.error(err);
+	// 		alert('Invoice download failed.');
+	// 	} finally {
+	// 		setDownloading(false);
+	// 	}
+	// };
 
 	return (
 		<div className='opacity-90 rounded-2xl shadow-lg border max-w-6xl mx-auto border-[#0050A5] overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:border-[#0050A5]'>
@@ -255,16 +279,16 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 										{getPrice().toLocaleString()}
 									</p>
 									<p className='text-sm text-[#0050A5]'>
-										<span>Tax (5%)</span>
+										<span>Tax (0%)</span>
 										<span className='pl-3'>:</span> ₹{' '}
-										{(getPrice() * 0.05).toFixed(2)}
+										{(getPrice() * 0).toFixed(2)}
 									</p>
 									<div className='border-t border-[#0050A5] pt-2 mb-2'>
 										<p className='text-sm text-[#0050A5] font-bold'>
 											<strong>
 												Total<span className='pl-8'>:</span>
 											</strong>{' '}
-											₹ {(getPrice() * 1.05).toFixed(2)}
+											₹ {(getPrice() * 1).toFixed(2)}
 										</p>
 									</div>
 								</div>
@@ -296,6 +320,12 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 											day: 'numeric',
 										})}
 									</p>
+									<button
+		className='mt-4 bg-[#0050A5] hover:bg-[#003f85] justify-end text-white text-sm font-medium py-2 px-4 rounded-lg transition duration-300'
+		//onClick={handleDownloadInvoice}
+	>
+		Download Invoice
+	</button>
 								</div>
 							</div>
 						</div>
