@@ -331,17 +331,6 @@ const ServicesPage: React.FC = () => {
 		}));
 	};
 
-	// const handleAddToCart = () => {
-	// 	console.log('Adding to cart...');
-	// 	// Your add to cart logic here
-	// 	setIsModalOpen(false);
-	// };
-
-	// const handleOpenSignUp = () => {
-	// 	console.log('Opening sign up...');
-	// 	// Your sign up logic here
-	// };
-
 	const [showForm, setShowForm] = useState<boolean>(false);
 	const currentContent = activeNavItem ? contentSections[activeNavItem] : null;
 
@@ -685,8 +674,8 @@ const ServicesPage: React.FC = () => {
 				isOpen={showLoginModal}
 				onClose={() => setShowLoginModal(false)}
 			/>
+			
 			{/* Booking Modal */}
-
 			{isModalOpen && selectedPackageId && (
 				<BookingModal
 					isOpen={isModalOpen}
