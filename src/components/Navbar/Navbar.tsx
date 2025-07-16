@@ -9,7 +9,7 @@ import { Link } from 'react-router-dom';
 import ProfileMenu from '../home/ProfileMenu';
 import CustomDropdown from './Customdropdown';
 import TruckIcon from '../../assets/carimages/delivery-truck.png';
-import { getAllNotifications, getNotificationsByUser } from '../../features/Notification/services';
+import {  getNotificationsByUser } from '../../features/Notification/services';
 import { booking_cart } from '../../features/BookingCart/service';
 import { IoCartOutline } from 'react-icons/io5';
 import { useSocket } from '../../context/customerSocket';
@@ -145,20 +145,20 @@ export const Navbar: React.FC = () => {
     { title: "Offers", link: "/announcement" },
   ];
 
-  const formatDate = (isoString: string) => {
-    const date = new Date(isoString);
-    const day = String(date.getDate()).padStart(2, "0");
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const year = String(date.getFullYear()).slice(-2);
-    let hours = date.getHours();
-    const minutes = String(date.getMinutes()).padStart(2, "0");
-    const ampm = hours >= 12 ? "pm" : "am";
-    hours = hours % 12;
-    hours = hours ? hours : 12;
-    const formattedHours = String(hours).padStart(2, "0");
-    const formatted = `${day}-${month}-${year} ${formattedHours}:${minutes}${ampm}`;
-    return formatted;
-  };
+  // const formatDate = (isoString: string) => {
+  //   const date = new Date(isoString);
+  //   const day = String(date.getDate()).padStart(2, "0");
+  //   const month = String(date.getMonth() + 1).padStart(2, "0");
+  //   const year = String(date.getFullYear()).slice(-2);
+  //   let hours = date.getHours();
+  //   const minutes = String(date.getMinutes()).padStart(2, "0");
+  //   const ampm = hours >= 12 ? "pm" : "am";
+  //   hours = hours % 12;
+  //   hours = hours ? hours : 12;
+  //   const formattedHours = String(hours).padStart(2, "0");
+  //   const formatted = `${day}-${month}-${year} ${formattedHours}:${minutes}${ampm}`;
+  //   return formatted;
+  // };
 
 	useEffect(() => {
 		if (!socket) return;

@@ -4,7 +4,7 @@ import type { ReactNode } from 'react';
 
 type AuthContextType = {
 	isAuthenticated: boolean;
-	login: (data: string) => void;
+	login: (data: any) => void;
 	logout: () => void;
 };
 
@@ -18,7 +18,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 		setIsAuthenticated(!!token);
 	}, []);
 
-	const login = (data: string) => {
+	const login = (data: any) => {
 		try {
 			localStorage.setItem('authToken', data?.token);
 			localStorage.setItem('userId', data?.user)

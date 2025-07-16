@@ -4,7 +4,6 @@ import { FaArrowLeft } from 'react-icons/fa';
 import {
 	getNotificationsByUser,
 	markNotificationsAsRead,
-	updateNotificationById,
 } from '../../features/Notification/services';
 import dayjs from 'dayjs';
 import { useSocket } from '../../context/customerSocket';
@@ -43,6 +42,7 @@ export default function GmailStyleInbox() {
 	const fetchAllNotifications = async () => {
 		try {
 			const userId = localStorage.getItem('userId')
+			if (!userId) return;
 			const response: any = await getNotificationsByUser(userId);
 			const data: MailItem[] = response?.data?.data?.notifications || [];
 			const sortedData = data.sort(
@@ -72,18 +72,7 @@ export default function GmailStyleInbox() {
 	};
 
 
-	const handleUpdateNotification = async (notification: any) => {
-		setSelectedMail(notification);
-		if (!notification?.is_read) {
-			try {
-				await updateNotificationById({
-					uuid: notification?.uuid,
-				});
-			} catch (error) {
-				console.log(error);
-			}
-		}
-	};
+
 
 	useEffect(() => {
 		if (!socket) return;
@@ -166,7 +155,7 @@ export default function GmailStyleInbox() {
 										</span>
 
 										<p className='text-sm font-medium text-[#0050A5] mt-2'>
-											{mail.message}
+											{mail.Message}
 										</p>
 										<p className='text-xs text-gray-500 mt-2'>
 											{dayjs(mail.updated_at).format('MMM D h:mm A')}
@@ -218,7 +207,7 @@ export default function GmailStyleInbox() {
 								<hr className='my-4 border-t-1 border-gray-400' />
 
 								<div className='whitespace-pre-wrap text-md leading-relaxed text-gray-800'>
-									{selectedMail.message}
+									{selectedMail.Message}
 								</div>
 							</div>
 						) : (

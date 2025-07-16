@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { IonIcon } from '@ionic/react';
-import { arrowBack, timeOutline, locationOutline } from 'ionicons/icons';
+import { arrowBack, timeOutline } from 'ionicons/icons';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 

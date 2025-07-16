@@ -37,7 +37,7 @@ interface Car {
 const ProfilePage: React.FC = () => {
 	const [isCarTab, setIsCarTab] = useState(false);
 	const [editMode, setEditMode] = useState(false);
-	const [showHistory, setShowHistory] = useState<number | null>(null);
+
 	const [profileData, setProfileData] = useState<any>({});
 	const [errors, setErrors] = useState<any>({});
 	const [editCarMode, setEditCarMode] = useState(false);
@@ -248,7 +248,7 @@ const ProfilePage: React.FC = () => {
 							<div className='flex-1 overflow-y-auto overflow-x-hidden pr-2 scrollbar-hide'>
 								{editCarMode ? (
 									<div className='w-full max-w-sm mx-auto space-y-4'>
-										{cars.map((car, index) => (
+										{cars.map((_, index) => (
 											<div key={index} className='space-y-3'>
 												<div className='border p-4 rounded-xl bg-white shadow relative'>
 													<button
@@ -766,3 +766,7 @@ const ProfilePage: React.FC = () => {
 };
 
 export default ProfilePage;
+function setShowHistory(_arg0: null) {
+	throw new Error('Function not implemented.');
+}
+
