@@ -1,8 +1,10 @@
 import { Outlet } from 'react-router-dom';
 import { Navbar } from '../components/Navbar/Navbar';
+import { SocketProvider } from '../context/customerSocket';
 
 const MainLayout = () => {
 	return (
+		<SocketProvider role="customer">
 		<div className=''>
 			{/* Main content */}
 			<div className=''>
@@ -14,6 +16,7 @@ const MainLayout = () => {
 				</main>
 			</div>
 		</div>
+		</SocketProvider>
 	);
 };
 
