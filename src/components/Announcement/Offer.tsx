@@ -3,7 +3,6 @@ import { useState, useRef, useEffect } from 'react';
 import { FONTS } from '../../constants/constant';
 import HttpClient from '../../api/httpClient';
 import { API_END_POINTS } from '../../api/httpEndpoints';
-//import Offergift  from '../../assets/offer.png'
 
 type ServiceOffer = {
 	_id: string;
@@ -102,11 +101,6 @@ const Offer: React.FC<OfferProps> = ({ announcements }) => {
 			>
 				<span className='inline-block pb-1  relative text-center text-[#0050A5] mb-10'>
 					Yes Mechanic Special Offers
-					{/* <span
-						className={`absolute top-[52px] left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
-							offerTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
-						}`}
-					></span> */}
 				</span>
 			</h1>
 
@@ -151,17 +145,8 @@ const Offer: React.FC<OfferProps> = ({ announcements }) => {
 								)}
 							</div>
 						)}
-						{/* <button className='w-full bg-[#0050A5] text-white py-3 px-6 rounded-lg font-semibold hover:from-blue-600 hover:to-[#0050A5] transition-all duration-300 shadow-lg hover:shadow-xl'>
-							View Details →
-						</button> */}
 					</div>
 				))}
-				{/* {dataToShow.length === 0 && (
-					<div className='col-span-3 text-center py-12'>
-						<div className='animate-spin rounded-full h-12 w-12 border-b-2 border-[#0050A5] mx-auto mb-4'></div>
-						<p className='text-gray-600 text-lg'>Loading amazing offers...</p>
-					</div>
-				)} */}
 			</div>
 		</div>
 	);

@@ -1,110 +1,116 @@
 import { useEffect, useRef, useState } from 'react';
 import {
-  getEnquiryData,
-  postEnquiryData,
+	getEnquiryData,
+	postEnquiryData,
 } from '../../features/Enquiry/service';
 import { getUserProfile } from '../../features/Profile/service';
 import { FONTS } from '../../constants/constant';
+import { toast } from 'react-toastify';
 
 /* Reusable scroll animation hook */
-const useScrollAnimation = <T extends HTMLElement = HTMLElement>(options = {}) => {
-  const [isVisible, setIsVisible] = useState(false);
-  const elementRef = useRef<T>(null);
+const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
+	options = {}
+) => {
+	const [isVisible, setIsVisible] = useState(false);
+	const elementRef = useRef<T>(null);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => setIsVisible(entry.isIntersecting),
-      { threshold: 0.1, rootMargin: '0px 0px -50px 0px', ...options }
-    );
+	useEffect(() => {
+		const observer = new IntersectionObserver(
+			([entry]) => setIsVisible(entry.isIntersecting),
+			{ threshold: 0.1, rootMargin: '0px 0px -50px 0px', ...options }
+		);
 
-    if (elementRef.current) observer.observe(elementRef.current);
-    return () => {
-      if (elementRef.current) observer.unobserve(elementRef.current);
-    };
-  }, []);
+		if (elementRef.current) observer.observe(elementRef.current);
+		return () => {
+			if (elementRef.current) observer.unobserve(elementRef.current);
+		};
+	}, []);
 
-  return { elementRef, isVisible };
+	return { elementRef, isVisible };
 };
 
 const EnquiryForm = () => {
-  const enquiryTitle = useScrollAnimation<HTMLHeadingElement>();
-  const [submitted, setSubmitted] = useState(false);
-  const [profileData, setProfileData] = useState<any>(null);
-  const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    phoneNumber: '',
-    carModel: '',
-    ServiceType: 'general',
-    yourEnquiry: '',
-    Date: '',
-  });
+	const enquiryTitle = useScrollAnimation<HTMLHeadingElement>();
+	const [submitted, setSubmitted] = useState(false);
+	const [profileData, setProfileData] = useState<any>(null);
+	const [formData, setFormData] = useState({
+		fullName: '',
+		email: '',
+		phoneNumber: '',
+		carModel: '',
+		ServiceType: 'general',
+		yourEnquiry: '',
+		Date: '',
+	});
 
-  // Populate form once profileData is fetched
-  useEffect(() => {
-    if (profileData) {
-      const fullName = `${profileData.firstName || ''} ${profileData.lastName || ''}`.trim();
-      const email = profileData?.email || '';
-      const phone = profileData?.contact_info?.phoneNumber || '';
-      setFormData((prev) => ({
-        ...prev,
-        fullName,
-        email,
-        phoneNumber: phone,
-      }));
-    }
-  }, [profileData]);
+	// Populate form once profileData is fetched
+	useEffect(() => {
+		if (profileData) {
+			const fullName = `${profileData.firstName || ''} ${
+				profileData.lastName || ''
+			}`.trim();
+			const email = profileData?.email || '';
+			const phone = profileData?.contact_info?.phoneNumber || '';
+			setFormData((prev) => ({
+				...prev,
+				fullName,
+				email,
+				phoneNumber: phone,
+			}));
+		}
+	}, [profileData]);
 
-  const handleChange = (e: any) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: value,
-    }));
-  };
+	const handleChange = (e: any) => {
+		const { name, value } = e.target;
+		setFormData((prev) => ({
+			...prev,
+			[name]: value,
+		}));
+	};
 
-  const handleSubmit = async (e: any) => {
-    e.preventDefault();
-    try {
-      await postEnquiryData(formData);
-      setSubmitted(true);
-      setFormData({
-        fullName: '',
-        email: '',
-        phoneNumber: '',
-        carModel: '',
-        ServiceType: 'general',
-        yourEnquiry: '',
-        Date: '',
-      });
-    } catch (error) {
-      console.log('Data not sent:', error);
-    } finally {
-      setTimeout(() => setSubmitted(false), 5000);
-    }
-  };
+	const handleSubmit = async (e: any) => {
+		e.preventDefault();
+		try {
+			await postEnquiryData(formData);
+			setSubmitted(true);
+			setFormData({
+				fullName: '',
+				email: '',
+				phoneNumber: '',
+				carModel: '',
+				ServiceType: 'general',
+				yourEnquiry: '',
+				Date: '',
+			});
+			toast.success('Enquiry submitted successfully!', { autoClose: 2000 });
+		} catch (error) {
+			console.log('Data not sent:', error);
+		} finally {
+			setTimeout(() => setSubmitted(false), 5000);
+		}
+	};
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const response: any = await getUserProfile({});
-        setProfileData(response?.data?.data || {});
-      } catch (err) {
-        console.error('Error fetching profile:', err);
-      }
-    };
+	useEffect(() => {
+		const fetchProfile = async () => {
+			try {
+				const response: any = await getUserProfile({});
+				setProfileData(response?.data?.data || {});
+			} catch (err) {
+				console.error('Error fetching profile:', err);
+			}
+		};
 
-    const fetchEnquiries = async () => {
-      try {
-        await getEnquiryData({});
-      } catch (err) {
-        console.error('Error fetching enquiries:', err);
-      }
-    };
+		const fetchEnquiries = async () => {
+			try {
+				await getEnquiryData({});
+			} catch (err) {
+				console.error('Error fetching enquiries:', err);
+			}
+		};
 
-    fetchProfile();
-    fetchEnquiries();
-  }, []);
+		fetchProfile();
+		fetchEnquiries();
+	}, []);
 
 	return (
 		<div className='w-4/4 mx-auto p-6 bg-white rounded-lg shadow-md'>
@@ -115,10 +121,6 @@ const EnquiryForm = () => {
 			>
 				<span className='inline-block pb-1 relative text-start text-[#0050A5] mb-10'>
 					Enquiry Form
-					{/* <span
-						className={`absolute top-[52px] left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${enquiryTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
-							}`}
-					></span> */}
 				</span>
 			</h1>
 

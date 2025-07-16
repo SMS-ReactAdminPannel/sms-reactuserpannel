@@ -17,6 +17,8 @@ const CategoryPage = () => {
 		navigate(-1);
 	};
 
+	console.log(parts, 'category');
+
 	return (
 		<div className='bg-gradient-to-br from-blue-100 via-purple-50 to-pink-100 mt-5 mx-24'>
 			<div className='container mx-auto'>
@@ -58,11 +60,19 @@ const CategoryPage = () => {
 										<h2 className='text-xl font-bold text-[#0050A5] mb-1 group-hover:text-[#0050A5] transition-colors'>
 											{product?.spareparts_name}
 										</h2>
-										<div className='bg-green-500 inline-block px-2 py-0.5 rounded-md'>
-											<p className='text-sm text-white'>
-												Stock: {product?.stock}
-											</p>
-										</div>
+										{product?.stock > 0 ? (
+											<div className='bg-green-500 inline-block px-2 py-0.5 rounded-md'>
+												<p className='text-sm text-white'>
+													Stock: {product?.stock}
+												</p>
+											</div>
+										) : (
+											<div className='bg-red-500 inline-block px-2 py-0.5 rounded-md'>
+												<p className='text-sm text-white'>
+													Out of Stock
+												</p>
+											</div>
+										)}
 									</div>
 								</div>
 								<Link
