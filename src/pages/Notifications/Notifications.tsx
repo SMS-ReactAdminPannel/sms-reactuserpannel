@@ -3,12 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 import {
 	getNotificationsByUser,
+	markNotificationsAsRead,
 	updateNotificationById,
 } from '../../features/Notification/services';
 import dayjs from 'dayjs';
 import { useSocket } from '../../context/customerSocket';
 
 type MailItem = {
+	uuid: string;
 	sender: string;
 	title: string;
 	preview: string;
@@ -58,6 +60,18 @@ export default function GmailStyleInbox() {
 		fetchAllNotifications();
 	}, []);
 
+
+
+	const handleMarkRead = async (uuid: string) => {
+		try {
+			const response = await markNotificationsAsRead(uuid);
+			console.log("Notification marked as read:", response);
+		} catch (err) {
+			console.error("Failed to mark notification as read:", err);
+		}
+	};
+
+
 	const handleUpdateNotification = async (notification: any) => {
 		setSelectedMail(notification);
 		if (!notification?.is_read) {
@@ -74,7 +88,7 @@ export default function GmailStyleInbox() {
 	useEffect(() => {
 		if (!socket) return;
 
-		const handleNotify = (data:any) => {
+		const handleNotify = (data: any) => {
 			console.log("Notification Recieved", data);
 			setMails((prev) => [data, ...prev])
 		};
@@ -84,23 +98,24 @@ export default function GmailStyleInbox() {
 		return () => {
 			socket.off('newNotification', handleNotify);
 		}
-	},[socket])
+	}, [socket])
 
+	console.log('Filtered Mails:', filteredMails);
 
 	return (
-		<div className='min-h-screen bg-[#d8e1ef] p-2 font-[Poppins]'>
-			<div className='flex items-center mb-6 mt-6'>
-				<button
-					onClick={() => navigate(-1)}
-					className='flex items-center text-[#0050A5] hover:underline mr-4 pl-2'
-				>
-					<FaArrowLeft className='mr-1' />
-				</button>
-				<h1 className='text-3xl font-bold text-[#0050A5]'>Notification</h1>
-			</div>
+		<div className=' bg-[#d8e1ef] p-2 font-[Poppins]'>
 			<div className='flex h-[80vh] border rounded-2xl overflow-hidden shadow-lg bg-white'>
 				{/* Sidebar */}
 				<aside className='w-64 border-r bg-[#BED0EC] p-6'>
+					<div className='flex items-center mb-6 mt-6'>
+						<button
+							onClick={() => navigate(-1)}
+							className='flex items-center text-[#0050A5] hover:underline mr-4 pl-2'
+						>
+							<FaArrowLeft className='mr-1' />
+						</button>
+						<h1 className='text-3xl font-bold text-[#0050A5]'>Notification</h1>
+					</div>
 					<h2 className='text-lg font-semibold text-[#0050A5] mb-4'>Filters</h2>
 					<div className='space-y-3'>
 						{['all', 'unread', 'read'].map((f) => (
@@ -111,8 +126,8 @@ export default function GmailStyleInbox() {
 									setSelectedMail(null);
 								}}
 								className={`block w-full text-left px-4 py-2 rounded-lg transition-all duration-200 ${filter === f
-										? 'bg-[#0050A5] text-white'
-										: 'bg-transparent text-gray-700 hover:bg-gray-100'
+									? 'bg-[#0050A5] text-white'
+									: 'bg-transparent text-gray-700 hover:bg-gray-100'
 									}`}
 							>
 								{f.charAt(0).toUpperCase() + f.slice(1)}
@@ -127,10 +142,14 @@ export default function GmailStyleInbox() {
 						{filteredMails.map((mail, index) => (
 							<div
 								key={index}
-								onClick={() => handleUpdateNotification(mail)}
-								className={`cursor-pointer flex gap-4 p-4  rounded-xl hover:bg-blue-50 transition duration-150 ${mail.unread
-										? 'bg-gray-100 font-semibold'
-										: 'border border-gray-200'
+								onClick={() => {
+									// handleUpdateNotification(mail)
+									handleMarkRead(mail.uuid)
+								}}
+
+								className={`cursor-pointer flex gap-4 p-4  rounded-xl hover:bg-blue-50 transition duration-150 ${!mail.is_read
+									? 'bg-gray-100 font-semibold'
+									: 'border border-gray-200'
 									}`}
 							>
 								<div className='p-[1px] rounded-full bg-gradient-to-r from-red-600 to-red-800 inline-block'>

@@ -64,6 +64,7 @@ export const Navbar: React.FC = () => {
 					new Date(a?.created_date).getTime()
 			);
 			setMails(sortedData);
+      console.log('Fetched Notifications:', sortedData);
 		} catch (error) {
 			console.log('Error Fetching Notifications:', error);
 		}
@@ -174,6 +175,36 @@ export const Navbar: React.FC = () => {
 		}
 	},[socket])
 
+
+  const getDateLabel = (isoDateStr: string): string => {
+    const inputDate = new Date(isoDateStr);
+    const today = new Date();
+    const yesterday = new Date();
+    yesterday.setDate(today.getDate() - 1);
+
+    const isSameDay = (d1: Date, d2: Date): boolean =>
+      d1.getDate() === d2.getDate() &&
+      d1.getMonth() === d2.getMonth() &&
+      d1.getFullYear() === d2.getFullYear();
+
+    const time = inputDate.toLocaleTimeString("en-IN", {
+      hour: "2-digit",
+      minute: "2-digit",
+      hour12: true,
+    });
+
+    if (isSameDay(inputDate, today)) return `Today at ${time}`;
+    if (isSameDay(inputDate, yesterday)) return `Yesterday at ${time}`;
+
+    const date = inputDate.toLocaleDateString("en-IN", {
+      day: "2-digit",
+      month: "short",
+      year: "numeric",
+    });
+
+    return `${date} at ${time}`;
+  };
+
 	return (
 		<header className='bg-white text-white w-full fixed top-0 z-50 border-b-2 border-white-900 '>
 			{/* Top Navbar */}
@@ -240,7 +271,7 @@ export const Navbar: React.FC = () => {
                 />
               </svg>
               {unreadCount > 0 && (
-                <span className="absolute top-0 right-1 bg-[#0050A5]-500 text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
+                <span className="absolute top-1 right-1.5 bg-[#0050A5] text-white text-xs w-4 h-4 flex items-center justify-center rounded-full">
                   {unreadCount}
                 </span>
               )}
@@ -249,14 +280,14 @@ export const Navbar: React.FC = () => {
             {showNotifications && (
               <div className="absolute right-0 mt-2 w-80 rounded-lg shadow-xl bg-[#BED0EC] z-50 overflow-hidden">
                 <div className="bg-[]-900 p-3">
-                  <h3 className="text-[#0050A5] font-bold">Notifications</h3>
+                  <h3 className="text-red-600 font-bold">Notifications</h3>
                 </div>
                 <div className="max-h-80 overflow-y-auto">
                   {filteredMails.length > 0 ? (
                     filteredMails.map((notification: any) => (
                       <div
                         key={notification._id}
-                        className={`group relative p-3 border-b hover:bg-gray-50 transition-colors duration-150 bg-[#BED0EC]-50
+                        className={`group relative p-3 border-b hover:bg-[#0050A5] text-[#0050A5] hover:text-white transition-colors duration-150 bg-[#BED0EC]-50
 												}`}
                       >
                         {/* This vertical red line will now appear on hover */}
@@ -264,12 +295,12 @@ export const Navbar: React.FC = () => {
                         <div className="absolute left-0 top-0 h-full w-1 bg-[#BED0EC]-600 opacity-0 group-hover:opacity-100 transition-opacity duration-200"></div>
 
                         <div className="flex justify-between items-start">
-                          <p className="text-sm text-[#BED0EC]-900 font-semibold">
+                          <p className="text-sm  font-semibold">
                             {notification.title}
                           </p>
                         </div>
-                        <p className="text-xs text-[#BED0EC]-800 mt-1 text-right">
-                          {formatDate(notification?.created_at)}
+                        <p className="text-xs text-[#ff7b00] mt-1 text-right">
+                          {getDateLabel(notification?.created_at)}
                         </p>
                       </div>
                     ))
@@ -398,7 +429,7 @@ export const Navbar: React.FC = () => {
             }}
           >
             <IoCartOutline className="text-3xl cursor-pointer text-[#0050A5]" />
-            <span className="absolute -top-2 left-6 bg-red-500 text-white text-xs rounded-full min-w-[18px] h-[18px] flex items-center justify-center cursor-pointer">
+            <span className="absolute -top-[3px] left-5 bg-red-500 text-white text-xs rounded-full w-4 h-4 flex items-center justify-center cursor-pointer">
               {cartCount}
             </span>
           </div>
