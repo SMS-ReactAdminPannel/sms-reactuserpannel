@@ -1,26 +1,21 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type React from 'react';
 import { useState, useEffect, useRef, useMemo } from 'react';
 import {
-	// Search,
 	Package,
 	Wrench,
 	CheckCircle,
 	Calendar,
-	// Truck,
 	Clock,
 	Search,
 } from 'lucide-react';
-// import bgImage from '../../assets/checkout-bg_1_.png';
-import { getBookingAll, getinvoiceService } from '../../features/Bookings/service';
-
-//import serviceImg from '../../assets/serviceimages/generalservice.png';
-//import spareImg from '../../assets/CAR GEAR/car gear.jpg';
+import {
+	getBookingAll,
+	getinvoiceProduct,
+	getinvoiceService,
+} from '../../features/Bookings/service';
 import { FONTS } from '../../constants/constant';
 import { useAuth } from '../auth/AuthContext';
-// import jsPDF from 'jspdf';
-// import autoTable from 'jspdf-autotable';
-import { MdOutlineFileDownload } from "react-icons/md";
+import { MdOutlineFileDownload } from 'react-icons/md';
 
 interface OrderDetails {
 	id: string;
@@ -75,11 +70,9 @@ const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 		}
 		return () => {
 			if (elementRef.current) {
-				// eslint-disable-next-line react-hooks/exhaustive-deps
 				observer.unobserve(elementRef.current);
 			}
 		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return { elementRef, isVisible };
@@ -90,28 +83,22 @@ interface OrderCardProps {
 }
 const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 	const [showDetails, setShowDetails] = useState(false);
-	//const [downloading, setDownloading] = useState(false);
 	const orderDate = new Date(order.date);
 	const isCompleted =
 		order.status === 'completed' || order.status === 'delivered';
 	const isOld = orderDate < new Date(Date.now() - 365 * 24 * 60 * 60 * 1000);
-
-	// Determine if it's a service or product order
 	const isService = order.type === 'service';
-	// const items = isService ? order.services : order.products;
-	// const firstItem = items?.[0];
 
-	// Get name and description based on order type
 	const getName = () => {
 		if (isService) {
-			return order.services?.[0]?.service_name || 'Service Order';
+			return order?.services?.[0]?.service_name || 'Service Order';
 		}
 		return order.products?.[0]?.productId?.productName || 'Product Order';
 	};
 
 	const getDescription = () => {
 		if (isService) {
-			return order.services?.[0]?.description || 'Service appointment';
+			return order?.services?.[0]?.description || 'Service appointment';
 		}
 		return `Order containing ${order.products?.length || 0} items`;
 	};
@@ -119,14 +106,14 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 	const getPrice = () => {
 		if (isService) {
 			return (
-				order.services?.reduce(
+				order?.services?.reduce(
 					(sum, service) => sum + (service?.price ?? 0),
 					0
 				) ?? 0
 			);
 		} else {
 			return (
-				order.products?.reduce(
+				order?.products?.reduce(
 					(sum, product) =>
 						sum + parseInt(product?.price ?? '0') * (product?.quantity ?? 0),
 					0
@@ -135,97 +122,32 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 		}
 	};
 
-	// const handleDownloadInvoice = async () => {
-	// 	try {
-	// 		setDownloading(true);
-	// 		const res = await fetch('file:///C:/Users/Admin/Downloads/g4.hall.pdf', {
-	// 			headers: { Accept: 'application/pdf' },
-	// 		});
-	// 		if (!res.ok) throw new Error('Could not download invoice');
-	// 		const blob = await res.blob();
-	// 		const url = URL.createObjectURL(blob);
-	// 		const a = document.createElement('a');
-	// 		a.href = url;
-	// 		a.download = `invoice_${order.uuid}.pdf`;
-	// 		document.body.appendChild(a);
-	// 		a.click();
-	// 		a.remove();
-	// 		URL.revokeObjectURL(url);
-	// 	} catch (err) {
-	// 		console.error(err);
-	// 		alert('Invoice download failed.');
-	// 	} finally {
-	// 		setDownloading(false);
-	// 	}
-	// };
-
-	
-	const handleDownloadInvoice =async () => {
-
-		const response:any = await getinvoiceService(':uuid')
-
-		console.log('invoice',response)
-
-		const responses:any =await getinvoiceService(':uuid')
-        console.log ('invoiceproduct',responses)
-		return response
-		
-};
-  //const doc = new jsPDF();
-
-  //
-
-  // Header
-//   doc.setFontSize(18).text('INVOICE', 14, y);
-//   y += 14;
-
-//   doc.setFontSize(11);
-//   doc.text(`Invoice No: ${invoiceNo}`, 14, y += 14);
-//   doc.text(`Order ID  : ${orderId}`, 14, y += 12);
-//   doc.text(`Issued On : ${issuedDate}`, 14, y += 12);
-
-//   // Customer Info
-//   doc.setFontSize(12).text('Bill To:', 14, y += 20);
-//   doc.setFontSize(11);
-//   doc.text(customer.name, 14, y += 14);
-//   doc.text(customer.email, 14, y += 12);
-//   doc.text(customer.phone, 14, y += 12);
-
-//   // Order Info
-//   doc.setFontSize(12).text('Order Info:', 14, y += 20);
-//   doc.setFontSize(11);
-//   doc.text(`Status     : pending`, 14, y += 14);
-//   doc.text(`Order Type : Product`, 14, y += 12);
-//   doc.text(`Placed On  : ${issuedDate}`, 14, y += 12);
-
-//   // Table for Price Summary
-//   (autoTable as any)(doc, {
-//     startY: y + 20,
-//     head: [['Product', 'Base Price', 'Tax', 'Total']],
-//     body: [
-//       [
-//         productName,
-//         `₹${basePrice.toFixed(2)}`,
-//         `₹${taxAmount.toFixed(2)} (${taxPercent}%)`,
-//         `₹${total.toFixed(2)}`,
-//       ],
-//     ],
-//     styles: { fontSize: 10 },
-//     headStyles: { fillColor: [0, 80, 165] },
-//   });
-
-//   const finalY = (doc as any).lastAutoTable.finalY + 30;
-
-//   doc.setFontSize(11).setFont(undefined, 'bold');
-//   doc.text(`Total Payable: ₹${total.toFixed(2)}`, 14, finalY);
-
-  // Footer
-//   doc.setFontSize(9).setFont(undefined, 'normal');
-//   doc.text('Thank you for shopping with YES MECHANIC!', 14, 800);
-
-  // Save the PDF
-//   doc.save(`${invoiceNo}.pdf`);
-
+	const handleDownloadInvoice = async () => {
+		try {
+			if (!order?.uuid) {
+				throw new Error('No order UUID available');
+			}
+			if (order?.type === 'service') {
+				const response: any = await getinvoiceService({ uuid: order?.uuid });
+				const url = window.URL.createObjectURL(response.data);
+				const a = document.createElement('a');
+				a.href = url;
+				a.download = `invoice_${order.uuid}.pdf`;
+				a.click();
+				window.URL.revokeObjectURL(url);
+			} else if (order?.type === 'spare') {
+				const response: any = await getinvoiceProduct({ uuid: order?.uuid });
+				const url = window.URL.createObjectURL(response.data);
+				const a = document.createElement('a');
+				a.href = url;
+				a.download = `invoice_${order.uuid}.pdf`;
+				a.click();
+				window.URL.revokeObjectURL(url);
+			}
+		} catch (error) {
+			console.error('Error downloading invoice:', error);
+		}
+	};
 
 	return (
 		<div className='opacity-90 rounded-2xl shadow-lg border max-w-6xl mx-auto border-[#0050A5] overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:border-[#0050A5]'>
@@ -236,7 +158,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 					<div className='md:w-48 h-40 relative overflow-hidden rounded-lg shadow-md'>
 						<div className='w-full h-full bg-gray-100 flex items-center justify-center'>
 							<img
-								src={order.imageUrl}
+								src={order?.imageUrl}
 								alt='order'
 								className='w-full h-full object-cover'
 							/>
@@ -245,10 +167,11 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 						{/* Type Badge */}
 						<div className='absolute top-3 right-3 z-10'>
 							<span
-								className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${isService
+								className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+									isService
 										? 'bg-purple-100 text-purple-800'
 										: 'bg-blue-100 text-blue-800'
-									}`}
+								}`}
 							>
 								{isService ? (
 									<>
@@ -390,15 +313,17 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 											day: 'numeric',
 										})}
 									</p>
-									<div className='flex items-center justify-end'>
-
-									<button
-                                className='mt-4 bg-[#0050A5] hover:bg-[#003f85] text-white text-sm font-medium py-2 px-4 rounded-lg transition duration-300 flex items-center gap-2'
-                                   onClick={handleDownloadInvoice}
-                               >
-                              <MdOutlineFileDownload className='text-lg'/> Download Invoice
-                                 </button>
-									</div>
+									{isCompleted && (
+										<div className='flex items-center justify-end'>
+											<button
+												className='mt-4 bg-[#0050A5] hover:bg-[#003f85] text-white text-sm font-medium py-2 px-4 rounded-lg transition duration-300 flex items-center gap-2'
+												onClick={() => handleDownloadInvoice()}
+											>
+												<MdOutlineFileDownload className='text-lg' /> Download
+												Invoice
+											</button>
+										</div>
+									)}
 								</div>
 							</div>
 						</div>
@@ -417,7 +342,6 @@ const OrdersPage: React.FC = () => {
 	const [sortBy] = useState<'date' | 'price' | 'name'>('date');
 	const [orders, setOrders] = useState<OrderDetails[]>([]);
 	const orderTitle = useScrollAnimation<HTMLHeadingElement>();
-	// const [isLoading, setIsLoading] = useState(false);
 	const { isAuthenticated } = useAuth();
 
 	useEffect(() => {
@@ -558,42 +482,44 @@ const OrdersPage: React.FC = () => {
 						<div className='flex flex-wrap gap-2 bg-[white] rounded-xl p-1'>
 							<button
 								onClick={() => setFilterType('all')}
-								className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${filterType === 'all'
+								className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+									filterType === 'all'
 										? 'bg-[#0050A5] text-white shadow-sm'
 										: 'text-gray-600 hover:text-gray-900'
-									}`}
+								}`}
 							>
 								All Orders
 							</button>
 							<button
 								onClick={() => setFilterType('spare')}
-								className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${filterType === 'spare'
+								className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${
+									filterType === 'spare'
 										? 'bg-[#0050A5] text-white shadow-sm'
 										: 'text-gray-600 hover:text-gray-900'
-									}`}
+								}`}
 							>
 								<Package className='w-4 h-4 mr-1' />
 								Spare Parts
 							</button>
 							<button
 								onClick={() => setFilterType('service')}
-								className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${filterType === 'service'
+								className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${
+									filterType === 'service'
 										? 'bg-[#0050A5] text-white shadow-sm'
 										: 'text-gray-600 hover:text-gray-900'
-									}`}
+								}`}
 							>
 								<Wrench className='w-4 h-4 mr-1' />
 								Services
 							</button>
 						</div>
-
 					</div>
 				</div>
 
 				{/* Orders List */}
 				<div className='space-y-6'>
-					{filteredOrders.length > 0 ? (
-						filteredOrders.map((order) => (
+					{filteredOrders?.length > 0 ? (
+						filteredOrders?.map((order) => (
 							<OrderCard key={order.id} order={order} />
 						))
 					) : (

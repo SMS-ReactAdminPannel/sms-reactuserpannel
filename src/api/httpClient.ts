@@ -60,8 +60,9 @@ class HttpClient {
 		return response?.data;
 	}
 
-	async fileGet(url: string) {
+	async fileGet(url: string, params?: any) {
 		const response = await Axios.get(url, {
+			params,
 			responseType: 'blob',
 			headers: {},
 		});
@@ -74,7 +75,7 @@ class HttpClient {
 				'Content-Type': 'multipart/form-data',
 			},
 		});
-		return response?.data;
+		return response;
 	}
 }
 
