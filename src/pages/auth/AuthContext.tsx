@@ -20,7 +20,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
 	const login = (data: string) => {
 		try {
-			localStorage.setItem('authToken', data);
+			localStorage.setItem('authToken', data?.token);
+			localStorage.setItem('userId', data?.user)
 			setIsAuthenticated(true);
 		} catch (error) {
 			console.error("Login failed:", error);
@@ -28,7 +29,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 	};
 
 	const logout = () => {
-		localStorage.removeItem('authToken');
+		localStorage.clear();
 		setIsAuthenticated(false);
 	};
 

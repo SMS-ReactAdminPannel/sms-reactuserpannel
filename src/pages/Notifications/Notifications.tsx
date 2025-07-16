@@ -4,9 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 import {
 	getAllNotifications,
+	getNotificationsByUser,
 	updateNotificationById,
 } from '../../features/Notification/services';
 import dayjs from 'dayjs';
+import { useSocket } from '../../context/customerSocket';
 
 type MailItem = {
 	sender: string;
@@ -25,6 +27,7 @@ export default function GmailStyleInbox() {
 	const [selectedMail, setSelectedMail] = useState<MailItem | null>(null);
 	const [filter, setFilter] = useState<'all' | 'unread' | 'read'>('all');
 	const [mails, setMails] = useState<MailItem[]>([]);
+	const socket = useSocket();
 	// const [isLoading, setIsLoading] = useState(true);
 
 	const filteredMails = mails
@@ -33,14 +36,15 @@ export default function GmailStyleInbox() {
 			filter === 'all'
 				? true
 				: filter === 'unread'
-				? !mail.is_read
-				: mail.is_read
+					? !mail.is_read
+					: mail.is_read
 		);
 
 	const fetchAllNotifications = async () => {
 		try {
-			const response: any = await getAllNotifications({});
-			const data: MailItem[] = response?.data?.data || [];
+			const userId = localStorage.getItem('userId')
+			const response: any = await getNotificationsByUser(userId);
+			const data: MailItem[] = response?.data?.data?.notifications || [];
 			const sortedData = data.sort(
 				(b, a) =>
 					new Date(b?.created_at).getTime() - new Date(a?.created_at).getTime()
@@ -71,6 +75,22 @@ export default function GmailStyleInbox() {
 		}
 	};
 
+	useEffect(() => {
+		if (!socket) return;
+
+		const handleNotify = (data:any) => {
+			console.log("Notification Recieved", data);
+			setMails((prev) => [data, ...prev])
+		};
+
+		socket.on('newNotification', handleNotify);
+
+		return () => {
+			socket.off('newNotification', handleNotify);
+		}
+	},[socket])
+
+
 	return (
 		<div className='min-h-screen bg-[#d8e1ef] p-2 font-[Poppins]'>
 			<div className='flex items-center mb-6 mt-6'>
@@ -94,11 +114,10 @@ export default function GmailStyleInbox() {
 									setFilter(f as 'all' | 'unread' | 'read');
 									setSelectedMail(null);
 								}}
-								className={`block w-full text-left px-4 py-2 rounded-lg transition-all duration-200 ${
-									filter === f
+								className={`block w-full text-left px-4 py-2 rounded-lg transition-all duration-200 ${filter === f
 										? 'bg-[#0050A5] text-white'
 										: 'bg-transparent text-gray-700 hover:bg-gray-100'
-								}`}
+									}`}
 							>
 								{f.charAt(0).toUpperCase() + f.slice(1)}
 							</button>
@@ -113,11 +132,10 @@ export default function GmailStyleInbox() {
 							<div
 								key={index}
 								onClick={() => handleUpdateNotification(mail)}
-								className={`cursor-pointer flex gap-4 p-4  rounded-xl hover:bg-blue-50 transition duration-150 ${
-									mail.unread
+								className={`cursor-pointer flex gap-4 p-4  rounded-xl hover:bg-blue-50 transition duration-150 ${mail.unread
 										? 'bg-gray-100 font-semibold'
 										: 'border border-gray-200'
-								}`}
+									}`}
 							>
 								<div className='p-[1px] rounded-full bg-gradient-to-r from-red-600 to-red-800 inline-block'>
 									<img

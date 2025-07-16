@@ -1,17 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import React, { useState, useRef, useEffect } from "react";
-import { NavLink, useNavigate } from "react-router-dom";
-import { useAuth } from "../../pages/auth/AuthContext";
-import { COLORS, FONTS } from "../../constants/constant";
-import Logo from "../../assets/User (5).png";
-import { FiSearch } from "react-icons/fi";
-import { Link } from "react-router-dom";
-import ProfileMenu from "../home/ProfileMenu";
-import CustomDropdown from "./Customdropdown";
-import TruckIcon from "../../assets/carimages/delivery-truck.png";
-import { getAllNotifications } from "../../features/Notification/services";
-import { booking_cart } from "../../features/BookingCart/service";
-import { IoCartOutline } from "react-icons/io5";
+import React, { useState, useRef, useEffect } from 'react';
+import { NavLink, useNavigate } from 'react-router-dom';
+import { useAuth } from '../../pages/auth/AuthContext';
+import { COLORS, FONTS } from '../../constants/constant';
+import Logo from '../../assets/User (5).png';
+import { FiSearch } from 'react-icons/fi';
+import { Link } from 'react-router-dom';
+import ProfileMenu from '../home/ProfileMenu';
+import CustomDropdown from './Customdropdown';
+import TruckIcon from '../../assets/carimages/delivery-truck.png';
+import { getAllNotifications, getNotificationsByUser } from '../../features/Notification/services';
+import { booking_cart } from '../../features/BookingCart/service';
+import { IoCartOutline } from 'react-icons/io5';
+import { useSocket } from '../../context/customerSocket';
 
 type MailItem = {
   is_read: any;
@@ -27,21 +28,22 @@ type MailItem = {
 };
 
 export const Navbar: React.FC = () => {
-  const [isBellActive, setIsBellActive] = useState(false);
-  // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
-  const [showLogoutSuccess, setShowLogoutSuccess] = useState(false);
-  const [showNotifications, setShowNotifications] = useState(false);
-  // const [isLoggedIn, setIsLoggedIn] = useState(true);
-  const { isAuthenticated } = useAuth();
-  const isLoggedIn = isAuthenticated;
-  const { logout } = useAuth();
-  const navigate = useNavigate();
-  const dropdownRef = useRef<HTMLDivElement | null>(null);
-  const notificationRef = useRef<HTMLDivElement | null>(null);
-  const [search, setSearch] = useState("");
-  const [mails, setMails] = useState<MailItem[]>([]);
-  const [cartCount, setCartCount] = useState(0);
+	const [isBellActive, setIsBellActive] = useState(false);
+	// const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+	const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+	const [showLogoutSuccess, setShowLogoutSuccess] = useState(false);
+	const [showNotifications, setShowNotifications] = useState(false);
+	// const [isLoggedIn, setIsLoggedIn] = useState(true);
+	const { isAuthenticated } = useAuth();
+	const isLoggedIn = isAuthenticated;
+	const { logout } = useAuth();
+	const navigate = useNavigate();
+	const dropdownRef = useRef<HTMLDivElement | null>(null);
+	const notificationRef = useRef<HTMLDivElement | null>(null);
+	const [search, setSearch] = useState('');
+	const [mails, setMails] = useState<MailItem[]>([]);
+	const [cartCount, setCartCount] = useState(0);
+	const socket = useSocket();
 
   const filteredMails = mails
     .filter((mail) => mail.recipient_type === "user" && !mail.is_read)
@@ -51,20 +53,21 @@ export const Navbar: React.FC = () => {
     (mail) => mail.recipient_type === "user" && !mail.is_read
   );
 
-  const fetchAllNotifications = async () => {
-    try {
-      const response: any = await getAllNotifications("");
-      const data: MailItem[] = response?.data?.data || [];
-      const sortedData = data.sort(
-        (a, b) =>
-          new Date(b?.created_at).getTime() -
-          new Date(a?.created_date).getTime()
-      );
-      setMails(sortedData);
-    } catch (error) {
-      console.log("Error Fetching Notifications:", error);
-    }
-  };
+	const fetchAllNotifications = async () => {
+		try {
+			const userId: any = localStorage.getItem('userId')
+			const response: any = await getNotificationsByUser(userId);
+			const data: MailItem[] = response?.data?.data?.notifications || [];
+			const sortedData = data.sort(
+				(a, b) =>
+					new Date(b?.created_at).getTime() -
+					new Date(a?.created_date).getTime()
+			);
+			setMails(sortedData);
+		} catch (error) {
+			console.log('Error Fetching Notifications:', error);
+		}
+	};
 
   const fetchBookingCartCount = async () => {
     try {
@@ -156,6 +159,21 @@ export const Navbar: React.FC = () => {
     const formatted = `${day}-${month}-${year} ${formattedHours}:${minutes}${ampm}`;
     return formatted;
   };
+
+	useEffect(() => {
+		if (!socket) return;
+
+		const handleNotify = (data: MailItem) => {
+			console.log("Notification Recieved", data);
+			setMails((prev) => [data, ...prev])
+		}
+
+		socket.on('newNotification', handleNotify)
+
+		return () => {
+			socket.off('newNotification', handleNotify)
+		}
+	},[socket])
 
 	return (
 		<header className='bg-white text-white w-full fixed top-0 z-50 border-b-2 border-white-900 '>

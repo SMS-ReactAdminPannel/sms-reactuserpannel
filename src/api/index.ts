@@ -124,6 +124,14 @@ class Client {
 					API_END_POINTS.notification.update.replace(':uuid', params.uuid),
 					params
 				),
+			getByUser: (params: string) =>
+				httpClient.get(API_END_POINTS.notification.getByUser.replace(':userId', params)),
+			getUnreadCount: (params: string) =>
+				httpClient.get(API_END_POINTS.notification.getUnreadCount, params),
+			markAsRead: (params: string) =>
+				httpClient.patch(API_END_POINTS.notification.markAsRead.replace(':uuid', params), ''),
+			MarkAllAsRead: (params: string) =>
+				httpClient.get(API_END_POINTS.notification.markAllAsRead, params),
 		},
 
 		bookings: {
