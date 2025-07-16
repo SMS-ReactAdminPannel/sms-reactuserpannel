@@ -131,7 +131,6 @@ export default function SparePartsCart() {
 						discount: 0,
 					})
 				);
-
 				setServices(mappedServices);
 			}
 		} catch (error) {

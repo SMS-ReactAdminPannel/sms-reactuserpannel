@@ -15,17 +15,17 @@ const ContactPage = () => {
 				</p>
 			</div>
 
-			 <div className="grid grid-cols-2 lg:grid-cols gap-8">
-       
-          <EnquiryForm/>
-      
-
-            <div className="bg-white p-6 rounded-lg shadow-md overflow-y-auto max-h-[132vh]">
-          <ReplyMessageList />
-        </div>  </div>
+			<div className='grid grid-cols-2 lg:grid-cols gap-8'>
+				<EnquiryForm />
+				<div className='bg-white p-6 rounded-lg shadow-md overflow-y-auto max-h-[132vh]'>
+					<ReplyMessageList />
+				</div>{' '}
+			</div>
 			<div className='mt-12 max-w-7xl mx-auto grid gap-8 lg:grid-cols-2'>
 				<div className='bg-white p-6 rounded-lg shadow'>
-					<h3 className='text-lg font-medium text-[#0050A5]'>Our Contact Info</h3>
+					<h3 className='text-lg font-medium text-[#0050A5]'>
+						Our Contact Info
+					</h3>
 					<div className='mt-4 space-y-4'>
 						<p className='flex items-start'>
 							<svg
