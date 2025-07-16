@@ -21,6 +21,7 @@ import { useAuth } from '../auth/AuthContext';
 import LoginPromptModal from '../../components/Authentication/LoginPromptModal';
 import BookingModal from '../../components/service-centers/ServiceBookingModal';
 import { postSparePartsData } from '../../features/spareparts';
+import { toast } from 'react-toastify';
 
 interface ServiceItem {
 	name: string;
@@ -273,7 +274,8 @@ const ServicesPage: React.FC = () => {
 
 	const handleConfirmBooking = async (
 		requestType: string,
-		schedule_date: Date
+		schedule_date: Date,
+		preferedTime: any
 	) => {
 		if (!selectedPackageId) return;
 
@@ -282,21 +284,24 @@ const ServicesPage: React.FC = () => {
 		);
 
 		if (packageToAdd) {
-			setCart([...cart, packageToAdd]);
 			try {
 				const data = {
 					service: selectedPackageId,
 					type: 'service',
 					requestType,
 					schedule_date: schedule_date,
+					preferedTime: preferedTime,
 				};
-				const response = await postSparePartsData(data);
+				const response: any = await postSparePartsData(data);
 				if (response) {
+					setCart([...cart, packageToAdd]);
 					setShowCartNotification(true);
 					setTimeout(() => setShowCartNotification(false), 3000);
 					if ((window as any).refreshCartCount) {
 						(window as any).refreshCartCount();
 					}
+				} else if (!response) {
+					toast.error(response?.message);
 				}
 			} catch (error) {
 				console.log(error);
@@ -330,17 +335,6 @@ const ServicesPage: React.FC = () => {
 			[packageId]: !prev[packageId],
 		}));
 	};
-
-	// const handleAddToCart = () => {
-	// 	console.log('Adding to cart...');
-	// 	// Your add to cart logic here
-	// 	setIsModalOpen(false);
-	// };
-
-	// const handleOpenSignUp = () => {
-	// 	console.log('Opening sign up...');
-	// 	// Your sign up logic here
-	// };
 
 	const [showForm, setShowForm] = useState<boolean>(false);
 	const currentContent = activeNavItem ? contentSections[activeNavItem] : null;
@@ -685,8 +679,8 @@ const ServicesPage: React.FC = () => {
 				isOpen={showLoginModal}
 				onClose={() => setShowLoginModal(false)}
 			/>
-			{/* Booking Modal */}
 
+			{/* Booking Modal */}
 			{isModalOpen && selectedPackageId && (
 				<BookingModal
 					isOpen={isModalOpen}

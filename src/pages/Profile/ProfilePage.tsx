@@ -5,6 +5,7 @@ import {
   updateUserProfile,
 } from "../../features/Profile/service";
 import { data } from "react-router-dom";
+import { parentPort } from "worker_threads";
 
 // interface UserInfo {
 // 	name: string;
@@ -13,11 +14,31 @@ import { data } from "react-router-dom";
 // 	address: string;
 // }
 
+interface FormData {
+  firstName: string;
+  lastName: string;
+  email: string;
+  image?: string;
+  contact_info: {
+    city: string;
+    state: string;
+    phoneNumber: string;
+    address1: string;
+    address2: string;
+    [key: string]: string; // Allow dynamic access for nested fields
+  };
+  vehicleInfo:{
+    registerNumber:string;
+    model:string;
+    [key:string]:string;
+  }
+  [key: string]: any; // Allow dynamic access for top-level fields
+}
+
 interface Car {
   model: string;
   registerNumber: string;
-  company: string;
-  year: string;
+
 }
 
 interface ServiceHistory {
@@ -32,13 +53,50 @@ const ProfilePage: React.FC = () => {
   const [showHistory, setShowHistory] = useState<number | null>(null);
   const [profileData, setProfileData] = useState<any>({});
   const [errors, setErrors] = useState<any>({});
-  const [editCarMode,setEditCarMode]=useState(false)
+  const [editCarMode, setEditCarMode] = useState(false)
   // const [isLoading, setIsLoading] = useState(true);
+
+
+
+  const [formData, setFormData] = useState<FormData>({
+    firstName: '',
+    lastName: '',
+    email: '',
+    image: '',
+    contact_info: {
+      city: "",
+      state: "",
+      phoneNumber: "",
+      address1: "",
+      address2: "",
+    },
+    vehicleInfo: {
+      registerNumber: '',
+      model: '',
+    }
+  });
 
   const fetchUserProfile = async () => {
     try {
       const response: any = await getUserProfile({});
       if (response) {
+        setFormData({
+          firstName: response?.data?.data?.firstName,
+          lastName: response?.data?.data?.lastName,
+          email: response?.data?.data?.email,
+          image: response?.data?.data?.image,
+          contact_info: {
+            city: response?.data?.data?.contact_info?.city,
+            state: response?.data?.data?.contact_info?.state,
+            phoneNumber: response?.data?.data?.contact_info?.phoneNumber,
+            address1: response?.data?.data?.contact_info?.address1,
+            address2: response?.data?.data?.contact_info?.address2,
+          },
+          vehicleInfo: {
+            registerNumber: response?.data?.data?.vehicleInfo?.registerNumber,
+            model: response?.data?.data?.vehicleInfo?.model,
+          }
+        })
         setProfileData(response?.data?.data);
         // setIsLoading(false);
       }
@@ -57,8 +115,6 @@ const ProfilePage: React.FC = () => {
     {
       model: "",
       registerNumber: "",
-      company: "",
-      year: "",
     },
   ]);
 
@@ -92,47 +148,63 @@ const ProfilePage: React.FC = () => {
         return "";
       case "address1":
         return !value.trim() ? "Address is required" : "";
-        case "address2":
+      case "address2":
         return !value.trim() ? "Address 2 is required" : "";
-        case "city":
+      case "city":
         return !value.trim() ? "City is required" : "";
-        case "state":
+      case "state":
         return !value.trim() ? "state is required" : "";
       default:
         return "";
     }
   };
 
+
   const handleUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    let finalValue = value;
+    // console.log(`Updating field: ${name} with value: ${value}`);
+    // let finalValue = value;
 
-    if (name === "number") {
-      finalValue = value.replace(/[^0-9]/g, "");
-    }
+    setFormData((prev) => {
+      // Handle nested objects (e.g., address.street)
+      if (name.includes('.')) {
+        const [parent, child] = name.split('.');
+        return {
+          ...prev,
+          [parent]: {
+            ...prev[parent],
+            [child]: value,
+          },
+        };
+      }
 
-    setProfileData((prev: any) => ({ ...prev, [name]: finalValue }));
-    const error = validateField(name, finalValue);
-    setErrors((prev: any) => ({ ...prev, [name]: error }));
+      // Handle simple fields and checkboxes
+      return {
+        ...prev,
+        [name]: value,
+      };
+    });
+
+
+    // if (name === "phoneNumber") {
+    //   finalValue = value.replace(/[^0-9]/g, "");
+    // }
+
+    // setProfileData((prev: any) => ({ ...prev, [name]: finalValue }));
+    // const error = validateField(name, finalValue);
+    // setErrors((prev: any) => ({ ...prev, [name]: error }));
   };
 
   const handleCarChange = (index: number, field: keyof Car, value: string) => {
     const updatedCars = [...cars];
     updatedCars[index][field] = value;
     setCars(updatedCars);
-	
+
   };
   const handlesavecar = async () => {
     try {
-		
-      // const vehicleInfo = {
-      //   registerNumber: profileData.vehicleInfo?.registerNumber,
-      //   model: profileData.vehicleInfo?.model,
-      //   year: profileData.vehicleInfo?.year,
-      //   company: profileData.vehicleInfo?.company,
-      // };
 
-      const response = await updateUserProfile({ vehicleInfo:JSON.stringify(cars)});
+      const response = await updateUserProfile({ vehicleInfo: JSON.stringify(cars) });
 
       if (response) {
         console.log("Vehicle info saved successfully", response);
@@ -144,7 +216,7 @@ const ProfilePage: React.FC = () => {
   const addCar = () => {
     setCars([
       ...cars,
-      { model: "", registerNumber: "", company: "", year: "" },
+      { model: "", registerNumber: "",},
     ]);
   };
 
@@ -155,78 +227,58 @@ const ProfilePage: React.FC = () => {
     setShowHistory(null);
   };
 
-  const validateForm = () => {
-    const newErrors: any = {};
-    const fields = ["firstName", "lastName", "email", "number", "address1","address2", "city", "state"];
-
-    fields.forEach((field) => {
-      const error = validateField(field, profileData[field] || "");
-      if (error) newErrors[field] = error;
-    });
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
-
   const handleEditProfile = async () => {
-    if (!validateForm()) {
-      return;
-    }
-
+  
     setEditMode(false);
+     setEditCarMode(false)
+    console.log(formData, 'form data')
     try {
-      const contactInfoObj = {
-        phoneNumber:
-          profileData?.phoneNumber,
-        address1:
-          profileData?.address1,
-        address2:
-          profileData?.address2,
-        city: profileData?.city,
-        state: profileData?.state,
-      };
+      // const contactInfoObj = {
+      //   phoneNumber:
+      //     formData?.contact_info?.phoneNumber,
+      //   address1:
+      //     formData?.contact_info?.address1,
+      //   address2:
+      //     formData?.contact_info?.address2,
+      //   city: formData?.contact_info?.city,
+      //   state: formData?.contact_info?.state,
+      // };
       // Send only allowed fields
       const transformedData = {
-        firstName: profileData.firstName,
-        lastName: profileData.lastName,
-        email: profileData.email,
-        contact_info: JSON.stringify(contactInfoObj),
+        firstName: formData.firstName,
+        lastName: formData.lastName,
+        email: formData.email,
+        contact_info: {
+          phoneNumber: formData?.contact_info?.phoneNumber,
+          address1: formData?.contact_info?.address1,
+          address2: formData?.contact_info?.address2,
+          city: formData?.contact_info?.city,
+          state: formData?.contact_info?.state,
+        },
+        image: formData?.image,
+        vehicleInfo: {
+          registerNumber: formData?.vehicleInfo?.registerNumber,
+          model: formData?.vehicleInfo?.model,
+        }
       };
 
       const response = await updateUserProfile(transformedData);
       if (response) {
         console.log("Profile updated successfully:", response);
-        // Update local state with new data
-        setProfileData((prev: any) => ({
-          ...prev,
-          ...transformedData,
-          number: profileData.number,
-          address1: profileData.address1,
-          address2: profileData.address2,
-        }));
       }
     } catch (error) {
       console.error("Error updating profile:", error);
     }
   };
 
-  // if (isLoading) {
-  // 	return (
-  // 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-  // 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-  // 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-  // 		</div>
-  // 	);
-  // }
-
+  console.log(cars, 'cars')
   return (
     <div className="h-screen w-screen flex items-center justify-center p-8 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
       <div className="relative w-full max-w-4xl h-[600px] bg-white rounded-3xl shadow-2xl overflow-hidden">
         {/* Car Details Panel */}
         <div
-          className={`absolute inset-0 w-full h-full transition-all duration-500 ease-in-out ${
-            isCarTab ? "opacity-100 z-20" : "opacity-0 z-10"
-          }`}
+          className={`absolute inset-0 w-full h-full transition-all duration-500 ease-in-out ${isCarTab ? "opacity-100 z-20" : "opacity-0 z-10"
+            }`}
         >
           <div className="flex h-full w-full">
             {/* Red Section - Left */}
@@ -256,7 +308,7 @@ const ProfilePage: React.FC = () => {
                 Car Details
               </h2>
               <div className="flex-1 overflow-y-auto overflow-x-hidden pr-2 scrollbar-hide">
-                {editCarMode?(<div className="w-full max-w-sm mx-auto space-y-4">
+                {editCarMode ? (<div className="w-full max-w-sm mx-auto space-y-4">
                   {cars.map((car, index) => (
                     <div key={index} className="space-y-3">
                       <div className="border p-4 rounded-xl bg-white shadow relative">
@@ -271,37 +323,32 @@ const ProfilePage: React.FC = () => {
                         <div className="grid gap-3">
                           <input
                             type="text"
-                            name=""
+                            name="vehicleInfo.registerNumber"
                             id=""
-                            value={car.registerNumber||profileData?.vehicleInfo?.[0]?.registerNumber}
-                            onChange={(e) =>
-                              handleCarChange(
-                                index,
-                                "registerNumber",
-                                e.target.value
-                              )
+                            value={formData?.vehicleInfo?.registerNumber}
+                            onChange={handleUserChange
                             }
                             placeholder="Car Registration No"
                             className="w-full px-3 py-2 text-sm bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300"
                           />
-                          <input
+                          {/* <input
                             type="text"
                             name=""
                             id=""
-                            value={car.company||profileData?.vehicleInfo?.[0]?.company}
+                            value={car.company || profileData?.vehicleInfo?.[0]?.company}
                             onChange={(e) =>
                               handleCarChange(index, "company", e.target.value)
                             }
                             placeholder="Car Company"
                             className="w-full px-3 py-2 text-sm bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300"
-                          />
+                          /> */}
 
                           <input
+                          name="vehicleInfo.model"
                             type="text"
                             placeholder="Car Model"
-                            value={car.model||profileData?.vehicleInfo?.[0]?.model}
-                            onChange={(e) =>
-                              handleCarChange(index, "model", e.target.value)
+                            value={formData?.vehicleInfo?.model}
+                            onChange={handleUserChange
                             }
                             className="w-full px-3 py-2 text-sm bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300"
                             style={
@@ -311,97 +358,35 @@ const ProfilePage: React.FC = () => {
                             }
                           />
 
-                          <input
+                          {/* <input
                             type="text"
                             name=""
                             id=""
-                            value={car.year||profileData?.vehicleInfo?.[0]?.year}
+                            value={car.year || profileData?.vehicleInfo?.[0]?.year}
                             placeholder="Car Model Year"
                             onChange={(e) =>
                               handleCarChange(index, "year", e.target.value)
                             }
                             className="w-full px-3 py-2 text-sm bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300"
-                          />
+                          /> */}
 
-                         <div className="flex gap-3 ">
-                          <button
-                            onClick={()=>setEditCarMode(false)}
-                            className="py-3 flex-1 text-white font-medium rounded-lg hover:opacity-90 transition-all duration-300 bg-gray-400  shadow-lg"
-                          >
-                           Cancel
-                          </button>
-                           <button
-                            onClick={handlesavecar}
-                            className="py-3 flex-1 text-white font-medium rounded-lg hover:opacity-90 transition-all duration-300 bg-[#0050A5] shadow-lg"
-                          >
-                            SAVE
-                          </button>
-                         </div>
+                          <div className="flex gap-3 ">
+                            <button
+                              onClick={() => setEditCarMode(false)}
+                              className="py-3 flex-1 text-white font-medium rounded-lg hover:opacity-90 transition-all duration-300 bg-gray-400  shadow-lg"
+                            >
+                              Cancel
+                            </button>
+                            <button
+                              onClick={handleEditProfile}
+                              className="py-3 flex-1 text-white font-medium rounded-lg hover:opacity-90 transition-all duration-300 bg-[#0050A5] shadow-lg"
+                            >
+                              SAVE
+                            </button>
+                          </div>
                         </div>
-
-                        {/* <div>
-													<label className='text-sm font-semibold block mb-1 text-gray-700'>
-														Issue Description
-													</label>
-													<input
-														type='text'
-														placeholder='Describe the issue'
-														value={car.issue}
-														onChange={(e) =>
-															handleCarChange(index, 'issue', e.target.value)
-														}
-														className='w-full px-3 py-2 text-sm bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300'
-														style={
-															{
-																'--tw-ring-color': '#0050A5',
-															} as React.CSSProperties
-														}
-													/>
-												</div> */}
-                        {/* <div className='flex justify-end mt-3'>
-													<button className='w-auto py-1 px-2 bg-[#0050A5] text-white text-sm font-medium rounded-lg transition-transform duration-300 hover:scale-105'>
-														CAR HISTORY
-													</button>
-												</div> */}
                       </div>
 
-                      {/* Service History Panel */}
-                      {/* {showHistory === index && (
-                        <div className="bg-white border rounded-xl p-4 shadow-lg">
-                          <h4 className="text-lg font-semibold text-gray-800 mb-3">
-                            Service History
-                          </h4>
-                          {serviceHistory[index] &&
-                          serviceHistory[index].length > 0 ? (
-                            <div className="space-y-2">
-                              {serviceHistory[index].map(
-                                (history, historyIndex) => (
-                                  <div
-                                    key={historyIndex}
-                                    className="flex justify-between items-center p-2 bg-gray-50 rounded-lg"
-                                  >
-                                    <div>
-                                      <p className="font-medium text-sm text-gray-800">
-                                        {history.service}
-                                      </p>
-                                      <p className="text-xs text-gray-600">
-                                        {history.date}
-                                      </p>
-                                    </div>
-                                    <span className="px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">
-                                      {history.status}
-                                    </span>
-                                  </div>
-                                )
-                              )}
-                            </div>
-                          ) : (
-                            <p className="text-gray-500 text-sm">
-                              No service history available
-                            </p>
-                          )}
-                        </div>
-                      )} */}
                     </div>
                   ))}
                   <div className="flex flex-col items-center justify-center">
@@ -413,35 +398,22 @@ const ProfilePage: React.FC = () => {
                       ADD ANOTHER CAR
                     </button>
                   </div>
-                </div>):(<>
-                 <div className="space-y-4 bg-white p-6  rounded-xl shadow-lg">
+                </div>) : (<>
+                  <div className="space-y-4 bg-white p-6  rounded-xl shadow-lg">
                     <div className="space-y-3">
-                      
+
                       <p className="text-lg">
                         <strong className="text-gray-700">Register No:</strong>{" "}
                         <span className="text-gray-600">
-                          {profileData?.vehicleInfo?.[0]?.registerNumber|| "N/A"}
-                        </span>
-                      </p>
-                      <p className="text-lg">
-                        <strong className="text-gray-700">Car Company:</strong>{" "}
-                        <span className="text-gray-600">
-                          {profileData?.vehicleInfo?.[0]?.company || "N/A"}
+                          {profileData?.vehicleInfo?.registerNumber || "N/A"}
                         </span>
                       </p>
                       <p className="text-lg">
                         <strong className="text-gray-700">Car Model:</strong>{" "}
                         <span className="text-gray-600">
-                          {profileData?.vehicleInfo?.[0]?.model || "N/A"}
+                          {profileData?.vehicleInfo?.model}
                         </span>
                       </p>
-                      <p className="text-lg">
-                        <strong className="text-gray-700">Car Year:</strong>{" "}
-                        <span className="text-gray-600">
-                          {(profileData?.vehicleInfo?.[0]?.year) || "N/A"}
-                        </span>
-                      </p>
-                      
                     </div>
                     <div className="flex flex-col items-center justify-center">
                       <button
@@ -461,9 +433,8 @@ const ProfilePage: React.FC = () => {
 
         {/* User Profile Panel */}
         <div
-          className={`absolute inset-0 w-full h-full transition-all duration-500 ease-in-out ${
-            isCarTab ? "opacity-0 z-10" : "opacity-100 z-20"
-          }`}
+          className={`absolute inset-0 w-full h-full transition-all duration-500 ease-in-out ${isCarTab ? "opacity-0 z-10" : "opacity-100 z-20"
+            }`}
         >
           <div className="flex h-full w-full">
             {/* User Profile Section - Left */}
@@ -478,12 +449,11 @@ const ProfilePage: React.FC = () => {
                     <div>
                       <input
                         name="firstName"
-                        value={profileData?.firstName || ""}
+                        value={formData?.firstName}
                         onChange={handleUserChange}
                         placeholder="First Name"
-                        className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
-                          errors.firstName ? "ring-2 ring-red-500" : ""
-                        }`}
+                        className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${errors.firstName ? "ring-2 ring-red-500" : ""
+                          }`}
                         style={
                           {
                             "--tw-ring-color": errors.firstName
@@ -501,12 +471,11 @@ const ProfilePage: React.FC = () => {
                     <div>
                       <input
                         name="lastName"
-                        value={profileData?.lastName || ""}
+                        value={formData?.lastName}
                         onChange={handleUserChange}
                         placeholder="Last Name"
-                        className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
-                          errors.lastName ? "ring-2 ring-red-500" : ""
-                        }`}
+                        className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${errors.lastName ? "ring-2 ring-red-500" : ""
+                          }`}
                         style={
                           {
                             "--tw-ring-color": errors.lastName
@@ -524,12 +493,11 @@ const ProfilePage: React.FC = () => {
                     <div>
                       <input
                         name="email"
-                        value={profileData?.email || ""}
+                        value={formData?.email}
                         onChange={handleUserChange}
                         placeholder="Email"
-                        className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
-                          errors.email ? "ring-2 ring-red-500" : ""
-                        }`}
+                        className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${errors.email ? "ring-2 ring-red-500" : ""
+                          }`}
                         style={
                           {
                             "--tw-ring-color": errors.email
@@ -546,15 +514,14 @@ const ProfilePage: React.FC = () => {
                     </div>
                     <div>
                       <input
-                        name="phoneNumber"
+                        name="contact_info.phoneNumber"
                         value={
-                          profileData?.contact_info?.phoneNumber
+                          formData?.contact_info?.phoneNumber
                         }
                         onChange={handleUserChange}
                         placeholder="Phone Number"
-                        className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
-                          errors.number ? "ring-2 ring-red-500" : ""
-                        }`}
+                        className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${errors.number ? "ring-2 ring-red-500" : ""
+                          }`}
                         style={
                           {
                             "--tw-ring-color": errors.number
@@ -571,15 +538,14 @@ const ProfilePage: React.FC = () => {
                     </div>
                     <div>
                       <input
-                        name="address1"
+                        name="contact_info.address1"
                         value={
-                          profileData?.contact_info?.address1
+                          formData?.contact_info?.address1
                         }
                         onChange={handleUserChange}
                         placeholder="Address 1"
-                        className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
-                          errors.address1 ? "ring-2 ring-red-500" : ""
-                        }`}
+                        className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${errors.address1 ? "ring-2 ring-red-500" : ""
+                          }`}
                         style={
                           {
                             "--tw-ring-color": errors.address1
@@ -597,15 +563,14 @@ const ProfilePage: React.FC = () => {
 
                     <div>
                       <input
-                        name="address2"
+                        name="contact_info.address2"
                         value={
-                          profileData?.address2
+                          formData?.contact_info?.address2
                         }
                         onChange={handleUserChange}
                         placeholder="Address 2"
-                        className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
-                          errors.address2 ? "ring-2 ring-red-500" : ""
-                        }`}
+                        className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${errors.address2 ? "ring-2 ring-red-500" : ""
+                          }`}
                         style={
                           {
                             "--tw-ring-color": errors.address2
@@ -624,15 +589,14 @@ const ProfilePage: React.FC = () => {
 
                     <div>
                       <input
-                        name="city"
+                        name="contact_info.city"
                         value={
-                          profileData?.city
+                          formData?.contact_info?.city
                         }
                         onChange={handleUserChange}
                         placeholder="City"
-                        className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
-                          errors.city ? "ring-2 ring-red-500" : ""
-                        }`}
+                        className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${errors.city ? "ring-2 ring-red-500" : ""
+                          }`}
                         style={
                           {
                             "--tw-ring-color": errors.city
@@ -650,17 +614,16 @@ const ProfilePage: React.FC = () => {
 
 
 
-                                        <div>
+                    <div>
                       <input
-                        name="state"
+                        name="contact_info.state"
                         value={
-                          profileData?.contact_info?.state
+                          formData?.contact_info?.state
                         }
                         onChange={handleUserChange}
                         placeholder="state"
-                        className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
-                          errors.state ? "ring-2 ring-red-500" : ""
-                        }`}
+                        className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${errors.state ? "ring-2 ring-red-500" : ""
+                          }`}
                         style={
                           {
                             "--tw-ring-color": errors.state
@@ -688,10 +651,9 @@ const ProfilePage: React.FC = () => {
                           onChange={(e) => {
                             const file = e.target.files?.[0];
                             if (file) {
-                              setProfileData((prev: any) => ({
+                              setFormData((prev: any) => ({
                                 ...prev,
-                                image: file,
-                                preview: URL.createObjectURL(file),
+                                image: URL.createObjectURL(file),
                               }));
                             }
                           }}
@@ -717,52 +679,50 @@ const ProfilePage: React.FC = () => {
                 ) : (
                   <div className="space-y-4 bg-white p-6  rounded-xl shadow-lg">
                     <div className="space-y-3">
-                        <div className="flex  flex-col justify-center items-center">
-                          <div className=" w-24 h-24 rounded-full overflow-hidden border-2 ">
-                            <img src={profileData?.profile} alt="profile Pic" />
-                          </div>
-                        </div>
-                      
+                      <div>
+                        <img src={formData?.image} alt="profile Pic" className="w-24 h-24 mx-auto rounded-full object-cover" />
+                      </div>
+
                       <p className="text-lg">
                         <strong className="text-gray-700">First Name:</strong>{" "}
                         <span className="text-gray-600">
-                          {profileData?.firstName || "N/A"}
+                          {formData?.firstName}
                         </span>
                       </p>
                       <p className="text-lg">
                         <strong className="text-gray-700">Last Name:</strong>{" "}
                         <span className="text-gray-600">
-                          {profileData?.lastName || "N/A"}
+                          {formData?.lastName}
                         </span>
                       </p>
                       <p className="text-lg">
                         <strong className="text-gray-700">Email:</strong>{" "}
                         <span className="text-gray-600">
-                          {profileData?.email || "N/A"}
+                          {formData?.email}
                         </span>
                       </p>
                       <p className="text-lg">
                         <strong className="text-gray-700">Phone:</strong>{" "}
                         <span className="text-gray-600">
-                          {profileData?.contact_info?.phoneNumber ||"N/A"}
+                          {formData?.contact_info?.phoneNumber}
                         </span>
                       </p>
                       <p className="text-lg">
                         <strong className="text-gray-700">Address:</strong>{" "}
                         <span className="text-gray-600">
-                          {profileData?.contact_info?.address1}, {profileData?.contact_info?.address2}
+                          {formData?.contact_info?.address1}, {formData?.contact_info?.address2}
                         </span>
                       </p>
                       <p className="text-lg">
                         <strong className="text-gray-700">City:</strong>{" "}
                         <span className="text-gray-600">
-                          {profileData?.contact_info?.city}
+                          {formData?.contact_info?.city}
                         </span>
                       </p>
                       <p className="text-lg">
                         <strong className="text-gray-700">State:</strong>{" "}
                         <span className="text-gray-600">
-                          {profileData?.contact_info?.state}
+                          {formData?.contact_info?.state}
                         </span>
                       </p>
                     </div>
