@@ -50,11 +50,9 @@ export default function GmailStyleInbox() {
 					new Date(b?.created_at).getTime() - new Date(a?.created_at).getTime()
 			);
 			setMails(sortedData);
-			// setIsLoading(false);
 		} catch (error) {
 			console.log('Error Fetching Notifications:', error);
 		} finally {
-			// setIsLoading(false);
 		}
 	};
 

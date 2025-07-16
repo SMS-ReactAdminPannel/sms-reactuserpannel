@@ -203,8 +203,6 @@ const SpareParts: React.FC = () => {
 		? filteredParts
 		: filteredParts.slice(0, 8);
 
-	console.log(displayedParts, 'display parts');
-
 	const offerTitle = useScrollAnimation<HTMLHeadingElement>();
 	const productTitle = useScrollAnimation<HTMLHeadingElement>();
 	const bundleTitle = useScrollAnimation<HTMLHeadingElement>();
@@ -327,22 +325,24 @@ const SpareParts: React.FC = () => {
 										</div>
 										<div
 											className={`mt-2 text-xs font-semibold ${
-												part?.inStock ? 'text-green-600' : 'text-red-600'
+												part?.stock >= 1 ? 'text-green-600' : 'text-red-600'
 											}`}
 										>
-											{part?.inStock ? 'In Stock' : 'Out of Stock'}
+											{part?.stock >= 1 ? 'In Stock' : 'Out of Stock'}
 										</div>
 
 										{/* Cart Icon Button */}
-										<button
-											className='absolute bottom-4 right-5 bg-white p-3 rounded-full shadow hover:bg-[#0050A5] hover:text-white transition'
-											onClick={(e) => {
-												e.stopPropagation();
-												handleAddToCart(part);
-											}}
-										>
-											<ShoppingCart size={28} />
-										</button>
+										{part?.stock >= 1 && (
+											<button
+												className='absolute bottom-4 right-5 bg-white p-3 rounded-full shadow hover:bg-[#0050A5] hover:text-white transition'
+												onClick={(e) => {
+													e.stopPropagation();
+													handleAddToCart(part);
+												}}
+											>
+												<ShoppingCart size={28} />
+											</button>
+										)}
 									</div>
 								</div>
 							))}

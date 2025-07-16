@@ -12,7 +12,6 @@ import {
 	ChevronDown,
 	X,
 } from 'lucide-react';
-import SelectCarPage from './SelectCarPage';
 import { useNavigate } from 'react-router-dom';
 import AutoPopup from './RightSidePopup';
 import { getAllServiceCategories } from '../../features/ServicesPage/service';
@@ -45,17 +44,6 @@ interface ContentSection {
 	packages: ServicePackage[];
 }
 
-interface CarSelect {
-	id: string;
-	model: string;
-	year: string;
-}
-
-interface SelectedPackageInfo {
-	packageId: string;
-	carDetails: CarSelect;
-}
-
 interface ApiServiceCategory {
 	_id: string;
 	uuid: string;
@@ -83,6 +71,13 @@ interface ApiService {
 	updated_at: string;
 	image: string;
 	duration: string;
+}
+
+interface CartItem {
+	packageId: string;
+	bookingType?: string;
+	scheduleDate?: Date;
+	preferredTime?: { startTime: string; endTime: string };
 }
 
 const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
@@ -118,17 +113,11 @@ const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 };
 
 const ServicesPage: React.FC = () => {
-	const [selectedPackage, setSelectedPackage] = useState<SelectedPackageInfo[]>(
-		[]
-	);
-	const [selectedPackageId, setSelectedPackageId] = useState<string | null>(
-		null
-	);
 	const [activeNavItem, setActiveNavItem] = useState<string>('');
 	const [expandedServices, setExpandedServices] = useState<{
 		[key: string]: boolean;
 	}>({});
-	const [cart, setCart] = useState<SelectedPackageInfo[]>([]);
+	const [cart, setCart] = useState<CartItem[]>([]);
 	const [showWelcomePopup, setShowWelcomePopup] = useState(true);
 	const [serviceCategories, setServiceCategories] = useState<
 		ApiServiceCategory[]
@@ -143,6 +132,9 @@ const ServicesPage: React.FC = () => {
 	const { isAuthenticated } = useAuth();
 	const [isModalOpen, setIsModalOpen] = useState(false);
 	const [showCartNotification, setShowCartNotification] = useState(false);
+	const [selectedServiceId, setSelectedServiceId] = useState<string | null>(
+		null
+	);
 
 	const fetchAllServiceCategory = async () => {
 		try {
@@ -252,22 +244,16 @@ const ServicesPage: React.FC = () => {
 		return <Wrench className='w-6 h-6' />;
 	}
 
-	const handleSelectCar = (packageId: string) => {
-		setSelectedPackageId(packageId);
-		setShowForm(true);
-	};
-
 	const handleNavClick = (navItem: string) => {
 		localStorage.removeItem('selectedCategory');
 		setActiveNavItem(navItem);
-		setSelectedPackage([]);
 	};
 
-	const handleAddToCart = async (serviceId: string) => {
+	const handleAddToCart = (serviceId: string) => {
 		if (!isAuthenticated) {
 			setShowLoginModal(true);
 		} else {
-			setSelectedPackageId(serviceId);
+			setSelectedServiceId(serviceId);
 			setIsModalOpen(true);
 		}
 	};
@@ -277,44 +263,55 @@ const ServicesPage: React.FC = () => {
 		schedule_date: Date,
 		preferedTime: any
 	) => {
-		if (!selectedPackageId) return;
-
-		const packageToAdd = selectedPackage.find(
-			(p) => p.packageId === selectedPackageId
-		);
-
-		if (packageToAdd) {
-			try {
-				const data = {
-					service: selectedPackageId,
-					type: 'service',
-					requestType,
-					schedule_date: schedule_date,
-					preferedTime: preferedTime,
-				};
-				const response: any = await postSparePartsData(data);
-				if (response) {
-					setCart([...cart, packageToAdd]);
-					setShowCartNotification(true);
-					setTimeout(() => setShowCartNotification(false), 3000);
-					if ((window as any).refreshCartCount) {
-						(window as any).refreshCartCount();
-					}
-				} else if (!response) {
-					toast.error(response?.message);
-				}
-			} catch (error) {
-				console.log(error);
-			}
+		if (!selectedServiceId) {
+			toast.error('Please select a service first');
+			return;
 		}
-		setIsModalOpen(false);
+
+		try {
+			const data = {
+				service: selectedServiceId,
+				type: 'service',
+				requestType,
+				schedule_date,
+				preferedTime,
+			};
+
+			const response: any = await postSparePartsData(data);
+
+			if (response) {
+				// Add to cart with booking details
+				setCart((prev) => [
+					...prev,
+					{
+						packageId: selectedServiceId,
+						bookingType: requestType,
+						scheduleDate: schedule_date,
+						preferredTime: preferedTime,
+					},
+				]);
+
+				setShowCartNotification(true);
+				setTimeout(() => setShowCartNotification(false), 3000);
+
+				if ((window as any).refreshCartCount) {
+					(window as any).refreshCartCount();
+				}
+
+				// Reset selection and close modal
+				setSelectedServiceId(null);
+				setIsModalOpen(false);
+			} else {
+				toast.error(response?.message || 'Booking failed', { autoClose: 2000 });
+			}
+		} catch (error) {
+			console.error('Booking failed:', error);
+			toast.error('Failed to book service', { autoClose: 2000 });
+		}
 	};
 
 	const handleRemoveFromCart = (serviceId: string) => {
-		setCart(cart.filter((item) => item.packageId !== serviceId));
-		setSelectedPackage(
-			selectedPackage.filter((item) => item.packageId !== serviceId)
-		);
+		setCart((prev) => prev.filter((item) => item.packageId !== serviceId));
 	};
 
 	useEffect(() => {
@@ -336,7 +333,6 @@ const ServicesPage: React.FC = () => {
 		}));
 	};
 
-	const [showForm, setShowForm] = useState<boolean>(false);
 	const currentContent = activeNavItem ? contentSections[activeNavItem] : null;
 
 	return (
@@ -438,12 +434,6 @@ const ServicesPage: React.FC = () => {
 						<h1 ref={serviceTitle.elementRef} style={{ ...FONTS.sub_heading }}>
 							<span className='inline-block pb-1 relative text-[#0050A5] mb-2'>
 								{currentContent?.title || 'Services'}
-								{/* <span
-									className={`absolute top-11 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${serviceTitle.isVisible
-										? 'scale-x-100 w-full'
-										: 'scale-x-0 w-full'
-										}`}
-								></span> */}
 							</span>
 						</h1>
 
@@ -469,17 +459,12 @@ const ServicesPage: React.FC = () => {
 					) : (
 						<div className='space-y-8'>
 							{currentContent?.packages?.map((pkg) => {
-								const isSelected = selectedPackage.some(
-									(p) => p.packageId === pkg.id
-								);
 								const isInCart = cart.some((item) => item.packageId === pkg.id);
 
 								return (
 									<div
 										key={pkg.id}
-										className={`bg-[#d8e1ef] rounded-lg lg:w-[600px] md:w-[400px] shadow-lg relative transition-all duration-300 hover:shadow-xl ${
-											isSelected ? 'ring-2 ring-[#0050A5]-500' : ''
-										}`}
+										className={`bg-[#d8e1ef] rounded-lg lg:w-[600px] md:w-[400px] shadow-lg relative transition-all duration-300 hover:shadow-xl`}
 									>
 										{pkg.isRecommended && (
 											<div className='absolute top-0 left-0 z-10 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-1 rounded-br-lg'>
@@ -513,14 +498,6 @@ const ServicesPage: React.FC = () => {
 															<Clock className='w-4 h-4 mr-1' />
 															{pkg.duration}
 														</div>
-														{/* <div className='flex space-x-4 text-sm'>
-															<span className='inline-flex items-center px-3 py-1 rounded-full opacity-70 text-[#0050A5]'>
-																{pkg.warranty}
-															</span>
-															<span className='inline-flex items-center px-3 py-1 rounded-full opacity-70 text-[#0050A5]'>
-																{pkg.frequency}
-															</span>
-														</div> */}
 													</div>
 												</div>
 
@@ -570,65 +547,44 @@ const ServicesPage: React.FC = () => {
 												<div className='flex flex-col justify-between items-start mt-6'>
 													{/* Price and Discount */}
 													<div className='text-right mb-2'>
-														{isSelected && (
-															<>
-																<span className='line-through text-gray-400 mr-2 text-sm'>
-																	{pkg.price}
-																</span>
-																<span className='text-[#0050A5]-600 font-bold text-xl'>
-																	{pkg.discountPrice}
-																</span>
-															</>
-														)}
+														<span className='line-through text-gray-400 mr-2 text-sm'>
+															{pkg.price}
+														</span>
+														<span className='text-[#0050A5]-600 font-bold text-xl'>
+															{pkg.discountPrice}
+														</span>
 													</div>
 													<br />
 
 													{/* Buttons */}
-													{isSelected ? (
-														<div className='flex items-center space-x-2'>
-															{isInCart ? (
-																<>
-																	<button
-																		onClick={() => {
-																			navigate('/booking-cart');
-																		}}
-																		className='px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors'
-																	>
-																		Go to Cart
-																	</button>
-																	<button
-																		onClick={() => handleRemoveFromCart(pkg.id)}
-																		className='p-2 text-gray-500 hover:text-[#0050A5] transition-colors'
-																		title='Remove from cart'
-																	>
-																		<X className='w-5 h-5' />
-																	</button>
-																</>
-															) : (
-																<>
-																	<button
-																		onClick={() => handleAddToCart(pkg.id)}
-																		className='px-4 py-2 bg-[#0050A5] text-white rounded-md hover:bg-[#0050A5] transition-colors'
-																	>
-																		Add to Cart
-																	</button>
-																	<button
-																		onClick={() => handleRemoveFromCart(pkg.id)}
-																		className='px-4 py-2 border border-[#0050A5] rounded-md hover:bg-[#0050A5] hover:text-white transition-colors text-White'
-																	>
-																		Cancel
-																	</button>
-																</>
-															)}
-														</div>
-													) : (
-														<button
-															onClick={() => handleSelectCar(pkg.id)}
-															className='px-4 py-2 rounded-lg font-semibold bg-white border-2 border-[#0050A5] text-[#0050A5] hover:bg-[#0050A5]-50 hover:text-[#0050A5] transition-all duration-200 shadow-md hover:shadow-lg'
-														>
-															SELECT CAR
-														</button>
-													)}
+													<div className='flex items-center space-x-2'>
+														{isInCart ? (
+															<>
+																<button
+																	onClick={() => {
+																		navigate('/booking-cart');
+																	}}
+																	className='px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 transition-colors'
+																>
+																	Go to Cart
+																</button>
+																<button
+																	onClick={() => handleRemoveFromCart(pkg.id)}
+																	className='p-2 text-gray-500 hover:text-[#0050A5] transition-colors'
+																	title='Remove from cart'
+																>
+																	<X className='w-5 h-5' />
+																</button>
+															</>
+														) : (
+															<button
+																onClick={() => handleAddToCart(pkg.id)}
+																className='px-4 py-2 bg-[#0050A5] text-white rounded-md hover:bg-[#0050A5] transition-colors'
+															>
+																Add to Cart
+															</button>
+														)}
+													</div>
 												</div>
 											</div>
 										</div>
@@ -647,24 +603,6 @@ const ServicesPage: React.FC = () => {
 				</div>
 			</div>
 
-			{/* Car Selection Form Modal */}
-			{showForm && selectedPackageId && (
-				<div className='fixed inset-0 bg-black bg-opacity-50 flex justify-end items-center z-50 p-4'>
-					<SelectCarPage
-						onClose={() => setShowForm(false)}
-						setSelectedPackage={(carDetails) => {
-							const data: any = {
-								packageId: selectedPackageId,
-								carDetails,
-							};
-							setSelectedPackage((prev) => [...prev, data]);
-							setShowForm(false);
-						}}
-						packageId={selectedPackageId}
-					/>
-				</div>
-			)}
-
 			{/* Welcome Popup */}
 			<div>
 				{showWelcomePopup && (
@@ -681,21 +619,21 @@ const ServicesPage: React.FC = () => {
 			/>
 
 			{/* Booking Modal */}
-			{isModalOpen && selectedPackageId && (
+			{isModalOpen && selectedServiceId && (
 				<BookingModal
 					isOpen={isModalOpen}
 					onClose={() => setIsModalOpen(false)}
 					selectedService={{
-						id: selectedPackageId,
+						id: selectedServiceId,
 						duration: currentContent?.packages.find(
-							(p) => p.id === selectedPackageId
+							(p) => p.id === selectedServiceId
 						)?.duration,
 						title: currentContent?.packages.find(
-							(p) => p.id === selectedPackageId
+							(p) => p.id === selectedServiceId
 						)?.title,
 						price: Number(
 							currentContent?.packages
-								.find((p) => p.id === selectedPackageId)
+								.find((p) => p.id === selectedServiceId)
 								?.discountPrice.replace('₹', '') || 0
 						),
 					}}

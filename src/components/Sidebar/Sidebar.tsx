@@ -10,8 +10,6 @@ import {
 	FiSettings,
 	FiAlertTriangle,
 } from 'react-icons/fi';
-// import Logo from '../../assets/LOGO.jpg';
-// import { RiMenu2Line, RiMenu3Line } from 'react-icons/ri';
 import { Megaphone } from 'lucide-react';
 
 const COLOR = {
@@ -26,7 +24,6 @@ export const Sidebar = ({
 	isOpen: boolean;
 	setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) => {
-	// const uselocation = useLocation();
 
 	const handleLinkClick = () => {
 		// setIsOpen(false);
