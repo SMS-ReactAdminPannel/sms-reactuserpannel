@@ -46,11 +46,11 @@ export const Navbar: React.FC = () => {
 	const socket = useSocket();
 
   const filteredMails = mails
-    .filter((mail) => mail.recipient_type === "user" && !mail.is_read)
+    .filter((mail) => mail.recipient_type === "customer" && !mail.is_read)
     .slice(0, 4);
 
   const unReadMails = mails.filter(
-    (mail) => mail.recipient_type === "user" && !mail.is_read
+    (mail) => mail.recipient_type === "customer" && !mail.is_read
   );
 
 	const fetchAllNotifications = async () => {
