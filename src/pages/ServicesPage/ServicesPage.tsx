@@ -514,14 +514,6 @@ const ServicesPage: React.FC = () => {
 															<Clock className='w-4 h-4 mr-1' />
 															{pkg.duration}
 														</div>
-														{/* <div className='flex space-x-4 text-sm'>
-															<span className='inline-flex items-center px-3 py-1 rounded-full opacity-70 text-[#0050A5]'>
-																{pkg.warranty}
-															</span>
-															<span className='inline-flex items-center px-3 py-1 rounded-full opacity-70 text-[#0050A5]'>
-																{pkg.frequency}
-															</span>
-														</div> */}
 													</div>
 												</div>
 

@@ -3,9 +3,6 @@ import image1 from '../../assets/home/360_F_496483060_C9OG1wJpfmjMXcNmUBibmA9wYx
 import image2 from '../../assets/home/360_F_507812981_dGZXqBsqkBpEosDjTlJgmaJAyMFra7sp.jpg';
 import image3 from '../../assets/home/hand-mechanic-holding-car-service-600nw-2340377479.webp';
 import image4 from '../../assets/home/istockphoto-1387759698-612x612.jpg';
-// import serviceImg from '../../assets/CAR ANNUAL MAINTENANCE/Annual maintenance.jpg';
-// import CarImg1 from '../../assets/CarImg1.jpg';
-
 import { RxLapTimer } from 'react-icons/rx';
 import { LiaCertificateSolid } from 'react-icons/lia';
 import { BsTruck } from 'react-icons/bs';
@@ -32,7 +29,6 @@ import Roadsideassistant from '../../assets/CAR ROADSIDE/Roadside assistant.jpg'
 import Prebooking from '../../assets/CAR PREBOOKING/Prebooking.jpg';
 import Annualmaintenance from '../../assets/CAR ANNUAL MAINTENANCE/Annual maintenance.jpg';
 import appimage from '../../assets/User (5).png';
-// import bgImg from '../../assets/home/aesthetic-background-with-patterned-glass-texture.jpg';
 
 // icon for footer
 import { MdEmail } from 'react-icons/md'; // mail
@@ -736,7 +732,6 @@ const HomePage: React.FC = () => {
 						</div>
 					</div>
 				</div>
-				{/* FOOTER END */}
 			</div>
 		</>
 	);

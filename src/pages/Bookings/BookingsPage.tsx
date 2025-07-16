@@ -132,30 +132,6 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 		}
 	};
 
-	// const handleDownloadInvoice = async () => {
-	// 	try {
-	// 		setDownloading(true);
-	// 		const res = await fetch('file:///C:/Users/Admin/Downloads/g4.hall.pdf', {
-	// 			headers: { Accept: 'application/pdf' },
-	// 		});
-	// 		if (!res.ok) throw new Error('Could not download invoice');
-	// 		const blob = await res.blob();
-	// 		const url = URL.createObjectURL(blob);
-	// 		const a = document.createElement('a');
-	// 		a.href = url;
-	// 		a.download = `invoice_${order.uuid}.pdf`;
-	// 		document.body.appendChild(a);
-	// 		a.click();
-	// 		a.remove();
-	// 		URL.revokeObjectURL(url);
-	// 	} catch (err) {
-	// 		console.error(err);
-	// 		alert('Invoice download failed.');
-	// 	} finally {
-	// 		setDownloading(false);
-	// 	}
-	// };
-
 	return (
 		<div className='opacity-90 rounded-2xl shadow-lg border max-w-6xl mx-auto border-[#0050A5] overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:border-[#0050A5]'>
 			<div className='flex flex-col'>
@@ -174,11 +150,10 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 						{/* Type Badge */}
 						<div className='absolute top-3 right-3 z-10'>
 							<span
-								className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-									isService
+								className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${isService
 										? 'bg-purple-100 text-purple-800'
 										: 'bg-blue-100 text-blue-800'
-								}`}
+									}`}
 							>
 								{isService ? (
 									<>
@@ -321,11 +296,11 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 										})}
 									</p>
 									<button
-		className='mt-4 bg-[#0050A5] hover:bg-[#003f85] justify-end text-white text-sm font-medium py-2 px-4 rounded-lg transition duration-300'
-		//onClick={handleDownloadInvoice}
-	>
-		Download Invoice
-	</button>
+										className='mt-4 bg-[#0050A5] hover:bg-[#003f85] justify-end text-white text-sm font-medium py-2 px-4 rounded-lg transition duration-300'
+									//onClick={handleDownloadInvoice}
+									>
+										Download Invoice
+									</button>
 								</div>
 							</div>
 						</div>
@@ -347,8 +322,8 @@ const OrdersPage: React.FC = () => {
 	// const [isLoading, setIsLoading] = useState(false);
 	const { isAuthenticated } = useAuth();
 
-		useEffect(() => {
-			if (isAuthenticated) {
+	useEffect(() => {
+		if (isAuthenticated) {
 			const fetchOrders = async () => {
 				try {
 					const response: any = await getBookingAll({});
@@ -382,18 +357,16 @@ const OrdersPage: React.FC = () => {
 						];
 
 						setOrders(transformedOrders);
-						// setIsLoading(false);
 					}
 				} catch (err) {
 					console.error('Error fetching orders:', err);
 				} finally {
-					// setIsLoading(false);
 				}
 			};
 
 			fetchOrders();
 		}
-		}, [isAuthenticated]);
+	}, [isAuthenticated]);
 
 	const filteredOrders = useMemo(() => {
 		return orders
@@ -424,15 +397,6 @@ const OrdersPage: React.FC = () => {
 		(order) => order.status === 'completed' || order.status === 'delivered'
 	).length;
 
-	// if (isLoading) {
-	// 	return (
-	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-	// 		</div>
-	// 	);
-	// }
-
 	return (
 		<div className='min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100'>
 			<div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
@@ -445,12 +409,6 @@ const OrdersPage: React.FC = () => {
 					>
 						<span className='inline-block pb-1 relative text-[#0050A5] mb-2'>
 							My Orders
-							{/* <span
-								className={`absolute top-14 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${orderTitle.isVisible
-									? 'scale-x-100 w-full'
-									: 'scale-x-0 w-full'
-									}`}
-							></span> */}
 						</span>
 					</h1>
 					<p className='text-[#0050A5] text-lg max-w-6xl mx-auto'>
@@ -502,60 +460,35 @@ const OrdersPage: React.FC = () => {
 						<div className='flex flex-wrap gap-2 bg-[white] rounded-xl p-1'>
 							<button
 								onClick={() => setFilterType('all')}
-								className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-									filterType === 'all'
+								className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${filterType === 'all'
 										? 'bg-[#0050A5] text-white shadow-sm'
 										: 'text-gray-600 hover:text-gray-900'
-								}`}
+									}`}
 							>
 								All Orders
 							</button>
 							<button
 								onClick={() => setFilterType('spare')}
-								className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${
-									filterType === 'spare'
+								className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${filterType === 'spare'
 										? 'bg-[#0050A5] text-white shadow-sm'
 										: 'text-gray-600 hover:text-gray-900'
-								}`}
+									}`}
 							>
 								<Package className='w-4 h-4 mr-1' />
 								Spare Parts
 							</button>
 							<button
 								onClick={() => setFilterType('service')}
-								className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${
-									filterType === 'service'
+								className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${filterType === 'service'
 										? 'bg-[#0050A5] text-white shadow-sm'
 										: 'text-gray-600 hover:text-gray-900'
-								}`}
+									}`}
 							>
 								<Wrench className='w-4 h-4 mr-1' />
 								Services
 							</button>
 						</div>
 
-						{/* Sort Dropdown */}
-						{/* <select
-      value={sortBy}
-      onChange={(e) => setSortBy(e.target.value as 'date' | 'price' | 'name')}
-      className='px-4 py-2 w-full md:w-auto rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 transition-all duration-200 shadow-sm hover:shadow-md font-medium text-sm'
-    >
-      <option value='date'>Sort by Date</option>
-      <option value='price'>Sort by Price</option>
-      <option value='name'>Sort by Name</option>
-    </select> */}
-
-						{/* Reset Button */}
-						{/* <button
-      onClick={() => {
-        setSearchTerm('');
-        setFilterType('all');
-        setSortBy('date');
-      }}
-      className='px-4 py-2 mx-auto bg-red-600 text-white rounded-xl hover:bg-red-700 transition-all duration-200 shadow-sm hover:shadow-md font-medium text-sm'
-    >
-      Reset Filters
-    </button> */}
 					</div>
 				</div>
 

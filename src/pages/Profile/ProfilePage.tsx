@@ -1,18 +1,9 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from "react";
 import {
   getUserProfile,
   updateUserProfile,
 } from "../../features/Profile/service";
-import { data } from "react-router-dom";
-import { parentPort } from "worker_threads";
-
-// interface UserInfo {
-// 	name: string;
-// 	email: string;
-// 	number: string;
-// 	address: string;
-// }
+import { toast } from "react-toastify";
 
 interface FormData {
   firstName: string;
@@ -118,37 +109,25 @@ const ProfilePage: React.FC = () => {
     },
   ]);
 
-  // Mock service history data
-  const [serviceHistory] = useState<Record<number, ServiceHistory[]>>({
-    0: [
-      {
-        date: "2024-12-15",
-        service: "Brake Pad Replacement",
-        status: "Completed",
-      },
-      { date: "2024-11-20", service: "Oil Change", status: "Completed" },
-      { date: "2024-10-10", service: "Engine Diagnostic", status: "Completed" },
-    ],
-  });
-
   const validateField = (name: string, value: string) => {
     switch (name) {
       case "firstName":
+        return !value.trim() ? "FirstName is required" : "";
       case "lastName":
-        return !value.trim() ? "This field is required" : "";
+        return !value.trim() ? "LastName is required" : "";
       case "email":
         if (!value.trim()) return "Email is required";
         if (!/^[^\s@]+@gmail\.com$/.test(value))
           return "Email must be a Gmail address";
         return "";
-      case "number":
+      case "contact_info.phoneNumber":
         if (!value.trim()) return "Phone number is required";
         if (!/^[6-9]\d{9}$/.test(value.replace(/\D/g, "")))
           return "Invalid Indian phone number format";
         return "";
-      case "address1":
+      case `contact_info.address1`:
         return !value.trim() ? "Address is required" : "";
-      case "address2":
+      case "con":
         return !value.trim() ? "Address 2 is required" : "";
       case "city":
         return !value.trim() ? "City is required" : "";
@@ -162,8 +141,7 @@ const ProfilePage: React.FC = () => {
 
   const handleUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-    // console.log(`Updating field: ${name} with value: ${value}`);
-    // let finalValue = value;
+    let finalValue = value;
 
     setFormData((prev) => {
       // Handle nested objects (e.g., address.street)
@@ -185,34 +163,11 @@ const ProfilePage: React.FC = () => {
       };
     });
 
-
-    // if (name === "phoneNumber") {
-    //   finalValue = value.replace(/[^0-9]/g, "");
-    // }
-
-    // setProfileData((prev: any) => ({ ...prev, [name]: finalValue }));
-    // const error = validateField(name, finalValue);
-    // setErrors((prev: any) => ({ ...prev, [name]: error }));
+    setProfileData((prev: any) => ({ ...prev, [name]: finalValue }));
+    const error = validateField(name, finalValue);
+    setErrors((prev: any) => ({ ...prev, [name]: error }));
   };
 
-  const handleCarChange = (index: number, field: keyof Car, value: string) => {
-    const updatedCars = [...cars];
-    updatedCars[index][field] = value;
-    setCars(updatedCars);
-
-  };
-  const handlesavecar = async () => {
-    try {
-
-      const response = await updateUserProfile({ vehicleInfo: JSON.stringify(cars) });
-
-      if (response) {
-        console.log("Vehicle info saved successfully", response);
-      }
-    } catch (error) {
-      console.error("Error saving vehicle info", error);
-    }
-  };
   const addCar = () => {
     setCars([
       ...cars,
@@ -231,18 +186,7 @@ const ProfilePage: React.FC = () => {
   
     setEditMode(false);
      setEditCarMode(false)
-    console.log(formData, 'form data')
     try {
-      // const contactInfoObj = {
-      //   phoneNumber:
-      //     formData?.contact_info?.phoneNumber,
-      //   address1:
-      //     formData?.contact_info?.address1,
-      //   address2:
-      //     formData?.contact_info?.address2,
-      //   city: formData?.contact_info?.city,
-      //   state: formData?.contact_info?.state,
-      // };
       // Send only allowed fields
       const transformedData = {
         firstName: formData.firstName,
@@ -264,14 +208,13 @@ const ProfilePage: React.FC = () => {
 
       const response = await updateUserProfile(transformedData);
       if (response) {
-        console.log("Profile updated successfully:", response);
+        toast.success("Profile updated successfully!");
       }
     } catch (error) {
       console.error("Error updating profile:", error);
     }
   };
 
-  console.log(cars, 'cars')
   return (
     <div className="h-screen w-screen flex items-center justify-center p-8 bg-gradient-to-br from-gray-100 to-gray-200 overflow-hidden">
       <div className="relative w-full max-w-4xl h-[600px] bg-white rounded-3xl shadow-2xl overflow-hidden">
@@ -331,20 +274,8 @@ const ProfilePage: React.FC = () => {
                             placeholder="Car Registration No"
                             className="w-full px-3 py-2 text-sm bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300"
                           />
-                          {/* <input
-                            type="text"
-                            name=""
-                            id=""
-                            value={car.company || profileData?.vehicleInfo?.[0]?.company}
-                            onChange={(e) =>
-                              handleCarChange(index, "company", e.target.value)
-                            }
-                            placeholder="Car Company"
-                            className="w-full px-3 py-2 text-sm bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300"
-                          /> */}
-
                           <input
-                          name="vehicleInfo.model"
+                            name="vehicleInfo.model"
                             type="text"
                             placeholder="Car Model"
                             value={formData?.vehicleInfo?.model}
@@ -357,19 +288,6 @@ const ProfilePage: React.FC = () => {
                               } as React.CSSProperties
                             }
                           />
-
-                          {/* <input
-                            type="text"
-                            name=""
-                            id=""
-                            value={car.year || profileData?.vehicleInfo?.[0]?.year}
-                            placeholder="Car Model Year"
-                            onChange={(e) =>
-                              handleCarChange(index, "year", e.target.value)
-                            }
-                            className="w-full px-3 py-2 text-sm bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300"
-                          /> */}
-
                           <div className="flex gap-3 ">
                             <button
                               onClick={() => setEditCarMode(false)}
@@ -556,7 +474,7 @@ const ProfilePage: React.FC = () => {
                       />
                       {errors.address1 && (
                         <p className="text-red-500 text-sm mt-1">
-                          {errors.address1}
+                          {errors.contact_info.address1}
                         </p>
                       )}
                     </div>

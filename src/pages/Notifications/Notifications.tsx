@@ -25,7 +25,6 @@ export default function GmailStyleInbox() {
 	const [selectedMail, setSelectedMail] = useState<MailItem | null>(null);
 	const [filter, setFilter] = useState<'all' | 'unread' | 'read'>('all');
 	const [mails, setMails] = useState<MailItem[]>([]);
-	// const [isLoading, setIsLoading] = useState(true);
 
 	const filteredMails = mails
 		.filter((mail) => mail.recipient_type === 'user')
@@ -46,11 +45,9 @@ export default function GmailStyleInbox() {
 					new Date(b?.created_at).getTime() - new Date(a?.created_at).getTime()
 			);
 			setMails(sortedData);
-			// setIsLoading(false);
 		} catch (error) {
 			console.log('Error Fetching Notifications:', error);
 		} finally {
-			// setIsLoading(false);
 		}
 	};
 

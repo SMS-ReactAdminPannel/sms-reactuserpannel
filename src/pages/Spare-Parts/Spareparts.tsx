@@ -203,8 +203,6 @@ const SpareParts: React.FC = () => {
 		? filteredParts
 		: filteredParts.slice(0, 8);
 
-	console.log(displayedParts, 'display parts');
-
 	const offerTitle = useScrollAnimation<HTMLHeadingElement>();
 	const productTitle = useScrollAnimation<HTMLHeadingElement>();
 	const bundleTitle = useScrollAnimation<HTMLHeadingElement>();

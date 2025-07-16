@@ -19,8 +19,6 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ handleLogout }) => {
 				const response: any = await getUserProfile({});
 				if (response) {
 					setProfileData(response?.data?.data);
-					// setIsLoading(false);
-					console.log('Profile Data:', response?.data?.data);
 				}
 			} catch (error) {
 				console.error('Error fetching user profile:', error);

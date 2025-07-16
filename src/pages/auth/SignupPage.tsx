@@ -17,7 +17,6 @@ const SignupPage = () => {
 	const [showPassword, setShowPassword] = useState(false);
 	const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 	const navigate = useNavigate();
-	// const [isLoading, setIsLoading] = useState(true);
 
 	const {
 		register,
@@ -49,15 +48,6 @@ const SignupPage = () => {
 	};
 
 	const password = watch('password');
-
-	// if (isLoading) {
-	// 	return (
-	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-	// 		</div>
-	// 	);
-	// }
 
 	return (
 		<AuthLayout title=''>
@@ -190,14 +180,6 @@ const SignupPage = () => {
 				>
 					Sign Up
 				</button>
-				{/* <div className='text-center pt-1'>
-					<Link
-						to='/login'
-						className='text-white hover:underline text-lg text-[#d23c3c] font-bold'
-					>
-						Back to Login
-					</Link>
-				</div> */}
 			</form>
 		</AuthLayout>
 	);
