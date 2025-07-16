@@ -1,7 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { getOfferData } from '../../features/Offers';
-// import { toast } from 'react-toastify';
-
 interface PromoCardProps {
 	title: string;
 	points: string[];
@@ -65,9 +63,6 @@ const PromoCarousel: React.FC = () => {
 	const handleMouseLeave = () => {
 		setIsHovered(false);
 	};
-	// const handleApplyOffer = () => {
-	// 	toast.success('Offer applied successfully!');
-	// };
 
 	return (
 		<div
@@ -107,12 +102,6 @@ const PromoCarousel: React.FC = () => {
 									<p>Offer Price : &#8377; {card?.offer}</p>
 								</div>
 							</div>
-							{/* <button
-								className='bg-white font-semibold py-2 px-4 rounded-lg transition-all text-[#0050A5]'
-								onClick={handleApplyOffer}
-							>
-								Apply Offer
-							</button> */}
 						</div>
 					</div>
 				))}

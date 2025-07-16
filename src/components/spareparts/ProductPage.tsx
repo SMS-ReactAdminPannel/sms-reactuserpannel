@@ -110,7 +110,6 @@ const ProductPage = () => {
 								</span>
 							</div>
 
-							{/* <Toaster position="top-center" /> */}
 							<div className='flex justify-center items-center mt-12'>
 								{item?.stock >= 1 ? (
 									<button

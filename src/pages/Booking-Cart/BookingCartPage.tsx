@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState, useRef } from 'react';
 import { Wrench, Car } from 'lucide-react';
 import {
@@ -75,14 +74,6 @@ export default function SparePartsCart() {
 	);
 	const cartTitle = useScrollAnimation<HTMLHeadingElement>();
 	const [services, setServices] = useState<service[]>([]);
-	// const [confirmedPartOrders, setConfirmedPartOrders] = useState<
-	// 	{ part: spare; quantity: number }[]
-	// >([]);
-	// const [confirmedServiceOrders, setConfirmedServiceOrders] = useState<
-	// 	{ serv: service; quantity: number }[]
-	// >([]);
-	// const [showSummary, setShowSummary] = useState(false);
-	// const [showsSummary, setShowsSummary] = useState(false);
 	const { isAuthenticated } = useAuth();
 	const [cartId, setCartId] = useState<string>('');
 	const [serviceId, setServiceCartId] = useState<string>('');
@@ -113,7 +104,6 @@ export default function SparePartsCart() {
 						productName: product.productId?.productName || 'Unknown',
 						price: Number(product.price) || 0,
 						brand: product.productId?.brand || 'Generic',
-						// image: bgImage,
 						image: product.productId?.image || '',
 						quantity: Number(product.quantity) || 1,
 						category: product.productId?.category || '',
@@ -147,7 +137,6 @@ export default function SparePartsCart() {
 		} catch (error) {
 			console.error('Error fetching books/services', error);
 		} finally {
-			// setIsLoading(false);
 		}
 	};
 
@@ -201,7 +190,6 @@ export default function SparePartsCart() {
 		try {
 			const payload = {
 				cartId: serviceId,
-				// requestType:"scheduled"
 			};
 			const response = await postBookingService(payload);
 			if (response) {
@@ -319,8 +307,6 @@ export default function SparePartsCart() {
 		);
 	};
 	const ServiceCard = ({ serv }: { serv: service }) => {
-		// const [quantity, setQuantity] = useState(1);
-
 		return (
 			<div className='border rounded-lg h-[190px] shadow  mx-left p-4 mb-6 bg-white hover:shadow-md transition duration-300'>
 				<div className='flex justify-star gap-4'>
@@ -384,7 +370,6 @@ export default function SparePartsCart() {
 	return (
 		<div
 			className='min-h-screen p-6 '
-		// style={{ backgroundImage: `url(${bgImage})` }}
 		>
 			<div className='max-w-7xl mx-auto'>
 				{/* Header */}
@@ -395,10 +380,6 @@ export default function SparePartsCart() {
 				>
 					<span className='inline-block pb-1 relative text-[#0050A5] mb-6'>
 						My Cart
-						{/* <span
-							className={`absolute top-14 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${cartTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
-								}`}
-						></span> */}
 					</span>
 				</h1>
 

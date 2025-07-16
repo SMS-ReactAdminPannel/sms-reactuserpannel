@@ -64,11 +64,6 @@ const CustomServicesGrid: React.FC = () => {
 			>
 				<span className='inline-block pb-1 relative text-[#0050A5]'>
 					Available Spare Parts
-					{/* <span
-						className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
-							spareTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
-						}`}
-					></span> */}
 				</span>
 			</h1>
 			{spareParts.length !== 0 ? (

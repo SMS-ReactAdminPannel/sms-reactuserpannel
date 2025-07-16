@@ -133,7 +133,6 @@ export const Navbar: React.FC = () => {
 
   const handleLogout = () => {
     setShowLogoutConfirm(true);
-    // setIsDropdownOpen(false);
   };
 
   const navData = [
