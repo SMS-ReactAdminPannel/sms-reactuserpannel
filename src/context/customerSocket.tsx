@@ -34,7 +34,7 @@ export const SocketProvider = ({ children, role }: SocketProviderProps) => {
       newSocket.emit('register', { role });
     });
 
-    newSocket.on('connect_error', (err) => {
+    newSocket.on('connect_error', (err: { message: any; }) => {
       console.error(`[${role} Socket] connection error:`, err.message);
     });
 
