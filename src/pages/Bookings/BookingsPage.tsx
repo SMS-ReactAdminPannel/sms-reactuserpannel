@@ -12,12 +12,18 @@ import {
 	Search,
 } from 'lucide-react';
 // import bgImage from '../../assets/checkout-bg_1_.png';
-import { getBookingAll } from '../../features/Bookings/service';
+import {
+	getBookingAll,
+	getinvoiceService,
+} from '../../features/Bookings/service';
 
 //import serviceImg from '../../assets/serviceimages/generalservice.png';
 //import spareImg from '../../assets/CAR GEAR/car gear.jpg';
 import { FONTS } from '../../constants/constant';
 import { useAuth } from '../auth/AuthContext';
+// import jsPDF from 'jspdf';
+// import autoTable from 'jspdf-autotable';
+import { MdOutlineFileDownload } from 'react-icons/md';
 
 interface OrderDetails {
 	id: string;
@@ -132,6 +138,94 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 		}
 	};
 
+	// const handleDownloadInvoice = async () => {
+	// 	try {
+	// 		setDownloading(true);
+	// 		const res = await fetch('file:///C:/Users/Admin/Downloads/g4.hall.pdf', {
+	// 			headers: { Accept: 'application/pdf' },
+	// 		});
+	// 		if (!res.ok) throw new Error('Could not download invoice');
+	// 		const blob = await res.blob();
+	// 		const url = URL.createObjectURL(blob);
+	// 		const a = document.createElement('a');
+	// 		a.href = url;
+	// 		a.download = `invoice_${order.uuid}.pdf`;
+	// 		document.body.appendChild(a);
+	// 		a.click();
+	// 		a.remove();
+	// 		URL.revokeObjectURL(url);
+	// 	} catch (err) {
+	// 		console.error(err);
+	// 		alert('Invoice download failed.');
+	// 	} finally {
+	// 		setDownloading(false);
+	// 	}
+	// };
+
+	const handleDownloadInvoice = async () => {
+		const response: any = await getinvoiceService(':uuid');
+
+		console.log('invoice', response);
+
+		const responses: any = await getinvoiceService(':uuid');
+		console.log('invoiceproduct', responses);
+		return response;
+	};
+	//const doc = new jsPDF();
+
+	//
+
+	// Header
+	//   doc.setFontSize(18).text('INVOICE', 14, y);
+	//   y += 14;
+
+	//   doc.setFontSize(11);
+	//   doc.text(`Invoice No: ${invoiceNo}`, 14, y += 14);
+	//   doc.text(`Order ID  : ${orderId}`, 14, y += 12);
+	//   doc.text(`Issued On : ${issuedDate}`, 14, y += 12);
+
+	//   // Customer Info
+	//   doc.setFontSize(12).text('Bill To:', 14, y += 20);
+	//   doc.setFontSize(11);
+	//   doc.text(customer.name, 14, y += 14);
+	//   doc.text(customer.email, 14, y += 12);
+	//   doc.text(customer.phone, 14, y += 12);
+
+	//   // Order Info
+	//   doc.setFontSize(12).text('Order Info:', 14, y += 20);
+	//   doc.setFontSize(11);
+	//   doc.text(`Status     : pending`, 14, y += 14);
+	//   doc.text(`Order Type : Product`, 14, y += 12);
+	//   doc.text(`Placed On  : ${issuedDate}`, 14, y += 12);
+
+	//   // Table for Price Summary
+	//   (autoTable as any)(doc, {
+	//     startY: y + 20,
+	//     head: [['Product', 'Base Price', 'Tax', 'Total']],
+	//     body: [
+	//       [
+	//         productName,
+	//         `₹${basePrice.toFixed(2)}`,
+	//         `₹${taxAmount.toFixed(2)} (${taxPercent}%)`,
+	//         `₹${total.toFixed(2)}`,
+	//       ],
+	//     ],
+	//     styles: { fontSize: 10 },
+	//     headStyles: { fillColor: [0, 80, 165] },
+	//   });
+
+	//   const finalY = (doc as any).lastAutoTable.finalY + 30;
+
+	//   doc.setFontSize(11).setFont(undefined, 'bold');
+	//   doc.text(`Total Payable: ₹${total.toFixed(2)}`, 14, finalY);
+
+	// Footer
+	//   doc.setFontSize(9).setFont(undefined, 'normal');
+	//   doc.text('Thank you for shopping with YES MECHANIC!', 14, 800);
+
+	// Save the PDF
+	//   doc.save(`${invoiceNo}.pdf`);
+
 	return (
 		<div className='opacity-90 rounded-2xl shadow-lg border max-w-6xl mx-auto border-[#0050A5] overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:border-[#0050A5]'>
 			<div className='flex flex-col'>
@@ -150,10 +244,11 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 						{/* Type Badge */}
 						<div className='absolute top-3 right-3 z-10'>
 							<span
-								className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${isService
+								className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
+									isService
 										? 'bg-purple-100 text-purple-800'
 										: 'bg-blue-100 text-blue-800'
-									}`}
+								}`}
 							>
 								{isService ? (
 									<>
@@ -295,12 +390,15 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 											day: 'numeric',
 										})}
 									</p>
-									<button
-										className='mt-4 bg-[#0050A5] hover:bg-[#003f85] justify-end text-white text-sm font-medium py-2 px-4 rounded-lg transition duration-300'
-									//onClick={handleDownloadInvoice}
-									>
-										Download Invoice
-									</button>
+									<div className='flex items-center justify-end'>
+										<button
+											className='mt-4 bg-[#0050A5] hover:bg-[#003f85] text-white text-sm font-medium py-2 px-4 rounded-lg transition duration-300 flex items-center gap-2'
+											onClick={handleDownloadInvoice}
+										>
+											<MdOutlineFileDownload className='text-lg' /> Download
+											Invoice
+										</button>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -460,35 +558,37 @@ const OrdersPage: React.FC = () => {
 						<div className='flex flex-wrap gap-2 bg-[white] rounded-xl p-1'>
 							<button
 								onClick={() => setFilterType('all')}
-								className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${filterType === 'all'
+								className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
+									filterType === 'all'
 										? 'bg-[#0050A5] text-white shadow-sm'
 										: 'text-gray-600 hover:text-gray-900'
-									}`}
+								}`}
 							>
 								All Orders
 							</button>
 							<button
 								onClick={() => setFilterType('spare')}
-								className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${filterType === 'spare'
+								className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${
+									filterType === 'spare'
 										? 'bg-[#0050A5] text-white shadow-sm'
 										: 'text-gray-600 hover:text-gray-900'
-									}`}
+								}`}
 							>
 								<Package className='w-4 h-4 mr-1' />
 								Spare Parts
 							</button>
 							<button
 								onClick={() => setFilterType('service')}
-								className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${filterType === 'service'
+								className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${
+									filterType === 'service'
 										? 'bg-[#0050A5] text-white shadow-sm'
 										: 'text-gray-600 hover:text-gray-900'
-									}`}
+								}`}
 							>
 								<Wrench className='w-4 h-4 mr-1' />
 								Services
 							</button>
 						</div>
-
 					</div>
 				</div>
 
