@@ -140,12 +140,17 @@ const ProfilePage: React.FC = () => {
 		
 		setEditMode(false);
 		try {
+
+			const contactInfoObj = {
+			phoneNumber: profileData.number || profileData.contact_info?.phoneNumber || '',
+			address1: profileData.address || profileData.contact_info?.address1 || '',
+		};
 			// Send only allowed fields
 			const transformedData = {
 				firstName: profileData.firstName,
 				lastName: profileData.lastName,
 				email: profileData.email,
-				contact_info: `${profileData.number || profileData.contact_info?.phoneNumber || ''}, ${profileData.address || profileData.contact_info?.address1 || ''}`
+				contact_info: JSON.stringify(contactInfoObj),
 			};
 			
 			const response = await updateUserProfile(transformedData);
