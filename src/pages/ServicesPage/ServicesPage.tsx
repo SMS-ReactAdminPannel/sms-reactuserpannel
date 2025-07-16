@@ -275,7 +275,7 @@ const ServicesPage: React.FC = () => {
 	const handleConfirmBooking = async (
 		requestType: string,
 		schedule_date: Date,
-		preferedTime:any
+		preferedTime: any
 	) => {
 		if (!selectedPackageId) return;
 
@@ -290,18 +290,17 @@ const ServicesPage: React.FC = () => {
 					type: 'service',
 					requestType,
 					schedule_date: schedule_date,
-					preferedTime: preferedTime
+					preferedTime: preferedTime,
 				};
 				const response: any = await postSparePartsData(data);
-				if (response?.success === true) {
+				if (response) {
 					setCart([...cart, packageToAdd]);
 					setShowCartNotification(true);
 					setTimeout(() => setShowCartNotification(false), 3000);
 					if ((window as any).refreshCartCount) {
 						(window as any).refreshCartCount();
 					}
-				}
-				else if (!response) {
+				} else if (!response) {
 					toast.error(response?.message);
 				}
 			} catch (error) {
@@ -672,7 +671,7 @@ const ServicesPage: React.FC = () => {
 				isOpen={showLoginModal}
 				onClose={() => setShowLoginModal(false)}
 			/>
-			
+
 			{/* Booking Modal */}
 			{isModalOpen && selectedPackageId && (
 				<BookingModal
