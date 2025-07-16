@@ -12,12 +12,15 @@ import {
 	Search,
 } from 'lucide-react';
 // import bgImage from '../../assets/checkout-bg_1_.png';
-import { getBookingAll } from '../../features/Bookings/service';
+import { getBookingAll, getinvoiceService } from '../../features/Bookings/service';
 
 //import serviceImg from '../../assets/serviceimages/generalservice.png';
 //import spareImg from '../../assets/CAR GEAR/car gear.jpg';
 import { FONTS } from '../../constants/constant';
 import { useAuth } from '../auth/AuthContext';
+// import jsPDF from 'jspdf';
+// import autoTable from 'jspdf-autotable';
+import { MdOutlineFileDownload } from "react-icons/md";
 
 interface OrderDetails {
 	id: string;
@@ -155,6 +158,74 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 	// 		setDownloading(false);
 	// 	}
 	// };
+
+	
+	const handleDownloadInvoice =async () => {
+
+		const response:any = await getinvoiceService(':uuid')
+
+		console.log('invoice',response)
+
+		const responses:any =await getinvoiceService(':uuid')
+        console.log ('invoiceproduct',responses)
+		return response
+		
+};
+  //const doc = new jsPDF();
+
+  //
+
+  // Header
+//   doc.setFontSize(18).text('INVOICE', 14, y);
+//   y += 14;
+
+//   doc.setFontSize(11);
+//   doc.text(`Invoice No: ${invoiceNo}`, 14, y += 14);
+//   doc.text(`Order ID  : ${orderId}`, 14, y += 12);
+//   doc.text(`Issued On : ${issuedDate}`, 14, y += 12);
+
+//   // Customer Info
+//   doc.setFontSize(12).text('Bill To:', 14, y += 20);
+//   doc.setFontSize(11);
+//   doc.text(customer.name, 14, y += 14);
+//   doc.text(customer.email, 14, y += 12);
+//   doc.text(customer.phone, 14, y += 12);
+
+//   // Order Info
+//   doc.setFontSize(12).text('Order Info:', 14, y += 20);
+//   doc.setFontSize(11);
+//   doc.text(`Status     : pending`, 14, y += 14);
+//   doc.text(`Order Type : Product`, 14, y += 12);
+//   doc.text(`Placed On  : ${issuedDate}`, 14, y += 12);
+
+//   // Table for Price Summary
+//   (autoTable as any)(doc, {
+//     startY: y + 20,
+//     head: [['Product', 'Base Price', 'Tax', 'Total']],
+//     body: [
+//       [
+//         productName,
+//         `₹${basePrice.toFixed(2)}`,
+//         `₹${taxAmount.toFixed(2)} (${taxPercent}%)`,
+//         `₹${total.toFixed(2)}`,
+//       ],
+//     ],
+//     styles: { fontSize: 10 },
+//     headStyles: { fillColor: [0, 80, 165] },
+//   });
+
+//   const finalY = (doc as any).lastAutoTable.finalY + 30;
+
+//   doc.setFontSize(11).setFont(undefined, 'bold');
+//   doc.text(`Total Payable: ₹${total.toFixed(2)}`, 14, finalY);
+
+  // Footer
+//   doc.setFontSize(9).setFont(undefined, 'normal');
+//   doc.text('Thank you for shopping with YES MECHANIC!', 14, 800);
+
+  // Save the PDF
+//   doc.save(`${invoiceNo}.pdf`);
+
 
 	return (
 		<div className='opacity-90 rounded-2xl shadow-lg border max-w-6xl mx-auto border-[#0050A5] overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:border-[#0050A5]'>
@@ -320,12 +391,15 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 											day: 'numeric',
 										})}
 									</p>
+									<div className='flex items-center justify-end'>
+
 									<button
-		className='mt-4 bg-[#0050A5] hover:bg-[#003f85] justify-end text-white text-sm font-medium py-2 px-4 rounded-lg transition duration-300'
-		//onClick={handleDownloadInvoice}
-	>
-		Download Invoice
-	</button>
+                                className='mt-4 bg-[#0050A5] hover:bg-[#003f85] text-white text-sm font-medium py-2 px-4 rounded-lg transition duration-300 flex items-center gap-2'
+                                   onClick={handleDownloadInvoice}
+                               >
+                              <MdOutlineFileDownload className='text-lg'/> Download Invoice
+                                 </button>
+									</div>
 								</div>
 							</div>
 						</div>

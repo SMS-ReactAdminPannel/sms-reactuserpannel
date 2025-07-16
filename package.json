@@ -22,6 +22,8 @@
     "dayjs": "^1.11.13",
     "framer-motion": "^12.15.0",
     "ionicons": "^8.0.10",
+    "jspdf": "^3.0.1",
+    "jspdf-autotable": "^5.0.2",
     "lucide-react": "^0.511.0",
     "package.json": "file:",
     "react": "^19.1.0",

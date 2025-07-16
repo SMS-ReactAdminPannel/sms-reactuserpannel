@@ -141,6 +141,10 @@ class Client {
 				httpClient.post(API_END_POINTS.bookings.postProduct, data),
 			postService: (params: string) =>
 				httpClient.post(API_END_POINTS.bookings.postService, params),
+			getService:(params:string)=>
+				httpClient.get(API_END_POINTS.bookings.getService,params),
+			getProduct:(params:string)=>
+				httpClient.get(API_END_POINTS.bookings.postProduct,params)
 		},
 
 		enquiry: {

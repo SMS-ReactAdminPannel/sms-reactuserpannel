@@ -14,7 +14,7 @@ export const getBookingAll = async (data: any) => {
 export const postBookingProduct = async (data: any) => {
     try{
         const response = await new Client().user.bookings.postProduct(data)
-        return response
+        return response;
     }
     catch(error){
         console.log(error)
@@ -24,9 +24,30 @@ export const postBookingProduct = async (data: any) => {
 export const postBookingService = async (data: any) => {
     try{
         const response = await new Client().user.bookings.postService(data)
-        return response
+        return response;
     }
     catch(error){
         console.log(error)
+    }
+}
+
+export const getinvoiceProduct=async (params:string)=>{
+    try{
+     const response = await new Client().user.bookings.getProduct(params)
+     return response;
+    }
+    catch(error){
+    console.log('Error  fetching  product for invoice ',error)
+    }
+}
+
+
+export const  getinvoiceService = async (params:string)=>{
+    try{
+    const response = await new Client().user.bookings.getService(params)
+    return response;
+    }
+    catch(error){
+        console.log('Error fetching service for invoice', error )
     }
 }
