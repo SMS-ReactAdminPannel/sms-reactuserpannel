@@ -1,9 +1,7 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
 import {
-	getAllNotifications,
 	getNotificationsByUser,
 	updateNotificationById,
 } from '../../features/Notification/services';
@@ -31,7 +29,7 @@ export default function GmailStyleInbox() {
 	// const [isLoading, setIsLoading] = useState(true);
 
 	const filteredMails = mails
-		.filter((mail) => mail.recipient_type === 'user')
+		.filter((mail) => mail.recipient_type === 'customer')
 		.filter((mail) =>
 			filter === 'all'
 				? true
@@ -140,19 +138,19 @@ export default function GmailStyleInbox() {
 										src='\src/assets/images/istockphoto-1998660059-1024x1024.jpg'
 										className=' rounded-full w-10  h-10 object-cover'
 									/>
-									<div className=''>{mail.sender?.toUpperCase()}</div>
+									<div className=''>{mail?.sender?.toUpperCase()}</div>
 								</div>
 								<div className='flex-1'>
-									<div className='flex items-center justify-between'>
-										<span className='text-sm text-gray-800  '>
-											{mail.sender}
+									<div className=''>
+										<span className='text-sm text-gray-800 font-semibold '>
+											{mail?.title}
 										</span>
 
 										<p className='text-sm font-medium text-[#0050A5] mt-2'>
-											{mail.title}
+											{mail.message}
 										</p>
 										<p className='text-xs text-gray-500 mt-2'>
-											{dayjs(mail.updated_at).format('DD-MM-YYYY h:mm A')}
+											{dayjs(mail.updated_at).format('MMM D h:mm A')}
 										</p>
 									</div>
 								</div>
@@ -182,15 +180,15 @@ export default function GmailStyleInbox() {
 
 								<div className='flex items-center justify-end text-lg text-gray-600 mb-4'>
 									<div className='w-10 h-10 flex items-center justify-center bg-gradient-to-r from-red-600 to-red-800 text-white rounded-full mr-3 uppercase font-bold'>
-										{selectedMail.sender}
+										{selectedMail?.sender}
 									</div>
 									<div>
 										<p className='font-semibold text-gray-800 capitalize'>
-											{selectedMail.sender}
+											{selectedMail?.sender}
 										</p>
 										<div className='flex justify-center'>
 											<span className='text-sm text-gray-500  text-right block '>
-												{dayjs(selectedMail.updated_at).format(
+												{dayjs(selectedMail.created_at).format(
 													'DD-MM-YYYY h:mm A'
 												)}
 											</span>
@@ -201,7 +199,7 @@ export default function GmailStyleInbox() {
 								<hr className='my-4 border-t-1 border-gray-400' />
 
 								<div className='whitespace-pre-wrap text-md leading-relaxed text-gray-800'>
-									{selectedMail.Message}
+									{selectedMail.message}
 								</div>
 							</div>
 						) : (
