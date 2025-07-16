@@ -26,10 +26,6 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ handleLogout }) => {
 				// setIsLoading(false);
 			}
 		};
-	
-		// useEffect(() => {
-		// 	fetchUserProfile();
-		// }, []);
 
 	// Close dropdown when clicking outside
 	useEffect(() => {

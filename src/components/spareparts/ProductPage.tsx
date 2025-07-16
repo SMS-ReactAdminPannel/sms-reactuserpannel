@@ -18,14 +18,6 @@ const ProductPage = () => {
 	const product = parts.filter((item: any) => item.id === productId);
 	const [isAdded, setIsAdded] = useState(false);
 
-	// const handleAddToCart = () => {
-	// 	setIsAdded(true);
-	// 	//   toast.success('Item added to cart!');
-	// 	setTimeout(() => {
-	// 		setIsAdded(false);
-	// 	}, 2000);
-	// };
-
 	const handleAddToCart = async () => {
 		try {
 			const payload = {
@@ -105,7 +97,6 @@ const ProductPage = () => {
 								</span>
 							</div>
 
-							{/* <Toaster position="top-center" /> */}
 							<div className='flex justify-center items-center mt-12'>
 								<button
 									onClick={handleAddToCart}

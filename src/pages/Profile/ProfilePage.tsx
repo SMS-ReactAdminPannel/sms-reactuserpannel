@@ -18,10 +18,10 @@ interface FormData {
     address2: string;
     [key: string]: string; // Allow dynamic access for nested fields
   };
-  vehicleInfo:{
-    registerNumber:string;
-    model:string;
-    [key:string]:string;
+  vehicleInfo: {
+    registerNumber: string;
+    model: string;
+    [key: string]: string;
   }
   [key: string]: any; // Allow dynamic access for top-level fields
 }
@@ -171,7 +171,7 @@ const ProfilePage: React.FC = () => {
   const addCar = () => {
     setCars([
       ...cars,
-      { model: "", registerNumber: "",},
+      { model: "", registerNumber: "", },
     ]);
   };
 
@@ -183,9 +183,9 @@ const ProfilePage: React.FC = () => {
   };
 
   const handleEditProfile = async () => {
-  
+
     setEditMode(false);
-     setEditCarMode(false)
+    setEditCarMode(false)
     try {
       // Send only allowed fields
       const transformedData = {
@@ -257,13 +257,13 @@ const ProfilePage: React.FC = () => {
                       <div className="border p-4 rounded-xl bg-white shadow relative">
                         <button
                           onClick={() => deleteCar(index)}
-                          className="absolute top-0 right-0 text-red-500 text-sm hover:text-red-700 w-6 h-6 flex items-center justify-center"
+                          className="absolute top-3 right-5 bg-blue-700 text-white rounded-md text-sm w-6 h-6 flex items-center justify-center"
                           title="Delete this car"
                         >
-                          🗑
+                          X
                         </button>
 
-                        <div className="grid gap-3">
+                        <div className="grid gap-3 mt-8">
                           <input
                             type="text"
                             name="vehicleInfo.registerNumber"
@@ -361,7 +361,7 @@ const ProfilePage: React.FC = () => {
                 User Information
               </h2>
 
-              <div className="w-full max-w-sm overflow-scroll scrollbar-hide px-2 space-y-4">
+              <div className="w-full overflow-scroll scrollbar-hide px-2 space-y-4">
                 {editMode ? (
                   <>
                     <div>
@@ -370,6 +370,7 @@ const ProfilePage: React.FC = () => {
                         value={formData?.firstName}
                         onChange={handleUserChange}
                         placeholder="First Name"
+                        maxLength={15}
                         className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${errors.firstName ? "ring-2 ring-red-500" : ""
                           }`}
                         style={
@@ -391,6 +392,7 @@ const ProfilePage: React.FC = () => {
                         name="lastName"
                         value={formData?.lastName}
                         onChange={handleUserChange}
+                        maxLength={15}
                         placeholder="Last Name"
                         className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${errors.lastName ? "ring-2 ring-red-500" : ""
                           }`}
@@ -413,6 +415,7 @@ const ProfilePage: React.FC = () => {
                         name="email"
                         value={formData?.email}
                         onChange={handleUserChange}
+                        maxLength={25}
                         placeholder="Email"
                         className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${errors.email ? "ring-2 ring-red-500" : ""
                           }`}
@@ -460,6 +463,7 @@ const ProfilePage: React.FC = () => {
                         value={
                           formData?.contact_info?.address1
                         }
+                        maxLength={25}
                         onChange={handleUserChange}
                         placeholder="Address 1"
                         className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${errors.address1 ? "ring-2 ring-red-500" : ""
@@ -486,6 +490,7 @@ const ProfilePage: React.FC = () => {
                           formData?.contact_info?.address2
                         }
                         onChange={handleUserChange}
+                        maxLength={25}
                         placeholder="Address 2"
                         className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${errors.address2 ? "ring-2 ring-red-500" : ""
                           }`}
@@ -511,6 +516,7 @@ const ProfilePage: React.FC = () => {
                         value={
                           formData?.contact_info?.city
                         }
+                        maxLength={15}
                         onChange={handleUserChange}
                         placeholder="City"
                         className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${errors.city ? "ring-2 ring-red-500" : ""
@@ -538,6 +544,7 @@ const ProfilePage: React.FC = () => {
                         value={
                           formData?.contact_info?.state
                         }
+                        maxLength={15}
                         onChange={handleUserChange}
                         placeholder="state"
                         className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${errors.state ? "ring-2 ring-red-500" : ""
@@ -556,9 +563,6 @@ const ProfilePage: React.FC = () => {
                         </p>
                       )}
                     </div>
-
-
-
 
                     <div>
                       <div className="px-4 py-3 bg-gray-200 border-0 rounded-lg ">
@@ -595,59 +599,64 @@ const ProfilePage: React.FC = () => {
                     </div>
                   </>
                 ) : (
-                  <div className="space-y-4 bg-white p-6  rounded-xl shadow-lg">
+                  <div className="space-y-4 bg-white p-6 rounded-xl shadow-lg">
                     <div className="space-y-3">
-                      <div>
-                        <img src={formData?.image} alt="profile Pic" className="w-24 h-24 mx-auto rounded-full object-cover" />
+                      <div className="flex justify-center">
+                        <img
+                          src={formData?.image}
+                          alt="profile Pic"
+                          className="w-24 h-24 rounded-full object-cover"
+                        />
                       </div>
 
-                      <p className="text-lg">
-                        <strong className="text-gray-700">First Name:</strong>{" "}
-                        <span className="text-gray-600">
-                          {formData?.firstName}
-                        </span>
+                      <p className="text-lg grid grid-cols-2">
+                        <strong className="text-gray-700 inline-block w-32">First Name:</strong>
+                        <span className="text-gray-600 break-words">{formData?.firstName}</span>
                       </p>
-                      <p className="text-lg">
-                        <strong className="text-gray-700">Last Name:</strong>{" "}
-                        <span className="text-gray-600">
-                          {formData?.lastName}
-                        </span>
+
+                      <p className="text-lg grid grid-cols-2">
+                        <strong className="text-gray-700 inline-block w-32">Last Name:</strong>
+                        <span className="text-gray-600 break-words">{formData?.lastName}</span>
                       </p>
-                      <p className="text-lg">
-                        <strong className="text-gray-700">Email:</strong>{" "}
-                        <span className="text-gray-600">
-                          {formData?.email}
-                        </span>
+
+                      <p className="text-lg grid grid-cols-2">
+                        <strong className="text-gray-700 inline-block w-32">Email:</strong>
+                        <span className="text-gray-600 break-words">{formData?.email}</span>
                       </p>
-                      <p className="text-lg">
-                        <strong className="text-gray-700">Phone:</strong>{" "}
-                        <span className="text-gray-600">
+
+                      <p className="text-lg grid grid-cols-2">
+                        <strong className="text-gray-700 inline-block w-32">Phone:</strong>
+                        <span className="text-gray-600 break-words">
                           {formData?.contact_info?.phoneNumber}
                         </span>
                       </p>
-                      <p className="text-lg">
-                        <strong className="text-gray-700">Address:</strong>{" "}
-                        <span className="text-gray-600">
+
+                      <p className="text-lg grid grid-cols-2">
+                        <strong className="text-gray-700 inline-block w-32">Address:</strong>
+                        <span className="text-gray-600 break-words">
                           {formData?.contact_info?.address1}, {formData?.contact_info?.address2}
                         </span>
                       </p>
-                      <p className="text-lg">
-                        <strong className="text-gray-700">City:</strong>{" "}
-                        <span className="text-gray-600">
+
+                      <p className="text-lg grid grid-cols-2">
+                        <strong className="text-gray-700 inline-block w-32">City:</strong>
+                        <span className="text-gray-600 break-words">
                           {formData?.contact_info?.city}
                         </span>
                       </p>
-                      <p className="text-lg">
-                        <strong className="text-gray-700">State:</strong>{" "}
-                        <span className="text-gray-600">
+
+                      <p className="text-lg grid grid-cols-2">
+                        <strong className="text-gray-700 inline-block w-32">State:</strong>
+                        <span className="text-gray-600 break-words">
                           {formData?.contact_info?.state}
                         </span>
                       </p>
                     </div>
+
                     <div className="flex flex-col items-center justify-center">
                       <button
                         onClick={() => setEditMode(true)}
-                        className="w-[180px]  py-1.5 text-white font-medium rounded-lg hover:opacity-90 transition-all duration-300  shadow-lg mt-4"
+                        className="w-[180px] py-1.5 text-white font-medium rounded-lg hover:opacity-90 transition-all duration-300 shadow-lg mt-4"
                         style={{ backgroundColor: "#0050A5" }}
                       >
                         EDIT

@@ -115,10 +115,6 @@ const EnquiryForm = () => {
 			>
 				<span className='inline-block pb-1 relative text-start text-[#0050A5] mb-10'>
 					Enquiry Form
-					{/* <span
-						className={`absolute top-[52px] left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${enquiryTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
-							}`}
-					></span> */}
 				</span>
 			</h1>
 
