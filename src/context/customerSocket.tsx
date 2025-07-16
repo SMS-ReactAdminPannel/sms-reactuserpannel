@@ -17,7 +17,7 @@ export const SocketProvider = ({ children, role }: SocketProviderProps) => {
 
   useEffect(() => {
     const token = localStorage.getItem('authToken') || '';
-
+    const userId = localStorage.getItem('userId')
     if (!token) {
       console.warn("Missing authToken");
       return;
@@ -31,10 +31,10 @@ export const SocketProvider = ({ children, role }: SocketProviderProps) => {
 
     newSocket.on('connect', () => {
       console.log(`[${role} Socket] connected: ${newSocket.id}`);
-      newSocket.emit('register', { role });
+      newSocket.emit('register', {userId, role });
     });
 
-    newSocket.on('connect_error', (err) => {
+    newSocket.on('connect_error', (err: { message: any; }) => {
       console.error(`[${role} Socket] connection error:`, err.message);
     });
 

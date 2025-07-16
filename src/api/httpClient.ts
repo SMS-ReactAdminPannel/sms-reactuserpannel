@@ -48,7 +48,7 @@ class HttpClient {
 	}
 
 	async patch(url: string, params?: string, data?: string) {
-		const response = await Axios.put(url, data, {
+		const response = await Axios.patch(url, data, {
 			params: params,
 			headers: {},
 		});

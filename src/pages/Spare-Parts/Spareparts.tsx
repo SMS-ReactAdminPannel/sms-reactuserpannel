@@ -68,6 +68,7 @@ const SpareParts: React.FC = () => {
 			title: string;
 			image: string;
 			items: string[];
+			_id?: string;
 		}[]
 	>([]);
 
@@ -101,7 +102,7 @@ const SpareParts: React.FC = () => {
 
 					setParts(validatedParts);
 					const categoriesData = transformToCategories(validatedParts);
-					setCategories(categoriesData);
+					setCategories(categoriesData as any);
 					// setIsLoading(false);
 				} else {
 					throw new Error('API response data is not an array');
