@@ -257,7 +257,7 @@ const ProfilePage: React.FC = () => {
                       <div className="border p-4 rounded-xl bg-white shadow relative">
                         <button
                           onClick={() => deleteCar(index)}
-                          className="absolute top-3 right-5 bg-blue-700 text-white rounded-md text-sm w-6 h-6 flex items-center justify-center"
+                          className="absolute top-3 right-5 bg-red-600 text-white rounded-md text-sm w-6 h-6 flex items-center justify-center"
                           title="Delete this car"
                         >
                           X
