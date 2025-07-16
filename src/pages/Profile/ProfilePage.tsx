@@ -21,6 +21,9 @@ interface FormData {
 	vehicleInfo: {
 		registerNumber: string;
 		model: string;
+		year: string;
+		company: string;
+		fuleType: string;
 		[key: string]: string;
 	};
 	[key: string]: any; // Allow dynamic access for top-level fields
@@ -54,6 +57,9 @@ const ProfilePage: React.FC = () => {
 		vehicleInfo: {
 			registerNumber: '',
 			model: '',
+			company: '',
+			fuleType: '',
+			year: '',
 		},
 	});
 
@@ -76,15 +82,15 @@ const ProfilePage: React.FC = () => {
 					vehicleInfo: {
 						registerNumber: response?.data?.data?.vehicleInfo?.registerNumber,
 						model: response?.data?.data?.vehicleInfo?.model,
+						company: response?.data?.data?.vehicleInfo?.company,
+						fuleType: response?.data?.data?.vehicleInfo?.fuleType,
+						year: response?.data?.data?.vehicleInfo?.year,
 					},
 				});
 				setProfileData(response?.data?.data);
-				// setIsLoading(false);
 			}
 		} catch (error) {
 			console.error('Error fetching user profile:', error);
-		} finally {
-			// setIsLoading(false);
 		}
 	};
 
@@ -188,6 +194,9 @@ const ProfilePage: React.FC = () => {
 				vehicleInfo: {
 					registerNumber: formData?.vehicleInfo?.registerNumber,
 					model: formData?.vehicleInfo?.model,
+					company: formData?.vehicleInfo?.company,
+					year: formData?.vehicleInfo?.year,
+					fuleType: formData?.vehicleInfo?.fuleType,
 				},
 			};
 
@@ -273,6 +282,45 @@ const ProfilePage: React.FC = () => {
 																} as React.CSSProperties
 															}
 														/>
+														<input
+															name='vehicleInfo.company'
+															type='text'
+															placeholder='Car Company'
+															value={formData?.vehicleInfo?.company}
+															onChange={handleUserChange}
+															className='w-full px-3 py-2 text-sm bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300'
+															style={
+																{
+																	'--tw-ring-color': '#0050A5',
+																} as React.CSSProperties
+															}
+														/>
+														<input
+															name='vehicleInfo.year'
+															type='text'
+															placeholder='Car Year'
+															value={formData?.vehicleInfo?.year}
+															onChange={handleUserChange}
+															className='w-full px-3 py-2 text-sm bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300'
+															style={
+																{
+																	'--tw-ring-color': '#0050A5',
+																} as React.CSSProperties
+															}
+														/>
+														<input
+															name='vehicleInfo.fuleType'
+															type='text'
+															placeholder='Car Fuel Type'
+															value={formData?.vehicleInfo?.fuleType}
+															onChange={handleUserChange}
+															className='w-full px-3 py-2 text-sm bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300'
+															style={
+																{
+																	'--tw-ring-color': '#0050A5',
+																} as React.CSSProperties
+															}
+														/>
 														<div className='flex gap-3 '>
 															<button
 																onClick={() => setEditCarMode(false)}
@@ -305,18 +353,44 @@ const ProfilePage: React.FC = () => {
 									<>
 										<div className='space-y-4 bg-white p-6  rounded-xl shadow-lg'>
 											<div className='space-y-3'>
-												<p className='text-lg'>
-													<strong className='text-gray-700'>
+												<p className='text-lg flex'>
+													<strong className='text-gray-700 w-1/2'>
 														Register No:
 													</strong>{' '}
-													<span className='text-gray-600'>
+													<span className='text-gray-600 w-2/3'>
 														{profileData?.vehicleInfo?.registerNumber || 'N/A'}
 													</span>
 												</p>
-												<p className='text-lg'>
-													<strong className='text-gray-700'>Car Model:</strong>{' '}
-													<span className='text-gray-600'>
+												<p className='text-lg flex'>
+													<strong className='text-gray-700 w-1/2'>
+														Car Model:
+													</strong>{' '}
+													<span className='text-gray-600 w-2/3'>
 														{profileData?.vehicleInfo?.model}
+													</span>
+												</p>
+												<p className='text-lg flex'>
+													<strong className='text-gray-700 w-1/2'>
+														Car Company:
+													</strong>{' '}
+													<span className='text-gray-600 w-2/3'>
+														{profileData?.vehicleInfo?.company}
+													</span>
+												</p>
+												<p className='text-lg flex'>
+													<strong className='text-gray-700 w-1/2'>
+														Car Year:
+													</strong>{' '}
+													<span className='text-gray-600 w-2/3'>
+														{profileData?.vehicleInfo?.year}
+													</span>
+												</p>
+												<p className='text-lg flex'>
+													<strong className='text-gray-700 w-1/2'>
+														Fuel Type:
+													</strong>{' '}
+													<span className='text-gray-600 w-2/3'>
+														{profileData?.vehicleInfo?.fuleType}
 													</span>
 												</p>
 											</div>
