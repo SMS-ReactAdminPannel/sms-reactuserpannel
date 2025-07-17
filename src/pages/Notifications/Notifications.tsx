@@ -29,15 +29,15 @@ export default function GmailStyleInbox() {
 	const socket = useSocket();
 	// const [isLoading, setIsLoading] = useState(true);
 
-	const filteredMails = mails
-		.filter((mail) => mail.recipient_type === 'customer')
-		.filter((mail) =>
-			filter === 'all'
-				? true
-				: filter === 'unread'
-					? !mail.is_read
-					: mail.is_read
-		);
+	const filteredMails = mails.filter((mail) => {
+		if (mail.recipient_type !== 'customer' && mail.recipient_type !== 'all') return false;
+		if (filter === 'all') return true;
+		if (filter === 'unread') return !mail.is_read;
+		if (filter === 'read') return mail.is_read;
+
+		return true; // fallback
+	});
+
 
 	const fetchAllNotifications = async () => {
 		try {
@@ -63,8 +63,8 @@ export default function GmailStyleInbox() {
 
 
 	const handleMarkRead = async (uuid: string) => {
-		     setSelectedMail(uuid);
-			 console.log("uuid", uuid)
+		setSelectedMail(uuid);
+		console.log("uuid", uuid)
 		try {
 			const response = await markNotificationsAsRead(uuid.uuid);
 			console.log("Notification marked as read:", response);
