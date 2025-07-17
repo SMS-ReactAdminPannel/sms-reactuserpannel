@@ -369,6 +369,7 @@ const ProfilePage: React.FC = () => {
                     validationErrors['vehicleInfo.fuelType'] ? 'ring-2 ring-red-500' : ''
                   }`}
                 />
+				
                 {validationErrors['vehicleInfo.fuelType'] && (
                   <p className='text-red-500 text-sm mt-1'>{validationErrors['vehicleInfo.fuelType']}</p>
                 )}
@@ -734,4 +735,3 @@ const ProfilePage: React.FC = () => {
 };
 
 export default ProfilePage;
-
