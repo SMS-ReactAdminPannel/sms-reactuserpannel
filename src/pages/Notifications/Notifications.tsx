@@ -13,7 +13,7 @@ type MailItem = {
 	sender: string;
 	title: string;
 	preview: string;
-	Message: string;
+	message: string;
 	updated_at: string;
 	unread: boolean;
 	recipient_type: string;
@@ -63,8 +63,10 @@ export default function GmailStyleInbox() {
 
 
 	const handleMarkRead = async (uuid: string) => {
+		     setSelectedMail(uuid);
+			 console.log("uuid", uuid)
 		try {
-			const response = await markNotificationsAsRead(uuid);
+			const response = await markNotificationsAsRead(uuid.uuid);
 			console.log("Notification marked as read:", response);
 		} catch (err) {
 			console.error("Failed to mark notification as read:", err);
@@ -132,8 +134,7 @@ export default function GmailStyleInbox() {
 							<div
 								key={index}
 								onClick={() => {
-									// handleUpdateNotification(mail)
-									handleMarkRead(mail.uuid)
+									handleMarkRead(mail)
 								}}
 
 								className={`cursor-pointer flex gap-4 p-4  rounded-xl hover:bg-blue-50 transition duration-150 ${!mail.is_read
@@ -155,10 +156,10 @@ export default function GmailStyleInbox() {
 										</span>
 
 										<p className='text-sm font-medium text-[#0050A5] mt-2'>
-											{mail.Message}
+											{mail.message}
 										</p>
 										<p className='text-xs text-gray-500 mt-2'>
-											{dayjs(mail.updated_at).format('MMM D h:mm A')}
+											{dayjs(mail.created_at).format('MMM D h:mm A')}
 										</p>
 									</div>
 								</div>
@@ -188,15 +189,15 @@ export default function GmailStyleInbox() {
 
 								<div className='flex items-center justify-end text-lg text-gray-600 mb-4'>
 									<div className='w-10 h-10 flex items-center justify-center bg-gradient-to-r from-red-600 to-red-800 text-white rounded-full mr-3 uppercase font-bold'>
-										{selectedMail?.sender}
+										{selectedMail?.message}
 									</div>
 									<div>
 										<p className='font-semibold text-gray-800 capitalize'>
-											{selectedMail?.sender}
+											{selectedMail.sender}
 										</p>
 										<div className='flex justify-center'>
 											<span className='text-sm text-gray-500  text-right block '>
-												{dayjs(selectedMail.created_at).format(
+												{dayjs(selectedMail?.created_at).format(
 													'DD-MM-YYYY h:mm A'
 												)}
 											</span>
@@ -207,7 +208,7 @@ export default function GmailStyleInbox() {
 								<hr className='my-4 border-t-1 border-gray-400' />
 
 								<div className='whitespace-pre-wrap text-md leading-relaxed text-gray-800'>
-									{selectedMail.Message}
+									{selectedMail?.message}
 								</div>
 							</div>
 						) : (
