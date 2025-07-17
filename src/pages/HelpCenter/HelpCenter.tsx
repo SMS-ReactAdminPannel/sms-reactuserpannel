@@ -61,9 +61,6 @@ const HelpCenter: React.FC = () => {
       return;
     }
 
-    console.log("Subject:", subject);
-    console.log("Description:", description);
-
     setSubject("");
     setDescription("");
     setSubmitted(true);

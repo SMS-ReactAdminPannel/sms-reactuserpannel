@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { IonIcon } from '@ionic/react';
-import { arrowBack, timeOutline, locationOutline } from 'ionicons/icons';
+import { arrowBack, timeOutline } from 'ionicons/icons';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
 
@@ -34,11 +34,6 @@ const BookingModal = ({
 	const [selectedDate, setSelectedDate] = useState(new Date());
 
 	if (!isOpen) return null;
-
-	// const handleModalClick = (e: React.MouseEvent) => {
-	// 	e.stopPropagation();
-	// };
-
 	return (
 		<div className='fixed inset-0 z-[1000] overflow-y-auto'>
 			{/* Backdrop - click to close */}
@@ -121,35 +116,7 @@ const BookingModal = ({
 										/>
 										<span>Working Hours: 9:00 AM - 5:00 PM</span>
 									</div>
-									{/* <div className='flex items-center'>
-										<IonIcon
-											icon={locationOutline}
-											className='text-blue-500 mr-2 text-xl'
-										/>
-										<span>Service Center Location</span>
-									</div> */}
 								</div>
-
-								{/* <div className='mb-4'>
-									<label className='block font-medium mb-2'>
-										Preferred Time:
-									</label>
-									<div className='flex items-center'>
-										<input
-											type='time'
-											value={startTime}
-											onChange={(e) => setStartTime(e.target.value)}
-											className='flex-1 border border-gray-300 rounded p-2 mr-2'
-										/>
-										<span className='mx-2'>to</span>
-										<input
-											type='time'
-											value={endTime}
-											onChange={(e) => setEndTime(e.target.value)}
-											className='flex-1 border border-gray-300 rounded p-2'
-										/>
-									</div>
-								</div> */}
 							</div>
 						)}
 

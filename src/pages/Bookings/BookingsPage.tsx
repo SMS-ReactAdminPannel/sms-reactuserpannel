@@ -1,23 +1,21 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import type React from 'react';
 import { useState, useEffect, useRef, useMemo } from 'react';
 import {
-	// Search,
 	Package,
 	Wrench,
 	CheckCircle,
 	Calendar,
-	// Truck,
 	Clock,
 	Search,
 } from 'lucide-react';
-// import bgImage from '../../assets/checkout-bg_1_.png';
-import { getBookingAll } from '../../features/Bookings/service';
-
-//import serviceImg from '../../assets/serviceimages/generalservice.png';
-//import spareImg from '../../assets/CAR GEAR/car gear.jpg';
+import {
+	getBookingAll,
+	getinvoiceProduct,
+	getinvoiceService,
+} from '../../features/Bookings/service';
 import { FONTS } from '../../constants/constant';
 import { useAuth } from '../auth/AuthContext';
+import { MdOutlineFileDownload } from 'react-icons/md';
 
 interface OrderDetails {
 	id: string;
@@ -72,11 +70,9 @@ const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 		}
 		return () => {
 			if (elementRef.current) {
-				// eslint-disable-next-line react-hooks/exhaustive-deps
 				observer.unobserve(elementRef.current);
 			}
 		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return { elementRef, isVisible };
@@ -87,28 +83,22 @@ interface OrderCardProps {
 }
 const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 	const [showDetails, setShowDetails] = useState(false);
-	//const [downloading, setDownloading] = useState(false);
 	const orderDate = new Date(order.date);
 	const isCompleted =
 		order.status === 'completed' || order.status === 'delivered';
 	const isOld = orderDate < new Date(Date.now() - 365 * 24 * 60 * 60 * 1000);
-
-	// Determine if it's a service or product order
 	const isService = order.type === 'service';
-	// const items = isService ? order.services : order.products;
-	// const firstItem = items?.[0];
 
-	// Get name and description based on order type
 	const getName = () => {
 		if (isService) {
-			return order.services?.[0]?.service_name || 'Service Order';
+			return order?.services?.[0]?.service_name || 'Service Order';
 		}
 		return order.products?.[0]?.productId?.productName || 'Product Order';
 	};
 
 	const getDescription = () => {
 		if (isService) {
-			return order.services?.[0]?.description || 'Service appointment';
+			return order?.services?.[0]?.description || 'Service appointment';
 		}
 		return `Order containing ${order.products?.length || 0} items`;
 	};
@@ -116,14 +106,14 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 	const getPrice = () => {
 		if (isService) {
 			return (
-				order.services?.reduce(
+				order?.services?.reduce(
 					(sum, service) => sum + (service?.price ?? 0),
 					0
 				) ?? 0
 			);
 		} else {
 			return (
-				order.products?.reduce(
+				order?.products?.reduce(
 					(sum, product) =>
 						sum + parseInt(product?.price ?? '0') * (product?.quantity ?? 0),
 					0
@@ -132,29 +122,32 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 		}
 	};
 
-	// const handleDownloadInvoice = async () => {
-	// 	try {
-	// 		setDownloading(true);
-	// 		const res = await fetch('file:///C:/Users/Admin/Downloads/g4.hall.pdf', {
-	// 			headers: { Accept: 'application/pdf' },
-	// 		});
-	// 		if (!res.ok) throw new Error('Could not download invoice');
-	// 		const blob = await res.blob();
-	// 		const url = URL.createObjectURL(blob);
-	// 		const a = document.createElement('a');
-	// 		a.href = url;
-	// 		a.download = `invoice_${order.uuid}.pdf`;
-	// 		document.body.appendChild(a);
-	// 		a.click();
-	// 		a.remove();
-	// 		URL.revokeObjectURL(url);
-	// 	} catch (err) {
-	// 		console.error(err);
-	// 		alert('Invoice download failed.');
-	// 	} finally {
-	// 		setDownloading(false);
-	// 	}
-	// };
+	const handleDownloadInvoice = async () => {
+		try {
+			if (!order?.uuid) {
+				throw new Error('No order UUID available');
+			}
+			if (order?.type === 'service') {
+				const response: any = await getinvoiceService({ uuid: order?.uuid });
+				const url = window.URL.createObjectURL(response.data);
+				const a = document.createElement('a');
+				a.href = url;
+				a.download = `invoice_${order.uuid}.pdf`;
+				a.click();
+				window.URL.revokeObjectURL(url);
+			} else if (order?.type === 'spare') {
+				const response: any = await getinvoiceProduct({ uuid: order?.uuid });
+				const url = window.URL.createObjectURL(response.data);
+				const a = document.createElement('a');
+				a.href = url;
+				a.download = `invoice_${order.uuid}.pdf`;
+				a.click();
+				window.URL.revokeObjectURL(url);
+			}
+		} catch (error) {
+			console.error('Error downloading invoice:', error);
+		}
+	};
 
 	return (
 		<div className='opacity-90 rounded-2xl shadow-lg border max-w-6xl mx-auto border-[#0050A5] overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:border-[#0050A5]'>
@@ -165,7 +158,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 					<div className='md:w-48 h-40 relative overflow-hidden rounded-lg shadow-md'>
 						<div className='w-full h-full bg-gray-100 flex items-center justify-center'>
 							<img
-								src={order.imageUrl}
+								src={order?.imageUrl}
 								alt='order'
 								className='w-full h-full object-cover'
 							/>
@@ -320,12 +313,17 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 											day: 'numeric',
 										})}
 									</p>
-									<button
-		className='mt-4 bg-[#0050A5] hover:bg-[#003f85] justify-end text-white text-sm font-medium py-2 px-4 rounded-lg transition duration-300'
-		//onClick={handleDownloadInvoice}
-	>
-		Download Invoice
-	</button>
+									{isCompleted && (
+										<div className='flex items-center justify-end'>
+											<button
+												className='mt-4 bg-[#0050A5] hover:bg-[#003f85] text-white text-sm font-medium py-2 px-4 rounded-lg transition duration-300 flex items-center gap-2'
+												onClick={() => handleDownloadInvoice()}
+											>
+												<MdOutlineFileDownload className='text-lg' /> Download
+												Invoice
+											</button>
+										</div>
+									)}
 								</div>
 							</div>
 						</div>
@@ -344,11 +342,10 @@ const OrdersPage: React.FC = () => {
 	const [sortBy] = useState<'date' | 'price' | 'name'>('date');
 	const [orders, setOrders] = useState<OrderDetails[]>([]);
 	const orderTitle = useScrollAnimation<HTMLHeadingElement>();
-	// const [isLoading, setIsLoading] = useState(false);
 	const { isAuthenticated } = useAuth();
 
-		useEffect(() => {
-			if (isAuthenticated) {
+	useEffect(() => {
+		if (isAuthenticated) {
 			const fetchOrders = async () => {
 				try {
 					const response: any = await getBookingAll({});
@@ -382,18 +379,16 @@ const OrdersPage: React.FC = () => {
 						];
 
 						setOrders(transformedOrders);
-						// setIsLoading(false);
 					}
 				} catch (err) {
 					console.error('Error fetching orders:', err);
 				} finally {
-					// setIsLoading(false);
 				}
 			};
 
 			fetchOrders();
 		}
-		}, [isAuthenticated]);
+	}, [isAuthenticated]);
 
 	const filteredOrders = useMemo(() => {
 		return orders
@@ -424,15 +419,6 @@ const OrdersPage: React.FC = () => {
 		(order) => order.status === 'completed' || order.status === 'delivered'
 	).length;
 
-	// if (isLoading) {
-	// 	return (
-	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-	// 		</div>
-	// 	);
-	// }
-
 	return (
 		<div className='min-h-screen bg-gradient-to-br from-gray-50 via-white to-gray-100'>
 			<div className='max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8'>
@@ -445,12 +431,6 @@ const OrdersPage: React.FC = () => {
 					>
 						<span className='inline-block pb-1 relative text-[#0050A5] mb-2'>
 							My Orders
-							{/* <span
-								className={`absolute top-14 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${orderTitle.isVisible
-									? 'scale-x-100 w-full'
-									: 'scale-x-0 w-full'
-									}`}
-							></span> */}
 						</span>
 					</h1>
 					<p className='text-[#0050A5] text-lg max-w-6xl mx-auto'>
@@ -533,36 +513,13 @@ const OrdersPage: React.FC = () => {
 								Services
 							</button>
 						</div>
-
-						{/* Sort Dropdown */}
-						{/* <select
-      value={sortBy}
-      onChange={(e) => setSortBy(e.target.value as 'date' | 'price' | 'name')}
-      className='px-4 py-2 w-full md:w-auto rounded-xl focus:outline-none focus:ring-2 focus:ring-gray-500 focus:border-transparent bg-gradient-to-r from-red-600 to-red-700 text-white hover:from-red-700 hover:to-red-800 transition-all duration-200 shadow-sm hover:shadow-md font-medium text-sm'
-    >
-      <option value='date'>Sort by Date</option>
-      <option value='price'>Sort by Price</option>
-      <option value='name'>Sort by Name</option>
-    </select> */}
-
-						{/* Reset Button */}
-						{/* <button
-      onClick={() => {
-        setSearchTerm('');
-        setFilterType('all');
-        setSortBy('date');
-      }}
-      className='px-4 py-2 mx-auto bg-red-600 text-white rounded-xl hover:bg-red-700 transition-all duration-200 shadow-sm hover:shadow-md font-medium text-sm'
-    >
-      Reset Filters
-    </button> */}
 					</div>
 				</div>
 
 				{/* Orders List */}
 				<div className='space-y-6'>
-					{filteredOrders.length > 0 ? (
-						filteredOrders.map((order) => (
+					{filteredOrders?.length > 0 ? (
+						filteredOrders?.map((order) => (
 							<OrderCard key={order.id} order={order} />
 						))
 					) : (
