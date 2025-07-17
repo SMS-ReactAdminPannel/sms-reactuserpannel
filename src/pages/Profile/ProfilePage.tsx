@@ -734,7 +734,4 @@ const ProfilePage: React.FC = () => {
 };
 
 export default ProfilePage;
-function setShowHistory(_arg0: null) {
-  throw new Error('Function not implemented.');
-}
 
