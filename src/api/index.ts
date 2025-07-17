@@ -170,6 +170,10 @@ class Client {
 			update: (params: string, data: any) =>
 				httpClient.update(API_END_POINTS.enquiry.update, params, data),
 		},
+
+		Subcription: {
+			post: (data: any) => httpClient.post(API_END_POINTS.notificationSubcription.post, data),
+		}
 	};
 }
 export default Client;
