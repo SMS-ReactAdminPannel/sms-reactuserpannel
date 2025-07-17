@@ -21,6 +21,7 @@ interface SparePart {
 	brand: string;
 	image: string;
 	category?: string;
+	warrentyPeriod?: string;
 }
 
 const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
@@ -97,6 +98,7 @@ const SpareParts: React.FC = () => {
 								(Array.isArray(part.images) ? part.images[0] : ''),
 							category: part.category || 'Uncategorized',
 							inStock: part?.inStock,
+							warrentyPeriod: part.warrentyPeriod || '',
 						};
 					});
 
@@ -631,6 +633,9 @@ const SpareParts: React.FC = () => {
 								)}
 							</p>
 						</div>
+						{selectedPart.warrentyPeriod !== ""	&& <div className='flex justify-between items-center mb-4'>
+							<p className='text-sm text-gray-600'>Warrenty : {selectedPart.warrentyPeriod}</p>
+						</div>}
 
 						<div className='flex items-center gap-2 mb-4'>
 							<span className='text-sm font-medium'>Quantity:</span>
