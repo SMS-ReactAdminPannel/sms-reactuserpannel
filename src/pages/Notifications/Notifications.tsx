@@ -89,8 +89,6 @@ export default function GmailStyleInbox() {
 		}
 	}, [socket])
 
-	console.log('Filtered Mails:', filteredMails);
-
 	return (
 		<div className=' bg-[#d8e1ef] p-2 font-[Poppins]'>
 			<div className='flex h-[80vh] border rounded-2xl overflow-hidden shadow-lg bg-white'>
