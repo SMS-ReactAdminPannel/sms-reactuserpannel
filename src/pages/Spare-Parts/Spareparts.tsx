@@ -7,9 +7,9 @@ import {
 } from '../../features/spareparts';
 import { FONTS } from '../../constants/constant';
 import { Link } from 'react-router-dom';
-import toast from 'react-hot-toast';
 import { useAuth } from '../auth/AuthContext';
 import LoginPromptModal from '../../components/Authentication/LoginPromptModal';
+import { toast } from 'react-toastify';
 
 interface SparePart {
 	id: any;
@@ -98,7 +98,7 @@ const SpareParts: React.FC = () => {
 								(Array.isArray(part.images) ? part.images[0] : ''),
 							category: part.category || 'Uncategorized',
 							inStock: part?.inStock,
-							warrentyPeriod: part.warrentyPeriod || '',
+							warrentyPeriod: part.warrentyPeriod,
 						};
 					});
 
@@ -175,6 +175,8 @@ const SpareParts: React.FC = () => {
 		part?.spareparts_name?.toLowerCase().includes(searchTerm.toLowerCase())
 	);
 
+	console.log(parts, 'parts');
+
 	// Add to cart button functions
 	const handleAddToCart = async (part: SparePart) => {
 		if (isAuthenticated) {
@@ -185,14 +187,19 @@ const SpareParts: React.FC = () => {
 						price: part?.price?.toString(),
 						quantity: quantity,
 					},
-				brand: 'spare',
+					brand: 'spare',
 				};
-				const response = await postSparePartsData(payload);
+				const response: any = await postSparePartsData(payload);
 				if (response) {
-					toast.success('Item added to cart!', { duration: 2000 });
+					toast.success('Item added to cart!', { autoClose: 2000 });
 					if ((window as any).refreshCartCount) {
 						(window as any).refreshCartCount();
 					}
+				} else {
+					toast.error(
+						response?.message || 'Booking failed, please update your profile',
+						{ autoClose: 2000 }
+					);
 				}
 			} catch (error) {
 				console.error('Error adding to cart:', error);
@@ -547,11 +554,11 @@ const SpareParts: React.FC = () => {
 										{title}
 									</h2>
 									<div className='border '>
-									<img
-                                  src={image}
-                                   alt={title}
-                                 className="w-16 h-16 object-contain border rounded-md"
-                                    />
+										<img
+											src={image}
+											alt={title}
+											className='w-16 h-16 object-contain border rounded-md'
+										/>
 									</div>
 								</div>
 								<ul className='space-y-1 text-sm'>
@@ -619,7 +626,9 @@ const SpareParts: React.FC = () => {
 							{selectedPart.spareparts_name}
 						</h2>
 						<div className='flex justify-between items-center mb-4'>
-							<p className='text-sm text-gray-600'>Brand: {selectedPart.brand}</p>
+							<p className='text-sm text-gray-600'>
+								Brand: {selectedPart.brand}
+							</p>
 
 							<p
 								className={`${
@@ -633,9 +642,13 @@ const SpareParts: React.FC = () => {
 								)}
 							</p>
 						</div>
-						{selectedPart.warrentyPeriod !== ""	&& <div className='flex justify-between items-center mb-4'>
-							<p className='text-sm text-gray-600'>Warrenty : {selectedPart.warrentyPeriod}</p>
-						</div>}
+						{selectedPart.warrentyPeriod !== '' && (
+							<div className='flex justify-between items-center mb-4'>
+								<p className='text-sm text-gray-600'>
+									Warrenty : {selectedPart.warrentyPeriod}
+								</p>
+							</div>
+						)}
 
 						<div className='flex items-center gap-2 mb-4'>
 							<span className='text-sm font-medium'>Quantity:</span>

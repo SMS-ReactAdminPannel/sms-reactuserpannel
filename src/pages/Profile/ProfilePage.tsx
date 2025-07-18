@@ -16,7 +16,7 @@ interface FormData {
 		phoneNumber: string;
 		address1: string;
 		address2: string;
-		[key: string]: string; // Allow dynamic access for nested fields
+		[key: string]: string;
 	};
 	vehicleInfo: {
 		registerNumber: string;
@@ -26,7 +26,7 @@ interface FormData {
 		fuleType: string;
 		[key: string]: string;
 	};
-	[key: string]: any; // Allow dynamic access for top-level fields
+	[key: string]: any;
 }
 
 interface Car {
@@ -37,10 +37,10 @@ interface Car {
 const ProfilePage: React.FC = () => {
 	const [isCarTab, setIsCarTab] = useState(false);
 	const [editMode, setEditMode] = useState(false);
-
 	const [profileData, setProfileData] = useState<any>({});
 	const [errors, setErrors] = useState<any>({});
 	const [editCarMode, setEditCarMode] = useState(false);
+	const [formSubmitted, setFormSubmitted] = useState(false);
 
 	const [formData, setFormData] = useState<FormData>({
 		firstName: '',
@@ -68,23 +68,24 @@ const ProfilePage: React.FC = () => {
 			const response: any = await getUserProfile({});
 			if (response) {
 				setFormData({
-					firstName: response?.data?.data?.firstName,
-					lastName: response?.data?.data?.lastName,
-					email: response?.data?.data?.email,
-					image: response?.data?.data?.image,
+					firstName: response?.data?.data?.firstName || '',
+					lastName: response?.data?.data?.lastName || '',
+					email: response?.data?.data?.email || '',
+					image: response?.data?.data?.image || '',
 					contact_info: {
-						city: response?.data?.data?.contact_info?.city,
-						state: response?.data?.data?.contact_info?.state,
-						phoneNumber: response?.data?.data?.contact_info?.phoneNumber,
-						address1: response?.data?.data?.contact_info?.address1,
-						address2: response?.data?.data?.contact_info?.address2,
+						city: response?.data?.data?.contact_info?.city || '',
+						state: response?.data?.data?.contact_info?.state || '',
+						phoneNumber: response?.data?.data?.contact_info?.phoneNumber || '',
+						address1: response?.data?.data?.contact_info?.address1 || '',
+						address2: response?.data?.data?.contact_info?.address2 || '',
 					},
 					vehicleInfo: {
-						registerNumber: response?.data?.data?.vehicleInfo?.registerNumber,
-						model: response?.data?.data?.vehicleInfo?.model,
-						company: response?.data?.data?.vehicleInfo?.company,
-						fuleType: response?.data?.data?.vehicleInfo?.fuleType,
-						year: response?.data?.data?.vehicleInfo?.year,
+						registerNumber:
+							response?.data?.data?.vehicleInfo?.registerNumber || '',
+						model: response?.data?.data?.vehicleInfo?.model || '',
+						company: response?.data?.data?.vehicleInfo?.company || '',
+						fuleType: response?.data?.data?.vehicleInfo?.fuleType || '',
+						year: response?.data?.data?.vehicleInfo?.year || '',
 					},
 				});
 				setProfileData(response?.data?.data);
@@ -108,38 +109,141 @@ const ProfilePage: React.FC = () => {
 	const validateField = (name: string, value: string) => {
 		switch (name) {
 			case 'firstName':
-				return !value.trim() ? 'FirstName is required' : '';
+				return !value.trim()
+					? 'First Name is required'
+					: value.trim().length < 3
+					? 'First Name must be at least 3 characters'
+					: '';
 			case 'lastName':
-				return !value.trim() ? 'LastName is required' : '';
+				return !value.trim()
+					? 'Last Name is required'
+					: value.trim().length < 1
+					? 'Last Name must be at least 1 character'
+					: '';
 			case 'email':
 				if (!value.trim()) return 'Email is required';
-				if (!/^[^\s@]+@gmail\.com$/.test(value))
-					return 'Email must be a Gmail address';
+				if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
+					return 'Invalid email format';
 				return '';
 			case 'contact_info.phoneNumber':
 				if (!value.trim()) return 'Phone number is required';
 				if (!/^[6-9]\d{9}$/.test(value.replace(/\D/g, '')))
-					return 'Invalid Indian phone number format';
+					return 'Invalid Indian phone number (10 digits starting with 6-9)';
 				return '';
-			case `contact_info.address1`:
-				return !value.trim() ? 'Address is required' : '';
-			case 'con':
-				return !value.trim() ? 'Address 2 is required' : '';
-			case 'city':
-				return !value.trim() ? 'City is required' : '';
-			case 'state':
-				return !value.trim() ? 'state is required' : '';
+			case 'contact_info.address1':
+				return !value.trim()
+					? 'Address 1 is required'
+					: value.trim().length < 5
+					? 'Address must be at least 5 characters'
+					: '';
+			case 'contact_info.address2':
+				return !value.trim()
+					? 'Address 2 is required'
+					: value.trim().length < 5
+					? 'Address must be at least 5 characters'
+					: '';
+			case 'contact_info.city':
+				return !value.trim()
+					? 'City is required'
+					: value.trim().length < 3
+					? 'City must be at least 3 characters'
+					: '';
+			case 'contact_info.state':
+				return !value.trim()
+					? 'State is required'
+					: value.trim().length < 3
+					? 'State must be at least 3 characters'
+					: '';
+			case 'vehicleInfo.registerNumber':
+				return !value.trim()
+					? 'Registration number is required'
+					: !/^[A-Za-z]{2}\s?\d{2}\s?[A-Za-z]{1,2}\s?\d{4}$/.test(value.trim())
+					? 'Invalid registration format (e.g., MH 01 AB 1234)'
+					: '';
+			case 'vehicleInfo.model':
+				return !value.trim() ? 'Model is required' : '';
+			case 'vehicleInfo.company':
+				return !value.trim() ? 'Company is required' : '';
+			case 'vehicleInfo.year':
+				if (!value.trim()) return 'Year is required';
+				if (!/^\d{4}$/.test(value.trim())) return 'Year must be 4 digits';
+				if (
+					parseInt(value) < 1900 ||
+					parseInt(value) > new Date().getFullYear() + 1
+				)
+					return `Year must be between 1900 and ${
+						new Date().getFullYear() + 1
+					}`;
+				return '';
+			case 'vehicleInfo.fuleType':
+				return !value.trim() ? 'Fuel type is required' : '';
 			default:
 				return '';
 		}
 	};
 
+	const validateForm = () => {
+		const newErrors: any = {};
+		let isValid = true;
+
+		// Validate user fields
+		const userFields = ['firstName', 'lastName', 'email'];
+		userFields.forEach((field) => {
+			const error = validateField(field, formData[field]);
+			if (error) {
+				newErrors[field] = error;
+				isValid = false;
+			}
+		});
+
+		// Validate contact info
+		const contactFields = [
+			'phoneNumber',
+			'address1',
+			'address2',
+			'city',
+			'state',
+		];
+		contactFields.forEach((field) => {
+			const error = validateField(
+				`contact_info.${field}`,
+				formData.contact_info[field]
+			);
+			if (error) {
+				newErrors[`contact_info.${field}`] = error;
+				isValid = false;
+			}
+		});
+
+		// Validate vehicle info if in car tab
+		if (isCarTab || editCarMode) {
+			const vehicleFields = [
+				'registerNumber',
+				'model',
+				'company',
+				'year',
+				'fuleType',
+			];
+			vehicleFields.forEach((field) => {
+				const error = validateField(
+					`vehicleInfo.${field}`,
+					formData.vehicleInfo[field]
+				);
+				if (error) {
+					newErrors[`vehicleInfo.${field}`] = error;
+					isValid = false;
+				}
+			});
+		}
+
+		setErrors(newErrors);
+		return isValid;
+	};
+
 	const handleUserChange = (e: React.ChangeEvent<HTMLInputElement>) => {
 		const { name, value } = e.target;
-		let finalValue = value;
 
 		setFormData((prev) => {
-			// Handle nested objects (e.g., address.street)
 			if (name.includes('.')) {
 				const [parent, child] = name.split('.');
 				return {
@@ -150,17 +254,17 @@ const ProfilePage: React.FC = () => {
 					},
 				};
 			}
-
-			// Handle simple fields and checkboxes
 			return {
 				...prev,
 				[name]: value,
 			};
 		});
 
-		setProfileData((prev: any) => ({ ...prev, [name]: finalValue }));
-		const error = validateField(name, finalValue);
-		setErrors((prev: any) => ({ ...prev, [name]: error }));
+		// Validate only if form has been submitted or field has error
+		if (formSubmitted || errors[name]) {
+			const error = validateField(name, value);
+			setErrors((prev: any) => ({ ...prev, [name]: error }));
+		}
 	};
 
 	const addCar = () => {
@@ -171,41 +275,50 @@ const ProfilePage: React.FC = () => {
 		const newCars = [...cars];
 		newCars.splice(index, 1);
 		setCars(newCars);
-		setShowHistory(null);
 	};
 
 	const handleEditProfile = async () => {
-		setEditMode(false);
-		setEditCarMode(false);
+		setFormSubmitted(true);
+		const isValid = validateForm();
+
+		if (!isValid) {
+			toast.error('Please fix all the fields before submitting');
+			return;
+		}
+
 		try {
-			// Send only allowed fields
 			const transformedData = {
 				firstName: formData.firstName,
 				lastName: formData.lastName,
 				email: formData.email,
 				contact_info: {
-					phoneNumber: formData?.contact_info?.phoneNumber,
-					address1: formData?.contact_info?.address1,
-					address2: formData?.contact_info?.address2,
-					city: formData?.contact_info?.city,
-					state: formData?.contact_info?.state,
+					phoneNumber: formData.contact_info.phoneNumber,
+					address1: formData.contact_info.address1,
+					address2: formData.contact_info.address2,
+					city: formData.contact_info.city,
+					state: formData.contact_info.state,
 				},
-				image: formData?.image,
+				image: formData.image,
 				vehicleInfo: {
-					registerNumber: formData?.vehicleInfo?.registerNumber,
-					model: formData?.vehicleInfo?.model,
-					company: formData?.vehicleInfo?.company,
-					year: formData?.vehicleInfo?.year,
-					fuleType: formData?.vehicleInfo?.fuleType,
+					registerNumber: formData.vehicleInfo.registerNumber,
+					model: formData.vehicleInfo.model,
+					company: formData.vehicleInfo.company,
+					year: formData.vehicleInfo.year,
+					fuleType: formData.vehicleInfo.fuleType,
 				},
 			};
 
 			const response = await updateUserProfile(transformedData);
 			if (response) {
 				toast.success('Profile updated successfully!');
+				setEditMode(false);
+				setEditCarMode(false);
+				setFormSubmitted(false);
+				fetchUserProfile();
 			}
 		} catch (error) {
 			console.error('Error updating profile:', error);
+			toast.error('Failed to update profile');
 		}
 	};
 
@@ -219,15 +332,15 @@ const ProfilePage: React.FC = () => {
 					}`}
 				>
 					<div className='flex h-full w-full'>
-						{/* Red Section - Left */}
+						{/* Blue Section - Left */}
 						<div
 							className='w-1/2  relative overflow-hidden'
 							style={{ backgroundColor: '#0050A5' }}
 						>
-							<div className='absolute inset-0 bg-gradient-to-br from-red-600/20 to-transparent' />
+							<div className='absolute inset-0 bg-gradient-to-br from-blue-600/20 to-transparent' />
 							<div className='relative z-10 flex flex-col items-center justify-center h-full text-white p-8'>
 								<h2 className='text-xl font-bold mb-4'>User Profile</h2>
-								<p className='text-red-100 text-center mb-8 leading-relaxed'>
+								<p className='text-blue-100 text-center mb-8 leading-relaxed'>
 									Switch to manage your personal information and account details
 								</p>
 								<button
@@ -260,67 +373,101 @@ const ProfilePage: React.FC = () => {
 													</button>
 
 													<div className='grid gap-3 mt-8'>
-														<input
-															type='text'
-															name='vehicleInfo.registerNumber'
-															id=''
-															value={formData?.vehicleInfo?.registerNumber}
-															onChange={handleUserChange}
-															placeholder='Car Registration No'
-															className='w-full px-3 py-2 text-sm bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300'
-														/>
-														<input
-															name='vehicleInfo.model'
-															type='text'
-															placeholder='Car Model'
-															value={formData?.vehicleInfo?.model}
-															onChange={handleUserChange}
-															className='w-full px-3 py-2 text-sm bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300'
-															style={
-																{
-																	'--tw-ring-color': '#0050A5',
-																} as React.CSSProperties
-															}
-														/>
-														<input
-															name='vehicleInfo.company'
-															type='text'
-															placeholder='Car Company'
-															value={formData?.vehicleInfo?.company}
-															onChange={handleUserChange}
-															className='w-full px-3 py-2 text-sm bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300'
-															style={
-																{
-																	'--tw-ring-color': '#0050A5',
-																} as React.CSSProperties
-															}
-														/>
-														<input
-															name='vehicleInfo.year'
-															type='text'
-															placeholder='Car Year'
-															value={formData?.vehicleInfo?.year}
-															onChange={handleUserChange}
-															className='w-full px-3 py-2 text-sm bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300'
-															style={
-																{
-																	'--tw-ring-color': '#0050A5',
-																} as React.CSSProperties
-															}
-														/>
-														<input
-															name='vehicleInfo.fuleType'
-															type='text'
-															placeholder='Car Fuel Type'
-															value={formData?.vehicleInfo?.fuleType}
-															onChange={handleUserChange}
-															className='w-full px-3 py-2 text-sm bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300'
-															style={
-																{
-																	'--tw-ring-color': '#0050A5',
-																} as React.CSSProperties
-															}
-														/>
+														<div>
+															<input
+																type='text'
+																name='vehicleInfo.registerNumber'
+																value={formData?.vehicleInfo?.registerNumber}
+																onChange={handleUserChange}
+																placeholder='Car Registration No'
+																className={`w-full px-3 py-2 text-sm bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
+																	errors['vehicleInfo.registerNumber']
+																		? 'ring-2 ring-red-500'
+																		: ''
+																}`}
+															/>
+															{errors['vehicleInfo.registerNumber'] && (
+																<p className='text-red-500 text-sm mt-1'>
+																	{errors['vehicleInfo.registerNumber']}
+																</p>
+															)}
+														</div>
+														<div>
+															<input
+																name='vehicleInfo.model'
+																type='text'
+																placeholder='Car Model'
+																value={formData?.vehicleInfo?.model}
+																onChange={handleUserChange}
+																className={`w-full px-3 py-2 text-sm bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
+																	errors['vehicleInfo.model']
+																		? 'ring-2 ring-red-500'
+																		: ''
+																}`}
+															/>
+															{errors['vehicleInfo.model'] && (
+																<p className='text-red-500 text-sm mt-1'>
+																	{errors['vehicleInfo.model']}
+																</p>
+															)}
+														</div>
+														<div>
+															<input
+																name='vehicleInfo.company'
+																type='text'
+																placeholder='Car Company'
+																value={formData?.vehicleInfo?.company}
+																onChange={handleUserChange}
+																className={`w-full px-3 py-2 text-sm bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
+																	errors['vehicleInfo.company']
+																		? 'ring-2 ring-red-500'
+																		: ''
+																}`}
+															/>
+															{errors['vehicleInfo.company'] && (
+																<p className='text-red-500 text-sm mt-1'>
+																	{errors['vehicleInfo.company']}
+																</p>
+															)}
+														</div>
+														<div>
+															<input
+																name='vehicleInfo.year'
+																type='text'
+																placeholder='Car Year'
+																value={formData?.vehicleInfo?.year}
+																onChange={handleUserChange}
+																className={`w-full px-3 py-2 text-sm bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
+																	errors['vehicleInfo.year']
+																		? 'ring-2 ring-red-500'
+																		: ''
+																}`}
+															/>
+															{errors['vehicleInfo.year'] && (
+																<p className='text-red-500 text-sm mt-1'>
+																	{errors['vehicleInfo.year']}
+																</p>
+															)}
+														</div>
+														<div>
+															<input
+																name='vehicleInfo.fuleType'
+																type='text'
+																placeholder='Car Fuel Type'
+																value={formData?.vehicleInfo?.fuleType}
+																onChange={handleUserChange}
+																className={`w-full px-3 py-2 text-sm bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
+																	errors['vehicleInfo.fuleType']
+																		? 'ring-2 ring-red-500'
+																		: ''
+																}`}
+															/>
+															{errors['vehicleInfo.fuleType'] && (
+																<p className='text-red-500 text-sm mt-1'>
+																	{errors['vehicleInfo.fuleType']}
+																</p>
+															)}
+														</div>
 														<div className='flex gap-3 '>
 															<button
 																onClick={() => setEditCarMode(false)}
@@ -434,16 +581,11 @@ const ProfilePage: React.FC = () => {
 												onChange={handleUserChange}
 												placeholder='First Name'
 												maxLength={15}
+												minLength={3}
+												required={true}
 												className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
 													errors.firstName ? 'ring-2 ring-red-500' : ''
 												}`}
-												style={
-													{
-														'--tw-ring-color': errors.firstName
-															? '#ef4444'
-															: '#0050A5',
-													} as React.CSSProperties
-												}
 											/>
 											{errors.firstName && (
 												<p className='text-red-500 text-sm mt-1'>
@@ -461,13 +603,6 @@ const ProfilePage: React.FC = () => {
 												className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
 													errors.lastName ? 'ring-2 ring-red-500' : ''
 												}`}
-												style={
-													{
-														'--tw-ring-color': errors.lastName
-															? '#ef4444'
-															: '#0050A5',
-													} as React.CSSProperties
-												}
 											/>
 											{errors.lastName && (
 												<p className='text-red-500 text-sm mt-1'>
@@ -485,13 +620,6 @@ const ProfilePage: React.FC = () => {
 												className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
 													errors.email ? 'ring-2 ring-red-500' : ''
 												}`}
-												style={
-													{
-														'--tw-ring-color': errors.email
-															? '#ef4444'
-															: '#0050A5',
-													} as React.CSSProperties
-												}
 											/>
 											{errors.email && (
 												<p className='text-red-500 text-sm mt-1'>
@@ -506,19 +634,14 @@ const ProfilePage: React.FC = () => {
 												onChange={handleUserChange}
 												placeholder='Phone Number'
 												className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
-													errors.number ? 'ring-2 ring-red-500' : ''
+													errors['contact_info.phoneNumber']
+														? 'ring-2 ring-red-500'
+														: ''
 												}`}
-												style={
-													{
-														'--tw-ring-color': errors.number
-															? '#ef4444'
-															: '#0050A5',
-													} as React.CSSProperties
-												}
 											/>
-											{errors.number && (
+											{errors['contact_info.phoneNumber'] && (
 												<p className='text-red-500 text-sm mt-1'>
-													{errors.number}
+													{errors['contact_info.phoneNumber']}
 												</p>
 											)}
 										</div>
@@ -530,19 +653,14 @@ const ProfilePage: React.FC = () => {
 												onChange={handleUserChange}
 												placeholder='Address 1'
 												className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
-													errors.address1 ? 'ring-2 ring-red-500' : ''
+													errors['contact_info.address1']
+														? 'ring-2 ring-red-500'
+														: ''
 												}`}
-												style={
-													{
-														'--tw-ring-color': errors.address1
-															? '#ef4444'
-															: '#0050A5',
-													} as React.CSSProperties
-												}
 											/>
-											{errors.address1 && (
+											{errors['contact_info.address1'] && (
 												<p className='text-red-500 text-sm mt-1'>
-													{errors.contact_info.address1}
+													{errors['contact_info.address1']}
 												</p>
 											)}
 										</div>
@@ -555,19 +673,14 @@ const ProfilePage: React.FC = () => {
 												maxLength={25}
 												placeholder='Address 2'
 												className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
-													errors.address2 ? 'ring-2 ring-red-500' : ''
+													errors['contact_info.address2']
+														? 'ring-2 ring-red-500'
+														: ''
 												}`}
-												style={
-													{
-														'--tw-ring-color': errors.address2
-															? '#ef4444'
-															: '#0050A5',
-													} as React.CSSProperties
-												}
 											/>
-											{errors.address2 && (
+											{errors['contact_info.address2'] && (
 												<p className='text-red-500 text-sm mt-1'>
-													{errors.address2}
+													{errors['contact_info.address2']}
 												</p>
 											)}
 										</div>
@@ -580,19 +693,14 @@ const ProfilePage: React.FC = () => {
 												onChange={handleUserChange}
 												placeholder='City'
 												className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
-													errors.city ? 'ring-2 ring-red-500' : ''
+													errors['contact_info.city']
+														? 'ring-2 ring-red-500'
+														: ''
 												}`}
-												style={
-													{
-														'--tw-ring-color': errors.city
-															? '#ef4444'
-															: '#0050A5',
-													} as React.CSSProperties
-												}
 											/>
-											{errors.city && (
+											{errors['contact_info.city'] && (
 												<p className='text-red-500 text-sm mt-1'>
-													{errors.city}
+													{errors['contact_info.city']}
 												</p>
 											)}
 										</div>
@@ -605,19 +713,14 @@ const ProfilePage: React.FC = () => {
 												onChange={handleUserChange}
 												placeholder='state'
 												className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
-													errors.state ? 'ring-2 ring-red-500' : ''
+													errors['contact_info.state']
+														? 'ring-2 ring-red-500'
+														: ''
 												}`}
-												style={
-													{
-														'--tw-ring-color': errors.state
-															? '#ef4444'
-															: '#0050A5',
-													} as React.CSSProperties
-												}
 											/>
-											{errors.state && (
+											{errors['contact_info.state'] && (
 												<p className='text-red-500 text-sm mt-1'>
-													{errors.state}
+													{errors['contact_info.state']}
 												</p>
 											)}
 										</div>
@@ -738,15 +841,15 @@ const ProfilePage: React.FC = () => {
 							</div>
 						</div>
 
-						{/* Red Section - Right */}
+						{/* Blue Section - Right */}
 						<div
 							className='w-1/2  relative overflow-hidden'
 							style={{ backgroundColor: '#0050A5' }}
 						>
-							<div className='absolute inset-0 bg-gradient-to-br from-red-600/20 to-transparent' />
+							<div className='absolute inset-0 bg-gradient-to-br from-blue-600/20 to-transparent' />
 							<div className='relative z-10 flex flex-col items-center justify-center h-full text-white p-8'>
 								<h2 className='text-2xl font-bold mb-4'>Car Details</h2>
-								<p className='text-red-100 text-center mb-8 leading-relaxed'>
+								<p className='text-blue-100 text-center mb-8 leading-relaxed'>
 									Switch to manage your vehicle information and service requests
 								</p>
 								<button
@@ -766,6 +869,3 @@ const ProfilePage: React.FC = () => {
 };
 
 export default ProfilePage;
-function setShowHistory(_arg0: null) {
-	throw new Error('Function not implemented.');
-}
