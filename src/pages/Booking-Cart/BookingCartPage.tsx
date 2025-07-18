@@ -159,8 +159,8 @@ export default function SparePartsCart() {
 			}
 
 			const adminNotification = {
-				title: "New Spare Part Booking",
-				message: `New Spare Part Booking Arrived`,
+				title: "New Spare Part Booking Received",
+				message: `A customer has booked a spare part. Please ensure it's processed accordingly.`,
 				type: "info",
 				priority: "medium",
 				recipient_type: "admin",
@@ -196,8 +196,8 @@ export default function SparePartsCart() {
 			}
 
 			const adminNotification = {
-				title: "New Service Booking",
-				message: `New Service Booking Arrived`,
+				title: "New Service Request Booked",
+				message: `A customer has booked a service. Review the request and assign it as needed.`,
 				type: "info",
 				priority: "medium",
 				recipient_type: "admin",
@@ -383,11 +383,11 @@ export default function SparePartsCart() {
 				</h1>
 
 				{/* Tabs */}
-				<div className='mb-6 ml-[65px]'>
-					<div className='relative inline-flex p-1 bg-[#BED0EC] rounded-full border border-gray-300'>
+				<div className='mb-6 ml-[65px] text-center  '>
+					<div className='relative inline-flex p-1 bg-[#BED0EC] rounded-full border  border-gray-300'>
 						<button
 							onClick={() => setActiveTab('service')}
-							className={`px-6 py-3 rounded-full flex items-center gap-2 z-10 transition-colors duration-300 ${activeTab === 'service' ? 'text-white' : 'text-black '
+							className={`px-6 py-3 rounded-full flex items-center w-[500px] gap-2 z-10 transition-colors duration-300 ${activeTab === 'service' ? 'text-white' : 'text-black '
 								}`}
 						>
 							<Wrench className='text-lg' />
@@ -427,11 +427,11 @@ export default function SparePartsCart() {
 										))}
 									</div>
 								) : (
-									<div className='bg-white rounded-lg shadow-md p-8 text-center'>
-										<p className='text-gray-500'>
-											No spare parts found matching your criteria.
-										</p>
-									</div>
+									<div className="flex items-center  text-center justify-end h-[300px] w-full">
+  <p className='text-gray-500 text-lg'>
+    No spare parts found matching your criteria.
+  </p>
+</div>
 								)}
 							</div>
 						)}
@@ -446,11 +446,11 @@ export default function SparePartsCart() {
 										))}
 									</div>
 								) : (
-									<div className='bg-white rounded-lg shadow-md p-8 text-center'>
-										<p className='text-gray-500'>
-											No services found matching your criteria.
-										</p>
-									</div>
+									<div className="flex items-center  text-center justify-end h-[300px] w-full">
+	                   <p className="text-gray-500  text-center text-lg">
+	                	       No services found matching your criteria.
+	                    </p>
+                   </div>
 								)}
 							</div>
 						)}

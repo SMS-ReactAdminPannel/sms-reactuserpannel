@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from 'react';
 import { FONTS } from '../../constants/constant';
 import HttpClient from '../../api/httpClient';
 import { API_END_POINTS } from '../../api/httpEndpoints';
+import offer from '../../assets/offer.png'
 
 type ServiceOffer = {
 	_id: string;
@@ -104,8 +105,9 @@ const Offer: React.FC<OfferProps> = ({ announcements }) => {
 				</span>
 			</h1>
 
-			<h1 className=''></h1>
-
+			{/* <h1 className=''></h1> */}
+			{dataToShow.length > 0 ? (
+         
 			<div className='grid grid-cols-3 gap-8 max-w-7xl mx-auto'>
 				{dataToShow.map((offer) => (
 					<div
@@ -147,7 +149,12 @@ const Offer: React.FC<OfferProps> = ({ announcements }) => {
 						)}
 					</div>
 				))}
+			</div>) : (
+			<div className='text-center text-gray-500 mt-20 text-xl font-medium'>
+				<img src={offer} alt="" className="h-24 w-auto mx-auto object-contain"/>
+				No special offers available .
 			</div>
+		)}
 		</div>
 	);
 };
