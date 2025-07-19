@@ -261,7 +261,8 @@ const ServicesPage: React.FC = () => {
 	const handleConfirmBooking = async (
 		requestType: string,
 		schedule_date: Date,
-		preferedTime: any
+		preferedTime: any,
+		selectedCar:any
 	) => {
 		if (!selectedServiceId) {
 			toast.error('Please select a service first');
@@ -269,12 +270,23 @@ const ServicesPage: React.FC = () => {
 		}
 
 		try {
+			if(selectedCar=="initial"){
+				toast.error("Select the Car Correctly")
+				return
+			}
+
+			if(preferedTime.startTime=="" || preferedTime.endTime==""){
+				toast.error("select Time Category")
+				return
+			}
+
 			const data = {
 				service: selectedServiceId,
 				type: 'service',
 				requestType,
 				schedule_date,
 				preferedTime,
+				vehicle:Number(selectedCar)
 			};
 
 			const response: any = await postSparePartsData(data);

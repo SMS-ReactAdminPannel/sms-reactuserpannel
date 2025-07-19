@@ -18,20 +18,23 @@ interface FormData {
 		address2: string;
 		[key: string]: string;
 	};
-	vehicleInfo: {
+	vehicleInfo: Array<{
 		registerNumber: string;
 		model: string;
 		year: string;
 		company: string;
 		fuleType: string;
 		[key: string]: string;
-	};
+	}>;
 	[key: string]: any;
 }
 
 interface Car {
 	model: string;
 	registerNumber: string;
+	company?: string;
+	year?: string;
+	fuleType?: string;
 }
 
 const ProfilePage: React.FC = () => {
@@ -41,6 +44,7 @@ const ProfilePage: React.FC = () => {
 	const [errors, setErrors] = useState<any>({});
 	const [editCarMode, setEditCarMode] = useState(false);
 	const [formSubmitted, setFormSubmitted] = useState(false);
+	const [currentCarIndex, setCurrentCarIndex] = useState<number | null>(null);
 
 	const [formData, setFormData] = useState<FormData>({
 		firstName: '',
@@ -54,19 +58,31 @@ const ProfilePage: React.FC = () => {
 			address1: '',
 			address2: '',
 		},
-		vehicleInfo: {
+		vehicleInfo: [{
 			registerNumber: '',
 			model: '',
 			company: '',
 			fuleType: '',
 			year: '',
-		},
+		}],
 	});
 
 	const fetchUserProfile = async () => {
 		try {
 			const response: any = await getUserProfile({});
 			if (response) {
+				const vehicleInfo = response?.data?.data?.vehicleInfo 
+					? Array.isArray(response.data.data.vehicleInfo) 
+						? response.data.data.vehicleInfo 
+						: [response.data.data.vehicleInfo]
+					: [{
+						registerNumber: '',
+						model: '',
+						company: '',
+						fuleType: '',
+						year: '',
+					}];
+
 				setFormData({
 					firstName: response?.data?.data?.firstName || '',
 					lastName: response?.data?.data?.lastName || '',
@@ -79,14 +95,7 @@ const ProfilePage: React.FC = () => {
 						address1: response?.data?.data?.contact_info?.address1 || '',
 						address2: response?.data?.data?.contact_info?.address2 || '',
 					},
-					vehicleInfo: {
-						registerNumber:
-							response?.data?.data?.vehicleInfo?.registerNumber || '',
-						model: response?.data?.data?.vehicleInfo?.model || '',
-						company: response?.data?.data?.vehicleInfo?.company || '',
-						fuleType: response?.data?.data?.vehicleInfo?.fuleType || '',
-						year: response?.data?.data?.vehicleInfo?.year || '',
-					},
+					vehicleInfo: vehicleInfo,
 				});
 				setProfileData(response?.data?.data);
 			}
@@ -98,13 +107,6 @@ const ProfilePage: React.FC = () => {
 	useEffect(() => {
 		fetchUserProfile();
 	}, []);
-
-	const [cars, setCars] = useState<Car[]>([
-		{
-			model: '',
-			registerNumber: '',
-		},
-	]);
 
 	const validateField = (name: string, value: string) => {
 		switch (name) {
@@ -217,22 +219,24 @@ const ProfilePage: React.FC = () => {
 
 		// Validate vehicle info if in car tab
 		if (isCarTab || editCarMode) {
-			const vehicleFields = [
-				'registerNumber',
-				'model',
-				'company',
-				'year',
-				'fuleType',
-			];
-			vehicleFields.forEach((field) => {
-				const error = validateField(
-					`vehicleInfo.${field}`,
-					formData.vehicleInfo[field]
-				);
-				if (error) {
-					newErrors[`vehicleInfo.${field}`] = error;
-					isValid = false;
-				}
+			formData.vehicleInfo.forEach((car, index) => {
+				const vehicleFields = [
+					'registerNumber',
+					'model',
+					'company',
+					'year',
+					'fuleType',
+				];
+				vehicleFields.forEach((field) => {
+					const error = validateField(
+						`vehicleInfo.${field}`,
+						car[field]
+					);
+					if (error) {
+						newErrors[`vehicleInfo.${index}.${field}`] = error;
+						isValid = false;
+					}
+				});
 			});
 		}
 
@@ -246,6 +250,17 @@ const ProfilePage: React.FC = () => {
 		setFormData((prev) => {
 			if (name.includes('.')) {
 				const [parent, child] = name.split('.');
+				if (parent === 'vehicleInfo' && currentCarIndex !== null) {
+					const updatedVehicleInfo = [...prev.vehicleInfo];
+					updatedVehicleInfo[currentCarIndex] = {
+						...updatedVehicleInfo[currentCarIndex],
+						[child]: value
+					};
+					return {
+						...prev,
+						vehicleInfo: updatedVehicleInfo
+					};
+				}
 				return {
 					...prev,
 					[parent]: {
@@ -268,13 +283,47 @@ const ProfilePage: React.FC = () => {
 	};
 
 	const addCar = () => {
-		setCars([...cars, { model: '', registerNumber: '' }]);
+		setEditCarMode(true);
+		setCurrentCarIndex(formData.vehicleInfo.length);
+		setFormData(prev => ({
+			...prev,
+			vehicleInfo: [
+				...prev.vehicleInfo,
+				{
+					registerNumber: '',
+					model: '',
+					company: '',
+					fuleType: '',
+					year: '',
+				}
+			]
+		}));
 	};
 
+	const handleEditCar = (car: Car, index: number) => {
+		setEditCarMode(true);
+		setCurrentCarIndex(index);
+	};
+
+	const handleAddCar = () => {
+		if (!validateForm()) {
+			toast.error('Please fix all the fields before submitting');
+			return;
+		}
+		setEditCarMode(false);
+		setCurrentCarIndex(null);
+		toast.success('Car added successfully!');
+	}
+
 	const deleteCar = (index: number) => {
-		const newCars = [...cars];
-		newCars.splice(index, 1);
-		setCars(newCars);
+		const newVehicleInfo = [...formData.vehicleInfo];
+		newVehicleInfo.splice(index, 1);
+		setFormData(prev => ({
+			...prev,
+			vehicleInfo: newVehicleInfo
+		}));
+		setEditCarMode(false);
+		setCurrentCarIndex(null);
 	};
 
 	const handleEditProfile = async () => {
@@ -299,13 +348,7 @@ const ProfilePage: React.FC = () => {
 					state: formData.contact_info.state,
 				},
 				image: formData.image,
-				vehicleInfo: {
-					registerNumber: formData.vehicleInfo.registerNumber,
-					model: formData.vehicleInfo.model,
-					company: formData.vehicleInfo.company,
-					year: formData.vehicleInfo.year,
-					fuleType: formData.vehicleInfo.fuleType,
-				},
+				vehicleInfo: formData.vehicleInfo,
 			};
 
 			const response = await updateUserProfile(transformedData);
@@ -314,6 +357,7 @@ const ProfilePage: React.FC = () => {
 				setEditMode(false);
 				setEditCarMode(false);
 				setFormSubmitted(false);
+				setCurrentCarIndex(null);
 				fetchUserProfile();
 			}
 		} catch (error) {
@@ -359,197 +403,208 @@ const ProfilePage: React.FC = () => {
 								Car Details
 							</h2>
 							<div className='flex-1 overflow-y-auto overflow-x-hidden pr-2 scrollbar-hide'>
-								{editCarMode ? (
+								{editCarMode && currentCarIndex !== null ? (
 									<div className='w-full max-w-sm mx-auto space-y-4'>
-										{cars.map((_, index) => (
-											<div key={index} className='space-y-3'>
-												<div className='border p-4 rounded-xl bg-white shadow relative'>
-													<button
-														onClick={() => deleteCar(index)}
-														className='absolute top-3 right-5 bg-red-600 text-white rounded-md text-sm w-6 h-6 flex items-center justify-center'
-														title='Delete this car'
-													>
-														X
-													</button>
+										<div className='space-y-3'>
+											<div className='border p-4 rounded-xl bg-white shadow relative'>
+												<button
+													onClick={() => {
+														if (formData.vehicleInfo[currentCarIndex].registerNumber === '' && 
+															formData.vehicleInfo[currentCarIndex].model === '') {
+															deleteCar(currentCarIndex);
+														}
+														setEditCarMode(false);
+														setCurrentCarIndex(null);
+													}}
+													className='absolute top-3 right-5 bg-red-600 text-white rounded-md text-sm w-6 h-6 flex items-center justify-center'
+													title='Delete this car'
+												>
+													X
+												</button>
 
-													<div className='grid gap-3 mt-8'>
-														<div>
-															<input
-																type='text'
-																name='vehicleInfo.registerNumber'
-																value={formData?.vehicleInfo?.registerNumber}
-																onChange={handleUserChange}
-																placeholder='Car Registration No'
-																className={`w-full px-3 py-2 text-sm bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
-																	errors['vehicleInfo.registerNumber']
-																		? 'ring-2 ring-red-500'
-																		: ''
-																}`}
-															/>
-															{errors['vehicleInfo.registerNumber'] && (
-																<p className='text-red-500 text-sm mt-1'>
-																	{errors['vehicleInfo.registerNumber']}
-																</p>
-															)}
-														</div>
-														<div>
-															<input
-																name='vehicleInfo.model'
-																type='text'
-																placeholder='Car Model'
-																value={formData?.vehicleInfo?.model}
-																onChange={handleUserChange}
-																className={`w-full px-3 py-2 text-sm bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
-																	errors['vehicleInfo.model']
-																		? 'ring-2 ring-red-500'
-																		: ''
-																}`}
-															/>
-															{errors['vehicleInfo.model'] && (
-																<p className='text-red-500 text-sm mt-1'>
-																	{errors['vehicleInfo.model']}
-																</p>
-															)}
-														</div>
-														<div>
-															<input
-																name='vehicleInfo.company'
-																type='text'
-																placeholder='Car Company'
-																value={formData?.vehicleInfo?.company}
-																onChange={handleUserChange}
-																className={`w-full px-3 py-2 text-sm bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
-																	errors['vehicleInfo.company']
-																		? 'ring-2 ring-red-500'
-																		: ''
-																}`}
-															/>
-															{errors['vehicleInfo.company'] && (
-																<p className='text-red-500 text-sm mt-1'>
-																	{errors['vehicleInfo.company']}
-																</p>
-															)}
-														</div>
-														<div>
-															<input
-																name='vehicleInfo.year'
-																type='text'
-																placeholder='Car Year'
-																value={formData?.vehicleInfo?.year}
-																onChange={handleUserChange}
-																className={`w-full px-3 py-2 text-sm bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
-																	errors['vehicleInfo.year']
-																		? 'ring-2 ring-red-500'
-																		: ''
-																}`}
-															/>
-															{errors['vehicleInfo.year'] && (
-																<p className='text-red-500 text-sm mt-1'>
-																	{errors['vehicleInfo.year']}
-																</p>
-															)}
-														</div>
-														<div>
-															<input
-																name='vehicleInfo.fuleType'
-																type='text'
-																placeholder='Car Fuel Type'
-																value={formData?.vehicleInfo?.fuleType}
-																onChange={handleUserChange}
-																className={`w-full px-3 py-2 text-sm bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
-																	errors['vehicleInfo.fuleType']
-																		? 'ring-2 ring-red-500'
-																		: ''
-																}`}
-															/>
-															{errors['vehicleInfo.fuleType'] && (
-																<p className='text-red-500 text-sm mt-1'>
-																	{errors['vehicleInfo.fuleType']}
-																</p>
-															)}
-														</div>
-														<div className='flex gap-3 '>
-															<button
-																onClick={() => setEditCarMode(false)}
-																className='py-3 flex-1 text-white font-medium rounded-lg hover:opacity-90 transition-all duration-300 bg-gray-400  shadow-lg'
-															>
-																Cancel
-															</button>
-															<button
-																onClick={handleEditProfile}
-																className='py-3 flex-1 text-white font-medium rounded-lg hover:opacity-90 transition-all duration-300 bg-[#0050A5] shadow-lg'
-															>
-																SAVE
-															</button>
-														</div>
+												<div className='grid gap-3 mt-8'>
+													<div>
+														<input
+															type='text'
+															name='vehicleInfo.registerNumber'
+															value={formData.vehicleInfo[currentCarIndex].registerNumber}
+															onChange={handleUserChange}
+															placeholder='Car Registration No'
+															className={`w-full px-3 py-2 text-sm bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
+																errors[`vehicleInfo.${currentCarIndex}.registerNumber`]
+																	? 'ring-2 ring-red-500'
+																	: ''
+															}`}
+														/>
+														{errors[`vehicleInfo.${currentCarIndex}.registerNumber`] && (
+															<p className='text-red-500 text-sm mt-1'>
+																{errors[`vehicleInfo.${currentCarIndex}.registerNumber`]}
+															</p>
+														)}
+													</div>
+													<div>
+														<input
+															name='vehicleInfo.model'
+															type='text'
+															placeholder='Car Model'
+															value={formData.vehicleInfo[currentCarIndex].model}
+															onChange={handleUserChange}
+															className={`w-full px-3 py-2 text-sm bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
+																errors[`vehicleInfo.${currentCarIndex}.model`]
+																	? 'ring-2 ring-red-500'
+																	: ''
+															}`}
+														/>
+														{errors[`vehicleInfo.${currentCarIndex}.model`] && (
+															<p className='text-red-500 text-sm mt-1'>
+																{errors[`vehicleInfo.${currentCarIndex}.model`]}
+															</p>
+														)}
+													</div>
+													<div>
+														<input
+															name='vehicleInfo.company'
+															type='text'
+															placeholder='Car Company'
+															value={formData.vehicleInfo[currentCarIndex].company}
+															onChange={handleUserChange}
+															className={`w-full px-3 py-2 text-sm bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
+																errors[`vehicleInfo.${currentCarIndex}.company`]
+																	? 'ring-2 ring-red-500'
+																	: ''
+															}`}
+														/>
+														{errors[`vehicleInfo.${currentCarIndex}.company`] && (
+															<p className='text-red-500 text-sm mt-1'>
+																{errors[`vehicleInfo.${currentCarIndex}.company`]}
+															</p>
+														)}
+													</div>
+													<div>
+														<input
+															name='vehicleInfo.year'
+															type='text'
+															placeholder='Car Year'
+															value={formData.vehicleInfo[currentCarIndex].year}
+															onChange={handleUserChange}
+															className={`w-full px-3 py-2 text-sm bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
+																errors[`vehicleInfo.${currentCarIndex}.year`]
+																	? 'ring-2 ring-red-500'
+																	: ''
+															}`}
+														/>
+														{errors[`vehicleInfo.${currentCarIndex}.year`] && (
+															<p className='text-red-500 text-sm mt-1'>
+																{errors[`vehicleInfo.${currentCarIndex}.year`]}
+															</p>
+														)}
+													</div>
+													<div>
+														<input
+															name='vehicleInfo.fuleType'
+															type='text'
+															placeholder='Car Fuel Type'
+															value={formData.vehicleInfo[currentCarIndex].fuleType}
+															onChange={handleUserChange}
+															className={`w-full px-3 py-2 text-sm bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
+																errors[`vehicleInfo.${currentCarIndex}.fuleType`]
+																	? 'ring-2 ring-red-500'
+																	: ''
+															}`}
+														/>
+														{errors[`vehicleInfo.${currentCarIndex}.fuleType`] && (
+															<p className='text-red-500 text-sm mt-1'>
+																{errors[`vehicleInfo.${currentCarIndex}.fuleType`]}
+															</p>
+														)}
+													</div>
+													<div className='flex gap-3 '>
+														<button
+															onClick={() => {
+																setEditCarMode(false);
+																setCurrentCarIndex(null);
+															}}
+															className='py-3 flex-1 text-white font-medium rounded-lg hover:opacity-90 transition-all duration-300 bg-gray-400  shadow-lg'
+														>
+															Cancel
+														</button>
+														<button
+															onClick={handleEditProfile}
+															className='py-3 flex-1 text-white font-medium rounded-lg hover:opacity-90 transition-all duration-300 bg-[#0050A5] shadow-lg'
+														>
+															SAVE
+														</button>
 													</div>
 												</div>
 											</div>
-										))}
-										<div className='flex flex-col items-center justify-center'>
-											<button
-												onClick={addCar}
-												className='w-[180px] py-1.5 text-white font-medium rounded-lg  transition-all duration-300 hover:scale-95 shadow-lg sticky bottom-0'
-												style={{ backgroundColor: '#0050A5' }}
-											>
-												ADD ANOTHER CAR
-											</button>
 										</div>
 									</div>
 								) : (
 									<>
-										<div className='space-y-4 bg-white p-6  rounded-xl shadow-lg'>
-											<div className='space-y-3'>
-												<p className='text-lg flex'>
-													<strong className='text-gray-700 w-1/2'>
-														Register No:
-													</strong>{' '}
-													<span className='text-gray-600 w-2/3'>
-														{profileData?.vehicleInfo?.registerNumber || 'N/A'}
-													</span>
-												</p>
-												<p className='text-lg flex'>
-													<strong className='text-gray-700 w-1/2'>
-														Car Model:
-													</strong>{' '}
-													<span className='text-gray-600 w-2/3'>
-														{profileData?.vehicleInfo?.model}
-													</span>
-												</p>
-												<p className='text-lg flex'>
-													<strong className='text-gray-700 w-1/2'>
-														Car Company:
-													</strong>{' '}
-													<span className='text-gray-600 w-2/3'>
-														{profileData?.vehicleInfo?.company}
-													</span>
-												</p>
-												<p className='text-lg flex'>
-													<strong className='text-gray-700 w-1/2'>
-														Car Year:
-													</strong>{' '}
-													<span className='text-gray-600 w-2/3'>
-														{profileData?.vehicleInfo?.year}
-													</span>
-												</p>
-												<p className='text-lg flex'>
-													<strong className='text-gray-700 w-1/2'>
-														Fuel Type:
-													</strong>{' '}
-													<span className='text-gray-600 w-2/3'>
-														{profileData?.vehicleInfo?.fuleType}
-													</span>
-												</p>
+										{formData.vehicleInfo.map((car, index) => (
+											<div key={index} className='space-y-4 bg-white p-6 rounded-xl shadow-lg mb-4'>
+												<div className='space-y-3'>
+													<p className='text-lg flex'>
+														<strong className='text-gray-700 w-1/2'>
+															Register No:
+														</strong>{' '}
+														<span className='text-gray-600 w-2/3'>
+															{car?.registerNumber || 'N/A'}
+														</span>
+													</p>
+													<p className='text-lg flex'>
+														<strong className='text-gray-700 w-1/2'>
+															Car Model:
+														</strong>{' '}
+														<span className='text-gray-600 w-2/3'>
+															{car?.model}
+														</span>
+													</p>
+													<p className='text-lg flex'>
+														<strong className='text-gray-700 w-1/2'>
+															Car Company:
+														</strong>{' '}
+														<span className='text-gray-600 w-2/3'>
+															{car?.company}
+														</span>
+													</p>
+													<p className='text-lg flex'>
+														<strong className='text-gray-700 w-1/2'>
+															Car Year:
+														</strong>{' '}
+														<span className='text-gray-600 w-2/3'>
+															{car?.year}
+														</span>
+													</p>
+													<p className='text-lg flex'>
+														<strong className='text-gray-700 w-1/2'>
+															Fuel Type:
+														</strong>{' '}
+														<span className='text-gray-600 w-2/3'>
+															{car?.fuleType}
+														</span>
+													</p>
+												</div>
+												<div className='flex flex-col items-center justify-center'>
+													<button
+														onClick={() => handleEditCar(car, index)}
+														className='w-[180px] py-1.5 text-white font-medium rounded-lg hover:opacity-90 transition-all duration-300 shadow-lg mt-4'
+														style={{ backgroundColor: '#0050A5' }}
+													>
+														EDIT
+													</button>
+												</div>
 											</div>
-											<div className='flex flex-col items-center justify-center'>
-												<button
-													onClick={() => setEditCarMode(true)}
-													className='w-[180px]  py-1.5 text-white font-medium rounded-lg hover:opacity-90 transition-all duration-300  shadow-lg mt-4'
-													style={{ backgroundColor: '#0050A5' }}
-												>
-													EDIT
-												</button>
-											</div>
+										))}
+
+										<div className='flex flex-col mt-8 items-center justify-center'>
+											<button
+												onClick={addCar}
+												className='w-[180px] py-1.5 text-white font-medium rounded-lg transition-all duration-300 hover:scale-95 shadow-lg sticky bottom-0'
+												style={{ backgroundColor: '#0050A5' }}
+											>
+												ADD ANOTHER CAR
+											</button>
 										</div>
 									</>
 								)}
@@ -615,7 +670,7 @@ const ProfilePage: React.FC = () => {
 												name='email'
 												value={formData?.email}
 												onChange={handleUserChange}
-												maxLength={25}
+												maxLength={40}
 												placeholder='Email'
 												className={`w-full px-4 py-3 bg-gray-200 border-0 rounded-lg focus:outline-none focus:ring-2 transition-all duration-300 ${
 													errors.email ? 'ring-2 ring-red-500' : ''
