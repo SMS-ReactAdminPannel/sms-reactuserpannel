@@ -2,7 +2,8 @@
 import axios from 'axios';
 
 const backEndUrl: string = 'https://sms-node-backend-17xb.onrender.com';
-// const backEndUrl: string = 'http://localhost:3000';
+// const backEndUrl: string = 'http://192.168.1.16:3000';
+// const backEndUrl: string = 'http://localhost:3000'
 
 const Axios = axios.create({
 	baseURL: backEndUrl,
@@ -47,7 +48,7 @@ class HttpClient {
 	}
 
 	async patch(url: string, params?: string, data?: string) {
-		const response = await Axios.put(url, data, {
+		const response = await Axios.patch(url, data, {
 			params: params,
 			headers: {},
 		});
@@ -59,8 +60,9 @@ class HttpClient {
 		return response?.data;
 	}
 
-	async fileGet(url: string) {
+	async fileGet(url: string, params?: any) {
 		const response = await Axios.get(url, {
+			params,
 			responseType: 'blob',
 			headers: {},
 		});
@@ -73,7 +75,7 @@ class HttpClient {
 				'Content-Type': 'multipart/form-data',
 			},
 		});
-		return response?.data;
+		return response;
 	}
 }
 

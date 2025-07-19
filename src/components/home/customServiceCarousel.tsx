@@ -1,8 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { FONTS } from '../../constants/constant';
 import { getHomeData } from '../../features/home';
-import DummyImage from '../../assets/CAR BRAKES/Car brakes.jpg';
 
 const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 	options = {}
@@ -53,7 +52,6 @@ const CustomServicesGrid: React.FC = () => {
 				throw new Error('Error fetching spare parts data');
 			}
 		};
-
 		fetchSpareParts();
 	}, []);
 
@@ -66,26 +64,22 @@ const CustomServicesGrid: React.FC = () => {
 			>
 				<span className='inline-block pb-1 relative text-[#0050A5]'>
 					Available Spare Parts
-					{/* <span
-						className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
-							spareTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
-						}`}
-					></span> */}
 				</span>
 			</h1>
 			{spareParts.length !== 0 ? (
 				<div className='grid grid-cols-5 gap-10'>
-					{spareParts?.map((item) => (
+					{spareParts?.slice(0, 15)?.map((item) => (
+						<Link to={`/spare-parts/product/${item._id}`}>
 						<div
 							key={item._id}
-							className='bg-[#d8e1ef] rounded-lg p-2 shadow-3xl hover:shadow-4xl hover:scale-102 transition-transform duration-300 text-center text-red-900 relative cursor-pointer'
+							className='bg-[#d8e1ef] rounded-lg p-2 shadow-3xl hover:shadow-4xl hover:scale-102 transition-transform duration-300 relative cursor-pointer'
 							onClick={() => navigate('/spare-parts')}
 						>
-							<div className='w-full h-[125px] bg-white flex items-center justify-center overflow-hidden rounded'>
+							<div className='w-full h-[125px] rounded'>
 								<img
-									src={DummyImage}
+									src={item?.image}
 									alt={item?.productName}
-									className='w-full h-full object-cover'
+									className='w-full h-full object-cover '
 								/>
 							</div>
 							{item?.label && (
@@ -97,12 +91,13 @@ const CustomServicesGrid: React.FC = () => {
 								</span>
 							)}
 							<p
-								className='mt-3 text-[#0050A5]'
+								className='mt-3 text-[#0050A5] text-center'
 								style={{ ...FONTS.paragraph, fontWeight: 600 }}
 							>
 								{item?.productName}
 							</p>
 						</div>
+						</Link>
 					))}
 				</div>
 			) : (

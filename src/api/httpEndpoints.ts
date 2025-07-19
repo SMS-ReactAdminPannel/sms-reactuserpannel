@@ -62,14 +62,20 @@ export const API_END_POINTS = {
 	},
 
 	notification: {
-		getAll: '/api/notifications/',
+		getAll: '/api/notifications/customer',
 		update: '/api/notifications/:uuid',
+		getByUser: `/api/notifications/user/:userId`,
+		getUnreadCount: `/api/notifications/user/:userId/unread-count`,
+		markAsRead: `/api/notifications/read/:uuid`,
+		markAllAsRead: `/api/notifications/read-all/:userId`,
 	},
 
 	bookings: {
 		getAll: '/api/customer/cartbooking/all',
 		postProduct: '/api/customer/cartbooking/product/confirm',
 		postService: '/api/customer/cartbooking/service/confirm',
+		getProductInvoice:'/api/customer/invoice/product/:uuid',
+		getServiceInvoice:'/api/customer/invoice/service/:uuid'
 	},
 
 	enquiry: {

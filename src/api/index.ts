@@ -94,7 +94,9 @@ class Client {
 				httpClient.patch(API_END_POINTS.service_bookings.patch, params, data),
 		},
 
-		offer: {},
+		offer: {
+			getAll: () => httpClient.get(API_END_POINTS.offer.Get),
+		},
 		auth: {
 			login: (data: string) =>
 				httpClient.post(API_END_POINTS.auth.post_login, data),
@@ -121,6 +123,19 @@ class Client {
 					API_END_POINTS.notification.update.replace(':uuid', params.uuid),
 					params
 				),
+			getByUser: (params: string) =>
+				httpClient.get(
+					API_END_POINTS.notification.getByUser.replace(':userId', params)
+				),
+			getUnreadCount: (params: string) =>
+				httpClient.get(API_END_POINTS.notification.getUnreadCount, params),
+			markAsRead: (params: string) =>
+				httpClient.patch(
+					API_END_POINTS.notification.markAsRead.replace(':uuid', params),
+					''
+				),
+			MarkAllAsRead: (params: string) =>
+				httpClient.get(API_END_POINTS.notification.markAllAsRead, params),
 		},
 
 		bookings: {
@@ -130,6 +145,22 @@ class Client {
 				httpClient.post(API_END_POINTS.bookings.postProduct, data),
 			postService: (params: string) =>
 				httpClient.post(API_END_POINTS.bookings.postService, params),
+			getServiceInvoice: (params: any) =>
+				httpClient.fileGet(
+					API_END_POINTS.bookings.getServiceInvoice.replace(
+						':uuid',
+						params?.uuid
+					),
+					params
+				),
+			getProductInvoice: (params: any) =>
+				httpClient.fileGet(
+					API_END_POINTS.bookings.getProductInvoice.replace(
+						':uuid',
+						params?.uuid
+					),
+					params
+				),
 		},
 
 		enquiry: {

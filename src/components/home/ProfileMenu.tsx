@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FiLogOut, FiSettings, FiUser } from 'react-icons/fi';
-import profileImage from '../../assets/profile_picture.jpg';
+import { getUserProfile } from '../../features/Profile/service';
 
 type ProfileMenuProps = {
 	handleLogout: () => void;
@@ -11,6 +11,21 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ handleLogout }) => {
 	const [isOpen, setIsOpen] = useState(false);
 	const menuRef = useRef<HTMLDivElement>(null);
 	const navigate = useNavigate();
+	const [profileData, setProfileData] = useState<any>({});
+	
+
+	const fetchUserProfile = async () => {
+			try {
+				const response: any = await getUserProfile({});
+				if (response) {
+					setProfileData(response?.data?.data);
+				}
+			} catch (error) {
+				console.error('Error fetching user profile:', error);
+			} finally {
+				// setIsLoading(false);
+			}
+		};
 
 	// Close dropdown when clicking outside
 	useEffect(() => {
@@ -19,6 +34,7 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ handleLogout }) => {
 				setIsOpen(false);
 			}
 		};
+		fetchUserProfile();
 
 		document.addEventListener('mousedown', handleClickOutside);
 		return () => {
@@ -32,15 +48,15 @@ const ProfileMenu: React.FC<ProfileMenuProps> = ({ handleLogout }) => {
 	}, [navigate]);
 
 	return (
-		<div className='relative inline-block text-left' ref={menuRef}>
+		<div className='relative inline-block  text-left' ref={menuRef}>
 			<button
 				onClick={() => setIsOpen((prev) => !prev)}
 				className='focus:outline-none'
 			>
 				<img
-					src={profileImage}
+					src={profileData?.image}
 					alt='Profile'
-					className='w-12	h-12 rounded-full'
+					className='w-12	h-12 rounded-full text-black'
 				/>
 			</button>
 

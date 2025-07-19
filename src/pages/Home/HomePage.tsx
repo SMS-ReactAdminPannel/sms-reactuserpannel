@@ -3,9 +3,6 @@ import image1 from '../../assets/home/360_F_496483060_C9OG1wJpfmjMXcNmUBibmA9wYx
 import image2 from '../../assets/home/360_F_507812981_dGZXqBsqkBpEosDjTlJgmaJAyMFra7sp.jpg';
 import image3 from '../../assets/home/hand-mechanic-holding-car-service-600nw-2340377479.webp';
 import image4 from '../../assets/home/istockphoto-1387759698-612x612.jpg';
-import serviceImg from '../../assets/CAR ANNUAL MAINTENANCE/Annual maintenance.jpg';
-// import CarImg1 from '../../assets/CarImg1.jpg';
-
 import { RxLapTimer } from 'react-icons/rx';
 import { LiaCertificateSolid } from 'react-icons/lia';
 import { BsTruck } from 'react-icons/bs';
@@ -32,7 +29,6 @@ import Roadsideassistant from '../../assets/CAR ROADSIDE/Roadside assistant.jpg'
 import Prebooking from '../../assets/CAR PREBOOKING/Prebooking.jpg';
 import Annualmaintenance from '../../assets/CAR ANNUAL MAINTENANCE/Annual maintenance.jpg';
 import appimage from '../../assets/User (5).png';
-// import bgImg from '../../assets/home/aesthetic-background-with-patterned-glass-texture.jpg';
 
 // icon for footer
 import { MdEmail } from 'react-icons/md'; // mail
@@ -95,63 +91,28 @@ const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 
 const HomePage: React.FC = () => {
 	const navigate = useNavigate();
-
-	// Create separate hooks for each title
 	const servicesTitle = useScrollAnimation<HTMLHeadingElement>();
 	const careTitle = useScrollAnimation<HTMLHeadingElement>();
 	const discoverTitle = useScrollAnimation<HTMLHeadingElement>();
 	const contactTitle = useScrollAnimation<HTMLHeadingElement>();
-	// const [, setIsLoading] = useState(true);
 	const [serviceData, setServiceData] = useState<ServiceCategory[]>([]);
-	//const [selectedService, setSelectedService] = useState<any>(null);
-
-	const fetchHomePageData = () => {
-		try {
-			// setIsLoading(false);
-		} catch (error) {
-			console.log(error);
-		} finally {
-			// setIsLoading(false);
-		}
-	};
 
 	const fetchServiceData = async () => {
 		try {
 			const response = (await getAllServiceCategories()) as ApiResponse;
-			if (response && response.data && response.data.data) {
-				setServiceData(response.data.data);
-				//console.log(response.data.data);
+			if (response && response?.data && response?.data?.data) {
+				setServiceData(response?.data?.data);
 			}
 		} catch (error) {
 			console.error('Error fetching service data:', error);
 		}
 	};
 
-	// 	fetch all specific service details
-	// 	const fetchAllServiceDetails = async () => {{
-	// 		try{
-	// 			setIsLoading(true);
-	// 			const response = await getServiceCategoryById();
-	// 			if (response) {
-	// 				setSelectedService(response.data.data);
-	// 				console.log(response.data.data);
-	// 				navigate(`/services/${id}`);
-	// 			}
-	// 		} catch (error) {
-	// 			console.error('Error fetching service data:', error);
-	// 		} finally {
-	// 			setIsLoading(false);
-	// 		}
-	// 	};
-	// }
-
 	useEffect(() => {
-		fetchHomePageData();
 		fetchServiceData();
 	}, []);
 
 	const handleServiceClick = (categoryId: string, categoryName: string) => {
-		// Store the category info in localStorage or pass via state
 		localStorage.setItem(
 			'selectedCategory',
 			JSON.stringify({
@@ -159,20 +120,8 @@ const HomePage: React.FC = () => {
 				name: categoryName,
 			})
 		);
-		// console.log('Selected Category:', categoryId, categoryName);
-
-		// Navigate to services page
 		navigate('/services');
 	};
-
-	// if (isLoading) {
-	// 	return (
-	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-	// 			<div className='animate-spin rounded-full h-12 w-12 border-2 border-red-500'></div>
-	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-	// 		</div>
-	// 	);
-	// }
 
 	return (
 		<>
@@ -190,23 +139,16 @@ const HomePage: React.FC = () => {
 					>
 						<span className='inline-block pb-1 relative'>
 							Available Services
-							{/* <span
-								className={`absolute top-9 left-1/2 h-[1px] bg-red-900 transform -translate-x-1/2 origin-center transition-all duration-700 ${
-									servicesTitle.isVisible
-										? 'scale-x-100 w-full'
-										: 'scale-x-0 w-full'
-								}`}
-							></span> */}
 						</span>
 					</h1>
 					{serviceData?.length !== 0 ? (
 						<div className='grid md:grid-cols-4 sm:grid-cols-2 gap-4 justify-items-center'>
-							{serviceData?.map((service) => (
+							{serviceData?.slice(0, 8)?.map((service: any) => (
 								<Link
 									to='/services'
 									key={service?.id}
 									onClick={() =>
-										handleServiceClick(service?.id, service?.category_name)
+										handleServiceClick(service?._id, service?.category_name)
 									}
 									className={`bg-[#d8e1ef] rounded-lg md:h-56 sm:h-auto w-60 p-2 shadow-md hover:shadow-lg transition-shadow ease-in duration-300 border-1 border-b-2 cursor-pointer transform hover:scale-102 border-[#0050A5]`}
 								>
@@ -214,7 +156,7 @@ const HomePage: React.FC = () => {
 										<div className='text-[#0050A5] flex justify-center items-center h-32 w-full'>
 											<img
 												className='w-full h-32 rounded'
-												src={serviceImg}
+												src={service?.image}
 												alt={service?.category_name}
 											/>
 										</div>
@@ -237,7 +179,7 @@ const HomePage: React.FC = () => {
 				<div className={`h-[90vh] flex justify-center items-center`}>
 					<div className='mx-24'>
 						<PromoCarousel />
-					</div>
+					</div> 
 				</div>
 				<div className='bg-[#BED0EC]'>
 					<div className='mx-24'>
@@ -254,13 +196,6 @@ const HomePage: React.FC = () => {
 							>
 								<span className='inline-block pb-1 relative text-[#0050A5]'>
 									Care Advantages
-									{/* <span
-										className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
-											careTitle.isVisible
-												? 'scale-x-100 w-full'
-												: 'scale-x-0 w-full'
-										}`}
-									></span> */}
 								</span>
 							</h1>
 							<div className='flex space-x-6 items-center justify-center'>
@@ -308,13 +243,6 @@ const HomePage: React.FC = () => {
 							>
 								<span className='inline-block pb-1 relative text-[#0050A5]'>
 									Discover Our Services
-									{/* <span
-										className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
-											discoverTitle.isVisible
-												? 'scale-x-100 w-full'
-												: 'scale-x-0 w-full'
-										}`}
-									></span> */}
 								</span>
 							</h1>
 							<div className='flex mt-5 justify-around gap-10'>
@@ -462,13 +390,6 @@ const HomePage: React.FC = () => {
 						>
 							<span className='inline-block pb-4 relative text-[#0050A5]'>
 								Customised Care For All Your Needs
-								{/* <span
-									className={`absolute top-10 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${
-										contactTitle.isVisible
-											? 'scale-x-100 w-full'
-											: 'scale-x-0 w-full'
-									}`}
-								></span> */}
 							</span>
 						</h1>
 
@@ -811,7 +732,6 @@ const HomePage: React.FC = () => {
 						</div>
 					</div>
 				</div>
-				{/* FOOTER END */}
 			</div>
 		</>
 	);

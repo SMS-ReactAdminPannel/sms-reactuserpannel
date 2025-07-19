@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useState, useRef } from 'react';
 import { Wrench, Car } from 'lucide-react';
 import {
@@ -8,10 +7,10 @@ import {
 	postBookingProduct,
 } from '../../features/BookingCart/service';
 import { toast } from 'react-toastify';
-import bgImage from '../../assets/checkout-bg_1_.png';
 import { postBookingService } from '../../features/Bookings/service';
 import { FONTS } from '../../constants/constant';
 import { useAuth } from '../auth/AuthContext';
+import { useSocket } from '../../context/customerSocket';
 
 interface spare {
 	discount: number;
@@ -75,14 +74,6 @@ export default function SparePartsCart() {
 	);
 	const cartTitle = useScrollAnimation<HTMLHeadingElement>();
 	const [services, setServices] = useState<service[]>([]);
-	// const [confirmedPartOrders, setConfirmedPartOrders] = useState<
-	// 	{ part: spare; quantity: number }[]
-	// >([]);
-	// const [confirmedServiceOrders, setConfirmedServiceOrders] = useState<
-	// 	{ serv: service; quantity: number }[]
-	// >([]);
-	// const [showSummary, setShowSummary] = useState(false);
-	// const [showsSummary, setShowsSummary] = useState(false);
 	const { isAuthenticated } = useAuth();
 	const [cartId, setCartId] = useState<string>('');
 	const [serviceId, setServiceCartId] = useState<string>('');
@@ -90,6 +81,7 @@ export default function SparePartsCart() {
 		(acc, part) => acc + part.price * part.quantity,
 		0
 	);
+	const socket = useSocket();
 
 	const totalServicePrice = services.reduce((acc, serv) => acc + serv.price, 0);
 
@@ -102,7 +94,6 @@ export default function SparePartsCart() {
 			const cartData = response?.data?.data;
 			if (!Array.isArray(cartData)) return;
 			const spareEntry = cartData.find((item) => item.type === 'spare');
-			console.log(spareEntry, "checing spare enter")
 			const cartId = spareEntry?._id;
 			setCartId(cartId);
 
@@ -113,8 +104,7 @@ export default function SparePartsCart() {
 						productName: product.productId?.productName || 'Unknown',
 						price: Number(product.price) || 0,
 						brand: product.productId?.brand || 'Generic',
-						image: bgImage,
-						// image: product.productId?.image || '',
+						image: product.productId?.image || '',
 						quantity: Number(product.quantity) || 1,
 						category: product.productId?.category || '',
 						description: product.productId?.description || '',
@@ -127,7 +117,6 @@ export default function SparePartsCart() {
 
 			const serviceEntry = cartData.find((item) => item.type === 'service');
 			const serviceId = serviceEntry?._id;
-			console.log(serviceEntry, "checing service enter")
 			setServiceCartId(serviceId);
 
 			if (serviceEntry?.services) {
@@ -137,19 +126,16 @@ export default function SparePartsCart() {
 						service_name: service.service_name || 'Unknown',
 						price: Number(service.price) || 0,
 						description: service.description || '',
-						image: service.productId?.image || bgImage,
+						image: service.productId?.image,
 						is_active: service.productId?.stock || true,
 						discount: 0,
 					})
 				);
-
-				console.log("Map", mappedServices)
 				setServices(mappedServices);
 			}
 		} catch (error) {
 			console.error('Error fetching books/services', error);
 		} finally {
-			// setIsLoading(false);
 		}
 	};
 
@@ -171,6 +157,24 @@ export default function SparePartsCart() {
 			if (response) {
 				toast.success('Order placed successfully!', { autoClose: 2000 });
 			}
+
+			const adminNotification = {
+				title: "New Spare Part Booking",
+				message: `New Spare Part Booking Arrived`,
+				type: "info",
+				priority: "medium",
+				recipient_type: "admin",
+				recipient_id: "686967efa56e85869138d5b2",
+				is_read: false,
+				is_active: true,
+				is_sent: false,
+				created_at: new Date().toISOString(),
+			};
+
+			if (!socket) return null;
+			socket.emit("newNotification", adminNotification);
+			console.log("Notification emitted:", adminNotification);
+
 		} catch (error: any) {
 			console.error('Order placement error:', {
 				error: error.message,
@@ -185,12 +189,28 @@ export default function SparePartsCart() {
 		try {
 			const payload = {
 				cartId: serviceId,
-				// requestType:"scheduled"
 			};
 			const response = await postBookingService(payload);
 			if (response) {
 				toast.success('Order placed successfully!', { autoClose: 2000 });
 			}
+
+			const adminNotification = {
+				title: "New Service Booking",
+				message: `New Service Booking Arrived`,
+				type: "info",
+				priority: "medium",
+				recipient_type: "admin",
+				recipient_id: "686967efa56e85869138d5b2",
+				is_read: false,
+				is_active: true,
+				is_sent: false,
+				created_at: new Date().toISOString(),
+			};
+
+			if (!socket) return null;
+			socket.emit("newNotification", adminNotification);
+			console.log("Notification emitted:", adminNotification);
 		} catch (error: any) {
 			console.error('Order placement error:', error);
 			toast.error(error.response?.data?.message || 'Failed to place order');
@@ -201,14 +221,12 @@ export default function SparePartsCart() {
 		if (activeTab === 'service') {
 			const response = await deleteBookingCartProduct({ cartId, productId: id });
 			if (response) {
-				console.log('Product removed successfully', response);
 				toast.success('Product removed successfully', { autoClose: 2000 });
 				books_valid();
 			}
 		} else if (activeTab === 'ServiceBookingPage') {
 			const response = await deleteBookingCartService({ cartId: serviceId, serviceId: id });
 			if (response) {
-				console.log('Service removed successfully', response);
 				toast.success('Service removed successfully', { autoClose: 2000 });
 				books_valid();
 			}
@@ -226,11 +244,7 @@ export default function SparePartsCart() {
 				<div className='flex justify-star gap-4'>
 					<div className='w-32 h-32 relative group overflow-hidden rounded border'>
 						<img
-							src={
-								part.image
-									? part.image
-									: 'https://boodmo.com/media/cache/catalog_part/images/parts/3fe3e3713e19d66a47bae04233a97cf4.webp'
-							}
+							src={part.image}
 							alt={part.productName}
 							className='object-contain w-full h-full p-2 transition-transform duration-300 group-hover:scale-105'
 						/>
@@ -292,18 +306,12 @@ export default function SparePartsCart() {
 		);
 	};
 	const ServiceCard = ({ serv }: { serv: service }) => {
-		// const [quantity, setQuantity] = useState(1);
-
 		return (
 			<div className='border rounded-lg h-[190px] shadow  mx-left p-4 mb-6 bg-white hover:shadow-md transition duration-300'>
 				<div className='flex justify-star gap-4'>
 					<div className='w-32 h-32 relative group overflow-hidden rounded border'>
 						<img
-							src={
-								serv.image
-									? serv.image
-									: 'https://boodmo.com/media/cache/catalog_part/images/parts/3fe3e3713e19d66a47bae04233a97cf4.webp'
-							}
+							src={serv.image}
 							alt={serv.service_name}
 							className='object-contain w-full h-full p-2 transition-transform duration-300 group-hover:scale-105'
 						/>
@@ -361,7 +369,6 @@ export default function SparePartsCart() {
 	return (
 		<div
 			className='min-h-screen p-6 '
-		// style={{ backgroundImage: `url(${bgImage})` }}
 		>
 			<div className='max-w-7xl mx-auto'>
 				{/* Header */}
@@ -372,10 +379,6 @@ export default function SparePartsCart() {
 				>
 					<span className='inline-block pb-1 relative text-[#0050A5] mb-6'>
 						My Cart
-						{/* <span
-							className={`absolute top-14 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${cartTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
-								}`}
-						></span> */}
 					</span>
 				</h1>
 

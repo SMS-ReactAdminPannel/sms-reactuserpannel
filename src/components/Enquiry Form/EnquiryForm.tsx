@@ -1,12 +1,13 @@
-/* eslint-disable react-hooks/exhaustive-deps */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useEffect, useRef, useState } from 'react';
 import {
 	getEnquiryData,
 	postEnquiryData,
 } from '../../features/Enquiry/service';
+import { getUserProfile } from '../../features/Profile/service';
 import { FONTS } from '../../constants/constant';
+import { toast } from 'react-toastify';
 
+/* Reusable scroll animation hook */
 const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 	options = {}
 ) => {
@@ -15,24 +16,13 @@ const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 
 	useEffect(() => {
 		const observer = new IntersectionObserver(
-			([entry]) => {
-				setIsVisible(entry.isIntersecting);
-			},
-			{
-				threshold: 0.1,
-				rootMargin: '0px 0px -50px 0px',
-				...options,
-			}
+			([entry]) => setIsVisible(entry.isIntersecting),
+			{ threshold: 0.1, rootMargin: '0px 0px -50px 0px', ...options }
 		);
 
-		if (elementRef.current) {
-			observer.observe(elementRef.current);
-		}
-
+		if (elementRef.current) observer.observe(elementRef.current);
 		return () => {
-			if (elementRef.current) {
-				observer.unobserve(elementRef.current);
-			}
+			if (elementRef.current) observer.unobserve(elementRef.current);
 		};
 	}, []);
 
@@ -40,6 +30,9 @@ const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 };
 
 const EnquiryForm = () => {
+	const enquiryTitle = useScrollAnimation<HTMLHeadingElement>();
+	const [submitted, setSubmitted] = useState(false);
+	const [profileData, setProfileData] = useState<any>(null);
 	const [formData, setFormData] = useState({
 		fullName: '',
 		email: '',
@@ -50,8 +43,22 @@ const EnquiryForm = () => {
 		Date: '',
 	});
 
-	const [submitted, setSubmitted] = useState(false);
-	const enquiryTitle = useScrollAnimation<HTMLHeadingElement>();
+	// Populate form once profileData is fetched
+	useEffect(() => {
+		if (profileData) {
+			const fullName = `${profileData.firstName || ''} ${
+				profileData.lastName || ''
+			}`.trim();
+			const email = profileData?.email || '';
+			const phone = profileData?.contact_info?.phoneNumber || '';
+			setFormData((prev) => ({
+				...prev,
+				fullName,
+				email,
+				phoneNumber: phone,
+			}));
+		}
+	}, [profileData]);
 
 	const handleChange = (e: any) => {
 		const { name, value } = e.target;
@@ -64,53 +71,56 @@ const EnquiryForm = () => {
 	const handleSubmit = async (e: any) => {
 		e.preventDefault();
 		try {
+			await postEnquiryData(formData);
 			setSubmitted(true);
 			setFormData({
 				fullName: '',
 				email: '',
 				phoneNumber: '',
 				carModel: '',
-				ServiceType: '',
+				ServiceType: 'general',
 				yourEnquiry: '',
 				Date: '',
 			});
-			const response = await postEnquiryData(formData);
-			if(response){}
+			toast.success('Enquiry submitted successfully!', { autoClose: 2000 });
 		} catch (error) {
-			console.log('Data not send : ', error);
-		}
-
-		// Reset submission status after 5 seconds
-		setTimeout(() => setSubmitted(false), 5000);
-	};
-
-	const getEnquiryDatas = async () => {
-		try {
-			const data = {};
-			const response = await getEnquiryData(data);
-			if(response){}
-		} catch (error) {
-			console.log(error);
+			console.log('Data not sent:', error);
+		} finally {
+			setTimeout(() => setSubmitted(false), 5000);
 		}
 	};
 
 	useEffect(() => {
-		getEnquiryDatas();
+		const fetchProfile = async () => {
+			try {
+				const response: any = await getUserProfile({});
+				setProfileData(response?.data?.data || {});
+			} catch (err) {
+				console.error('Error fetching profile:', err);
+			}
+		};
+
+		const fetchEnquiries = async () => {
+			try {
+				await getEnquiryData({});
+			} catch (err) {
+				console.error('Error fetching enquiries:', err);
+			}
+		};
+
+		fetchProfile();
+		fetchEnquiries();
 	}, []);
 
 	return (
-		<div className='w-2/3 mx-auto p-6 bg-white rounded-lg shadow-md'>
+		<div className='w-4/4 mx-auto p-6 bg-white rounded-lg shadow-md'>
 			<h1
 				ref={enquiryTitle.elementRef}
-				className='text-center'
+				className='text-start'
 				style={{ ...FONTS.heading }}
 			>
-				<span className='inline-block pb-1 relative text-center text-[#0050A5] mb-10'>
+				<span className='inline-block pb-1 relative text-start text-[#0050A5] mb-10'>
 					Enquiry Form
-					{/* <span
-						className={`absolute top-[52px] left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${enquiryTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
-							}`}
-					></span> */}
 				</span>
 			</h1>
 
@@ -135,6 +145,7 @@ const EnquiryForm = () => {
 						value={formData.fullName}
 						onChange={handleChange}
 						required
+						disabled
 						className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#0050A5] focus:border-[#0050A5]'
 					/>
 				</div>
@@ -153,6 +164,7 @@ const EnquiryForm = () => {
 						value={formData.email}
 						onChange={handleChange}
 						required
+						disabled
 						className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#0050A5] focus:border-[#0050A5]'
 					/>
 				</div>
@@ -172,6 +184,7 @@ const EnquiryForm = () => {
 						onChange={handleChange}
 						maxLength={10}
 						required
+						disabled
 						className='mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-[#0050A5] focus:border-[#0050A5]'
 					/>
 				</div>
@@ -252,7 +265,7 @@ const EnquiryForm = () => {
 					/>
 				</div>
 
-				<div className='flex justify-center space-x-4 mt-6'>
+				<div className='flex justify-start space-x-4 mt-6'>
 					<button
 						type='submit'
 						className='w-1/5 flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-[#0050A5] hover:bg-[#004494] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#004494]'

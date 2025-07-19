@@ -25,7 +25,7 @@ const LoginPromptModal: React.FC<Props> = ({ isOpen, onClose }) => {
 			className='w-[90%] max-w-md mx-auto mt-40 bg-white p-6 rounded shadow'
 			overlayClassName='fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[60]'
 		>
-			<h2 className='text-xl font-semibold mb-2'>Please SignUp</h2>
+			<h2 className='text-xl font-semibold mb-2'>Please Login</h2>
 			<p className='text-gray-700 mb-4'>You need to login to book a service.</p>
 			<div className='flex justify-end space-x-4'>
 				<button

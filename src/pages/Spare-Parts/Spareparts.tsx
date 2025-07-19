@@ -1,33 +1,27 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useState, useEffect, useRef } from 'react';
 import { ShoppingCart } from 'lucide-react';
 import { Search, X } from 'lucide-react';
-
 import {
 	getSparePartsData,
 	postSparePartsData,
 } from '../../features/spareparts';
-import spareimg from '../../assets/CAR DIFFERENTIAL/Car differential.jpg';
 import { FONTS } from '../../constants/constant';
-// import { SiTicktick } from 'react-icons/si';
 import { Link } from 'react-router-dom';
-import spareImg from '../../assets/CarPart1.jfif';
 import toast from 'react-hot-toast';
 import { useAuth } from '../auth/AuthContext';
 import LoginPromptModal from '../../components/Authentication/LoginPromptModal';
 
 interface SparePart {
-	id: string;
+	id: any;
 	spareparts_name: string;
 	price: number;
-	stock: string;
+	stock: any;
+	inStock: any;
 	images: string[];
 	type: string;
 	image: string;
 	category?: string;
 }
-
-// Custom hook for Scroll Animation
 
 const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 	options = {}
@@ -53,11 +47,9 @@ const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 
 		return () => {
 			if (elementRef.current) {
-				// eslint-disable-next-line react-hooks/exhaustive-deps
 				observer.unobserve(elementRef.current);
 			}
 		};
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	return { elementRef, isVisible };
@@ -76,6 +68,7 @@ const SpareParts: React.FC = () => {
 			title: string;
 			image: string;
 			items: string[];
+			_id?: string;
 		}[]
 	>([]);
 
@@ -83,18 +76,13 @@ const SpareParts: React.FC = () => {
 	const { isAuthenticated } = useAuth();
 	const [showLoginModal, setShowLoginModal] = useState(false);
 
-	// const {CategoryData} = useSparePartsDataset;
-
-	// const [error, setError] = useState<string | null>(null);
-	// const [isLoading, setIsLoading] = useState(true);
-
 	const fetchSpareParts = async () => {
 		try {
-			// setError(null);
 			const response: any = await getSparePartsData({});
-			if (response && response.data && response.data.data) {
+
+			if (response && response?.data && response?.data?.data) {
 				if (Array.isArray(response.data.data)) {
-					const validatedParts = response.data.data.map((part: any) => {
+					const validatedParts = response?.data?.data?.map((part: any) => {
 						return {
 							id: part._id || '',
 							spareparts_name: part.productName || '',
@@ -108,12 +96,13 @@ const SpareParts: React.FC = () => {
 								part.image ||
 								(Array.isArray(part.images) ? part.images[0] : ''),
 							category: part.category || 'Uncategorized',
+							inStock: part?.inStock,
 						};
 					});
 
 					setParts(validatedParts);
 					const categoriesData = transformToCategories(validatedParts);
-					setCategories(categoriesData);
+					setCategories(categoriesData as any);
 					// setIsLoading(false);
 				} else {
 					throw new Error('API response data is not an array');
@@ -123,25 +112,21 @@ const SpareParts: React.FC = () => {
 			}
 		} catch (error) {
 			console.error('Error fetching spare parts:', error);
-			// setError(
-			// 	error instanceof Error ? error.message : 'Failed to fetch spare parts'
-			// );
 			setParts([]);
 			setCategories([]);
-		} finally {
-			// setIsLoading(false);
 		}
 	};
 
 	const transformToCategories = (parts: SparePart[]) => {
-		const categoriesMap = parts.reduce((acc, part) => {
+		const categoriesMap = parts.reduce((acc: any, part: any) => {
 			const categoryName = part.category || 'Uncategorized';
 			if (!acc[categoryName]) {
 				acc[categoryName] = {
 					id: categoryName.toLowerCase().replace(/\s+/g, '-'),
 					title: categoryName,
-					image: part.image || spareimg,
+					image: part.image,
 					items: [],
+					_id: part.id,
 				};
 			}
 			if (!acc[categoryName].items.includes(part.spareparts_name)) {
@@ -155,7 +140,6 @@ const SpareParts: React.FC = () => {
 
 	useEffect(() => {
 		fetchSpareParts();
-		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, []);
 
 	const handleTouchStart = (e: React.TouchEvent): void => {
@@ -185,8 +169,8 @@ const SpareParts: React.FC = () => {
 		}
 	};
 
-	const filteredParts = parts.filter((part) =>
-		part.spareparts_name.toLowerCase().includes(searchTerm.toLowerCase())
+	const filteredParts = parts?.filter((part) =>
+		part?.spareparts_name?.toLowerCase().includes(searchTerm.toLowerCase())
 	);
 
 	// Add to cart button functions
@@ -195,8 +179,8 @@ const SpareParts: React.FC = () => {
 			try {
 				const payload = {
 					products: {
-						productId: part.id,
-						price: part.price?.toString(),
+						productId: part?.id,
+						price: part?.price?.toString(),
 						quantity: quantity,
 					},
 					type: 'spare',
@@ -204,7 +188,6 @@ const SpareParts: React.FC = () => {
 				const response = await postSparePartsData(payload);
 				if (response) {
 					toast.success('Item added to cart!', { duration: 2000 });
-					// Refresh cart count in navbar
 					if ((window as any).refreshCartCount) {
 						(window as any).refreshCartCount();
 					}
@@ -224,16 +207,6 @@ const SpareParts: React.FC = () => {
 	const offerTitle = useScrollAnimation<HTMLHeadingElement>();
 	const productTitle = useScrollAnimation<HTMLHeadingElement>();
 	const bundleTitle = useScrollAnimation<HTMLHeadingElement>();
-	// const categoryTitle = useScrollAnimation<HTMLHeadingElement>();
-
-	// if (isLoading) {
-	// 	return (
-	// 		<div className='min-h-screen bg-gray-50 flex items-center justify-center flex-col gap-2'>
-	// 			<div className='animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500'></div>
-	// 			<p className='text-red-500 text-lg font-semibold'>Loading...</p>
-	// 		</div>
-	// 	);
-	// }
 
 	return (
 		<div className='p-12 mx-8'>
@@ -243,14 +216,46 @@ const SpareParts: React.FC = () => {
 					style={{ ...FONTS.heading }}
 				>
 					Spare Parts
-					{/* <span
-						className={`absolute top-14 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${offerTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
-							}`}
-					></span> */}
 				</span>
 			</h1>
 
-			<div className='flex items-center justify-end flex-wrap gap-4 mt-6 mb-6'>
+			{/* Hero Card */}
+			<div className='mb-8 w-full bg-gray-100 rounded-xl shadow p-4 md:p-6 flex flex-row lg:flex-row items-center gap-6 hover:shadow-lg transition-shadow duration-300 h-[280px]'>
+				{/* Content - Left Side */}
+				<div className='flex-1 order-none lg:order-none'>
+					<h2
+						className='text-[#0050A5] mb-3 md:mb-4'
+						style={{ ...FONTS.sub_heading }}
+					>
+						Ready to upgrade? Start exploring now!
+					</h2>
+					<p className='text-gray-700 mb-3 text-sm md:text-base'>
+						From trusted genuine parts to reliable aftermarket options — we’ve
+						got what your car needs. Quick delivery and happy customers are our
+						promise!
+					</p>
+				</div>
+
+				{/* Image - Right Side */}
+				<div className='flex-1 w-full lg:flex lg:justify-end order-0 lg:order-none'>
+					<img
+						src='https://t4.ftcdn.net/jpg/05/21/93/17/360_F_521931702_TXOHZBa3tLVISome894Zc061ceab4Txm.jpg'
+						alt='Spare Parts Overview'
+						className='rounded-lg max-h-[200px] md:max-h-[250px] w-full lg:w-auto object-cover shadow'
+					/>
+				</div>
+			</div>
+
+			<h1 className='text-center' ref={productTitle.elementRef}>
+				<span
+					className='inline-block pb-1 relative text-[#0050A5] mb-3'
+					style={{ ...FONTS.heading }}
+				>
+					Products
+				</span>
+			</h1>
+
+			<div className='flex items-center justify-end flex-wrap gap-4 mb-6'>
 				{/* Search Bar */}
 				<div className='relative w-full max-w-md'>
 					<input
@@ -274,50 +279,10 @@ const SpareParts: React.FC = () => {
 				</div>
 			</div>
 
-			{/* Hero Card */}
-			<div className='mb-8 w-full bg-gray-100 rounded-xl shadow p-4 md:p-6 flex flex-row lg:flex-row items-center gap-6 hover:shadow-lg transition-shadow duration-300 h-[280px]'>
-				{/* Content - Left Side */}
-				<div className='flex-1 order-none lg:order-none'>
-					<h2
-						className='text-[#0050A5] mb-3 md:mb-4'
-						style={{ ...FONTS.sub_heading }}
-					>
-						Welcome to Auto Spare Hub
-					</h2>
-					<p className='text-gray-700 mb-3 text-sm md:text-base'>
-						Discover top-quality auto spare parts. We offer genuine and after
-						market components with fast delivery and customer satisfaction
-						guaranteed.
-					</p>
-				</div>
-
-				{/* Image - Right Side */}
-				<div className='flex-1 w-full lg:flex lg:justify-end order-0 lg:order-none'>
-					<img
-						src='https://t4.ftcdn.net/jpg/05/21/93/17/360_F_521931702_TXOHZBa3tLVISome894Zc061ceab4Txm.jpg'
-						alt='Spare Parts Overview'
-						className='rounded-lg max-h-[200px] md:max-h-[250px] w-full lg:w-auto object-cover shadow'
-					/>
-				</div>
-			</div>
-
-			<h1 className='text-center' ref={productTitle.elementRef}>
-				<span
-					className='inline-block pb-1 relative text-[#0050A5] mb-10'
-					style={{ ...FONTS.heading }}
-				>
-					Products
-					{/* <span
-						className={`absolute top-12 left-1/2 h-[1px] bg-[#9b111e] transform -translate-x-1/2 origin-center transition-all duration-700 ${productTitle.isVisible ? 'scale-x-100 w-full' : 'scale-x-0 w-full'
-							}`}
-					></span> */}
-				</span>
-			</h1>
-
 			{/* Product Grid */}
 			<div className=' mx-auto'>
 				<div className='grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 mb-8 px-2'>
-					{displayedParts.length === 0 ? (
+					{displayedParts?.length === 0 ? (
 						<div className='col-span-full text-center py-8'>
 							<p className='text-gray-500 text-lg'>
 								{searchTerm
@@ -327,7 +292,7 @@ const SpareParts: React.FC = () => {
 						</div>
 					) : (
 						<>
-							{displayedParts.map((part, index) => (
+							{displayedParts?.map((part, index) => (
 								<div
 									key={part.id}
 									className='group relative border rounded-lg overflow-hidden shadow transition-transform duration-300 cursor-pointer bg-[#BED0EC]  hover:shadow-[0_0_10px_#BED0EC]'
@@ -340,47 +305,45 @@ const SpareParts: React.FC = () => {
 										<img
 											src={
 												(hoveredIndex === index &&
-													part.images &&
-													part.images[1]) ||
-												part.images[0] ||
-												part.image ||
-												spareimg
+													part?.images &&
+													part?.images[1]) ||
+												part?.images[0] ||
+												part?.image
 											}
-											alt={part.spareparts_name}
+											alt={part?.spareparts_name}
 											className='w-auto rounded object-cover transition-all duration-300 ease-in-out rounded-md'
-											onError={(e) => {
-												(e.target as HTMLImageElement).src = spareimg;
-											}}
 										/>
 									</div>
 									<div className='p-6 px-6 relative'>
 										<div className='text-xl font-semibold line-clamp-2 mb-1'>
-											{part.spareparts_name}
+											{part?.spareparts_name}
 										</div>
 										<div className='text-md text-gray-600 mb-1'>
-											{part.type}
+											{part?.type}
 										</div>
 										<div className='text-md font-bold text-[#0050A5]'>
-											₹{part.price.toLocaleString()}
+											₹{part?.price.toLocaleString()}
 										</div>
 										<div
 											className={`mt-2 text-xs font-semibold ${
-												part.stock ? 'text-green-600' : 'text-red-600'
+												part?.stock >= 1 ? 'text-green-600' : 'text-red-600'
 											}`}
 										>
-											{part.stock ? 'In Stock' : 'Out of Stock'}
+											{part?.stock >= 1 ? 'In Stock' : 'Out of Stock'}
 										</div>
 
 										{/* Cart Icon Button */}
-										<button
-											className='absolute bottom-4 right-5 bg-white p-3 rounded-full shadow hover:bg-[#0050A5] hover:text-white transition'
-											onClick={(e) => {
-												e.stopPropagation();
-												handleAddToCart(part);
-											}}
-										>
-											<ShoppingCart size={28} />
-										</button>
+										{part?.stock >= 1 && (
+											<button
+												className='absolute bottom-4 right-5 bg-white p-3 rounded-full shadow hover:bg-[#0050A5] hover:text-white transition'
+												onClick={(e) => {
+													e.stopPropagation();
+													handleAddToCart(part);
+												}}
+											>
+												<ShoppingCart size={28} />
+											</button>
+										)}
 									</div>
 								</div>
 							))}
@@ -390,7 +353,7 @@ const SpareParts: React.FC = () => {
 
 				{/* View All/Show Less Buttons */}
 				<div className='flex justify-center gap-4 mt-6'>
-					{!showAllProducts && filteredParts.length > 8 && (
+					{!showAllProducts && filteredParts?.length > 8 && (
 						<button
 							onClick={() => setShowAllProducts(true)}
 							className='bg-[#0050A5] text-white px-6 py-2 rounded-md  transition-colors duration-200'
@@ -417,7 +380,7 @@ const SpareParts: React.FC = () => {
 			</div>
 
 			{/* Bundles Section - Only show if there are parts */}
-			{parts.length > 0 && (
+			{parts?.length > 0 && (
 				<div className='bg-gray-100 mt-16 transition-shadow p-8'>
 					<h1 className='text-center' ref={bundleTitle.elementRef}>
 						<span
@@ -445,7 +408,7 @@ const SpareParts: React.FC = () => {
 							onTouchEnd={handleTouchEnd}
 						>
 							{/* Add clones at the beginning and end for seamless looping */}
-							{[...parts.slice(-3), ...parts, ...parts.slice(0, 3)].map(
+							{[...parts?.slice(-3), ...parts, ...parts?.slice(0, 3)]?.map(
 								(part, index) => (
 									<div
 										key={`${part.id}-${index}`}
@@ -455,7 +418,7 @@ const SpareParts: React.FC = () => {
 											{/* Background Image with Overlay */}
 											<div
 												className='absolute inset-0 bg-cover bg-center blur-[2px]'
-												style={{ backgroundImage: `url(${spareimg}` }}
+												style={{ backgroundImage: `url(${part?.image}` }}
 											/>
 											<div className='absolute inset-0 bg-black opacity-10' />
 
@@ -463,16 +426,13 @@ const SpareParts: React.FC = () => {
 											<div className='relative z-10 flex flex-col items-center'>
 												<div className='w-16 h-16 mb-4 rounded-full bg-white bg-opacity-20 flex items-center justify-center backdrop-blur-sm'>
 													<img
-														src={spareimg}
-														alt={part.spareparts_name}
+														src={part?.image}
+														alt={part?.spareparts_name}
 														className='w-12 h-12 object-cover rounded-full'
-														onError={(e) => {
-															(e.target as HTMLImageElement).src = spareimg;
-														}}
 													/>
 												</div>
 												<div className='text-xl font-semibold mb-2'>
-													{part.spareparts_name}
+													{part?.spareparts_name}
 												</div>
 											</div>
 										</div>
@@ -573,9 +533,9 @@ const SpareParts: React.FC = () => {
 					By Categories
 				</h1>
 
-				{categories.length !== 0 ? (
+				{categories?.length !== 0 ? (
 					<div className=' grid grid-cols-4 gap-6'>
-						{categories?.map(({ id, title, items }) => (
+						{categories?.map(({ id, title, items, image, _id }) => (
 							<div
 								key={id}
 								className='flex flex-col gap-4 p-6 border rounded-xl shadow-md'
@@ -585,17 +545,24 @@ const SpareParts: React.FC = () => {
 										{title}
 									</h2>
 									<img
-										src={spareImg}
+										src={image}
 										alt={title}
 										className='w-16 h-16 object-contain'
 									/>
 								</div>
 								<ul className='space-y-1 text-sm'>
-									{items.slice(0, 3).map((item, index) => (
-										<li key={index} className='hover:underline cursor-pointer'>
-											{item}
-										</li>
-									))}
+									{items?.slice(0, 3).map((item, index) => {
+										return (
+											<Link to={`/spare-parts/product/${_id}`}>
+												<li
+													key={index}
+													className='hover:underline cursor-pointer'
+												>
+													{item}
+												</li>
+											</Link>
+										);
+									})}
 								</ul>
 								<Link
 									to={`/spare-parts/category/${id}`}
@@ -637,22 +604,31 @@ const SpareParts: React.FC = () => {
 								src={
 									selectedPart.images && selectedPart.images[0]
 										? selectedPart.images[0]
-										: selectedPart.image || spareimg
+										: selectedPart.image
 								}
 								alt={selectedPart.spareparts_name}
 								className='w-48 h-48 object-cover rounded-lg shadow-md'
-								onError={(e) => {
-									(e.target as HTMLImageElement).src = spareimg;
-								}}
 							/>
 						</div>
 
 						<h2 className='text-lg font-bold mb-2'>
 							{selectedPart.spareparts_name}
 						</h2>
-						<p className='text-sm text-gray-600 mb-1'>
-							Type: {selectedPart.type}
-						</p>
+						<div className='flex justify-between items-center mb-4'>
+							<p className='text-sm text-gray-600'>Type: {selectedPart.type}</p>
+
+							<p
+								className={`${
+									selectedPart.stock > 0 ? 'bg-green-700' : 'bg-red-500'
+								} text-white px-2 py-1 rounded-full text-sm font-semibold`}
+							>
+								{selectedPart.stock && parseInt(selectedPart.stock) > 0 ? (
+									<span>Stock : {selectedPart.stock}</span>
+								) : (
+									<span>Out of Stock</span>
+								)}
+							</p>
+						</div>
 
 						<div className='flex items-center gap-2 mb-4'>
 							<span className='text-sm font-medium'>Quantity:</span>
@@ -664,8 +640,16 @@ const SpareParts: React.FC = () => {
 							</button>
 							<span className='px-2'>{quantity}</span>
 							<button
-								onClick={() => setQuantity((prev) => prev + 1)}
-								className='px-2 py-1 bg-gray-200 rounded hover:bg-gray-300'
+								onClick={() =>
+									setQuantity((prev) =>
+										quantity < parseInt(selectedPart.stock) ? prev + 1 : prev
+									)
+								}
+								className={`px-2 py-1 bg-gray-200 rounded hover:bg-gray-300 ${
+									parseInt(selectedPart.stock) <= quantity
+										? 'cursor-not-allowed opacity-50'
+										: ''
+								}`}
 							>
 								+
 							</button>

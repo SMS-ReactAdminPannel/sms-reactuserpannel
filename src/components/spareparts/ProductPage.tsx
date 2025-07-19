@@ -2,7 +2,6 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { useSparePartsDataset } from '../spareparts/data/Product';
 import { IoMdArrowRoundBack } from 'react-icons/io';
 import { useState } from 'react';
-import spareImg from '../../assets/CarPart1.jfif';
 import { postSparePartsData } from '../../features/spareparts';
 import { toast } from 'react-toastify';
 
@@ -17,14 +16,6 @@ const ProductPage = () => {
 
 	const product = parts.filter((item: any) => item.id === productId);
 	const [isAdded, setIsAdded] = useState(false);
-
-	// const handleAddToCart = () => {
-	// 	setIsAdded(true);
-	// 	//   toast.success('Item added to cart!');
-	// 	setTimeout(() => {
-	// 		setIsAdded(false);
-	// 	}, 2000);
-	// };
 
 	const handleAddToCart = async () => {
 		try {
@@ -48,7 +39,7 @@ const ProductPage = () => {
 	};
 	return (
 		<>
-			{product.map((item: any, index: number) => (
+			{product?.map((item: any, index: number) => (
 				<div className='container mx-auto p-7' key={item.id || index}>
 					<IoMdArrowRoundBack
 						onClick={fallBack}
@@ -57,7 +48,7 @@ const ProductPage = () => {
 					<div className='flex xs:flex-col sm:flex-col md:flex-row gap-8'>
 						<div className='md:w-3/5 sm:w-4/5 md:h-[380px] sm:h-[300px]'>
 							<img
-								src={spareImg}
+								src={item?.image}
 								alt={item?.spareparts_name}
 								className='w-full h-full rounded-lg object-cover shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2'
 							/>
@@ -69,16 +60,24 @@ const ProductPage = () => {
 							<p className='text-xl text-[#0050A5] font-semibold mb-4'>
 								₹{item?.price}{' '}
 								<span className='text-gray-500'>
-									<del>₹{item?.price + 500}</del>
+									<del>₹{item?.price * 1.2}</del>
 								</span>
 							</p>
 							<h2 className='text-lg font-semibold mb-2'>Specifications:</h2>
-							<ul className='mb-6'>
+							<ul className=''>
 								<li key={index} className='mb-1 text-sm'>
 									• {item?.spareparts_name}
 								</li>
 							</ul>
-
+							{item?.stock >= 1 ? (
+								<div className='bg-green-600 inline-block my-3 px-2 py-0.5 rounded-md'>
+									<p className='text-white'>Stock: {item?.stock}</p>
+								</div>
+							) : (
+								<div className='bg-red-600 inline-block my-3 px-2 py-0.5 rounded-md'>
+									<p className='text-white'>Stock: {item?.stock}</p>
+								</div>
+							)}
 							<div className='flex items-center gap-2 mb-4'>
 								<span className='text-sm font-medium'>Quantity:</span>
 								<button
@@ -89,8 +88,16 @@ const ProductPage = () => {
 								</button>
 								<span className='px-2'>{quantity}</span>
 								<button
-									onClick={() => setQuantity((prev) => prev + 1)}
-									className='px-2 py-1 bg-[#BED0EC] rounded hover:bg-[#BED0EC] hover:scale-105 transition-transform duration-200'
+									onClick={() =>
+										setQuantity((prev) =>
+											item?.stock > prev ? prev + 1 : prev
+										)
+									}
+									className={`px-2 py-1 bg-[#BED0EC] rounded hover:bg-[#BED0EC] hover:scale-105 transition-transform duration-200 ${
+										item?.stock <= quantity
+											? 'opacity-50 cursor-not-allowed'
+											: ''
+									}`}
 								>
 									+
 								</button>
@@ -103,14 +110,23 @@ const ProductPage = () => {
 								</span>
 							</div>
 
-							{/* <Toaster position="top-center" /> */}
 							<div className='flex justify-center items-center mt-12'>
-								<button
-									onClick={handleAddToCart}
-									className={`px-3 py-2 bg-[#0050A5] text-white font-semibold py-1 rounded-full transition-all duration-300 transform shadow-lg hover:scale-105 hover:shadow-xl`}
-								>
-									{isAdded ? 'Added!' : 'Add To Cart'}
-								</button>
+								{item?.stock >= 1 ? (
+									<button
+										onClick={handleAddToCart}
+										className={`px-3 py-2 bg-[#0050A5] text-white font-semibold py-1 rounded-full transition-all duration-300 transform shadow-lg hover:scale-105 hover:shadow-xl`}
+									>
+										{isAdded ? 'Added!' : 'Add To Cart'}
+									</button>
+								) : (
+									<button
+										onClick={handleAddToCart}
+										disabled
+										className={`px-3 py-2 bg-red-700 text-white font-semibold py-1 rounded-full`}
+									>
+										Out of Stock
+									</button>
+								)}
 							</div>
 						</div>
 					</div>
