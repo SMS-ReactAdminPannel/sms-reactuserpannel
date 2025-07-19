@@ -282,11 +282,11 @@ export default function SparePartsCart() {
 
 						<div className='flex gap-2 items-center'>
 							<span className='text-lg font-bold text-[#0050A5]'>
-								₹{part?.price}
+								&#8377;{part?.price}
 							</span>
-							<span className='line-through text-sm text-gray-400 '>
+							{/* <span className='line-through text-sm text-gray-400 '>
 								₹{Math.round(part?.price * 1.3)}
-							</span>
+							</span> */}
 						</div>
 
 						<div className='flex gap-2'>
@@ -350,11 +350,11 @@ export default function SparePartsCart() {
 
 						<div className='flex gap-2 items-center'>
 							<span className='text-lg font-bold text-[#0050A5]'>
-								₹{serv.price}
+								&#8377;{serv.price}
 							</span>
-							<span className='line-through text-sm text-gray-400 '>
+							{/* <span className='line-through text-sm text-gray-400 '>
 								₹{Math.round(serv.price * 1.3)}
-							</span>
+							</span> */}
 						</div>
 
 						<div className='flex gap-2 '>
@@ -463,7 +463,7 @@ export default function SparePartsCart() {
 					</div>
 
 					{/* Summary Sidebar */}
-					<div className=' fixed w-[520px] ml-[50px] left-1/2'>
+					<div className=' fixed w-[520px] ml-[50px] top-[370px] left-1/2'>
 						{/* Parts Summary */}
 						{books?.length > 0 && activeTab === 'service' && (
 							<div className='bg-white rounded-lg shadow-md p-4 mb-6  '>
@@ -482,25 +482,25 @@ export default function SparePartsCart() {
 								<div className='space-y-2 mb-4'>
 									<div className='flex justify-between text-sm'>
 										<span>price ({books.length} items)</span>
-										<span>₹{totalPartPrice}</span>
+										<span>&#8377;{totalPartPrice}</span>
 									</div>
-									<div className='flex justify-between text-sm'>
+									{/* <div className='flex justify-between text-sm'>
 										<span>Discount</span>
 										<span> - ₹ 0</span>
-									</div>
-									<div className='flex justify-between text-sm'>
+									</div> */}
+									{/* <div className='flex justify-between text-sm'>
 										<span>Delivery Charges</span>
 										<span>
 											{' '}
 											<del>₹100</del>{' '}
 											<span className='text-green-600 font-bold'>Free</span>{' '}
 										</span>
-									</div>
+									</div> */}
 								</div>
 								<div className='border-t border-[#0050A5] pt-2 mb-2'>
 									<div className='flex justify-between font-bold text-[#0050A5]'>
 										<span>Total</span>
-										<span>₹{totalPartPrice}</span>
+										<span>&#8377;{totalPartPrice}</span>
 									</div>
 								</div>
 								<div className='flex justify-center'>
@@ -541,25 +541,25 @@ export default function SparePartsCart() {
 								<div className='space-y-2 mb-4'>
 									<div className='flex justify-between text-sm'>
 										<span>price ({services.length} items)</span>
-										<span>₹{totalServicePrice}</span>
+										<span>&#8377;{totalServicePrice}</span>
 									</div>
-									<div className='flex justify-between text-sm'>
+									{/* <div className='flex justify-between text-sm'>
 										<span>Discount</span>
 										<span> - ₹ 0</span>
-									</div>
-									<div className='flex justify-between text-sm'>
+									</div> */}
+									{/* <div className='flex justify-between text-sm'>
 										<span>Delivery Charges</span>
 										<span>
 											{' '}
 											<del>₹100</del>{' '}
 											<span className='text-green-600 font-bold'>Free</span>{' '}
 										</span>
-									</div>
+									</div> */}
 								</div>
 								<div className='border-t border-[#0050A5] pt-2 mb-4'>
 									<div className='flex justify-between font-bold text-[#0050A5]'>
 										<span>Total</span>
-										<span>₹{totalServicePrice}</span>
+										<span>&#8377;{totalServicePrice}</span>
 									</div>
 								</div>
 								<div className='flex justify-center'>

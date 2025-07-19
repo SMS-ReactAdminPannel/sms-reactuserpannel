@@ -205,8 +205,8 @@ const ServicesPage: React.FC = () => {
 							icon: <Wrench className='w-4 h-4' />,
 						},
 					],
-					price: `₹${discountPrice}`,
-					discountPrice: `₹${originalPrice}`,
+					price: `${discountPrice}`,
+					discountPrice: `${originalPrice}`,
 				};
 			});
 
@@ -547,11 +547,11 @@ const ServicesPage: React.FC = () => {
 												<div className='flex flex-col justify-between items-start mt-6'>
 													{/* Price and Discount */}
 													<div className='text-right mb-2'>
-														<span className='line-through text-gray-400 mr-2 text-sm'>
-															{pkg.price}
-														</span>
+														{/* <span className='line-through text-gray-400 mr-2 text-sm'>
+															&#8377; {pkg.price}
+														</span> */}
 														<span className='text-[#0050A5]-600 font-bold text-xl'>
-															{pkg.discountPrice}
+															&#8377; {pkg.discountPrice}
 														</span>
 													</div>
 													<br />

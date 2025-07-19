@@ -65,10 +65,10 @@ const SparePartCard: React.FC<Props> = ({ parts, onDelete, onConfirm }) => {
             <div className="flex flex-cols gap-4 w-72 justify-between   ">
               <div className="flex gap-3">
                 <span className="text-lg font-bold text-green-600 ">
-                ₹{totalPrice}
+                &#8377;{totalPrice}
               </span>
               <span className="line-through text-sm text-gray-400">
-                ₹{parts.originalPrice}
+                &#8377;{parts.originalPrice}
               </span></div>
               <span className="text-red-500 text-sm">
                 {parts.discount}% off

@@ -331,7 +331,7 @@ const SpareParts: React.FC = () => {
 											{part?.brand}
 										</div>
 										<div className='text-md font-bold text-[#0050A5]'>
-											₹{part?.price.toLocaleString()}
+											&#8377;{part?.price.toLocaleString()}
 										</div>
 										<div
 											className={`mt-2 text-xs font-semibold ${
@@ -678,7 +678,7 @@ const SpareParts: React.FC = () => {
 						<div className='text-sm mt-3 mb-2'>
 							Total Price:{' '}
 							<span className='font-semibold text-[#0050A5]'>
-								₹{(selectedPart.price * quantity).toLocaleString()}
+								&#8377;{(selectedPart.price * quantity).toLocaleString()}
 							</span>
 						</div>
 
