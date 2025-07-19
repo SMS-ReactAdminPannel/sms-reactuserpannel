@@ -13,7 +13,7 @@ type MailItem = {
 	sender: string;
 	title: string;
 	preview: string;
-	Message: string;
+	message: string;
 	updated_at: string;
 	unread: boolean;
 	recipient_type: string;
@@ -29,19 +29,19 @@ export default function GmailStyleInbox() {
 	const socket = useSocket();
 	// const [isLoading, setIsLoading] = useState(true);
 
-	const filteredMails = mails
-		.filter((mail) => mail.recipient_type === 'customer')
-		.filter((mail) =>
-			filter === 'all'
-				? true
-				: filter === 'unread'
-					? !mail.is_read
-					: mail.is_read
-		);
+	const filteredMails = mails.filter((mail) => {
+		if (mail.recipient_type !== 'customer' && mail.recipient_type !== 'all')
+			return false;
+		if (filter === 'all') return true;
+		if (filter === 'unread') return !mail.is_read;
+		if (filter === 'read') return mail.is_read;
+
+		return true; // fallback
+	});
 
 	const fetchAllNotifications = async () => {
 		try {
-			const userId = localStorage.getItem('userId')
+			const userId = localStorage.getItem('userId');
 			if (!userId) return;
 			const response: any = await getNotificationsByUser(userId);
 			const data: MailItem[] = response?.data?.data?.notifications || [];
@@ -60,36 +60,29 @@ export default function GmailStyleInbox() {
 		fetchAllNotifications();
 	}, []);
 
-
-
-	const handleMarkRead = async (uuid: string) => {
+	const handleMarkRead = async (mail: MailItem) => {
+		setSelectedMail(mail);
 		try {
-			const response = await markNotificationsAsRead(uuid);
-			console.log("Notification marked as read:", response);
+			const response = await markNotificationsAsRead(mail.uuid);
+			console.log('Notification marked as read:', response);
 		} catch (err) {
-			console.error("Failed to mark notification as read:", err);
+			console.error('Failed to mark notification as read:', err);
 		}
 	};
-
-
-
 
 	useEffect(() => {
 		if (!socket) return;
 
 		const handleNotify = (data: any) => {
-			console.log("Notification Recieved", data);
-			setMails((prev) => [data, ...prev])
+			setMails((prev) => [data, ...prev]);
 		};
 
 		socket.on('newNotification', handleNotify);
 
 		return () => {
 			socket.off('newNotification', handleNotify);
-		}
-	}, [socket])
-
-	console.log('Filtered Mails:', filteredMails);
+		};
+	}, [socket]);
 
 	return (
 		<div className=' bg-[#d8e1ef] p-2 font-[Poppins]'>
@@ -114,10 +107,11 @@ export default function GmailStyleInbox() {
 									setFilter(f as 'all' | 'unread' | 'read');
 									setSelectedMail(null);
 								}}
-								className={`block w-full text-left px-4 py-2 rounded-lg transition-all duration-200 ${filter === f
-									? 'bg-[#0050A5] text-white'
-									: 'bg-transparent text-gray-700 hover:bg-gray-100'
-									}`}
+								className={`block w-full text-left px-4 py-2 rounded-lg transition-all duration-200 ${
+									filter === f
+										? 'bg-[#0050A5] text-white'
+										: 'bg-transparent text-gray-700 hover:bg-gray-100'
+								}`}
 							>
 								{f.charAt(0).toUpperCase() + f.slice(1)}
 							</button>
@@ -132,14 +126,13 @@ export default function GmailStyleInbox() {
 							<div
 								key={index}
 								onClick={() => {
-									// handleUpdateNotification(mail)
-									handleMarkRead(mail.uuid)
+									handleMarkRead(mail);
 								}}
-
-								className={`cursor-pointer flex gap-4 p-4  rounded-xl hover:bg-blue-50 transition duration-150 ${!mail.is_read
-									? 'bg-gray-100 font-semibold'
-									: 'border border-gray-200'
-									}`}
+								className={`cursor-pointer flex gap-4 p-4  rounded-xl hover:bg-blue-50 transition duration-150 ${
+									!mail.is_read
+										? 'bg-gray-100 font-semibold'
+										: 'border border-gray-200'
+								}`}
 							>
 								<div className='p-[1px] rounded-full bg-gradient-to-r from-red-600 to-red-800 inline-block'>
 									<img
@@ -155,10 +148,10 @@ export default function GmailStyleInbox() {
 										</span>
 
 										<p className='text-sm font-medium text-[#0050A5] mt-2'>
-											{mail.Message}
+											{mail.message}
 										</p>
 										<p className='text-xs text-gray-500 mt-2'>
-											{dayjs(mail.updated_at).format('MMM D h:mm A')}
+											{dayjs(mail.created_at).format('MMM D h:mm A')}
 										</p>
 									</div>
 								</div>
@@ -187,16 +180,14 @@ export default function GmailStyleInbox() {
 								</h2>
 
 								<div className='flex items-center justify-end text-lg text-gray-600 mb-4'>
-									<div className='w-10 h-10 flex items-center justify-center bg-gradient-to-r from-red-600 to-red-800 text-white rounded-full mr-3 uppercase font-bold'>
-										{selectedMail?.sender}
-									</div>
+									
 									<div>
-										<p className='font-semibold text-gray-800 capitalize'>
-											{selectedMail?.sender}
-										</p>
+										{/* <p className='font-semibold text-gray-800 capitalize'>
+											{selectedMail.sender}
+										</p> */}
 										<div className='flex justify-center'>
 											<span className='text-sm text-gray-500  text-right block '>
-												{dayjs(selectedMail.created_at).format(
+												{dayjs(selectedMail?.created_at).format(
 													'DD-MM-YYYY h:mm A'
 												)}
 											</span>
@@ -207,7 +198,7 @@ export default function GmailStyleInbox() {
 								<hr className='my-4 border-t-1 border-gray-400' />
 
 								<div className='whitespace-pre-wrap text-md leading-relaxed text-gray-800'>
-									{selectedMail.Message}
+									{selectedMail?.message}
 								</div>
 							</div>
 						) : (

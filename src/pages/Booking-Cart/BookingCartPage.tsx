@@ -88,6 +88,7 @@ export default function SparePartsCart() {
 	const books_valid = async () => {
 		try {
 			const response: any = await booking_cart({});
+			console.log(response, '');
 			if (response) {
 				// setIsLoading(false);
 			}
@@ -100,22 +101,22 @@ export default function SparePartsCart() {
 			if (spareEntry?.products) {
 				const spares = spareEntry.products.map(
 					(product: any): spare => ({
-						_id: product?._id || "",
-						productName: product.productId?.productName || 'Unknown',
-						price: Number(product.price) || 0,
-						brand: product.productId?.brand || 'Generic',
-						image: product.productId?.image || '',
-						quantity: Number(product.quantity) || 1,
-						category: product.productId?.category || '',
-						description: product.productId?.description || '',
-						stock: Number(product.productId?.stock) || 0,
+						_id: product?._id,
+						productName: product?.productId?.productName,
+						price: Number(product?.price),
+						brand: product.productId?.brand,
+						image: product.productId?.image,
+						quantity: Number(product?.quantity),
+						category: product?.productId?.category,
+						description: product?.productId?.description,
+						stock: Number(product?.productId?.stock),
 						discount: 0,
 					})
 				);
 				setBooks(spares);
 			}
 
-			const serviceEntry = cartData.find((item) => item.type === 'service');
+			const serviceEntry = cartData?.find((item) => item.type === 'service');
 			const serviceId = serviceEntry?._id;
 			setServiceCartId(serviceId);
 
@@ -123,11 +124,11 @@ export default function SparePartsCart() {
 				const mappedServices = serviceEntry.services.map(
 					(service: any): service => ({
 						_id: service?._id || '0',
-						service_name: service.service_name || 'Unknown',
-						price: Number(service.price) || 0,
+						service_name: service?.service_name || 'Unknown',
+						price: Number(service?.price) || 0,
 						description: service.description || '',
-						image: service.productId?.image,
-						is_active: service.productId?.stock || true,
+						image: service?.productId?.image,
+						is_active: service?.productId?.stock || true,
 						discount: 0,
 					})
 				);
@@ -146,7 +147,6 @@ export default function SparePartsCart() {
 		}
 	}, [isAuthenticated]);
 
-
 	const placeOrder = async () => {
 		try {
 			const payload = {
@@ -159,12 +159,12 @@ export default function SparePartsCart() {
 			}
 
 			const adminNotification = {
-				title: "New Spare Part Booking",
-				message: `New Spare Part Booking Arrived`,
+				title: 'New Spare Part Booking Received',
+				message: `A customer has booked a spare part. Please ensure it's processed accordingly.`,
 				type: "info",
 				priority: "medium",
 				recipient_type: "admin",
-				recipient_id: "686967efa56e85869138d5b2",
+				recipient_id: "",
 				is_read: false,
 				is_active: true,
 				is_sent: false,
@@ -172,9 +172,7 @@ export default function SparePartsCart() {
 			};
 
 			if (!socket) return null;
-			socket.emit("newNotification", adminNotification);
-			console.log("Notification emitted:", adminNotification);
-
+			socket.emit('newNotification', adminNotification);
 		} catch (error: any) {
 			console.error('Order placement error:', {
 				error: error.message,
@@ -196,12 +194,12 @@ export default function SparePartsCart() {
 			}
 
 			const adminNotification = {
-				title: "New Service Booking",
-				message: `New Service Booking Arrived`,
+				title: 'New Service Request Booked',
+				message: `A customer has booked a service. Review the request and assign it as needed.`,
 				type: "info",
 				priority: "medium",
 				recipient_type: "admin",
-				recipient_id: "686967efa56e85869138d5b2",
+				recipient_id: "",
 				is_read: false,
 				is_active: true,
 				is_sent: false,
@@ -209,8 +207,7 @@ export default function SparePartsCart() {
 			};
 
 			if (!socket) return null;
-			socket.emit("newNotification", adminNotification);
-			console.log("Notification emitted:", adminNotification);
+			socket.emit('newNotification', adminNotification);
 		} catch (error: any) {
 			console.error('Order placement error:', error);
 			toast.error(error.response?.data?.message || 'Failed to place order');
@@ -219,13 +216,19 @@ export default function SparePartsCart() {
 
 	const handleDelete = async (id: number) => {
 		if (activeTab === 'service') {
-			const response = await deleteBookingCartProduct({ cartId, productId: id });
+			const response = await deleteBookingCartProduct({
+				cartId,
+				productId: id,
+			});
 			if (response) {
 				toast.success('Product removed successfully', { autoClose: 2000 });
 				books_valid();
 			}
 		} else if (activeTab === 'ServiceBookingPage') {
-			const response = await deleteBookingCartService({ cartId: serviceId, serviceId: id });
+			const response = await deleteBookingCartService({
+				cartId: serviceId,
+				serviceId: id,
+			});
 			if (response) {
 				toast.success('Service removed successfully', { autoClose: 2000 });
 				books_valid();
@@ -257,31 +260,32 @@ export default function SparePartsCart() {
 
 					<div className='flex-1 flex flex-col justify-between'>
 						<div
-							className={`relative left-[305px] text-xs text-center px-2 w-[90px] py-0.5 rounded font-medium ${part.stock
-								? 'bg-[#BED0EC] text-[#0050A5]'
-								: 'bg-[#0050A5] text-white'
-								}`}
+							className={`relative left-[305px] text-xs text-center px-2 w-[90px] py-0.5 rounded font-medium ${
+								part.stock
+									? 'bg-[#BED0EC] text-[#0050A5]'
+									: 'bg-[#0050A5] text-white'
+							}`}
 						>
-							{part.stock ? 'In Stock' : 'Out of Stock'}
+							{part?.stock ? 'In Stock' : 'Out of Stock'}
 						</div>
 						<div>
 							<div className='flex justify-between items-start'>
 								<h3 className='text-base font-semibold text-[#0050A5]'>
-									{part.productName}
+									{part?.productName}
 								</h3>
 							</div>
 							<p className='text-sm text-gray-600 mb-2'>
-								{part.description ||
+								{part?.description ||
 									'High quality ceramic brake pads for safe and smooth braking'}
 							</p>
 						</div>
 
 						<div className='flex gap-2 items-center'>
 							<span className='text-lg font-bold text-[#0050A5]'>
-								₹{part.price}
+								₹{part?.price}
 							</span>
 							<span className='line-through text-sm text-gray-400 '>
-								₹{Math.round(part.price * 1.3)}
+								₹{Math.round(part?.price * 1.3)}
 							</span>
 						</div>
 
@@ -324,10 +328,11 @@ export default function SparePartsCart() {
 
 					<div className='flex-1 flex flex-col justify-between'>
 						<span
-							className={`relative left-[325px] text-xs px-2 w-[65px] py-0.5 rounded font-medium ${serv.is_active
-								? 'bg-[#BED0EC] text-[#0050A5]'
-								: 'bg-red-700 text-white'
-								}`}
+							className={`relative left-[325px] text-xs px-2 w-[65px] py-0.5 rounded font-medium ${
+								serv.is_active
+									? 'bg-[#BED0EC] text-[#0050A5]'
+									: 'bg-red-700 text-white'
+							}`}
 						>
 							{serv.is_active ? 'Available' : 'Not Available'}
 						</span>
@@ -367,9 +372,7 @@ export default function SparePartsCart() {
 	};
 
 	return (
-		<div
-			className='min-h-screen p-6 '
-		>
+		<div className='min-h-screen p-6 '>
 			<div className='max-w-7xl mx-auto'>
 				{/* Header */}
 				<h1
@@ -383,12 +386,13 @@ export default function SparePartsCart() {
 				</h1>
 
 				{/* Tabs */}
-				<div className='mb-6 ml-[65px]'>
-					<div className='relative inline-flex p-1 bg-[#BED0EC] rounded-full border border-gray-300'>
+				<div className='mb-6 ml-[65px] text-center  '>
+					<div className='relative inline-flex p-1 bg-[#BED0EC] rounded-full border  border-gray-300'>
 						<button
 							onClick={() => setActiveTab('service')}
-							className={`px-6 py-3 rounded-full flex items-center gap-2 z-10 transition-colors duration-300 ${activeTab === 'service' ? 'text-white' : 'text-black '
-								}`}
+							className={`px-20 py-3 rounded-full flex items-center gap-2 z-10 transition-colors duration-300 ${
+								activeTab === 'service' ? 'text-white' : 'text-black '
+							}`}
 						>
 							<Wrench className='text-lg' />
 							SparePart Orders
@@ -396,20 +400,22 @@ export default function SparePartsCart() {
 
 						<button
 							onClick={() => setActiveTab('ServiceBookingPage')}
-							className={`px-6 py-3 rounded-full flex items-center gap-2 z-10 transition-colors duration-300 ${activeTab === 'ServiceBookingPage'
-								? 'text-white'
-								: 'text-black '
-								}`}
+							className={`px-20 py-3 rounded-full flex items-center gap-2 z-10 transition-colors duration-300 ${
+								activeTab === 'ServiceBookingPage'
+									? 'text-white'
+									: 'text-black '
+							}`}
 						>
 							<Car className='text-xl' />
 							Service Order
 						</button>
 						{/* Animated indicator with smooth sliding */}
 						<div
-							className={`absolute inset-y-1 h-[calc(100%-0.5rem)] bg-[#0050A5] rounded-full shadow-md transition-all duration-300 ease-in-out ${activeTab === 'service'
-								? 'left-1 w-[calc(50%-0.25rem)]'
-								: 'left-[calc(50%+0.25rem)] w-[calc(50%-0.25rem)]'
-								}`}
+							className={`absolute inset-y-1 h-[calc(100%-0.5rem)] bg-[#0050A5] rounded-full shadow-md transition-all duration-300 ease-in-out ${
+								activeTab === 'service'
+									? 'left-1 w-[calc(50%-0.25rem)]'
+									: 'left-[calc(50%+0.25rem)] w-[calc(50%-0.25rem)]'
+							}`}
 						/>
 					</div>
 				</div>
@@ -427,8 +433,8 @@ export default function SparePartsCart() {
 										))}
 									</div>
 								) : (
-									<div className='bg-white rounded-lg shadow-md p-8 text-center'>
-										<p className='text-gray-500'>
+									<div className='flex items-center  text-center justify-end h-[300px] w-full'>
+										<p className='text-gray-500 text-lg'>
 											No spare parts found matching your criteria.
 										</p>
 									</div>
@@ -446,8 +452,8 @@ export default function SparePartsCart() {
 										))}
 									</div>
 								) : (
-									<div className='bg-white rounded-lg shadow-md p-8 text-center'>
-										<p className='text-gray-500'>
+									<div className='flex items-center  text-center justify-end h-[300px] w-full'>
+										<p className='text-gray-500  text-center text-lg'>
 											No services found matching your criteria.
 										</p>
 									</div>

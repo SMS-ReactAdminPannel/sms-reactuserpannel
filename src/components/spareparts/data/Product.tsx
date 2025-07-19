@@ -35,6 +35,7 @@ export const useSparePartsDataset = () => {
 						image:
 							part.image || (Array.isArray(part.images) ? part.images[0] : ''),
 						category: part.category || 'Uncategorized',
+						warrantyPeriod: part.warrantyPeriod
 					}));
 
 					setParts(validatedParts);

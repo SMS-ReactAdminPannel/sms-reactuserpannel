@@ -74,8 +74,8 @@ export const API_END_POINTS = {
 		getAll: '/api/customer/cartbooking/all',
 		postProduct: '/api/customer/cartbooking/product/confirm',
 		postService: '/api/customer/cartbooking/service/confirm',
-		getProductInvoice:'/api/customer/invoice/product/:uuid',
-		getServiceInvoice:'/api/customer/invoice/service/:uuid'
+		getProductInvoice: '/api/customer/invoice/product/:uuid',
+		getServiceInvoice: '/api/customer/invoice/service/:uuid'
 	},
 
 	enquiry: {
@@ -83,4 +83,8 @@ export const API_END_POINTS = {
 		getAll: '/api/serviceEnquiry/getAllEnquiries',
 		update: '/api/serviceEnquiry/updateEnquiry/:id',
 	},
+
+	notificationSubcription: {
+		post: '/api/subscription/notify'
+	}
 };

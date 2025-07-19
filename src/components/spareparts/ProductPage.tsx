@@ -14,7 +14,7 @@ const ProductPage = () => {
 		navigate(-1);
 	};
 
-	const product = parts.filter((item: any) => item.id === productId);
+	const product = parts?.filter((item: any) => item.id === productId);
 	const [isAdded, setIsAdded] = useState(false);
 
 	const handleAddToCart = async () => {
@@ -27,16 +27,24 @@ const ProductPage = () => {
 				},
 				type: 'spare',
 			};
-			setIsAdded(true);
-			const response = await postSparePartsData(payload);
+			const response: any = await postSparePartsData(payload);
 			if (response) {
+				setIsAdded(true);
 				setIsAdded(false);
 				toast.success('Item added to cart!', { autoClose: 3000 });
+			} else {
+				toast.error(
+					response?.message || 'Booking failed, please update your profile',
+					{ autoClose: 2000 }
+				);
 			}
 		} catch (error) {
 			console.error('Error adding to cart:', error);
 		}
 	};
+
+	console.log(product, 'product');
+
 	return (
 		<>
 			{product?.map((item: any, index: number) => (
@@ -57,12 +65,17 @@ const ProductPage = () => {
 							<h1 className='text-2xl font-bold mb-4'>
 								{item?.spareparts_name}
 							</h1>
-							<p className='text-xl text-[#0050A5] font-semibold mb-4'>
-								₹{item?.price}{' '}
-								<span className='text-gray-500'>
-									<del>₹{item?.price * 1.2}</del>
-								</span>
-							</p>
+							<div className='flex justify-between'>
+								<p className='text-xl text-[#0050A5] font-semibold mb-4'>
+									₹{item?.price}{' '}
+									<span className='text-gray-500'>
+										<del>₹{item?.price * 1.2}</del>
+									</span>
+								</p>
+								<p className='text-md text-gray-800 font-semibold mb-4'>
+									Warranty: {item?.warrantyPeriod}
+								</p>
+							</div>
 							<h2 className='text-lg font-semibold mb-2'>Specifications:</h2>
 							<ul className=''>
 								<li key={index} className='mb-1 text-sm'>

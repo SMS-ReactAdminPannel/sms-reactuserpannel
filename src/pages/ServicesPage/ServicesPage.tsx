@@ -302,7 +302,7 @@ const ServicesPage: React.FC = () => {
 				setSelectedServiceId(null);
 				setIsModalOpen(false);
 			} else {
-				toast.error(response?.message || 'Booking failed', { autoClose: 2000 });
+				toast.error(response?.message || 'Booking failed, please update your profile', { autoClose: 2000 });
 			}
 		} catch (error) {
 			console.error('Booking failed:', error);

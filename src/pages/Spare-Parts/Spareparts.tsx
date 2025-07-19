@@ -7,9 +7,9 @@ import {
 } from '../../features/spareparts';
 import { FONTS } from '../../constants/constant';
 import { Link } from 'react-router-dom';
-import toast from 'react-hot-toast';
 import { useAuth } from '../auth/AuthContext';
 import LoginPromptModal from '../../components/Authentication/LoginPromptModal';
+import { toast } from 'react-toastify';
 
 interface SparePart {
 	id: any;
@@ -18,9 +18,10 @@ interface SparePart {
 	stock: any;
 	inStock: any;
 	images: string[];
-	type: string;
+	brand: string;
 	image: string;
 	category?: string;
+	warrentyPeriod?: string;
 }
 
 const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
@@ -91,12 +92,13 @@ const SpareParts: React.FC = () => {
 							images: Array.isArray(part.images)
 								? part.images
 								: [part.image || ''],
-							type: part.type || '',
+							brand: part.brand || '',
 							image:
 								part.image ||
 								(Array.isArray(part.images) ? part.images[0] : ''),
 							category: part.category || 'Uncategorized',
 							inStock: part?.inStock,
+							warrentyPeriod: part.warrentyPeriod,
 						};
 					});
 
@@ -173,6 +175,8 @@ const SpareParts: React.FC = () => {
 		part?.spareparts_name?.toLowerCase().includes(searchTerm.toLowerCase())
 	);
 
+	console.log(parts, 'parts');
+
 	// Add to cart button functions
 	const handleAddToCart = async (part: SparePart) => {
 		if (isAuthenticated) {
@@ -183,14 +187,19 @@ const SpareParts: React.FC = () => {
 						price: part?.price?.toString(),
 						quantity: quantity,
 					},
-					type: 'spare',
+					brand: 'spare',
 				};
-				const response = await postSparePartsData(payload);
+				const response: any = await postSparePartsData(payload);
 				if (response) {
-					toast.success('Item added to cart!', { duration: 2000 });
+					toast.success('Item added to cart!', { autoClose: 2000 });
 					if ((window as any).refreshCartCount) {
 						(window as any).refreshCartCount();
 					}
+				} else {
+					toast.error(
+						response?.message || 'Booking failed, please update your profile',
+						{ autoClose: 2000 }
+					);
 				}
 			} catch (error) {
 				console.error('Error adding to cart:', error);
@@ -311,7 +320,7 @@ const SpareParts: React.FC = () => {
 												part?.image
 											}
 											alt={part?.spareparts_name}
-											className='w-auto rounded object-cover transition-all duration-300 ease-in-out rounded-md'
+											className=' rounded object-cover transition-all duration-300 ease-in-out border w-48 h-32 rounded-md'
 										/>
 									</div>
 									<div className='p-6 px-6 relative'>
@@ -319,7 +328,7 @@ const SpareParts: React.FC = () => {
 											{part?.spareparts_name}
 										</div>
 										<div className='text-md text-gray-600 mb-1'>
-											{part?.type}
+											{part?.brand}
 										</div>
 										<div className='text-md font-bold text-[#0050A5]'>
 											₹{part?.price.toLocaleString()}
@@ -538,17 +547,19 @@ const SpareParts: React.FC = () => {
 						{categories?.map(({ id, title, items, image, _id }) => (
 							<div
 								key={id}
-								className='flex flex-col gap-4 p-6 border rounded-xl shadow-md'
+								className='flex flex-col gap-4 p-6 border rounded-2xl shadow-md'
 							>
 								<div className='flex justify-between items-center'>
 									<h2 className='text-md font-bold uppercase text-[#0050A5]'>
 										{title}
 									</h2>
-									<img
-										src={image}
-										alt={title}
-										className='w-16 h-16 object-contain'
-									/>
+									<div className='border '>
+										<img
+											src={image}
+											alt={title}
+											className='w-16 h-16 object-contain border rounded-md'
+										/>
+									</div>
 								</div>
 								<ul className='space-y-1 text-sm'>
 									{items?.slice(0, 3).map((item, index) => {
@@ -615,7 +626,9 @@ const SpareParts: React.FC = () => {
 							{selectedPart.spareparts_name}
 						</h2>
 						<div className='flex justify-between items-center mb-4'>
-							<p className='text-sm text-gray-600'>Type: {selectedPart.type}</p>
+							<p className='text-sm text-gray-600'>
+								Brand: {selectedPart.brand}
+							</p>
 
 							<p
 								className={`${
@@ -629,6 +642,13 @@ const SpareParts: React.FC = () => {
 								)}
 							</p>
 						</div>
+						{selectedPart.warrentyPeriod !== '' && (
+							<div className='flex justify-between items-center mb-4'>
+								<p className='text-sm text-gray-600'>
+									Warrenty : {selectedPart.warrentyPeriod}
+								</p>
+							</div>
+						)}
 
 						<div className='flex items-center gap-2 mb-4'>
 							<span className='text-sm font-medium'>Quantity:</span>
