@@ -161,7 +161,7 @@ export default function SparePartsCart() {
 			const adminNotification = {
 				title: "New Spare Part Booking Received",
 				message: `A customer has booked a spare part. Please ensure it's processed accordingly.`,
-				type: "info",
+				type: "orderReq",
 				priority: "medium",
 				recipient_type: "admin",
 				recipient_id: "",
@@ -198,7 +198,7 @@ export default function SparePartsCart() {
 			const adminNotification = {
 				title: "New Service Request Booked",
 				message: `A customer has booked a service. Review the request and assign it as needed.`,
-				type: "info",
+				type: "serviceReq",
 				priority: "medium",
 				recipient_type: "admin",
 				recipient_id: "",

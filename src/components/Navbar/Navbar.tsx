@@ -9,66 +9,71 @@ import { Link } from 'react-router-dom';
 import ProfileMenu from '../home/ProfileMenu';
 import CustomDropdown from './Customdropdown';
 import TruckIcon from '../../assets/carimages/delivery-truck.png';
-import {  getNotificationsByUser } from '../../features/Notification/services';
+import { getNotificationsByUser, markNotificationsAsRead } from '../../features/Notification/services';
 import { booking_cart } from '../../features/BookingCart/service';
 import { IoCartOutline } from 'react-icons/io5';
 import { useSocket } from '../../context/customerSocket';
 
 type MailItem = {
-  is_read: any;
-  created_at: string | number | Date;
-  created_date: string | number | Date;
-  sender: string;
+  id: number;
+  _id: string;
+  message: string;
+  created_at: string;
+  is_read: boolean;
+  priority: string;
+  action_type: string;
   title: string;
-  preview: string;
-  Message: string;
-  updated_at: string;
-  unread: boolean;
+  is_active: boolean;
+  uuid: string;
   recipient_type: string;
+  type: string;
 };
 
 export const Navbar: React.FC = () => {
-	const [isBellActive, setIsBellActive] = useState(false);
-	// const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-	const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
-	const [showLogoutSuccess, setShowLogoutSuccess] = useState(false);
-	const [showNotifications, setShowNotifications] = useState(false);
-	// const [isLoggedIn, setIsLoggedIn] = useState(true);
-	const { isAuthenticated } = useAuth();
-	const isLoggedIn = isAuthenticated;
-	const { logout } = useAuth();
-	const navigate = useNavigate();
-	const dropdownRef = useRef<HTMLDivElement | null>(null);
-	const notificationRef = useRef<HTMLDivElement | null>(null);
-	const [search, setSearch] = useState('');
-	const [mails, setMails] = useState<MailItem[]>([]);
-	const [cartCount, setCartCount] = useState(0);
-	const socket = useSocket();
+  const [isBellActive, setIsBellActive] = useState(false);
+  // const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+  const [showLogoutSuccess, setShowLogoutSuccess] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  // const [isLoggedIn, setIsLoggedIn] = useState(true);
+  const { isAuthenticated } = useAuth();
+  const isLoggedIn = isAuthenticated;
+  const { logout } = useAuth();
+  const navigate = useNavigate();
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
+  const notificationRef = useRef<HTMLDivElement | null>(null);
+  const [search, setSearch] = useState('');
+  const [mails, setMails] = useState<MailItem[]>([]);
+  const [cartCount, setCartCount] = useState(0);
+  const socket = useSocket();
 
   const filteredMails = mails
-    .filter((mail) => mail.recipient_type === "customer" && !mail.is_read)
-    .slice(0, 4);
+    .filter((m) => {
+      if (m.recipient_type !== 'customer' && m.recipient_type !== 'all') return false;
+      return m
+    })
+
 
   const unReadMails = mails.filter(
     (mail) => mail.recipient_type === "customer" && !mail.is_read
   );
 
-	const fetchAllNotifications = async () => {
-		try {
-			const userId: any = localStorage.getItem('userId')
-			const response: any = await getNotificationsByUser(userId);
-			const data: MailItem[] = response?.data?.data?.notifications || [];
-			const sortedData = data.sort(
-				(a, b) =>
-					new Date(b?.created_at).getTime() -
-					new Date(a?.created_date).getTime()
-			);
-			setMails(sortedData);
+  const fetchAllNotifications = async () => {
+    try {
+      const userId: any = localStorage.getItem('userId')
+      const response: any = await getNotificationsByUser(userId);
+      const data: MailItem[] = response?.data?.data?.notifications || [];
+      const sortedData = data.sort(
+        (a, b) =>
+          new Date(b?.created_at).getTime() -
+          new Date(a?.created_at).getTime()
+      );
+      setMails(sortedData);
       console.log('Fetched Notifications:', sortedData);
-		} catch (error) {
-			console.log('Error Fetching Notifications:', error);
-		}
-	};
+    } catch (error) {
+      console.log('Error Fetching Notifications:', error);
+    }
+  };
 
   const fetchBookingCartCount = async () => {
     try {
@@ -87,12 +92,12 @@ export const Navbar: React.FC = () => {
     }
   };
 
-	useEffect(() => {
-		(window as any).refreshCartCount = fetchBookingCartCount;
-		return () => {
-			delete (window as any).refreshCartCount;
-		};
-	}, []);
+  useEffect(() => {
+    (window as any).refreshCartCount = fetchBookingCartCount;
+    return () => {
+      delete (window as any).refreshCartCount;
+    };
+  }, []);
 
   useEffect(() => {
     fetchAllNotifications();
@@ -160,20 +165,20 @@ export const Navbar: React.FC = () => {
   //   return formatted;
   // };
 
-	useEffect(() => {
-		if (!socket) return;
+  useEffect(() => {
+    if (!socket) return;
 
-		const handleNotify = (data: MailItem) => {
-			console.log("Notification Recieved", data);
-			setMails((prev) => [data, ...prev])
-		}
+    const handleNotify = (data: MailItem) => {
+      console.log("Notification Recieved", data);
+      setMails((prev) => [data, ...prev])
+    }
 
-		socket.on('newNotification', handleNotify)
+    socket.on('newNotification', handleNotify)
 
-		return () => {
-			socket.off('newNotification', handleNotify)
-		}
-	},[socket])
+    return () => {
+      socket.off('newNotification', handleNotify)
+    }
+  }, [socket])
 
 
   const getDateLabel = (isoDateStr: string): string => {
@@ -205,37 +210,58 @@ export const Navbar: React.FC = () => {
     return `${date} at ${time}`;
   };
 
-	return (
-		<header className='bg-white text-white w-full fixed top-0 z-50 border-b-2 border-white-900 '>
-			{/* Top Navbar */}
-			<div className='bg-[#0050A5] h-[2px]'></div>
-			<div className='flex items-center justify-between md:px-24 sm:px-12 py-2 space-x-4'>
-				{/* Logo & Location */}
-				<div className='flex items-center space-x-4'>
-					<Link to='/' className='text-2xl font-bold text-white'>
-						<img src={Logo} alt='yes mechanic logo' className='w-40 h-[auto]' />
-					</Link>
-				</div>
+  const notifyHandle = async (n: MailItem) => {
+    try {
+      if (!n.is_read) {
+        await markNotificationsAsRead((n.uuid))
+        if (n.type === 'jobCard') {
+          await navigate('/bookings')
+        } else {
+          await navigate('/announcement')
+        }
+        setMails((prev) => prev.map((m) => m._id === n._id ? { ...m, is_read: true } : m))
+      } else if (n.type === 'jobCard') {
+        await navigate('/bookings')
+      } else {
+        await navigate('/announcement')
+      }
+      setShowNotifications(false)
+    } catch (error) {
+      console.error(error)
+    }
+  }
 
-				<div className='text-white flex items-center gap-1'>
-					<img src={TruckIcon} className='w-7' />
-					<label className='text-[#0050A5] cursor-pointer text-sm font-semibold'>
-						QUICK DELIVERY
-					</label>
-				</div>
+  return (
+    <header className='bg-white text-white w-full fixed top-0 z-50 border-b-2 border-white-900 '>
+      {/* Top Navbar */}
+      <div className='bg-[#0050A5] h-[2px]'></div>
+      <div className='flex items-center justify-between md:px-24 sm:px-12 py-2 space-x-4'>
+        {/* Logo & Location */}
+        <div className='flex items-center space-x-4'>
+          <Link to='/' className='text-2xl font-bold text-white'>
+            <img src={Logo} alt='yes mechanic logo' className='w-40 h-[auto]' />
+          </Link>
+        </div>
 
-				<div className='text-[#0050A5] flex items-center border border-[#0050A5] rounded-md'>
-					<CustomDropdown />
-				</div>
-				{/* Search Bar */}
-				<div className='flex flex-1 justify-end'>
-					<input
-						type='text'
-						className='px-4 py-2 text-[#0050A5] placeholder-gray-600 text-sm bg-[#fff] rounded-l-md focus:outline-none focus:ring-[#0050A5] w-72 shadow-md border border-[#0050A5] focus:border-[#0050A5]'
-						placeholder='Search'
-						value={search}
-						onChange={(e) => setSearch(e.target.value)}
-					/>
+        <div className='text-white flex items-center gap-1'>
+          <img src={TruckIcon} className='w-7' />
+          <label className='text-[#0050A5] cursor-pointer text-sm font-semibold'>
+            QUICK DELIVERY
+          </label>
+        </div>
+
+        <div className='text-[#0050A5] flex items-center border border-[#0050A5] rounded-md'>
+          <CustomDropdown />
+        </div>
+        {/* Search Bar */}
+        <div className='flex flex-1 justify-end'>
+          <input
+            type='text'
+            className='px-4 py-2 text-[#0050A5] placeholder-gray-600 text-sm bg-[#fff] rounded-l-md focus:outline-none focus:ring-[#0050A5] w-72 shadow-md border border-[#0050A5] focus:border-[#0050A5]'
+            placeholder='Search'
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
 
           <button className="bg-[#0050A5] px-3 py-2 rounded-r-md">
             <FiSearch
@@ -252,9 +278,8 @@ export const Navbar: React.FC = () => {
             <button
               aria-label="Notifications"
               onClick={handleBellClick}
-              className={`relative p-2.5 rounded-full focus:outline-none transform transition-transform duration-200 ease-in-out ${
-                isBellActive ? "scale-90" : "scale-100"
-              }`}
+              className={`relative p-2.5 rounded-full focus:outline-none transform transition-transform duration-200 ease-in-out ${isBellActive ? "scale-90" : "scale-100"
+                }`}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -286,8 +311,9 @@ export const Navbar: React.FC = () => {
                   {filteredMails.length > 0 ? (
                     filteredMails.map((notification: any) => (
                       <div
+                        onClick={async () => await notifyHandle(notification)}
                         key={notification._id}
-                        className={`group relative p-3 border-b hover:bg-[#0050A5] text-[#0050A5] hover:text-white transition-colors duration-150 bg-[#BED0EC]-50
+                        className={`group relative p-3 border-b hover:bg-[#0050A5] cursor-pointer text-[#0050A5] hover:text-white transition-colors duration-150 bg-[#BED0EC]-50
 												}`}
                       >
                         {/* This vertical red line will now appear on hover */}
@@ -468,33 +494,32 @@ export const Navbar: React.FC = () => {
             }}
             className={({ isActive }) =>
               `relative pb-1 text-md font-semibold transition-all duration-300 ease-in-out whitespace-nowrap
-	${
-    isActive
-      ? 'text-white-900 after:content-[""] after:absolute after:left-0 after:bottom-11 after:h-[2.9px] after:w-full after:bg-white after:transition-all after:duration-300'
-      : 'text-white-800 after:content-[""] after:absolute after:left-0 after:bottom-11 after:h-[2.9px] after:w-0 after:bg-white after:transition-all after:duration-300 hover:after:w-full'
-  }`
+	${isActive
+                ? 'text-white-900 after:content-[""] after:absolute after:left-0 after:bottom-11 after:h-[2.9px] after:w-full after:bg-white after:transition-all after:duration-300'
+                : 'text-white-800 after:content-[""] after:absolute after:left-0 after:bottom-11 after:h-[2.9px] after:w-0 after:bg-white after:transition-all after:duration-300 hover:after:w-full'
+              }`
             }
           >
             {item.title}
           </NavLink>
         ))}
 
-				<div className='flex justify-end'>
-					<button
-						className='text-[#0854a4] py-1 px-8 rounded-full'
-						style={{
-							...FONTS.paragraph,
-							fontWeight: 600,
-							backgroundColor: '#fff',
-							fontFamily: 'Montserrat',
-						}}
-						onClick={() => navigate('/contact-us')}
-					>
-						Enquiry
-					</button>
-				</div>
-			</div>
-			<div className='shadow-lg'></div>
-		</header>
-	);
+        <div className='flex justify-end'>
+          <button
+            className='text-[#0854a4] py-1 px-8 rounded-full'
+            style={{
+              ...FONTS.paragraph,
+              fontWeight: 600,
+              backgroundColor: '#fff',
+              fontFamily: 'Montserrat',
+            }}
+            onClick={() => navigate('/contact-us')}
+          >
+            Enquiry
+          </button>
+        </div>
+      </div>
+      <div className='shadow-lg'></div>
+    </header>
+  );
 };
