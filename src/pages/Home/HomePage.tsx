@@ -152,21 +152,21 @@ const HomePage: React.FC = () => {
 									}
 									className={`bg-[#d8e1ef] rounded-lg md:h-56 sm:h-auto w-60 p-2 shadow-md hover:shadow-lg transition-shadow ease-in duration-300 border-1 border-b-2 cursor-pointer transform hover:scale-102 border-[#0050A5]`}
 								>
-								<div className='flex flex-col items-center justify-center h-full gap-2'>
-	<div className='text-[#0050A5] flex justify-center items-center w-40 h-32'>
-		<img
-			className='w-52 h-40 object-contain rounded border border-white'
-			src={service?.image}
-			alt={service?.category_name}
-		/>
-	</div>
-	<h3
-		className='text-center text-[#0050A5]'
-		style={{ ...FONTS.sub_heading2, fontWeight: 500 }}
-	>
-		{service?.category_name}
-	</h3>
-</div>
+									<div className='flex flex-col items-center justify-center h-full gap-2'>
+										<div className='text-[#0050A5] flex justify-center items-center w-40 h-32'>
+											<img
+												className='w-52 h-40 object-contain rounded border border-white'
+												src={service?.image}
+												alt={service?.category_name}
+											/>
+										</div>
+										<h3
+											className='text-center text-[#0050A5]'
+											style={{ ...FONTS.sub_heading2, fontWeight: 500 }}
+										>
+											{service?.category_name}
+										</h3>
+									</div>
 
 								</Link>
 							))}
@@ -180,7 +180,7 @@ const HomePage: React.FC = () => {
 				<div className={`h-[90vh] flex justify-center items-center`}>
 					<div className='mx-24'>
 						<PromoCarousel />
-					</div> 
+					</div>
 				</div>
 				<div className='bg-[#BED0EC]'>
 					<div className='mx-24'>

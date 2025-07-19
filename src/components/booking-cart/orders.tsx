@@ -36,7 +36,7 @@ const OrderDetails: React.FC<OrderDetailsProps> = ({ part }) => {
         {part.date && (
           <p className="text-xs text-neutral-500">Ordered on: {part.date}</p>
         )}
-        <p className="text-green-400 font-bold text-lg mt-1">₹{part.price}</p>
+        <p className="text-green-400 font-bold text-lg mt-1">&#8377;{part.price}</p>
       </div>
 
       {/* CTA Button */}
