@@ -188,13 +188,11 @@ export default function GmailStyleInbox() {
 								</h2>
 
 								<div className='flex items-center justify-end text-lg text-gray-600 mb-4'>
-									<div className='w-10 h-10 flex items-center justify-center bg-gradient-to-r from-red-600 to-red-800 text-white rounded-full mr-3 uppercase font-bold'>
-										{selectedMail?.message}
-									</div>
+									
 									<div>
-										<p className='font-semibold text-gray-800 capitalize'>
+										{/* <p className='font-semibold text-gray-800 capitalize'>
 											{selectedMail.sender}
-										</p>
+										</p> */}
 										<div className='flex justify-center'>
 											<span className='text-sm text-gray-500  text-right block '>
 												{dayjs(selectedMail?.created_at).format(
