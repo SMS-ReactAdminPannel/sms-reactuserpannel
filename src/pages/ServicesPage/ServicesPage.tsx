@@ -275,9 +275,11 @@ const ServicesPage: React.FC = () => {
 				return
 			}
 
-			if(preferedTime.startTime=="" || preferedTime.endTime==""){
-				toast.error("select Time Category")
-				return
+			if(requestType=="schedule"){
+				if(preferedTime.startTime=="" || preferedTime.endTime==""){
+					toast.error("select Time Category")
+					return
+				}
 			}
 
 			const data = {
