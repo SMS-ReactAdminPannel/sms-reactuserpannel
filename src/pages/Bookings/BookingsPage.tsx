@@ -316,12 +316,14 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 											day: 'numeric',
 										})}
 									</p>
-									<p className='text-sm text-[#0050A5]'>
-										<span>
-											Tracking ID<span className='pl-3'>:</span>
-										</span>
-										{order?.track_id}
-									</p>
+									{!isService && (
+										<p className='text-sm text-[#0050A5]'>
+											<span>
+												Tracking ID<span className='pl-3'>:</span>
+											</span>
+											{order?.track_id}
+										</p>
+									)}
 									{isCompleted && (
 										<div className='flex items-center justify-end'>
 											<button
