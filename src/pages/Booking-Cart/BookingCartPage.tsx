@@ -136,7 +136,6 @@ export default function SparePartsCart() {
 			}
 		} catch (error) {
 			console.error('Error fetching books/services', error);
-		} finally {
 		}
 	};
 
@@ -260,11 +259,10 @@ export default function SparePartsCart() {
 
 					<div className='flex-1 flex flex-col justify-between'>
 						<div
-							className={`relative left-[305px] text-xs text-center px-2 w-[90px] py-0.5 rounded font-medium ${
-								part.stock
-									? 'bg-[#BED0EC] text-[#0050A5]'
-									: 'bg-[#0050A5] text-white'
-							}`}
+							className={`relative left-[305px] text-xs text-center px-2 w-[90px] py-0.5 rounded font-medium ${part.stock
+								? 'bg-[#BED0EC] text-[#0050A5]'
+								: 'bg-[#0050A5] text-white'
+								}`}
 						>
 							{part?.stock ? 'In Stock' : 'Out of Stock'}
 						</div>
@@ -299,11 +297,11 @@ export default function SparePartsCart() {
 								REMOVE
 							</button>
 						</div>
-						<div className='text-sm text-[#0050A5] font-medium flex items-center gap-1'>
+						{/* <div className='text-sm text-[#0050A5] font-medium flex items-center gap-1'>
 							<span className='text-base'>🚚</span>
 							Delivery by{' '}
 							<span className='font-semibold ml-1'>Sat, Jun 14</span>
-						</div>
+						</div> */}
 					</div>
 				</div>
 			</div>
@@ -328,11 +326,10 @@ export default function SparePartsCart() {
 
 					<div className='flex-1 flex flex-col justify-between'>
 						<span
-							className={`relative left-[325px] text-xs px-2 w-[65px] py-0.5 rounded font-medium ${
-								serv.is_active
-									? 'bg-[#BED0EC] text-[#0050A5]'
-									: 'bg-red-700 text-white'
-							}`}
+							className={`relative left-[325px] text-xs px-2 w-[65px] py-0.5 rounded font-medium ${serv.is_active
+								? 'bg-[#BED0EC] text-[#0050A5]'
+								: 'bg-red-700 text-white'
+								}`}
 						>
 							{serv.is_active ? 'Available' : 'Not Available'}
 						</span>
@@ -390,9 +387,8 @@ export default function SparePartsCart() {
 					<div className='relative inline-flex p-1 bg-[#BED0EC] rounded-full border  border-gray-300'>
 						<button
 							onClick={() => setActiveTab('service')}
-							className={`px-20 py-3 rounded-full flex items-center gap-2 z-10 transition-colors duration-300 ${
-								activeTab === 'service' ? 'text-white' : 'text-black '
-							}`}
+							className={`px-20 py-3 rounded-full flex items-center gap-2 z-10 transition-colors duration-300 ${activeTab === 'service' ? 'text-white' : 'text-black '
+								}`}
 						>
 							<Wrench className='text-lg' />
 							SparePart Orders
@@ -400,22 +396,20 @@ export default function SparePartsCart() {
 
 						<button
 							onClick={() => setActiveTab('ServiceBookingPage')}
-							className={`px-20 py-3 rounded-full flex items-center gap-2 z-10 transition-colors duration-300 ${
-								activeTab === 'ServiceBookingPage'
-									? 'text-white'
-									: 'text-black '
-							}`}
+							className={`px-20 py-3 rounded-full flex items-center gap-2 z-10 transition-colors duration-300 ${activeTab === 'ServiceBookingPage'
+								? 'text-white'
+								: 'text-black '
+								}`}
 						>
 							<Car className='text-xl' />
 							Service Order
 						</button>
 						{/* Animated indicator with smooth sliding */}
 						<div
-							className={`absolute inset-y-1 h-[calc(100%-0.5rem)] bg-[#0050A5] rounded-full shadow-md transition-all duration-300 ease-in-out ${
-								activeTab === 'service'
-									? 'left-1 w-[calc(50%-0.25rem)]'
-									: 'left-[calc(50%+0.25rem)] w-[calc(50%-0.25rem)]'
-							}`}
+							className={`absolute inset-y-1 h-[calc(100%-0.5rem)] bg-[#0050A5] rounded-full shadow-md transition-all duration-300 ease-in-out ${activeTab === 'service'
+								? 'left-1 w-[calc(50%-0.25rem)]'
+								: 'left-[calc(50%+0.25rem)] w-[calc(50%-0.25rem)]'
+								}`}
 						/>
 					</div>
 				</div>

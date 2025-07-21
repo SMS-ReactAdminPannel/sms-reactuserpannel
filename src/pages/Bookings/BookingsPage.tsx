@@ -28,6 +28,7 @@ interface OrderDetails {
 	status: 'pending' | 'completed' | 'delivered' | 'Dispatched to Courier';
 	type: 'spare' | 'service';
 	track_id: string;
+	trackslip_image: string;
 	products?: Array<{
 		productId: {
 			_id: string;
@@ -89,6 +90,8 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 		order.status === 'completed' || order.status === 'delivered' || order.status === "Dispatched to Courier";
 	const isOld = orderDate < new Date(Date.now() - 365 * 24 * 60 * 60 * 1000);
 	const isService = order.type === 'service';
+
+	console.log(order, 'checking oders dta')
 
 	const getName = () => {
 		if (isService) {
@@ -168,11 +171,10 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 						{/* Type Badge */}
 						<div className='absolute top-3 right-3 z-10'>
 							<span
-								className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-									isService
-										? 'bg-purple-100 text-purple-800'
-										: 'bg-blue-100 text-blue-800'
-								}`}
+								className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${isService
+									? 'bg-purple-100 text-purple-800'
+									: 'bg-blue-100 text-blue-800'
+									}`}
 							>
 								{isService ? (
 									<>
@@ -314,12 +316,12 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 											day: 'numeric',
 										})}
 									</p>
-										<p className='text-sm text-[#0050A5]'>
-											<span>
-												Tracking ID<span className='pl-3'>:</span>
-											</span>{' '}
-											{order?.track_id}
-										</p>
+									<p className='text-sm text-[#0050A5]'>
+										<span>
+											Tracking ID<span className='pl-3'>:</span>
+										</span>
+										{order?.track_id}
+									</p>
 									{isCompleted && (
 										<div className='flex items-center justify-end'>
 											<button
@@ -351,6 +353,7 @@ const OrdersPage: React.FC = () => {
 	const orderTitle = useScrollAnimation<HTMLHeadingElement>();
 	const { isAuthenticated } = useAuth();
 
+
 	useEffect(() => {
 		if (isAuthenticated) {
 			const fetchOrders = async () => {
@@ -369,6 +372,8 @@ const OrdersPage: React.FC = () => {
 								status: productOrder.status,
 								type: 'spare',
 								products: productOrder.products,
+								track_id: productOrder.track_id,
+								trackslip_image: productOrder.trackslip_image
 							})) || []),
 
 							...(response.data.serviceConfirm?.map((serviceOrder: any) => ({
@@ -389,7 +394,6 @@ const OrdersPage: React.FC = () => {
 					}
 				} catch (err) {
 					console.error('Error fetching orders:', err);
-				} finally {
 				}
 			};
 
@@ -489,32 +493,29 @@ const OrdersPage: React.FC = () => {
 						<div className='flex flex-wrap gap-2 bg-[white] rounded-xl p-1'>
 							<button
 								onClick={() => setFilterType('all')}
-								className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
-									filterType === 'all'
-										? 'bg-[#0050A5] text-white shadow-sm'
-										: 'text-gray-600 hover:text-gray-900'
-								}`}
+								className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${filterType === 'all'
+									? 'bg-[#0050A5] text-white shadow-sm'
+									: 'text-gray-600 hover:text-gray-900'
+									}`}
 							>
 								All Orders
 							</button>
 							<button
 								onClick={() => setFilterType('spare')}
-								className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${
-									filterType === 'spare'
-										? 'bg-[#0050A5] text-white shadow-sm'
-										: 'text-gray-600 hover:text-gray-900'
-								}`}
+								className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${filterType === 'spare'
+									? 'bg-[#0050A5] text-white shadow-sm'
+									: 'text-gray-600 hover:text-gray-900'
+									}`}
 							>
 								<Package className='w-4 h-4 mr-1' />
 								Spare Parts
 							</button>
 							<button
 								onClick={() => setFilterType('service')}
-								className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${
-									filterType === 'service'
-										? 'bg-[#0050A5] text-white shadow-sm'
-										: 'text-gray-600 hover:text-gray-900'
-								}`}
+								className={`px-4 py-2 rounded-lg text-sm font-medium transition-all flex items-center ${filterType === 'service'
+									? 'bg-[#0050A5] text-white shadow-sm'
+									: 'text-gray-600 hover:text-gray-900'
+									}`}
 							>
 								<Wrench className='w-4 h-4 mr-1' />
 								Services
