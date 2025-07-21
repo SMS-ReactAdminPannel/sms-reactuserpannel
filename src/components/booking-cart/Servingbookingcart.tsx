@@ -56,10 +56,10 @@ const ServiceBookingPage: React.FC<Props> = ({
           <div className="items-center text-center  w-1/3  justify-center flex  ">
             <div className="flex flex-cols gap-4 w-full items-center align-center justify-center  ">
               <span className="text-lg font-bold text-green-600">
-                ₹{totalPrice}
+                &#8377;{totalPrice}
               </span>
               <span className="line-through text-sm text-gray-400">
-                ₹{service.originalPrice}
+                &#8377;{service.originalPrice}
               </span>
             </div>
           </div>

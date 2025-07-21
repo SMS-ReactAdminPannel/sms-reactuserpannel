@@ -1,8 +1,9 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { IonIcon } from '@ionic/react';
 import { arrowBack, timeOutline } from 'ionicons/icons';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { getUserProfile } from '../../features/Profile/service';
 
 interface BookingModalProps {
 	isOpen: boolean;
@@ -14,7 +15,7 @@ interface BookingModalProps {
 		duration?: string;
 	};
 	isAuthenticated?: boolean;
-	onAddToCart?: (requestType: string, schedule_date: Date,preferedTime:any) => void;
+	onAddToCart?: (requestType: string, schedule_date: Date, preferedTime: any, selectedCar:any) => void;
 	onOpenSignUp?: () => void;
 }
 
@@ -34,6 +35,29 @@ const BookingModal = ({
 	const [selectedDate, setSelectedDate] = useState(new Date());
 
 	if (!isOpen) return null;
+
+
+	const [carData, setCarData] = useState<any[]>([])
+	const [selectedCar, setSelectedCar] = useState('initial')
+
+	console.log(selectedCar, "selected CAr")
+
+	const fetchUserProfile = async () => {
+		try {
+			const response: any = await getUserProfile({});
+			if (response) {
+				console.log(response.data.data.vehicleInfo, "Cars Response")
+				setCarData(response?.data?.data?.vehicleInfo)
+			}
+		} catch (error) {
+			console.error('Error fetching user profile:', error);
+		}
+	};
+
+	useEffect(() => {
+		fetchUserProfile();
+	}, []);
+
 	return (
 		<div className='fixed inset-0 z-[1000] overflow-y-auto'>
 			{/* Backdrop - click to close */}
@@ -45,12 +69,12 @@ const BookingModal = ({
 			{/* Modal container */}
 			<div className='flex items-center justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0'>
 				{/* Center the modal */}
-				<span
+				{/* <span
 					className='hidden sm:inline-block sm:align-middle sm:h-screen'
 					aria-hidden='true'
 				>
 					&#8203;
-				</span>
+				</span> */}
 
 				{/* Modal content */}
 				<div
@@ -116,6 +140,24 @@ const BookingModal = ({
 										/>
 										<span>Working Hours: 9:00 AM - 5:00 PM</span>
 									</div>
+									<div className="flex items-center mb-4">
+										<select
+											title="cars"
+											name="cars"
+											id="cars"
+											value={selectedCar}
+											onChange={(e) => setSelectedCar(e.target.value)}
+											className="w-64 px-3 py-2 rounded-xl border border-gray-300 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-gray-700 bg-white"
+										>
+											<option value="initial">Select Car</option>
+											{carData?.map((cars: any, index: any) => (
+												<option value={index} key={cars.model}>
+													{cars.registerNumber} , {cars.company}
+												</option>
+											))}
+										</select>
+									</div>
+
 								</div>
 							</div>
 						)}
@@ -123,8 +165,26 @@ const BookingModal = ({
 						{/* Pre-Booked Service Details */}
 						{selectedBookingType === "schedule" && (
 							<div className='mb-6'>
-								<h4 className='text-lg font-bold mb-4'>Select Date & Time</h4>
 
+								<div className="flex items-center mb-4">
+									<select
+										title="cars"
+										name="cars"
+										id="cars"
+										value={selectedCar}
+										onChange={(e) => setSelectedCar(e.target.value)}
+										className="w-64 px-3 py-2 rounded-xl border border-gray-300 shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 text-gray-700 bg-white"
+									>
+										<option value="initial">Select Car</option>
+										{carData?.map((cars: any, index: any) => (
+											<option value={index} key={cars.model}>
+												{cars.registerNumber} , {cars.company}
+											</option>
+										))}
+									</select>
+								</div>
+
+								<h4 className='text-lg font-bold mb-4'>Select Date & Time</h4>
 								<div className='mb-4'>
 									<label className='block font-medium mb-2'>Select Date:</label>
 									<DatePicker
@@ -172,7 +232,7 @@ const BookingModal = ({
 							onClick={() => {
 								if (isAuthenticated) {
 									const preferedTime = { startTime, endTime };
-									onAddToCart?.(selectedBookingType, selectedDate, preferedTime);
+									onAddToCart?.(selectedBookingType, selectedDate, preferedTime, selectedCar);
 								} else {
 									onOpenSignUp?.();
 								}

@@ -67,10 +67,10 @@ const ProductPage = () => {
 							</h1>
 							<div className='flex justify-between'>
 								<p className='text-xl text-[#0050A5] font-semibold mb-4'>
-									₹{item?.price}{' '}
-									<span className='text-gray-500'>
-										<del>₹{item?.price * 1.2}</del>
-									</span>
+									&#8377;{item?.price}{' '}
+									{/* <span className='text-gray-500'>
+										<del>&#8377;{item?.price * 1.2}</del>
+									</span> */}
 								</p>
 								<p className='text-md text-gray-800 font-semibold mb-4'>
 									Warranty: {item?.warrantyPeriod}
@@ -119,7 +119,7 @@ const ProductPage = () => {
 							<div className='text-sm mt-3 mb-2'>
 								Total Price:{' '}
 								<span className='font-semibold text-[#0050A5]'>
-									₹{(Number(item?.price) * quantity).toLocaleString()}
+									&#8377;{(Number(item?.price) * quantity).toLocaleString()}
 								</span>
 							</div>
 

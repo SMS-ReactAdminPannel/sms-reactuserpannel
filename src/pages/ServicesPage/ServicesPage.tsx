@@ -205,8 +205,8 @@ const ServicesPage: React.FC = () => {
 							icon: <Wrench className='w-4 h-4' />,
 						},
 					],
-					price: `₹${discountPrice}`,
-					discountPrice: `₹${originalPrice}`,
+					price: `${discountPrice}`,
+					discountPrice: `${originalPrice}`,
 				};
 			});
 
@@ -261,7 +261,8 @@ const ServicesPage: React.FC = () => {
 	const handleConfirmBooking = async (
 		requestType: string,
 		schedule_date: Date,
-		preferedTime: any
+		preferedTime: any,
+		selectedCar:any
 	) => {
 		if (!selectedServiceId) {
 			toast.error('Please select a service first');
@@ -269,12 +270,23 @@ const ServicesPage: React.FC = () => {
 		}
 
 		try {
+			if(selectedCar=="initial"){
+				toast.error("Select the Car Correctly")
+				return
+			}
+
+			if(preferedTime.startTime=="" || preferedTime.endTime==""){
+				toast.error("select Time Category")
+				return
+			}
+
 			const data = {
 				service: selectedServiceId,
 				type: 'service',
 				requestType,
 				schedule_date,
 				preferedTime,
+				vehicle:Number(selectedCar)
 			};
 
 			const response: any = await postSparePartsData(data);
@@ -547,11 +559,11 @@ const ServicesPage: React.FC = () => {
 												<div className='flex flex-col justify-between items-start mt-6'>
 													{/* Price and Discount */}
 													<div className='text-right mb-2'>
-														<span className='line-through text-gray-400 mr-2 text-sm'>
-															{pkg.price}
-														</span>
+														{/* <span className='line-through text-gray-400 mr-2 text-sm'>
+															&#8377; {pkg.price}
+														</span> */}
 														<span className='text-[#0050A5]-600 font-bold text-xl'>
-															{pkg.discountPrice}
+															&#8377; {pkg.discountPrice}
 														</span>
 													</div>
 													<br />

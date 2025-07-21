@@ -215,7 +215,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 								{/* Price + Old Order */}
 								<div className='text-right'>
 									<div className='text-2xl font-bold text-gray-900'>
-										₹{getPrice().toLocaleString()}
+										&#8377;{getPrice().toLocaleString()}
 									</div>
 									{isOld && (
 										<span className='text-xs text-gray-500 bg-gray-100 px-2 py-1 rounded-full mt-1 inline-block'>
@@ -268,12 +268,12 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 									</p>
 									<p className='text-sm text-[#0050A5]'>
 										<span>Base Price</span>
-										<span className='pl-1'>:</span> ₹{' '}
+										<span className='pl-1'>:</span> &#8377;{' '}
 										{getPrice().toLocaleString()}
 									</p>
 									<p className='text-sm text-[#0050A5]'>
 										<span>Tax (0%)</span>
-										<span className='pl-3'>:</span> ₹{' '}
+										<span className='pl-3'>:</span> &#8377;{' '}
 										{(getPrice() * 0).toFixed(2)}
 									</p>
 									<div className='border-t border-[#0050A5] pt-2 mb-2'>
@@ -281,7 +281,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 											<strong>
 												Total<span className='pl-8'>:</span>
 											</strong>{' '}
-											₹ {(getPrice() * 1).toFixed(2)}
+											&#8377; {(getPrice() * 1).toFixed(2)}
 										</p>
 									</div>
 								</div>

@@ -17,6 +17,7 @@ type ServiceOffer = {
 	offerPrice?: number;
 	image?: string;
 	badge?: string;
+	offer?: number;
 };
 
 // Scroll - line animation
@@ -114,30 +115,23 @@ const Offer: React.FC<OfferProps> = ({ announcements }) => {
 						key={offer._id}
 						className='bg-white rounded-xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 p-8 border-l-4 border-[#0050A5]'
 					>
-						<div className='flex items-center justify-between mb-4'>
-							<div className='bg-[#0050A5]  text-white px-3 py-1 rounded-full text-sm font-semibold'>
-								Special Offer
-							</div>
-							<div className='w-24'>
-								<img src={offer?.image} alt="offergift" />
-							</div>
-						</div>
-						<h3 className='text-2xl font-bold text-gray-800 mb-4 leading-tight'>
+						<img src={offer?.image} className='w-full h-32 object-cover' alt="offergift" />
+						<h3 className='text-2xl font-bold text-gray-800 m-4 leading-tight'>
 							{offer.title}
 						</h3>
 						<p className='text-gray-600 mb-4 leading-relaxed text-base'>
 							{offer.description}
 						</p>
-						{(offer.originalPrice || offer.offerPrice) && (
-							<div className='mb-4'>
+						{(offer.originalPrice || offer.offer) && (
+							<div>
 								{offer.originalPrice && (
 									<span className='text-gray-500 line-through text-lg mr-2'>
-										₹{offer.originalPrice}
+										&#8377; {offer.originalPrice}
 									</span>
 								)}
-								{offer.offerPrice && (
+								{offer.offer&& (
 									<span className='text-green-600 font-bold text-xl'>
-										₹{offer.offerPrice}
+										&#8377; {offer.offer}
 									</span>
 								)}
 								{offer.discount && (
