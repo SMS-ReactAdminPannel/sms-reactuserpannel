@@ -267,8 +267,8 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 										<span className='pl-5'>:</span> {getName()}
 									</p>
 									<p className='text-sm text-[#0050A5]'>
-										<span>Base Price</span>
-										<span className='pl-1'>:</span> &#8377;{' '}
+										<span>Price</span>
+										<span className='pl-9'>:</span> &#8377;{' '}
 										{getPrice().toLocaleString()}
 									</p>
 									<p className='text-sm text-[#0050A5]'>
