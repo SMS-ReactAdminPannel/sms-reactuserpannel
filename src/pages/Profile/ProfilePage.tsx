@@ -40,7 +40,7 @@ interface Car {
 const ProfilePage: React.FC = () => {
 	const [isCarTab, setIsCarTab] = useState(false);
 	const [editMode, setEditMode] = useState(false);
-	const [profileData, setProfileData] = useState<any>({});
+	const [profileData, setProfileData] = useState<FormData>({});
 	const [errors, setErrors] = useState<any>({});
 	const [editCarMode, setEditCarMode] = useState(false);
 	const [formSubmitted, setFormSubmitted] = useState(false);
@@ -107,6 +107,8 @@ const ProfilePage: React.FC = () => {
 	useEffect(() => {
 		fetchUserProfile();
 	}, []);
+
+	console.log(profileData, 'profile')
 
 	const validateField = (name: string, value: string) => {
 		switch (name) {
@@ -359,6 +361,8 @@ const ProfilePage: React.FC = () => {
 				setFormSubmitted(false);
 				setCurrentCarIndex(null);
 				fetchUserProfile();
+			}else{
+				toast.error("Car Register Number already exits")
 			}
 		} catch (error) {
 			console.error('Error updating profile:', error);
@@ -541,7 +545,7 @@ const ProfilePage: React.FC = () => {
 									</div>
 								) : (
 									<>
-										{formData.vehicleInfo.map((car, index) => (
+										{profileData?.vehicleInfo?.map((car, index) => (
 											<div key={index} className='space-y-4 bg-white p-6 rounded-xl shadow-lg mb-4'>
 												<div className='space-y-3'>
 													<p className='text-lg flex'>
