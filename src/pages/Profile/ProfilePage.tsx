@@ -40,7 +40,7 @@ interface Car {
 const ProfilePage: React.FC = () => {
 	const [isCarTab, setIsCarTab] = useState(false);
 	const [editMode, setEditMode] = useState(false);
-	const [profileData, setProfileData] = useState<any>({});
+	const [, setProfileData] = useState<any>({});
 	const [errors, setErrors] = useState<any>({});
 	const [editCarMode, setEditCarMode] = useState(false);
 	const [formSubmitted, setFormSubmitted] = useState(false);
@@ -300,20 +300,11 @@ const ProfilePage: React.FC = () => {
 		}));
 	};
 
-	const handleEditCar = (car: Car, index: number) => {
+	const handleEditCar = (_car: Car, index: number) => {
 		setEditCarMode(true);
 		setCurrentCarIndex(index);
 	};
 
-	const handleAddCar = () => {
-		if (!validateForm()) {
-			toast.error('Please fix all the fields before submitting');
-			return;
-		}
-		setEditCarMode(false);
-		setCurrentCarIndex(null);
-		toast.success('Car added successfully!');
-	}
 
 	const deleteCar = (index: number) => {
 		const newVehicleInfo = [...formData.vehicleInfo];
