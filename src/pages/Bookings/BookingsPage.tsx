@@ -25,8 +25,9 @@ interface OrderDetails {
 	description?: string;
 	date: string;
 	price: number;
-	status: 'pending' | 'completed' | 'delivered';
+	status: 'pending' | 'completed' | 'delivered' | 'Dispatched to Courier';
 	type: 'spare' | 'service';
+	track_id: string;
 	products?: Array<{
 		productId: {
 			_id: string;
@@ -85,7 +86,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 	const [showDetails, setShowDetails] = useState(false);
 	const orderDate = new Date(order.date);
 	const isCompleted =
-		order.status === 'completed' || order.status === 'delivered';
+		order.status === 'completed' || order.status === 'delivered' || order.status === "Dispatched to Courier";
 	const isOld = orderDate < new Date(Date.now() - 365 * 24 * 60 * 60 * 1000);
 	const isService = order.type === 'service';
 
@@ -235,12 +236,12 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 							{isCompleted ? (
 								<div className='flex items-center text-green-600 text-sm font-medium'>
 									<CheckCircle className='w-4 h-4 mr-1' />
-									Completed
+									{order.status}
 								</div>
 							) : (
 								<div className='flex items-center text-orange-600 text-sm font-medium'>
 									<Clock className='w-4 h-4 mr-1' />
-									{order.status || 'Pending'}
+									{order.status}
 								</div>
 							)}
 						</div>
@@ -295,7 +296,7 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 										<span>
 											Status<span className='pl-11'>:</span>
 										</span>{' '}
-										{order.status || 'Pending'}
+										{order.status}
 									</p>
 									<p className='text-sm text-[#0050A5]'>
 										<span>
@@ -313,6 +314,12 @@ const OrderCard: React.FC<OrderCardProps> = ({ order }) => {
 											day: 'numeric',
 										})}
 									</p>
+										<p className='text-sm text-[#0050A5]'>
+											<span>
+												Tracking ID<span className='pl-3'>:</span>
+											</span>{' '}
+											{order?.track_id}
+										</p>
 									{isCompleted && (
 										<div className='flex items-center justify-end'>
 											<button

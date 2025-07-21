@@ -5,6 +5,8 @@ import {
 } from '../../features/Enquiry/service';
 import { getUserProfile } from '../../features/Profile/service';
 import { FONTS } from '../../constants/constant';
+// import { isAbsolute } from 'path';
+import { useAuth } from '../../pages/auth/AuthContext';
 import { toast } from 'react-toastify';
 
 /* Reusable scroll animation hook */
@@ -30,18 +32,19 @@ const useScrollAnimation = <T extends HTMLElement = HTMLElement>(
 };
 
 const EnquiryForm = () => {
-	const enquiryTitle = useScrollAnimation<HTMLHeadingElement>();
-	const [submitted, setSubmitted] = useState(false);
-	const [profileData, setProfileData] = useState<any>(null);
-	const [formData, setFormData] = useState({
-		fullName: '',
-		email: '',
-		phoneNumber: '',
-		carModel: '',
-		ServiceType: 'general',
-		yourEnquiry: '',
-		Date: '',
-	});
+  const enquiryTitle = useScrollAnimation<HTMLHeadingElement>();
+  const [submitted, setSubmitted] = useState(false);
+  const [profileData, setProfileData] = useState<any>(null);
+  const [formData, setFormData] = useState({
+    fullName: '',
+    email: '',
+    phoneNumber: '',
+    carModel: '',
+    ServiceType: 'general',
+    yourEnquiry: '',
+    Date: '',
+  });
+  const { isAuthenticated } = useAuth();	
 
 	// Populate form once profileData is fetched
 	useEffect(() => {
@@ -90,15 +93,17 @@ const EnquiryForm = () => {
 		}
 	};
 
-	useEffect(() => {
-		const fetchProfile = async () => {
-			try {
-				const response: any = await getUserProfile({});
-				setProfileData(response?.data?.data || {});
-			} catch (err) {
-				console.error('Error fetching profile:', err);
-			}
-		};
+  useEffect(() => {
+	if(isAuthenticated) {
+    const fetchProfile = async () => {
+      try {
+        const response: any = await getUserProfile({});
+        setProfileData(response?.data?.data || {});
+		console.log('Profile data fetched:', response?.data?.data);
+      } catch (err) {
+        console.error('Error fetching profile:', err);
+      }
+    };
 
 		const fetchEnquiries = async () => {
 			try {
@@ -108,9 +113,10 @@ const EnquiryForm = () => {
 			}
 		};
 
-		fetchProfile();
-		fetchEnquiries();
-	}, []);
+    fetchProfile();
+    fetchEnquiries();
+  }
+}, [isAuthenticated]);
 
 	return (
 		<div className='w-4/4 mx-auto p-6 bg-white rounded-lg shadow-md'>
