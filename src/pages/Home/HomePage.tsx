@@ -221,7 +221,7 @@ const HomePage: React.FC = () => {
 									<div className='ml-14'>
 										<TbCertificate size={28} color={COLORS.primary} />
 									</div>
-									<p className='font-bold text-xl mt-3'>5000+</p>
+									<p className= 'font-bold text-xl mt-3'>5000+</p>
 									<p>Certified Technicians</p>
 								</div>
 								<div className='pl-6 text-center'>

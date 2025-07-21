@@ -5,6 +5,8 @@ import {
 } from '../../features/Enquiry/service';
 import { getUserProfile } from '../../features/Profile/service';
 import { FONTS } from '../../constants/constant';
+import { isAbsolute } from 'path';
+import { useAuth } from '../../pages/auth/AuthContext';
 
 /* Reusable scroll animation hook */
 const useScrollAnimation = <T extends HTMLElement = HTMLElement>(options = {}) => {
@@ -39,6 +41,7 @@ const EnquiryForm = () => {
     yourEnquiry: '',
     Date: '',
   });
+  const { isAuthenticated } = useAuth();	
 
   // Populate form once profileData is fetched
   useEffect(() => {
@@ -85,10 +88,12 @@ const EnquiryForm = () => {
   };
 
   useEffect(() => {
+	if(isAuthenticated) {
     const fetchProfile = async () => {
       try {
         const response: any = await getUserProfile({});
         setProfileData(response?.data?.data || {});
+		console.log('Profile data fetched:', response?.data?.data);
       } catch (err) {
         console.error('Error fetching profile:', err);
       }
@@ -104,7 +109,8 @@ const EnquiryForm = () => {
 
     fetchProfile();
     fetchEnquiries();
-  }, []);
+  }
+}, [isAuthenticated]);
 
 	return (
 		<div className='w-4/4 mx-auto p-6 bg-white rounded-lg shadow-md'>

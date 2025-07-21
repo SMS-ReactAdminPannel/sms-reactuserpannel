@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { getEnquiryData } from "../../features/Enquiry/service";
 import { getUserProfile } from "../../features/Profile/service";
 import { FONTS } from "../../constants/constant";
+import { useAuth } from "../../pages/auth/AuthContext";
+import { FaBullseye } from "react-icons/fa";
 
 interface EnquiryReply {
   fullName: string;
@@ -18,13 +20,17 @@ const ReplyMessageList = () => {
   const [filteredReplies, setFilteredReplies] = useState<EnquiryReply[]>([]);
   const [loading, setLoading] = useState(true);
   const [profileData, setProfileData] = useState<any>(null);
+  const {isAuthenticated} = useAuth(); 
 
   // Fetch replies
   useEffect(() => {
+     if (isAuthenticated){
     const fetchReplies = async () => {
       try {
+        
         const response: any = await getEnquiryData('');
         const data = response?.data?.data;
+        console.log('Fetched replies:', data);
         if (Array.isArray(data)) {
           setReplies(data);
         } else {
@@ -38,24 +44,32 @@ const ReplyMessageList = () => {
         setLoading(false);
       }
     };
-
     fetchReplies();
-  }, []);
+  }
+  setLoading(false);
+}, [isAuthenticated]);
 
   // Fetch profile & filter replies
   useEffect(() => {
+    if(isAuthenticated){
     const fetchProfile = async () => {
       try {
         const response: any = await getUserProfile({});
         const profile = response?.data?.data;
         setProfileData(profile);
+        console.log('Profile data:', profile);
       } catch (err) {
         console.error("Error fetching profile:", err);
+      } finally {
+        setLoading(false);
       }
     };
-
     fetchProfile();
-  }, []);
+  } 
+  setLoading(false);
+}, []);
+
+  
 
   // Filter replies based on profile
   useEffect(() => {
@@ -72,6 +86,14 @@ const ReplyMessageList = () => {
       setFilteredReplies(filtered);
     }
   }, [profileData, replies]);
+
+  console.log("Authenticated?", isAuthenticated);
+  console.log("Replies:", replies);
+console.log("Filtered Replies:", filteredReplies);
+
+
+
+
 
   return (
     <div className="space-y-6">
