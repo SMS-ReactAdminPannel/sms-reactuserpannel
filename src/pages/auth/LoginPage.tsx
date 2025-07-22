@@ -4,6 +4,7 @@ import { toast } from 'react-toastify';
 import { FONTS } from '../../constants/constant';
 import AuthLayout from './AuthLayout';
 import { signUp } from '../../features/auth';
+import { StoreLocalStorage } from '../../utils/localStorage';
 
 type FormData = {
 	phone: string;
@@ -32,7 +33,8 @@ const LoginPage = () => {
 			}
 			const response: any = await signUp({ phoneNumber: phone_number });
 			if (response) {
-				await localStorage.setItem('AuthToken', response?.data?.data?.token);
+				// await localStorage.setItem('AuthToken', response?.data?.data?.token);
+				StoreLocalStorage('AuthToken', response?.data?.data?.token)
 				await localStorage.setItem('OTP', response?.data?.data?.otp);
 				navigate('/verify-otp');
 			}
@@ -59,9 +61,8 @@ const LoginPage = () => {
 						{...register('phone', {
 							required: 'Phone Number is required',
 						})}
-						className={`w-full px-4 py-3 border text-gray-800 placeholder:text-[#0050A5] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0050B5] bg-white text-sm transition ${
-							errors.phone ? 'border-[#0050A5]' : 'border-[#0050A5]'
-						}`}
+						className={`w-full px-4 py-3 border text-gray-800 placeholder:text-[#0050A5] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#0050B5] bg-white text-sm transition ${errors.phone ? 'border-[#0050A5]' : 'border-[#0050A5]'
+							}`}
 					/>
 					{errors.phone && (
 						<span
@@ -77,9 +78,8 @@ const LoginPage = () => {
 				<button
 					type='submit'
 					disabled={isLoading}
-					className={`w-full py-3 text-white font-semibold rounded-full shadow-md hover:shadow-xl transition-all duration-300 hover:brightness-110 text-sm bg-[#0050A5] ${
-						isLoading ? 'opacity-70 cursor-not-allowed' : ''
-					}`}
+					className={`w-full py-3 text-white font-semibold rounded-full shadow-md hover:shadow-xl transition-all duration-300 hover:brightness-110 text-sm bg-[#0050A5] ${isLoading ? 'opacity-70 cursor-not-allowed' : ''
+						}`}
 				>
 					{isLoading ? (
 						<div className='flex items-center justify-center gap-2'>
