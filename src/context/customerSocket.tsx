@@ -1,6 +1,7 @@
-import { createContext, useContext, useState, useEffect} from 'react';
+import { createContext, useContext, useState, useEffect } from 'react';
 import type { ReactNode } from "react"
 import { io, Socket } from 'socket.io-client';
+import { GetLocalStorage } from '../utils/localStorage';
 
 type SocketType = Socket | null;
 const SocketContext = createContext<SocketType>(null);
@@ -16,7 +17,8 @@ export const SocketProvider = ({ children, role }: SocketProviderProps) => {
   const [socket, setSocket] = useState<SocketType>(null);
 
   useEffect(() => {
-    const token = localStorage.getItem('authToken') || '';
+    // const token = localStorage.getItem('authToken') || '';
+    const token = GetLocalStorage('authToken') || '';
     const userId = localStorage.getItem('userId')
     if (!token) {
       console.warn("Missing authToken");
@@ -31,7 +33,7 @@ export const SocketProvider = ({ children, role }: SocketProviderProps) => {
 
     newSocket.on('connect', () => {
       console.log(`[${role} Socket] connected: ${newSocket.id}`);
-      newSocket.emit('register', {userId, role });
+      newSocket.emit('register', { userId, role });
     });
 
     newSocket.on('connect_error', (err: { message: any; }) => {
@@ -44,7 +46,7 @@ export const SocketProvider = ({ children, role }: SocketProviderProps) => {
       newSocket.disconnect();
       console.log(`[${role} Socket] disconnected`);
     };
-  }, [role]); 
+  }, [role]);
 
   return <SocketContext.Provider value={socket}>{children}</SocketContext.Provider>;
 };

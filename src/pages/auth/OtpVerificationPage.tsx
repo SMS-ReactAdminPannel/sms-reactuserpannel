@@ -6,6 +6,7 @@ import { useState, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { verifyotp } from '../../features/auth';
 import { useAuth } from './AuthContext';
+import { GetLocalStorage, RemoveLocalStorage } from '../../utils/localStorage';
 
 type OtpFormData = {
 	otp: string;
@@ -49,7 +50,8 @@ const OtpVerificationPage = () => {
 		}
 	};
 
-	const AuthToken: any = localStorage.getItem('AuthToken');
+	// const AuthToken: any = localStorage.getItem('AuthToken');
+	const AuthToken: any = GetLocalStorage('AuthToken')
 	const otp = localStorage.getItem('OTP');
 	const handleOtpVerify = async () => {
 		const enteredOtp = otpDigits?.join('');
@@ -63,7 +65,8 @@ const OtpVerificationPage = () => {
 			const data: any = { AuthToken, otp: enteredOtp };
 			const response: any = await verifyotp(data);
 			if (response) {
-				localStorage.removeItem('AuthToken');
+				// localStorage.removeItem('AuthToken');
+				RemoveLocalStorage('AuthToken')
 				localStorage.removeItem('OTP');
 				login(response?.data?.data);
 				navigate('/');

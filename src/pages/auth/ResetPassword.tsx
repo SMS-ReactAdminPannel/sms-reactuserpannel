@@ -5,6 +5,7 @@ import { EyeIcon, EyeSlashIcon } from '@heroicons/react/24/outline';
 import { Link, useNavigate } from 'react-router-dom';
 import AuthLayout from './AuthLayout';
 import { forgotPassword, verifyotp, resetPassword } from '../../features/auth';
+import { StoreLocalStorage } from '../../utils/localStorage';
 
 type ResetFormData = {
 	email: string;
@@ -92,7 +93,8 @@ const ResetPassword = () => {
 			const data = { AuthToken, otp: enteredOtp };
 			const response: any = await verifyotp(JSON.stringify(data));
 			if (response) {
-				localStorage.setItem('authToken', response.data.data);
+				// localStorage.setItem('authToken', response.data.data);
+				StoreLocalStorage('authToken', response.data.data)
 				setStep('reset');
 				clearErrors('otp');
 			} else {
