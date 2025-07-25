@@ -187,7 +187,7 @@ const SpareParts: React.FC = () => {
 						price: part?.price?.toString(),
 						quantity: quantity,
 					},
-					brand: 'spare',
+					type: 'spare',
 				};
 				const response: any = await postSparePartsData(payload);
 				if (response) {
